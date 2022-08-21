@@ -33,7 +33,8 @@ namespace Buform
 
         private void EstimateViewSize()
         {
-            var width = Bounds.Width;
+            var horizontalMargins = LayoutMargins.Left + LayoutMargins.Right;
+            var width = Bounds.Width - horizontalMargins;
 
             var request = _formsHeaderFooterView.Measure(
                 width,
