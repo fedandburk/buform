@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<buform:FormsFormCell
+    x:Class="Buform.Example.Forms.RandomNumberGeneratorView"
+    x:TypeArguments="core:RandomNumberGeneratorItem"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:buform="clr-namespace:Buform;assembly=Buform.Forms"
+    xmlns:core="clr-namespace:Buform.Example.Core;assembly=Buform.Example.Core"
+    xmlns:svg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+    HeightRequest="45">
+    <buform:FormsFormCell.Content>
+        <Grid Padding="20, 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                Grid.Column="0"
+                Text="{Binding Label}"
+                FontSize="16"
+                VerticalOptions="CenterAndExpand" />
+
+            <Label
+                Grid.Column="2"
+                Text="{Binding Value}"
+                FontSize="16"
+                TextColor="Gray"
+                VerticalOptions="CenterAndExpand" />
+
+            <svg:SvgCachedImage
+                Grid.Column="3"
+                HeightRequest="18"
+                Margin="5"
+                Source="goforward.svg">
+                <svg:SvgCachedImage.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GenerateCommand}" />
+                </svg:SvgCachedImage.GestureRecognizers>
+                <svg:SvgCachedImage.Transformations>
+                    <transformations:TintTransformation
+                        HexColor="#007AFF"
+                        EnableSolidColor="true" />
+                </svg:SvgCachedImage.Transformations>
+            </svg:SvgCachedImage>
+        </Grid>
+    </buform:FormsFormCell.Content>
+</buform:FormsFormCell>
