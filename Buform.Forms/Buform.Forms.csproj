@@ -36,6 +36,7 @@
     <ItemGroup>
         <Compile Include="BuformForms.cs" />
         <Compile Include="FormGroupRegistry.cs" />
+        <Compile Include="FormItemRegistry.cs" />
         <Compile Include="FormView.cs" />
         <Compile Include="FormsHeaderFooterView.cs" />
     </ItemGroup>

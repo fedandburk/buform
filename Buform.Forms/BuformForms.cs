@@ -5,10 +5,12 @@ namespace Buform
     public static class BuformForms
     {
         private static readonly FormGroupRegistry GroupRegistry;
+        private static readonly FormItemRegistry ItemRegistry;
 
         static BuformForms()
         {
             GroupRegistry = new FormGroupRegistry();
+            ItemRegistry = new FormItemRegistry();
 
             FormComponentRegistry.Register();
         }
@@ -27,6 +29,13 @@ namespace Buform
             GroupRegistry.RegisterGroupFooterClass<TGroup, TGroupView>();
         }
 
+        public static void RegisterItemClass<TItem, TItemView>()
+            where TItem : class, IFormItem
+            where TItemView : FormsFormCell<TItem>
+        {
+            ItemRegistry.RegisterItemClass<TItem, TItemView>();
+        }
+
         public static bool TryGetHeaderViewType(Type groupType, out Type? viewType)
         {
             return GroupRegistry.TryGetHeaderViewType(groupType, out viewType);
@@ -35,6 +44,11 @@ namespace Buform
         public static bool TryGetFooterViewType(Type groupType, out Type? viewType)
         {
             return GroupRegistry.TryGetFooterViewType(groupType, out viewType);
+        }
+
+        public static bool TryGetCellViewType(Type itemType, out Type? viewType)
+        {
+            return ItemRegistry.TryGetCellViewType(itemType, out viewType);
         }
     }
 }
