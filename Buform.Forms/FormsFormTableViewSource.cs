@@ -1,4 +1,5 @@
 using System;
+using Foundation;
 using UIKit;
 
 namespace Buform
@@ -8,6 +9,20 @@ namespace Buform
         public FormsFormTableViewSource(UITableView tableView) : base(tableView)
         {
             /* Required constructor */
+        }
+
+        protected override UITableViewCell GetCell(NSIndexPath indexPath, object item)
+        {
+            var sectionType = item.GetType();
+
+            if (!BuformForms.TryGetCellViewType(sectionType, out var viewType))
+            {
+                return base.GetCell(indexPath, item);
+            }
+
+            return viewType == null
+                ? base.GetCell(indexPath, item)
+                : new TableViewCell(viewType, item);
         }
 
         protected override UITableViewHeaderFooterView? GetViewForFooter(nint section, object sectionItem)
