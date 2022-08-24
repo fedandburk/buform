@@ -93,33 +93,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-1024.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-120.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-121.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-152.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-167.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-180.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-20.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-29.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-40.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-41.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-42.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-58.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-59.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-80.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-81.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-87.png" />
-        <ImageAsset Include="Assets.xcassets\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Logo@2x.png" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Logo@3x.png" />
-        <ImageAsset Include="Assets.xcassets\Main.colorset\Contents.json" />
-    </ItemGroup>
-
-    <ItemGroup>
         <InterfaceDefinition Include="LaunchScreen.storyboard" />
     </ItemGroup>
 
@@ -158,6 +131,37 @@
         <ProjectReference Include="..\Buform.FluentValidation\Buform.FluentValidation.csproj" />
         <ProjectReference Include="..\Buform.Forms\Buform.Forms.csproj" />
         <ProjectReference Include="..\Buform\Buform.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Resources" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-1024.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-120.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-121.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-152.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-167.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-180.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-20.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-29.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-40.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-41.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-42.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-58.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-59.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-60.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-80.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-81.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-87.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Logo@2x.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Logo@3x.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Main.colorset\Contents.json" />
     </ItemGroup>
 
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
