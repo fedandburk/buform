@@ -75,7 +75,7 @@
         <DeviceSpecificBuild>true</DeviceSpecificBuild>
         <MtouchDebug>true</MtouchDebug>
         <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-        <MtouchFastDev>true</MtouchFastDev>
+        <MtouchFastDev>false</MtouchFastDev>
         <MtouchFloat32>true</MtouchFloat32>
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
         <IOSDebuggerPort>57771</IOSDebuggerPort>
@@ -135,6 +135,10 @@
 
     <ItemGroup>
         <PackageReference Include="MvvmCross.Forms" Version="8.0.2" />
+        <PackageReference Include="SkiaSharp" Version="2.88.1" />
+        <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+        <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
+        <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515+946-sha.94acebbb4-azdo.6439792" />
         <PackageReference Include="FluentValidation" Version="11.1.0" />
         <PackageReference Include="Humanizer.Core" Version="2.14.1" />

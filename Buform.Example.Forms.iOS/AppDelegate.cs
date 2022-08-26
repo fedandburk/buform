@@ -1,4 +1,5 @@
-﻿using Foundation;
+﻿using FFImageLoading.Forms.Platform;
+using Foundation;
 using MvvmCross.Forms.Platforms.Ios.Core;
 using UIKit;
 
@@ -23,6 +24,8 @@ namespace Buform.Example.Forms.iOS
             UISlider.Appearance.TintColor = color;
             UITextField.Appearance.TintColor = color;
             UITextView.Appearance.TintColor = color;
+
+            CachedImageRenderer.Init();
 
             return base.FinishedLaunching(application, launchOptions);
         }
