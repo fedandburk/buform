@@ -1,6 +1,7 @@
 ﻿using FFImageLoading.Forms.Platform;
 using Foundation;
 using MvvmCross.Forms.Platforms.Ios.Core;
+using TouchEffect.iOS;
 using UIKit;
 
 namespace Buform.Example.Forms.iOS
@@ -26,6 +27,7 @@ namespace Buform.Example.Forms.iOS
             UITextView.Appearance.TintColor = color;
 
             CachedImageRenderer.Init();
+            TouchEffectPreserver.Preserve();
 
             return base.FinishedLaunching(application, launchOptions);
         }

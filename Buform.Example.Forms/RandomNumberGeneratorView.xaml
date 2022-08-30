@@ -8,6 +8,7 @@
     xmlns:buform="clr-namespace:Buform;assembly=Buform.Forms"
     xmlns:core="clr-namespace:Buform.Example.Core;assembly=Buform.Example.Core"
     xmlns:svg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+    xmlns:touch="clr-namespace:TouchEffect;assembly=TouchEffect"
     xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     HeightRequest="45">
     <buform:FormItemView.Content>
@@ -32,20 +33,25 @@
                 TextColor="Gray"
                 VerticalOptions="CenterAndExpand" />
 
-            <svg:SvgCachedImage
+            <Frame
                 Grid.Column="3"
-                HeightRequest="18"
-                Margin="5"
-                Source="goforward.svg">
-                <svg:SvgCachedImage.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GenerateCommand}" />
-                </svg:SvgCachedImage.GestureRecognizers>
-                <svg:SvgCachedImage.Transformations>
-                    <transformations:TintTransformation
-                        HexColor="#007AFF"
-                        EnableSolidColor="true" />
-                </svg:SvgCachedImage.Transformations>
-            </svg:SvgCachedImage>
+                Padding="0"
+                HasShadow="False"
+                BackgroundColor="Transparent"
+                touch:TouchEff.Command="{Binding GenerateCommand}"
+                touch:TouchEff.NativeAnimation="True"
+                touch:TouchEff.PressedOpacity="0.2">
+                <svg:SvgCachedImage
+                    HeightRequest="18"
+                    Margin="5"
+                    Source="GoForward.svg">
+                    <svg:SvgCachedImage.Transformations>
+                        <transformations:TintTransformation
+                            HexColor="#007AFF"
+                            EnableSolidColor="true" />
+                    </svg:SvgCachedImage.Transformations>
+                </svg:SvgCachedImage>
+            </Frame>
         </Grid>
     </buform:FormItemView.Content>
 </buform:FormItemView>
