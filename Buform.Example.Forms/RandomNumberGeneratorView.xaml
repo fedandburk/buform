@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<buform:FormsFormCell
+<buform:FormItemView
     x:Class="Buform.Example.Forms.RandomNumberGeneratorView"
     x:TypeArguments="core:RandomNumberGeneratorItem"
     xmlns="http://xamarin.com/schemas/2014/forms"
@@ -10,7 +10,7 @@
     xmlns:svg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
     xmlns:transformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
     HeightRequest="45">
-    <buform:FormsFormCell.Content>
+    <buform:FormItemView.Content>
         <Grid Padding="20, 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -47,5 +47,5 @@
                 </svg:SvgCachedImage.Transformations>
             </svg:SvgCachedImage>
         </Grid>
-    </buform:FormsFormCell.Content>
-</buform:FormsFormCell>
+    </buform:FormItemView.Content>
+</buform:FormItemView>

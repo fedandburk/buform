@@ -31,7 +31,7 @@ namespace Buform
 
         public static void RegisterItemClass<TItem, TItemView>()
             where TItem : class, IFormItem
-            where TItemView : FormsFormCell<TItem>
+            where TItemView : FormItemView<TItem>
         {
             ItemRegistry.RegisterItemClass<TItem, TItemView>();
         }

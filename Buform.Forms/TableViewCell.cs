@@ -9,7 +9,7 @@ namespace Buform
 {
     internal sealed class TableViewCell : UITableViewCell
     {
-        private readonly FormsFormCell _formsFormCell;
+        private readonly FormItemView _formItemView;
         private readonly IVisualElementRenderer _renderer;
 
         private CGSize _estimatedSize;
@@ -21,11 +21,11 @@ namespace Buform
         {
             SelectionStyle = UITableViewCellSelectionStyle.None;
 
-            _formsFormCell = (Activator.CreateInstance(viewType) as FormsFormCell)!;
+            _formItemView = (Activator.CreateInstance(viewType) as FormItemView)!;
 
-            _formsFormCell.BindingContext = bindingContext;
+            _formItemView.BindingContext = bindingContext;
 
-            _renderer = Platform.CreateRenderer(_formsFormCell);
+            _renderer = Platform.CreateRenderer(_formItemView);
 
             ContentView.AddSubviews(_renderer.NativeView);
         }
@@ -34,7 +34,7 @@ namespace Buform
         {
             var width = Bounds.Width;
 
-            var request = _formsFormCell.Measure(
+            var request = _formItemView.Measure(
                 width,
                 double.PositiveInfinity,
                 MeasureFlags.IncludeMargins
@@ -64,7 +64,7 @@ namespace Buform
                 _estimatedSize.Height
             );
 
-            Layout.LayoutChildIntoBoundingRegion(_formsFormCell, bounds);
+            Layout.LayoutChildIntoBoundingRegion(_formItemView, bounds);
 
             _renderer.NativeView.Frame = bounds.ToRectangleF();
         }

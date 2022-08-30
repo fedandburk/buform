@@ -161,7 +161,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <BundleResource Include="Resources\goforward.svg" />
+      <BundleResource Include="Resources\GoForward.svg" />
     </ItemGroup>
 
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

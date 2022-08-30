@@ -49,7 +49,7 @@ namespace Buform
 
         public void RegisterItemClass<TItem, TItemView>()
             where TItem : class, IFormItem
-            where TItemView : FormsFormCell<TItem>
+            where TItemView : FormItemView<TItem>
         {
             _holders[typeof(TItem)] = new Holder(
                 typeof(TItemView),
@@ -59,8 +59,8 @@ namespace Buform
 
         public void RegisterItemClass<TItem, TItemView, TExpandedItemView>()
             where TItem : class, IFormItem
-            where TItemView : FormsFormCell<TItem>
-            where TExpandedItemView : FormsFormCell<TItem>
+            where TItemView : FormItemView<TItem>
+            where TExpandedItemView : FormItemView<TItem>
         {
             _holders[typeof(TItem)] = new Holder(
                 typeof(TItemView),

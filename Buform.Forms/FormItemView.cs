@@ -2,11 +2,10 @@ using Xamarin.Forms;
 
 namespace Buform
 {
-    public class FormsFormCell : ContentView
+    public class FormItemView : ContentView
     {
     }
-
-    public class FormsFormCell<TItem> : FormsFormCell
+    public class FormItemView<TItem> : FormItemView
         where TItem : class, IFormItem
     {
         protected TItem? Item => BindingContext as TItem;
