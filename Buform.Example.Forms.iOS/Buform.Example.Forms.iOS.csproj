@@ -75,7 +75,7 @@
         <DeviceSpecificBuild>true</DeviceSpecificBuild>
         <MtouchDebug>true</MtouchDebug>
         <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
-        <MtouchFastDev>true</MtouchFastDev>
+        <MtouchFastDev>false</MtouchFastDev>
         <MtouchFloat32>true</MtouchFloat32>
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
         <IOSDebuggerPort>57771</IOSDebuggerPort>
@@ -90,33 +90,6 @@
         <Reference Include="System.Xml" />
         <Reference Include="System.Core" />
         <Reference Include="Xamarin.iOS" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-1024.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-120.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-121.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-152.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-167.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-180.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-20.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-29.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-40.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-41.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-42.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-58.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-59.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-60.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-80.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-81.png" />
-        <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon-87.png" />
-        <ImageAsset Include="Assets.xcassets\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Contents.json" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Logo@2x.png" />
-        <ImageAsset Include="Assets.xcassets\Logo.imageset\Logo@3x.png" />
-        <ImageAsset Include="Assets.xcassets\Main.colorset\Contents.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -135,6 +108,11 @@
 
     <ItemGroup>
         <PackageReference Include="MvvmCross.Forms" Version="8.0.2" />
+        <PackageReference Include="SkiaSharp" Version="2.88.1" />
+        <PackageReference Include="TouchView" Version="4.1.100" />
+        <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
+        <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
+        <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.11.982" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2515+946-sha.94acebbb4-azdo.6439792" />
         <PackageReference Include="FluentValidation" Version="11.2.1" />
         <PackageReference Include="Humanizer.Core" Version="2.14.1" />
@@ -154,6 +132,37 @@
         <ProjectReference Include="..\Buform.FluentValidation\Buform.FluentValidation.csproj" />
         <ProjectReference Include="..\Buform.Forms\Buform.Forms.csproj" />
         <ProjectReference Include="..\Buform\Buform.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-1024.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-120.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-121.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-152.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-167.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-180.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-20.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-29.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-40.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-41.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-42.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-58.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-59.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-60.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-76.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-80.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-81.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\AppIcon.appiconset\Icon-87.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Contents.json" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Logo@2x.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Logo.imageset\Logo@3x.png" />
+      <ImageAsset Include="Resources\Assets.xcassets\Main.colorset\Contents.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <BundleResource Include="Resources\GoForward.svg" />
     </ItemGroup>
 
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

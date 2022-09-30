@@ -7,6 +7,8 @@ namespace Buform.Example.Forms
     {
         public Application()
         {
+            BuformForms.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorView>();
+
             BuformForms.RegisterGroupHeaderClass<HeaderFormGroup, HeaderFormGroupView>();
         }
     }
