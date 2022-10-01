@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="MvvmCross.Forms" Version="8.0.2" />
-      <PackageReference Include="SkiaSharp" Version="2.88.1" />
+      <PackageReference Include="SkiaSharp" Version="2.88.2" />
       <PackageReference Include="TouchView" Version="4.1.100" />
       <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.11.982" />
       <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.11.982" />
