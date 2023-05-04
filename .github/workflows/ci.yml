@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  push:
+    branches: [ develop ]
+
+  pull_request:
+    types: [ opened, synchronize, edited ]
+    
+  workflow_dispatch:
+
+jobs:
+  CI:
+    uses: fedandburk/.github/workflows/dotnet-ci.yml@main
+    secrets: inherit
