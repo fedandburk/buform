@@ -11,5 +11,5 @@ on:
 
 jobs:
   CI:
-    uses: fedandburk/.github/workflows/dotnet-ci.yml@main
+    uses: fedandburk/workflows/.github/workflows/dotnet-ci.yml@main
     secrets: inherit
