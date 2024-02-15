@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Foundation;
-using SByteDev.Common.Extensions;
 using SByteDev.Xamarin.iOS.Extensions;
 using UIKit;
 
