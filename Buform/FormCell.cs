@@ -1,8 +1,4 @@
-using System;
 using System.ComponentModel;
-using Foundation;
-using SByteDev.Xamarin.iOS.Extensions;
-using UIKit;
 
 namespace Buform;
 

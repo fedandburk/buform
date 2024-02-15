@@ -1,6 +1,3 @@
-using System;
-using UIKit;
-
 namespace Buform;
 
 public abstract class PickerFormCellBase<TItem> : FormCell<TItem> where TItem : class, IFormItem

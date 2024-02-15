@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Buform;
 
 public interface ISegmentsFormItem : IValidatableFormItem

@@ -1,8 +1,3 @@
-using System.Threading.Tasks;
-using Foundation;
-using SByteDev.Xamarin.iOS.Extensions;
-using UIKit;
-
 namespace Buform;
 
 public abstract class PickerPresenterBase<TItem> : NSObject where TItem : class, IPickerFormItemBase

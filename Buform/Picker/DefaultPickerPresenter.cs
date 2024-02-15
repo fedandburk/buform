@@ -1,7 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using UIKit;
-
 namespace Buform;
 
 public class DefaultPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase

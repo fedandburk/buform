@@ -1,7 +1,3 @@
-using System;
-using CoreGraphics;
-using UIKit;
-
 namespace Buform;
 
 public static class Buform

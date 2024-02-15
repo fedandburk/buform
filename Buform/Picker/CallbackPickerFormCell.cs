@@ -1,6 +1,3 @@
-using System;
-using Foundation;
-
 namespace Buform;
 
 [Preserve(AllMembers = true)]

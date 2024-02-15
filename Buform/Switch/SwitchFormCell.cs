@@ -1,7 +1,3 @@
-using System;
-using Foundation;
-using UIKit;
-
 namespace Buform;
 
 [Preserve(AllMembers = true)]

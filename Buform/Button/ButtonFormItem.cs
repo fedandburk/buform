@@ -1,4 +1,3 @@
-using System;
 using System.Windows.Input;
 
 namespace Buform;
@@ -46,7 +45,7 @@ public class ButtonFormItem : FormItem<ICommand>
         Value.CanExecuteChanged += OnCanExecuteChanged;
     }
 
-    protected virtual void OnCanExecuteChanged(object sender, EventArgs e)
+    protected virtual void OnCanExecuteChanged(object? sender, EventArgs e)
     {
         NotifyPropertyChanged(nameof(IsReadOnly));
     }

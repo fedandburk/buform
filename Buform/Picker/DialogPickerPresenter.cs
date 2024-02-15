@@ -1,7 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using UIKit;
-
 namespace Buform;
 
 public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase

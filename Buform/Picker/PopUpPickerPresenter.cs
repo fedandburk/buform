@@ -1,8 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using Foundation;
-using UIKit;
-
 namespace Buform;
 
 [Preserve(AllMembers = true)]

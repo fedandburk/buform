@@ -1,5 +1,3 @@
-using System;
-
 namespace Buform;
 
 public class SegmentsOptionFormItem<TValue> : FormItem<TValue>, ISegmentsOptionFormItem

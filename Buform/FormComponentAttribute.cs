@@ -1,5 +1,3 @@
-using System;
-
 namespace Buform;
 
 [AttributeUsage(AttributeTargets.Class)]

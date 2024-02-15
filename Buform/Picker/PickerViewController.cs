@@ -1,12 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
-using CoreGraphics;
-using Foundation;
-using SByteDev.Xamarin.iOS.Extensions;
-using UIKit;
 
 namespace Buform;
 

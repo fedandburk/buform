@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Buform;
 
 public abstract class ValidatableForm : Form
