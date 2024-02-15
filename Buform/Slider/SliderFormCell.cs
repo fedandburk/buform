@@ -38,7 +38,7 @@ public class SliderFormCell : FormCell<SliderFormItem>
         });
     }
 
-    protected virtual void OnValueChanged(object sender, EventArgs e)
+    protected virtual void OnValueChanged(object? sender, EventArgs e)
     {
         if (Slider == null)
         {

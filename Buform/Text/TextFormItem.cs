@@ -63,7 +63,7 @@ public class TextFormItem<TValue> : ValidatableFormItem<TValue>, ITextFormItem
         {
             _formatter = value;
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }

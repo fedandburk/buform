@@ -96,7 +96,7 @@ public abstract class FormCell<TItem> : FormCell where TItem : class, IFormItem
         /* Required constructor */
     }
 
-    private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (Item == null)
         {
@@ -108,7 +108,7 @@ public abstract class FormCell<TItem> : FormCell where TItem : class, IFormItem
 
     protected abstract void OnItemSet();
 
-    protected abstract void OnItemPropertyChanged(string propertyName);
+    protected abstract void OnItemPropertyChanged(string? propertyName);
 
     public override void Initialize(IFormItem item)
     {

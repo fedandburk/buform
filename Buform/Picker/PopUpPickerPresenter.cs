@@ -23,8 +23,11 @@ public class PopUpPickerPresenter<TItem> : PickerPresenterBase<TItem> where TIte
 
         if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad)
         {
-            alertController.PopoverPresentationController.SourceView = sourceView;
-            alertController.PopoverPresentationController.SourceRect = sourceView.Bounds;
+            if (alertController.PopoverPresentationController != null)
+            {
+                alertController.PopoverPresentationController.SourceView = sourceView;
+                alertController.PopoverPresentationController.SourceRect = sourceView.Bounds;
+            }
         }
 
         await viewController.PresentViewControllerAsync(alertController, true).ConfigureAwait(false);

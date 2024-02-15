@@ -57,7 +57,7 @@ public class PickerViewController<TItem> : UITableViewController where TItem : c
         );
     }
 
-    protected virtual async void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    protected virtual async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
 

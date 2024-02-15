@@ -37,7 +37,7 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
         {
             _formatter = value;
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }

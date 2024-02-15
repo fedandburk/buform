@@ -61,7 +61,7 @@ public class SegmentsFormCell : FormCell<ISegmentsFormItem>
         });
     }
 
-    protected virtual void OnValueChanged(object sender, EventArgs e)
+    protected virtual void OnValueChanged(object? sender, EventArgs e)
     {
         if (SegmentedControl == null)
         {

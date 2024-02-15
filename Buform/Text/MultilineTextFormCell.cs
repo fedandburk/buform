@@ -38,7 +38,7 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
         });
     }
 
-    protected virtual void OnChanged(object sender, EventArgs e)
+    protected virtual void OnChanged(object? sender, EventArgs e)
     {
         if (TextView == null)
         {

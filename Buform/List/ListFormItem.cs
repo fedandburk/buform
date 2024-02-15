@@ -1,5 +1,6 @@
 namespace Buform;
 
+// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class ListFormItem<TValue> : FormItem<TValue>, IListFormItem
 {
     private Func<TValue?, string?>? _formatter;
@@ -11,7 +12,7 @@ public class ListFormItem<TValue> : FormItem<TValue>, IListFormItem
         {
             _formatter = value;
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }

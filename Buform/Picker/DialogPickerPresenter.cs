@@ -24,8 +24,12 @@ public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem> where TIt
 
         navigationController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
 
-        navigationController.PopoverPresentationController.SourceView = sourceView;
-        navigationController.PopoverPresentationController.SourceRect = sourceView.Bounds;
+        // ReSharper disable once InvertIf
+        if (navigationController.PopoverPresentationController != null)
+        {
+            navigationController.PopoverPresentationController.SourceView = sourceView;
+            navigationController.PopoverPresentationController.SourceRect = sourceView.Bounds;
+        }
 
         return viewController.PresentViewControllerAsync(navigationController, true);
     }

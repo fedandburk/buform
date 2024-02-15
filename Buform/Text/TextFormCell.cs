@@ -62,7 +62,7 @@ public class TextFormCell : FormCell<ITextFormItem>
         });
     }
 
-    private void OnEditingChanged(object sender, EventArgs e)
+    private void OnEditingChanged(object? sender, EventArgs e)
     {
         if (TextField == null)
         {

@@ -44,7 +44,7 @@ public class StepperFormCell : FormCell<StepperFormItem>
         });
     }
 
-    protected virtual void OnValueChanged(object sender, EventArgs e)
+    protected virtual void OnValueChanged(object? sender, EventArgs e)
     {
         if (Item == null)
         {

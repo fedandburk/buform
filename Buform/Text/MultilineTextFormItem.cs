@@ -39,7 +39,7 @@ public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMulti
         {
             _formatter = value;
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }

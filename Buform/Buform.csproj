@@ -74,6 +74,7 @@
     <!--    Picker    -->
 
     <ItemGroup>
+        <Compile Include="NsObjectExtensions.cs" />
         <Compile Include="Picker\AsyncPickerFormItem.cs" />
         <Compile Include="Picker\AsyncPickerLoadingState.cs" />
         <Compile Include="Picker\CallbackPickerFormItem.cs" />
@@ -175,6 +176,7 @@
     <!--    Validation    -->
 
     <ItemGroup>
+        <Compile Include="UiApplicationExtensions.cs" />
         <Compile Include="Validation\FormValidationError.cs" />
         <Compile Include="Validation\IValidatableFormItem.cs" />
         <Compile Include="Validation\ValidatableForm.cs" />

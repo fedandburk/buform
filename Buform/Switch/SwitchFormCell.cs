@@ -44,7 +44,7 @@ public class SwitchFormCell : FormCell<SwitchFormItem>
         });
     }
 
-    private void OnValueChanged(object sender, EventArgs e)
+    private void OnValueChanged(object? sender, EventArgs e)
     {
         if (Item == null)
         {

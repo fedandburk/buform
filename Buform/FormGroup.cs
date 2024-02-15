@@ -50,12 +50,12 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
         return (IEnumerator<IFormItem>)base.GetEnumerator();
     }
         
-    protected virtual void OnItemValueChanged(object sender, FormValueChangedEventArgs e)
+    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
         NotifyValueChanged(e);
     }
 
-    protected virtual void OnItemVisibilityChanged(object sender, EventArgs e)
+    protected virtual void OnItemVisibilityChanged(object? sender, EventArgs e)
     {
         if (sender is not TFormItem item)
         {

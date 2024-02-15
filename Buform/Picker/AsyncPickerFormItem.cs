@@ -19,7 +19,7 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
                 option.Formatter = Formatter;
             }
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
@@ -72,7 +72,7 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
             State = AsyncPickerLoadingState.Loading;
             NotifyPropertyChanged(nameof(State));
 
-            var source = await SourceFactory(cancellationToken).ConfigureAwait(false);
+            var source = SourceFactory == null ? null : await SourceFactory(cancellationToken).ConfigureAwait(false);
 
             Options = source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
             NotifyPropertyChanged(nameof(Options));

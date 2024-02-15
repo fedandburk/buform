@@ -33,7 +33,7 @@ public sealed class FormTextView : UITextView
         TextColor = UIColor.Label;
 
         TextContainer.LineFragmentPadding = 0;
-            
+
         Changed += OnChanged;
 
         _placeholderLabel = new UILabel
@@ -48,7 +48,7 @@ public sealed class FormTextView : UITextView
         AddSubview(_placeholderLabel);
     }
 
-    private void OnChanged(object sender, EventArgs e)
+    private void OnChanged(object? sender, EventArgs e)
     {
         TextChanged();
     }

@@ -22,7 +22,7 @@ public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<T
                 option.Formatter = ItemFormatter;
             }
 
-            NotifyPropertyChanged(nameof(ItemFormatter));
+            NotifyPropertyChanged();
         }
     }
 
@@ -33,7 +33,7 @@ public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<T
         {
             _valueFormatter = value;
 
-            NotifyPropertyChanged(nameof(ValueFormatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
@@ -47,7 +47,7 @@ public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<T
 
             Options = _source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
 
-            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(Options));
         }
     }

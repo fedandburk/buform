@@ -43,7 +43,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
                 item.Formatter = Formatter;
             }
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
         }
     }
 
@@ -66,7 +66,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
 
             Reset();
 
-            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged();
         }
     }
 
@@ -76,7 +76,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
         _footerLabel = footerLabel;
     }
 
-    protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    protected virtual void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         Reset();
 

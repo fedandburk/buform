@@ -28,7 +28,7 @@ public class AsyncPickerViewController : PickerViewController<IAsyncPickerFormIt
         var activityIndicator = new UIActivityIndicatorView
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray,
+            ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Medium,
             HidesWhenStopped = true
         };
 

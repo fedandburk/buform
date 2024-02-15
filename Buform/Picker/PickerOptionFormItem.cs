@@ -11,7 +11,7 @@ public class PickerOptionFormItem<TValue> : FormItem<TValue>, IPickerOptionFormI
         {
             _formatter = value;
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }

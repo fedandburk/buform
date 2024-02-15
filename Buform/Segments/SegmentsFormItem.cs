@@ -33,7 +33,7 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
                 item.Formatter = Formatter;
             }
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
         }
     }
 
@@ -46,7 +46,7 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
 
             Items = _source?.Select(CreateItem) ?? Array.Empty<SegmentsOptionFormItem<TValue>>();
 
-            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(Items));
         }
     }

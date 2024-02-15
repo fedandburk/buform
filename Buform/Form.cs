@@ -39,7 +39,7 @@ public class Form : FormCollection<IFormGroup>
         Target = target ?? throw new ArgumentNullException(nameof(target));
     }
 
-    protected virtual void OnItemValueChanged(object sender, FormValueChangedEventArgs e)
+    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
         NotifyValueChanged(e);
     }

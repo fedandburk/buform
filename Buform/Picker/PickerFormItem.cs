@@ -19,7 +19,7 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
                 option.Formatter = Formatter;
             }
 
-            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
@@ -33,7 +33,7 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
 
             Options = _source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
 
-            NotifyPropertyChanged(nameof(Source));
+            NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(Options));
         }
     }

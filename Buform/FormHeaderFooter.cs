@@ -52,7 +52,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView where TGro
         /* Required constructor */
     }
 
-    private void OnGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (Group == null)
         {
@@ -67,7 +67,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView where TGro
         /* Nothing to do */
     }
 
-    protected virtual void OnGroupPropertyChanged(string propertyName)
+    protected virtual void OnGroupPropertyChanged(string? propertyName)
     {
         /* Nothing to do */
     }

@@ -116,7 +116,7 @@ public abstract class FormItem<TValue> : IFormItem
         OnValueChanged();
     }
 
-    private void OnTargetPropertyChanged(object sender, PropertyChangedEventArgs e)
+    private void OnTargetPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != PropertyName && !string.IsNullOrWhiteSpace(e.PropertyName))
         {
