@@ -43,7 +43,7 @@
     <!--    DateTime    -->
 
     <ItemGroup>
-        <Compile Include="Button\CommandExtensions.cs" />
+        <Compile Include="CommandExtensions.cs" />
         <Compile Include="DateTime\DateTimeFormItem.cs" />
         <Compile Include="DateTime\DateTimeInputType.cs" />
     </ItemGroup>
