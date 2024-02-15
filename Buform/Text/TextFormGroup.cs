@@ -1,36 +1,35 @@
-namespace Buform
+namespace Buform;
+
+public sealed class TextFormGroup : FormGroup<IFormItem>
 {
-    public sealed class TextFormGroup : FormGroup<IFormItem>
+    private string? _headerLabel;
+    private string? _footerLabel;
+
+    public string? HeaderLabel
     {
-        private string? _headerLabel;
-        private string? _footerLabel;
-
-        public string? HeaderLabel
+        get => _headerLabel;
+        set
         {
-            get => _headerLabel;
-            set
-            {
-                _headerLabel = value;
+            _headerLabel = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public string? FooterLabel
+    public string? FooterLabel
+    {
+        get => _footerLabel;
+        set
         {
-            get => _footerLabel;
-            set
-            {
-                _footerLabel = value;
+            _footerLabel = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public TextFormGroup(string? headerLabel = null, string? footerLabel = null)
-        {
-            HeaderLabel = headerLabel;
-            FooterLabel = footerLabel;
-        }
+    public TextFormGroup(string? headerLabel = null, string? footerLabel = null)
+    {
+        HeaderLabel = headerLabel;
+        FooterLabel = footerLabel;
     }
 }

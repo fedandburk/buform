@@ -1,11 +1,10 @@
-namespace Buform
+namespace Buform;
+
+public interface ICallbackPickerFormItem : IValidatableFormItem
 {
-    public interface ICallbackPickerFormItem : IValidatableFormItem
-    {
-        string? Label { get; }
+    string? Label { get; }
 
-        string? FormattedValue { get; }
+    string? FormattedValue { get; }
 
-        void ExecuteCallback();
-    }
+    void ExecuteCallback();
 }

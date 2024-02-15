@@ -1,64 +1,63 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class StepperFormItem : ValidatableFormItem<int>
 {
-    public class StepperFormItem : ValidatableFormItem<int>
+    private int _minValue;
+    private int _maxValue;
+    private int _stepAmount;
+    private string? _label;
+
+    public virtual int MinValue
     {
-        private int _minValue;
-        private int _maxValue;
-        private int _stepAmount;
-        private string? _label;
-
-        public virtual int MinValue
+        get => _minValue;
+        set
         {
-            get => _minValue;
-            set
-            {
-                _minValue = value;
+            _minValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual int MaxValue
+    public virtual int MaxValue
+    {
+        get => _maxValue;
+        set
         {
-            get => _maxValue;
-            set
-            {
-                _maxValue = value;
+            _maxValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual int StepAmount
+    public virtual int StepAmount
+    {
+        get => _stepAmount;
+        set
         {
-            get => _stepAmount;
-            set
-            {
-                _stepAmount = value;
+            _stepAmount = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual string? Label
+    public virtual string? Label
+    {
+        get => _label;
+        set
         {
-            get => _label;
-            set
-            {
-                _label = value;
+            _label = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public StepperFormItem(Expression<Func<int>> targetProperty) : base(targetProperty)
-        {
-            _minValue = int.MinValue;
-            _maxValue = int.MaxValue;
-            _stepAmount = 1;
-        }
+    public StepperFormItem(Expression<Func<int>> targetProperty) : base(targetProperty)
+    {
+        _minValue = int.MinValue;
+        _maxValue = int.MaxValue;
+        _stepAmount = 1;
     }
 }

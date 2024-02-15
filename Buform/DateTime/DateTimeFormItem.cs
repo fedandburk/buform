@@ -1,63 +1,62 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class DateTimeFormItem : ValidatableFormItem<DateTime?>
 {
-    public class DateTimeFormItem : ValidatableFormItem<DateTime?>
-    {
-        private DateTime _minValue;
-        private DateTime _maxValue;
-        private string? _label;
-        private DateTimeInputType _inputType;
+    private DateTime _minValue;
+    private DateTime _maxValue;
+    private string? _label;
+    private DateTimeInputType _inputType;
         
-        public virtual DateTime MinValue
+    public virtual DateTime MinValue
+    {
+        get => _minValue;
+        set
         {
-            get => _minValue;
-            set
-            {
-                _minValue = value;
+            _minValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual DateTime MaxValue
+    public virtual DateTime MaxValue
+    {
+        get => _maxValue;
+        set
         {
-            get => _maxValue;
-            set
-            {
-                _maxValue = value;
+            _maxValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual string? Label
+    public virtual string? Label
+    {
+        get => _label;
+        set
         {
-            get => _label;
-            set
-            {
-                _label = value;
+            _label = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual DateTimeInputType InputType
+    public virtual DateTimeInputType InputType
+    {
+        get => _inputType;
+        set
         {
-            get => _inputType;
-            set
-            {
-                _inputType = value;
+            _inputType = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public DateTimeFormItem(Expression<Func<DateTime?>> targetProperty) : base(targetProperty)
-        {
-            _minValue = DateTime.MinValue;
-            _maxValue = DateTime.MaxValue;
-        }
+    public DateTimeFormItem(Expression<Func<DateTime?>> targetProperty) : base(targetProperty)
+    {
+        _minValue = DateTime.MinValue;
+        _maxValue = DateTime.MaxValue;
     }
 }

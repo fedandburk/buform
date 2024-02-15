@@ -1,23 +1,22 @@
 using System.Collections.Generic;
 
-namespace Buform
+namespace Buform;
+
+public interface IPickerFormItemBase : IValidatableFormItem
 {
-    public interface IPickerFormItemBase : IValidatableFormItem
-    {
-        string? Label { get; }
+    string? Label { get; }
 
-        string? Message { get; }
+    string? Message { get; }
 
-        PickerInputType InputType { get; }
+    PickerInputType InputType { get; }
 
-        bool CanBeCleared { get; }
+    bool CanBeCleared { get; }
 
-        public string? FormattedValue { get; }
+    public string? FormattedValue { get; }
 
-        IEnumerable<IPickerOptionFormItem> Options { get; }
+    IEnumerable<IPickerOptionFormItem> Options { get; }
 
-        void Pick(IPickerOptionFormItem? item);
+    void Pick(IPickerOptionFormItem? item);
 
-        bool IsPicked(IPickerOptionFormItem item);
-    }
+    bool IsPicked(IPickerOptionFormItem item);
 }

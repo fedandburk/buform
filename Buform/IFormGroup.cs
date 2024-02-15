@@ -4,18 +4,17 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace Buform
+namespace Buform;
+
+public interface IFormGroup : IEnumerable<IFormItem>, INotifyCollectionChanged, INotifyPropertyChanged, IDisposable
 {
-    public interface IFormGroup : IEnumerable<IFormItem>, INotifyCollectionChanged, INotifyPropertyChanged, IDisposable
-    {
-        ICommand? RemoveCommand { get; }
-        ICommand? MoveCommand { get; }
-        ICommand? InsertCommand { get; }
+    ICommand? RemoveCommand { get; }
+    ICommand? MoveCommand { get; }
+    ICommand? InsertCommand { get; }
 
-        IEnumerable<IFormItem> HiddenItems { get; }
+    IEnumerable<IFormItem> HiddenItems { get; }
         
-        event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+    event EventHandler<FormValueChangedEventArgs>? ValueChanged;
 
-        IFormItem? GetItem(string propertyName);
-    }
+    IFormItem? GetItem(string propertyName);
 }

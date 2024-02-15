@@ -1,26 +1,25 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class SwitchFormItem : ValidatableFormItem<bool>
 {
-    public class SwitchFormItem : ValidatableFormItem<bool>
+    private string? _label;
+
+    public virtual string? Label
     {
-        private string? _label;
-
-        public virtual string? Label
+        get => _label;
+        set
         {
-            get => _label;
-            set
-            {
-                _label = value;
+            _label = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public SwitchFormItem(Expression<Func<bool>> targetProperty) : base(targetProperty)
-        {
-            /* Required constructor */
-        }
+    public SwitchFormItem(Expression<Func<bool>> targetProperty) : base(targetProperty)
+    {
+        /* Required constructor */
     }
 }

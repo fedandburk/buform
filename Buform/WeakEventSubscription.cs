@@ -1,76 +1,75 @@
 using System;
 using System.Collections.Specialized;
 
-namespace Buform
+namespace Buform;
+
+public sealed class WeakEventSubscription : IDisposable
 {
-    public sealed class WeakEventSubscription : IDisposable
+    private readonly WeakReference<INotifyCollectionChanged> _weakReference;
+    private readonly NotifyCollectionChangedEventHandler _eventHandler;
+
+    private bool _isSubscribed;
+
+    public WeakEventSubscription(
+        INotifyCollectionChanged target,
+        NotifyCollectionChangedEventHandler eventHandler
+    )
     {
-        private readonly WeakReference<INotifyCollectionChanged> _weakReference;
-        private readonly NotifyCollectionChangedEventHandler _eventHandler;
-
-        private bool _isSubscribed;
-
-        public WeakEventSubscription(
-            INotifyCollectionChanged target,
-            NotifyCollectionChangedEventHandler eventHandler
-        )
+        if (target == null)
         {
-            if (target == null)
-            {
-                throw new ArgumentNullException(nameof(target));
-            }
+            throw new ArgumentNullException(nameof(target));
+        }
 
-            if (eventHandler == null)
-            {
-                throw new ArgumentNullException(nameof(eventHandler));
-            }
+        if (eventHandler == null)
+        {
+            throw new ArgumentNullException(nameof(eventHandler));
+        }
             
-            _weakReference = new WeakReference<INotifyCollectionChanged>(target);
-            _eventHandler = eventHandler;
+        _weakReference = new WeakReference<INotifyCollectionChanged>(target);
+        _eventHandler = eventHandler;
 
-            Subscribe();
-        }
+        Subscribe();
+    }
 
-        private void Unsubscribe()
+    private void Unsubscribe()
+    {
+        if (!_isSubscribed)
         {
-            if (!_isSubscribed)
-            {
-                return;
-            }
-
-            if (!_weakReference.TryGetTarget(out var notifyCollectionChanged))
-            {
-                return;
-            }
-
-            notifyCollectionChanged.CollectionChanged -= _eventHandler;
-
-            _isSubscribed = false;
+            return;
         }
 
-        private void Subscribe()
+        if (!_weakReference.TryGetTarget(out var notifyCollectionChanged))
         {
-            if (_isSubscribed)
-            {
-                return;
-            }
-
-            if (!_weakReference.TryGetTarget(out var notifyCollectionChanged))
-            {
-                return;
-            }
-
-            notifyCollectionChanged.CollectionChanged += _eventHandler;
-
-            _isSubscribed = true;
+            return;
         }
 
-        public void Dispose()
+        notifyCollectionChanged.CollectionChanged -= _eventHandler;
+
+        _isSubscribed = false;
+    }
+
+    private void Subscribe()
+    {
+        if (_isSubscribed)
         {
-            Unsubscribe();
-
-            // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
-            GC.SuppressFinalize(this);
+            return;
         }
+
+        if (!_weakReference.TryGetTarget(out var notifyCollectionChanged))
+        {
+            return;
+        }
+
+        notifyCollectionChanged.CollectionChanged += _eventHandler;
+
+        _isSubscribed = true;
+    }
+
+    public void Dispose()
+    {
+        Unsubscribe();
+
+        // ReSharper disable once GCSuppressFinalizeForTypeWithoutDestructor
+        GC.SuppressFinalize(this);
     }
 }

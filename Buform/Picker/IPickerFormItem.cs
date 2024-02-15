@@ -1,6 +1,5 @@
-namespace Buform
+namespace Buform;
+
+public interface IPickerFormItem : IPickerFormItemBase
 {
-    public interface IPickerFormItem : IPickerFormItemBase
-    {
-    }
 }

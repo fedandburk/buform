@@ -1,7 +1,6 @@
-namespace Buform
+namespace Buform;
+
+public interface ISegmentsOptionFormItem : IFormItem
 {
-    public interface ISegmentsOptionFormItem : IFormItem
-    {
-        string? FormattedValue { get; }
-    }
+    string? FormattedValue { get; }
 }

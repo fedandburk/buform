@@ -1,20 +1,19 @@
 using System;
 using System.ComponentModel;
 
-namespace Buform
+namespace Buform;
+
+public interface IFormItem : INotifyPropertyChanged, IDisposable
 {
-    public interface IFormItem : INotifyPropertyChanged, IDisposable
-    {
-        string? PropertyName { get; }
+    string? PropertyName { get; }
 
-        bool IsReadOnly { get; set; }
-        bool IsVisible { get; set; }
+    bool IsReadOnly { get; set; }
+    bool IsVisible { get; set; }
 
-        object? Value { get; set; }
+    object? Value { get; set; }
 
-        event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-        event EventHandler? VisibilityChanged;
+    event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+    event EventHandler? VisibilityChanged;
 
-        void Initialize(Form form, object target);
-    }
+    void Initialize(Form form, object target);
 }

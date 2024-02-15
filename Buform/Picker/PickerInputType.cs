@@ -1,9 +1,8 @@
-namespace Buform
+namespace Buform;
+
+public enum PickerInputType
 {
-    public enum PickerInputType
-    {
-        Default = 0,
-        Dialog = 1,
-        PopUp = 2
-    }
+    Default = 0,
+    Dialog = 1,
+    PopUp = 2
 }

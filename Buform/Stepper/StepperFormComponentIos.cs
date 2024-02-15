@@ -1,15 +1,14 @@
 using Foundation;
 
-namespace Buform
+namespace Buform;
+
+[Preserve(AllMembers = true)]
+[FormComponent]
+// ReSharper disable once UnusedType.Global
+public sealed class StepperFormComponent : IFormComponent
 {
-    [Preserve(AllMembers = true)]
-    [FormComponent]
-    // ReSharper disable once UnusedType.Global
-    public sealed class StepperFormComponent : IFormComponent
+    public void Register()
     {
-        public void Register()
-        {
-            Buform.RegisterItemClass<StepperFormItem, StepperFormCell>();
-        }
+        Buform.RegisterItemClass<StepperFormItem, StepperFormCell>();
     }
 }

@@ -3,37 +3,36 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Buform
+namespace Buform;
+
+public class FormCollection<TItem> : ObservableCollection<TItem>, IDisposable
 {
-    public class FormCollection<TItem> : ObservableCollection<TItem>, IDisposable
+    private bool _isDisposed;
+
+    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+
+    protected virtual void NotifyValueChanged(FormValueChangedEventArgs e)
     {
-        private bool _isDisposed;
+        ValueChanged?.Invoke(this, e);
+    }
 
-        public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+    protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
 
-        protected virtual void NotifyValueChanged(FormValueChangedEventArgs e)
+    public void Dispose()
+    {
+        Dispose(true);
+    }
+
+    protected virtual void Dispose(bool isDisposing)
+    {
+        if (_isDisposed)
         {
-            ValueChanged?.Invoke(this, e);
+            return;
         }
 
-        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool isDisposing)
-        {
-            if (_isDisposed)
-            {
-                return;
-            }
-
-            _isDisposed = true;
-        }
+        _isDisposed = true;
     }
 }

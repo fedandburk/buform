@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 
-namespace Buform
-{
-    public interface ISegmentsFormItem : IValidatableFormItem
-    {
-        string? Label { get; }
+namespace Buform;
 
-        IEnumerable<ISegmentsOptionFormItem> Items { get; }
-    }
+public interface ISegmentsFormItem : IValidatableFormItem
+{
+    string? Label { get; }
+
+    IEnumerable<ISegmentsOptionFormItem> Items { get; }
 }

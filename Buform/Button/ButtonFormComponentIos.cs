@@ -1,15 +1,14 @@
 using Foundation;
 
-namespace Buform
+namespace Buform;
+
+[Preserve(AllMembers = true)]
+[FormComponent]
+// ReSharper disable once UnusedType.Global
+public sealed class ButtonFormComponent : IFormComponent
 {
-    [Preserve(AllMembers = true)]
-    [FormComponent]
-    // ReSharper disable once UnusedType.Global
-    public sealed class ButtonFormComponent : IFormComponent
+    public void Register()
     {
-        public void Register()
-        {
-            Buform.RegisterItemClass<ButtonFormItem, ButtonFormCell>();
-        }
+        Buform.RegisterItemClass<ButtonFormItem, ButtonFormCell>();
     }
 }

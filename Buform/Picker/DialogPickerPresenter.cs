@@ -2,36 +2,35 @@ using System;
 using System.Threading.Tasks;
 using UIKit;
 
-namespace Buform
+namespace Buform;
+
+public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase
 {
-    public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase
+    protected Func<TItem, UIViewController> ViewControllerFactory { get; }
+
+    public DialogPickerPresenter(Func<TItem, UIViewController> viewControllerFactory)
     {
-        protected Func<TItem, UIViewController> ViewControllerFactory { get; }
+        ViewControllerFactory = viewControllerFactory;
+    }
 
-        public DialogPickerPresenter(Func<TItem, UIViewController> viewControllerFactory)
+    public override Task PickAsync(UIView sourceView, TItem item)
+    {
+        var viewController = GetViewController();
+
+        if (viewController == null)
         {
-            ViewControllerFactory = viewControllerFactory;
+            return Task.CompletedTask;
         }
 
-        public override Task PickAsync(UIView sourceView, TItem item)
-        {
-            var viewController = GetViewController();
+        var pickerViewController = ViewControllerFactory(item);
 
-            if (viewController == null)
-            {
-                return Task.CompletedTask;
-            }
+        var navigationController = new UINavigationController(pickerViewController);
 
-            var pickerViewController = ViewControllerFactory(item);
+        navigationController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
 
-            var navigationController = new UINavigationController(pickerViewController);
+        navigationController.PopoverPresentationController.SourceView = sourceView;
+        navigationController.PopoverPresentationController.SourceRect = sourceView.Bounds;
 
-            navigationController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
-
-            navigationController.PopoverPresentationController.SourceView = sourceView;
-            navigationController.PopoverPresentationController.SourceRect = sourceView.Bounds;
-
-            return viewController.PresentViewControllerAsync(navigationController, true);
-        }
+        return viewController.PresentViewControllerAsync(navigationController, true);
     }
 }

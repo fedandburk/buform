@@ -1,12 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Buform
-{
-    public interface IAsyncPickerFormItem : IPickerFormItemBase
-    {
-        AsyncPickerLoadingState State { get; }
+namespace Buform;
 
-        Task LoadItemsAsync(CancellationToken cancellationToken);
-    }
+public interface IAsyncPickerFormItem : IPickerFormItemBase
+{
+    AsyncPickerLoadingState State { get; }
+
+    Task LoadItemsAsync(CancellationToken cancellationToken);
 }

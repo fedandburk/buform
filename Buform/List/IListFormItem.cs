@@ -1,7 +1,6 @@
-namespace Buform
+namespace Buform;
+
+public interface IListFormItem : IFormItem
 {
-    public interface IListFormItem : IFormItem
-    {
-        string? FormattedValue { get; }
-    }
+    string? FormattedValue { get; }
 }

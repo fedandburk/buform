@@ -2,123 +2,122 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace Buform
+namespace Buform;
+
+public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormGroup
 {
-    public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormGroup
+    private string? _headerLabel;
+    private string? _footerLabel;
+    private Func<TValue?, string?>? _formatter;
+    private IEnumerable<TValue>? _source;
+
+    public virtual string? HeaderLabel
     {
-        private string? _headerLabel;
-        private string? _footerLabel;
-        private Func<TValue?, string?>? _formatter;
-        private IEnumerable<TValue>? _source;
-
-        public virtual string? HeaderLabel
+        get => _headerLabel;
+        set
         {
-            get => _headerLabel;
-            set
-            {
-                _headerLabel = value;
+            _headerLabel = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual string? FooterLabel
+    public virtual string? FooterLabel
+    {
+        get => _footerLabel;
+        set
         {
-            get => _footerLabel;
-            set
-            {
-                _footerLabel = value;
+            _footerLabel = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual Func<TValue?, string?>? Formatter
+    public virtual Func<TValue?, string?>? Formatter
+    {
+        get => _formatter;
+        set
         {
-            get => _formatter;
-            set
+            _formatter = value;
+
+            foreach (var item in this)
             {
-                _formatter = value;
-
-                foreach (var item in this)
-                {
-                    item.Formatter = Formatter;
-                }
-
-                NotifyPropertyChanged(nameof(Formatter));
+                item.Formatter = Formatter;
             }
+
+            NotifyPropertyChanged(nameof(Formatter));
         }
+    }
 
-        public virtual IEnumerable<TValue>? Source
+    public virtual IEnumerable<TValue>? Source
+    {
+        get => _source;
+        set
         {
-            get => _source;
-            set
+            if (_source is INotifyCollectionChanged oldNotifyCollectionChanged)
             {
-                if (_source is INotifyCollectionChanged oldNotifyCollectionChanged)
-                {
-                    oldNotifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
-                }
+                oldNotifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
+            }
 
-                _source = value ?? Array.Empty<TValue>();
+            _source = value ?? Array.Empty<TValue>();
                 
-                if (_source is INotifyCollectionChanged newNotifyCollectionChanged)
-                {
-                    newNotifyCollectionChanged.CollectionChanged += OnCollectionChanged;
-                }
-
-                Reset();
-
-                NotifyPropertyChanged(nameof(Source));
+            if (_source is INotifyCollectionChanged newNotifyCollectionChanged)
+            {
+                newNotifyCollectionChanged.CollectionChanged += OnCollectionChanged;
             }
-        }
 
-        public ListFormGroup(string? headerLabel = null, string? footerLabel = null)
-        {
-            _headerLabel = headerLabel;
-            _footerLabel = footerLabel;
-        }
-
-        protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
             Reset();
 
             NotifyPropertyChanged(nameof(Source));
         }
+    }
 
-        protected virtual void Reset()
+    public ListFormGroup(string? headerLabel = null, string? footerLabel = null)
+    {
+        _headerLabel = headerLabel;
+        _footerLabel = footerLabel;
+    }
+
+    protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        Reset();
+
+        NotifyPropertyChanged(nameof(Source));
+    }
+
+    protected virtual void Reset()
+    {
+        ClearItems();
+
+        if (Source == null)
         {
-            ClearItems();
+            return;
+        }
 
-            if (Source == null)
+        foreach (var value in Source)
+        {
+            var item = new ListFormItem<TValue>(value)
             {
-                return;
-            }
+                Formatter = Formatter
+            };
 
-            foreach (var value in Source)
+            Add(item);
+        }
+    }
+
+    protected override void Dispose(bool isDisposing)
+    {
+        if (isDisposing)
+        {
+            if (_source is INotifyCollectionChanged notifyCollectionChanged)
             {
-                var item = new ListFormItem<TValue>(value)
-                {
-                    Formatter = Formatter
-                };
-
-                Add(item);
+                notifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
             }
         }
 
-        protected override void Dispose(bool isDisposing)
-        {
-            if (isDisposing)
-            {
-                if (_source is INotifyCollectionChanged notifyCollectionChanged)
-                {
-                    notifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
-                }
-            }
+        _formatter = null;
+        _source = null;
 
-            _formatter = null;
-            _source = null;
-
-            base.Dispose(isDisposing);
-        }
+        base.Dispose(isDisposing);
     }
 }

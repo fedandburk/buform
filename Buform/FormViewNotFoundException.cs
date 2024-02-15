@@ -1,12 +1,11 @@
 using System;
 
-namespace Buform
+namespace Buform;
+
+public sealed class FormViewNotFoundException : Exception
 {
-    public sealed class FormViewNotFoundException : Exception
+    public FormViewNotFoundException(object item) : base($"No view registered for {item.GetType()}.")
     {
-        public FormViewNotFoundException(object item) : base($"No view registered for {item.GetType()}.")
-        {
-            /* Required constructor */
-        }
+        /* Required constructor */
     }
 }

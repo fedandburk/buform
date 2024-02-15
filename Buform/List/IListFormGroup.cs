@@ -1,8 +1,7 @@
-namespace Buform
+namespace Buform;
+
+public interface IListFormGroup : IFormGroup
 {
-    public interface IListFormGroup : IFormGroup
-    {
-        string? HeaderLabel { get; }
-        string? FooterLabel { get; }
-    }
+    string? HeaderLabel { get; }
+    string? FooterLabel { get; }
 }

@@ -1,9 +1,8 @@
-namespace Buform
+namespace Buform;
+
+public enum DateTimeInputType
 {
-    public enum DateTimeInputType
-    {
-        Date = 0,
-        Time = 1,
-        DateTime = 2
-    }
+    Date = 0,
+    Time = 1,
+    DateTime = 2
 }

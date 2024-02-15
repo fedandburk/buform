@@ -1,7 +1,6 @@
-namespace Buform
+namespace Buform;
+
+public interface IFormComponent
 {
-    public interface IFormComponent
-    {
-        void Register();
-    }
+    void Register();
 }

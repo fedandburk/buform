@@ -1,39 +1,38 @@
 using System;
 using Foundation;
 
-namespace Buform
+namespace Buform;
+
+[Preserve(AllMembers = true)]
+public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
 {
-    [Preserve(AllMembers = true)]
-    public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
+    public TextFormGroupHeader()
     {
-        public TextFormGroupHeader()
-        {
-            /* Required constructor */
-        }
+        /* Required constructor */
+    }
 
-        public TextFormGroupHeader(IntPtr handle) : base(handle)
-        {
-            /* Required constructor */
-        }
+    public TextFormGroupHeader(IntPtr handle) : base(handle)
+    {
+        /* Required constructor */
+    }
 
-        private void UpdateLabel()
-        {
-            TextLabel.Text = Group?.HeaderLabel;
-        }
+    private void UpdateLabel()
+    {
+        TextLabel.Text = Group?.HeaderLabel;
+    }
 
-        protected override void OnGroupSet()
-        {
-            UpdateLabel();
-        }
+    protected override void OnGroupSet()
+    {
+        UpdateLabel();
+    }
 
-        protected override void OnGroupPropertyChanged(string propertyName)
+    protected override void OnGroupPropertyChanged(string propertyName)
+    {
+        switch (propertyName)
         {
-            switch (propertyName)
-            {
-                case nameof(Group.HeaderLabel):
-                    UpdateLabel();
-                    break;
-            }
+            case nameof(Group.HeaderLabel):
+                UpdateLabel();
+                break;
         }
     }
 }

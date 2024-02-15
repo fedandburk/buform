@@ -3,154 +3,153 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class Form : FormCollection<IFormGroup>
 {
-    public class Form : FormCollection<IFormGroup>
+    private bool _isReadOnly;
+
+    public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
+
+    public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
+
+    protected virtual object? Target { get; private set; }
+
+    public virtual bool IsReadOnly
     {
-        private bool _isReadOnly;
-
-        public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
-
-        public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
-
-        protected virtual object? Target { get; private set; }
-
-        public virtual bool IsReadOnly
+        get => _isReadOnly;
+        set
         {
-            get => _isReadOnly;
-            set
-            {
-                if (_isReadOnly == value)
-                {
-                    return;
-                }
-
-                _isReadOnly = value;
-
-                NotifyPropertyChanged();
-
-                var items = this
-                    .SelectMany(item => item)
-                    .Concat(this.SelectMany(item => item.HiddenItems));
-
-                UpdateItems(items);
-            }
-        }
-
-        public Form(object target)
-        {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
-        }
-
-        protected virtual void OnItemValueChanged(object sender, FormValueChangedEventArgs e)
-        {
-            NotifyValueChanged(e);
-        }
-
-        protected virtual void UpdateItems(IEnumerable<IFormItem> items)
-        {
-            foreach (var item in items)
-            {
-                item.IsReadOnly = IsReadOnly;
-            }
-        }
-
-        protected virtual void InitializeItems(IFormGroup group)
-        {
-            if (Target == null)
+            if (_isReadOnly == value)
             {
                 return;
             }
 
-            foreach (var item in group)
-            {
-                item.Initialize(this, Target);
-            }
+            _isReadOnly = value;
 
-            foreach (var item in group.HiddenItems)
-            {
-                item.Initialize(this, Target);
-            }
+            NotifyPropertyChanged();
+
+            var items = this
+                .SelectMany(item => item)
+                .Concat(this.SelectMany(item => item.HiddenItems));
+
+            UpdateItems(items);
+        }
+    }
+
+    public Form(object target)
+    {
+        Target = target ?? throw new ArgumentNullException(nameof(target));
+    }
+
+    protected virtual void OnItemValueChanged(object sender, FormValueChangedEventArgs e)
+    {
+        NotifyValueChanged(e);
+    }
+
+    protected virtual void UpdateItems(IEnumerable<IFormItem> items)
+    {
+        foreach (var item in items)
+        {
+            item.IsReadOnly = IsReadOnly;
+        }
+    }
+
+    protected virtual void InitializeItems(IFormGroup group)
+    {
+        if (Target == null)
+        {
+            return;
         }
 
-        protected override void InsertItem(int index, IFormGroup item)
+        foreach (var item in group)
         {
-            base.InsertItem(index, item);
-
-            item.ValueChanged += OnItemValueChanged;
-
-            InitializeItems(item);
-            UpdateItems(item);
+            item.Initialize(this, Target);
         }
 
-        protected override void SetItem(int index, IFormGroup item)
+        foreach (var item in group.HiddenItems)
         {
-            base.SetItem(index, item);
-
-            item.ValueChanged += OnItemValueChanged;
-
-            InitializeItems(item);
-            UpdateItems(item);
+            item.Initialize(this, Target);
         }
+    }
 
-        protected override void RemoveItem(int index)
+    protected override void InsertItem(int index, IFormGroup item)
+    {
+        base.InsertItem(index, item);
+
+        item.ValueChanged += OnItemValueChanged;
+
+        InitializeItems(item);
+        UpdateItems(item);
+    }
+
+    protected override void SetItem(int index, IFormGroup item)
+    {
+        base.SetItem(index, item);
+
+        item.ValueChanged += OnItemValueChanged;
+
+        InitializeItems(item);
+        UpdateItems(item);
+    }
+
+    protected override void RemoveItem(int index)
+    {
+        var item = this[index];
+
+        item.ValueChanged -= OnItemValueChanged;
+
+        base.RemoveItem(index);
+    }
+
+    protected override void ClearItems()
+    {
+        foreach (var item in this)
         {
-            var item = this[index];
-
             item.ValueChanged -= OnItemValueChanged;
-
-            base.RemoveItem(index);
         }
 
-        protected override void ClearItems()
-        {
-            foreach (var item in this)
-            {
-                item.ValueChanged -= OnItemValueChanged;
-            }
+        base.ClearItems();
+    }
 
-            base.ClearItems();
-        }
+    public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property) where TItem : class, IFormItem
+    {
+        return GetItem<TItem>(property.GetMemberName());
+    }
 
-        public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property) where TItem : class, IFormItem
-        {
-            return GetItem<TItem>(property.GetMemberName());
-        }
+    public virtual IFormItem? GetItem(Expression<Func<object?>> property)
+    {
+        return GetItem(property.GetMemberName());
+    }
 
-        public virtual IFormItem? GetItem(Expression<Func<object?>> property)
-        {
-            return GetItem(property.GetMemberName());
-        }
-
-        public virtual TItem? GetItem<TItem>(string propertyName) where TItem : class, IFormItem
-        {
-            return GetItem(propertyName) as TItem;
-        }
+    public virtual TItem? GetItem<TItem>(string propertyName) where TItem : class, IFormItem
+    {
+        return GetItem(propertyName) as TItem;
+    }
         
-        public virtual IFormItem? GetItem(string propertyName)
-        {
-            return this.Select(item => item.GetItem(propertyName)).FirstOrDefault(item => item != null);
-        }
+    public virtual IFormItem? GetItem(string propertyName)
+    {
+        return this.Select(item => item.GetItem(propertyName)).FirstOrDefault(item => item != null);
+    }
 
-        protected override void Dispose(bool isDisposing)
+    protected override void Dispose(bool isDisposing)
+    {
+        if (isDisposing)
         {
-            if (isDisposing)
+            foreach (var group in this)
             {
-                foreach (var group in this)
+                foreach (var item in group)
                 {
-                    foreach (var item in group)
-                    {
-                        item.ValueChanged -= OnItemValueChanged;
-                        item.Dispose();
-                    }
-
-                    group.Dispose();
+                    item.ValueChanged -= OnItemValueChanged;
+                    item.Dispose();
                 }
 
-                Target = null;
+                group.Dispose();
             }
 
-            base.Dispose(isDisposing);
+            Target = null;
         }
+
+        base.Dispose(isDisposing);
     }
 }

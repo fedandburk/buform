@@ -1,18 +1,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public static class ExpressionExtensions
 {
-    public static class ExpressionExtensions
+    public static string GetMemberName<TValue>(this Expression<Func<TValue>>? expression)
     {
-        public static string GetMemberName<TValue>(this Expression<Func<TValue>>? expression)
+        return expression?.Body switch
         {
-            return expression?.Body switch
-            {
-                MemberExpression item => item.Member.Name,
-                UnaryExpression { Operand: MemberExpression item } => item.Member.Name,
-                _ => throw new ArgumentOutOfRangeException(expression?.GetType().ToString(), null, null)
-            };
-        }
+            MemberExpression item => item.Member.Name,
+            UnaryExpression { Operand: MemberExpression item } => item.Member.Name,
+            _ => throw new ArgumentOutOfRangeException(expression?.GetType().ToString(), null, null)
+        };
     }
 }

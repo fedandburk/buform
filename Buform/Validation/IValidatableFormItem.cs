@@ -1,10 +1,9 @@
-namespace Buform
+namespace Buform;
+
+public interface IValidatableFormItem : IFormItem
 {
-    public interface IValidatableFormItem : IFormItem
-    {
-        string? ValidationErrorMessage { get; }
+    string? ValidationErrorMessage { get; }
         
-        void SetValidationError(FormValidationError? validationError, bool isForced);
-        void ResetValidationError();
-    }
+    void SetValidationError(FormValidationError? validationError, bool isForced);
+    void ResetValidationError();
 }

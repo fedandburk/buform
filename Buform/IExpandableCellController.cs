@@ -1,10 +1,9 @@
 using UIKit;
 
-namespace Buform
+namespace Buform;
+
+public interface IExpandableCellController
 {
-    public interface IExpandableCellController
-    {
-        void OnExpanded(UITableViewCell sourceCell, UITableViewCell expandedCell);
-        void OnCollapsed(UITableViewCell sourceCell, UITableViewCell collapsedCell);
-    }
+    void OnExpanded(UITableViewCell sourceCell, UITableViewCell expandedCell);
+    void OnCollapsed(UITableViewCell sourceCell, UITableViewCell collapsedCell);
 }

@@ -1,15 +1,14 @@
-namespace Buform
+namespace Buform;
+
+public sealed class FormValidationError
 {
-    public sealed class FormValidationError
+    public string TargetPropertyName { get; }
+
+    public string ErrorMessage { get; }
+
+    public FormValidationError(string targetPropertyName, string errorMessage)
     {
-        public string TargetPropertyName { get; }
-
-        public string ErrorMessage { get; }
-
-        public FormValidationError(string targetPropertyName, string errorMessage)
-        {
-            TargetPropertyName = targetPropertyName;
-            ErrorMessage = errorMessage;
-        }
+        TargetPropertyName = targetPropertyName;
+        ErrorMessage = errorMessage;
     }
 }

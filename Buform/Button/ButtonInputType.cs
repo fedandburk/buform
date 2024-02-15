@@ -1,9 +1,8 @@
-namespace Buform
+namespace Buform;
+
+public enum ButtonInputType
 {
-    public enum ButtonInputType
-    {
-        Default = 0,
-        Done = 1,
-        Destructive = 2
-    }
+    Default = 0,
+    Done = 1,
+    Destructive = 2
 }

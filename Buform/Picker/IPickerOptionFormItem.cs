@@ -1,7 +1,6 @@
-namespace Buform
+namespace Buform;
+
+public interface IPickerOptionFormItem : IFormItem
 {
-    public interface IPickerOptionFormItem : IFormItem
-    {
-        string? FormattedValue { get; }
-    }
+    string? FormattedValue { get; }
 }

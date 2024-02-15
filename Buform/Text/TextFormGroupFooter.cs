@@ -1,39 +1,38 @@
 using System;
 using Foundation;
 
-namespace Buform
+namespace Buform;
+
+[Preserve(AllMembers = true)]
+public sealed class TextFormGroupFooter : FormHeaderFooter<TextFormGroup>
 {
-    [Preserve(AllMembers = true)]
-    public sealed class TextFormGroupFooter : FormHeaderFooter<TextFormGroup>
+    public TextFormGroupFooter()
     {
-        public TextFormGroupFooter()
-        {
-            /* Required constructor */
-        }
+        /* Required constructor */
+    }
 
-        public TextFormGroupFooter(IntPtr handle) : base(handle)
-        {
-            /* Required constructor */
-        }
+    public TextFormGroupFooter(IntPtr handle) : base(handle)
+    {
+        /* Required constructor */
+    }
 
-        private void UpdateLabel()
-        {
-            TextLabel.Text = Group?.FooterLabel;
-        }
+    private void UpdateLabel()
+    {
+        TextLabel.Text = Group?.FooterLabel;
+    }
 
-        protected override void OnGroupSet()
-        {
-            UpdateLabel();
-        }
+    protected override void OnGroupSet()
+    {
+        UpdateLabel();
+    }
 
-        protected override void OnGroupPropertyChanged(string propertyName)
+    protected override void OnGroupPropertyChanged(string propertyName)
+    {
+        switch (propertyName)
         {
-            switch (propertyName)
-            {
-                case nameof(Group.FooterLabel):
-                    UpdateLabel();
-                    break;
-            }
+            case nameof(Group.FooterLabel):
+                UpdateLabel();
+                break;
         }
     }
 }

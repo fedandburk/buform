@@ -1,28 +1,27 @@
 using System;
 
-namespace Buform
+namespace Buform;
+
+public class SegmentsOptionFormItem<TValue> : FormItem<TValue>, ISegmentsOptionFormItem
 {
-    public class SegmentsOptionFormItem<TValue> : FormItem<TValue>, ISegmentsOptionFormItem
-    {
-        private Func<TValue?, string?>? _formatter;
+    private Func<TValue?, string?>? _formatter;
         
-        public virtual Func<TValue?, string?>? Formatter
+    public virtual Func<TValue?, string?>? Formatter
+    {
+        get => _formatter;
+        set
         {
-            get => _formatter;
-            set
-            {
-                _formatter = value;
+            _formatter = value;
 
-                NotifyPropertyChanged(nameof(Formatter));
-                NotifyPropertyChanged(nameof(FormattedValue));
-            }
+            NotifyPropertyChanged(nameof(Formatter));
+            NotifyPropertyChanged(nameof(FormattedValue));
         }
+    }
 
-        public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
+    public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-        public SegmentsOptionFormItem(TValue value) : base(value)
-        {
-            /* Required constructor */
-        }
+    public SegmentsOptionFormItem(TValue value) : base(value)
+    {
+        /* Required constructor */
     }
 }

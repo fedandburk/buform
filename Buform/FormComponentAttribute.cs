@@ -1,9 +1,8 @@
 using System;
 
-namespace Buform
+namespace Buform;
+
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class FormComponentAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class FormComponentAttribute : Attribute
-    {
-    }
 }

@@ -1,39 +1,38 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class SliderFormItem : FormItem<float>
 {
-    public class SliderFormItem : FormItem<float>
+    private float _minValue;
+    private float _maxValue;
+
+    public virtual float MinValue
     {
-        private float _minValue;
-        private float _maxValue;
-
-        public virtual float MinValue
+        get => _minValue;
+        set
         {
-            get => _minValue;
-            set
-            {
-                _minValue = value;
+            _minValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public virtual float MaxValue
+    public virtual float MaxValue
+    {
+        get => _maxValue;
+        set
         {
-            get => _maxValue;
-            set
-            {
-                _maxValue = value;
+            _maxValue = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public SliderFormItem(Expression<Func<float>> targetProperty) : base(targetProperty)
-        {
-            _minValue = float.MinValue;
-            _maxValue = float.MaxValue;
-        }
+    public SliderFormItem(Expression<Func<float>> targetProperty) : base(targetProperty)
+    {
+        _minValue = float.MinValue;
+        _maxValue = float.MaxValue;
     }
 }

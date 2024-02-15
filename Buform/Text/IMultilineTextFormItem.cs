@@ -1,13 +1,12 @@
-namespace Buform
+namespace Buform;
+
+public interface IMultilineTextFormItem : IValidatableFormItem
 {
-    public interface IMultilineTextFormItem : IValidatableFormItem
-    {
-        string? Placeholder { get; }
+    string? Placeholder { get; }
 
-        TextInputType InputType { get; }
+    TextInputType InputType { get; }
 
-        string? FormattedValue { get; }
+    string? FormattedValue { get; }
 
-        void SetValue(string? value);
-    }
+    void SetValue(string? value);
 }
