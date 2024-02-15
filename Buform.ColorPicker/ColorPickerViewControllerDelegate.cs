@@ -1,42 +1,37 @@
-using Foundation;
-using SByteDev.Xamarin.iOS.Extensions;
-using UIKit;
+namespace Buform;
 
-namespace Buform
+[Preserve(AllMembers = true)]
+public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate
 {
-    [Preserve(AllMembers = true)]
-    public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate
+    private ColorPickerFormItem? _item;
+
+    public ColorPickerViewControllerDelegate(ColorPickerFormItem item)
     {
-        private ColorPickerFormItem? _item;
+        _item = item;
+    }
 
-        public ColorPickerViewControllerDelegate(ColorPickerFormItem item)
+    public override void DidSelectColor(UIColorPickerViewController viewController, UIColor color, bool continuously)
+    {
+        if (continuously)
         {
-            _item = item;
+            return;
         }
 
-        public override void DidSelectColor(UIColorPickerViewController viewController, UIColor color, bool continuously)
+        if (_item == null)
         {
-            if (continuously)
-            {
-                return;
-            }
-
-            if (_item == null)
-            {
-                return;
-            }
-
-            _item.Value = color.ToColor();
+            return;
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _item = null;
-            }
+        _item.Value = color.ToColor();
+    }
 
-            base.Dispose(disposing);
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _item = null;
         }
+
+        base.Dispose(disposing);
     }
 }

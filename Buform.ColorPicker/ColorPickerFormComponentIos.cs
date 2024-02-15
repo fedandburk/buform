@@ -1,15 +1,12 @@
-using Foundation;
+namespace Buform;
 
-namespace Buform
+[Preserve(AllMembers = true)]
+[FormComponent]
+// ReSharper disable once UnusedType.Global
+public sealed class ColorPickerFormComponent : IFormComponent
 {
-    [Preserve(AllMembers = true)]
-    [FormComponent]
-    // ReSharper disable once UnusedType.Global
-    public sealed class ColorPickerFormComponent : IFormComponent
+    public void Register()
     {
-        public void Register()
-        {
-            Buform.RegisterItemClass<ColorPickerFormItem, ColorPickerFormCell>();
-        }
+        Buform.RegisterItemClass<ColorPickerFormItem, ColorPickerFormCell>();
     }
 }

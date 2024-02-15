@@ -43,6 +43,7 @@
     <!--    DateTime    -->
 
     <ItemGroup>
+        <Compile Include="ColorExtensions.cs" />
         <Compile Include="CommandExtensions.cs" />
         <Compile Include="DateTime\DateTimeFormItem.cs" />
         <Compile Include="DateTime\DateTimeInputType.cs" />
@@ -58,6 +59,7 @@
     <!--    List    -->
 
     <ItemGroup>
+        <Compile Include="EnumerableExtensions.cs" />
         <Compile Include="List\IListFormGroup.cs" />
         <Compile Include="List\IListFormItem.cs" />
         <Compile Include="List\ListFormGroup.cs" />
@@ -177,6 +179,7 @@
 
     <ItemGroup>
         <Compile Include="UiApplicationExtensions.cs" />
+        <Compile Include="UiColorExtensions.cs" />
         <Compile Include="Validation\FormValidationError.cs" />
         <Compile Include="Validation\IValidatableFormItem.cs" />
         <Compile Include="Validation\ValidatableForm.cs" />

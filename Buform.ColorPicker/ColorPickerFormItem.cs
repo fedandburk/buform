@@ -1,27 +1,25 @@
-using System;
 using System.Drawing;
 using System.Linq.Expressions;
 
-namespace Buform
+namespace Buform;
+
+public class ColorPickerFormItem : ValidatableFormItem<Color>
 {
-    public class ColorPickerFormItem : ValidatableFormItem<Color>
+    private string? _label;
+
+    public virtual string? Label
     {
-        private string? _label;
-
-        public virtual string? Label
+        get => _label;
+        set
         {
-            get => _label;
-            set
-            {
-                _label = value;
+            _label = value;
 
-                NotifyPropertyChanged();
-            }
+            NotifyPropertyChanged();
         }
+    }
 
-        public ColorPickerFormItem(Expression<Func<Color>> targetProperty) : base(targetProperty)
-        {
-            /* Required constructor */
-        }
+    public ColorPickerFormItem(Expression<Func<Color>> targetProperty) : base(targetProperty)
+    {
+        /* Required constructor */
     }
 }
