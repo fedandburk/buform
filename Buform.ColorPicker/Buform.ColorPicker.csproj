@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-ios</TargetFramework>
+        <TargetFrameworks>net7.0;net7.0-ios</TargetFrameworks>
         <UseMaui>false</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
+        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>Fedandburk.Buform.ColorPicker</PackageId>
         <PackageVersion>0.1.0</PackageVersion>

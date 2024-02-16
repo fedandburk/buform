@@ -1,11 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-ios</TargetFramework>
-        <UseMaui>false</UseMaui>
-        <SingleProject>true</SingleProject>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
-        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -33,10 +30,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Buform\Buform.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Include="FluentValidationForm.cs" />
     </ItemGroup>
 
 </Project>

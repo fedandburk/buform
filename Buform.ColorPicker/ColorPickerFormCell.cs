@@ -1,3 +1,5 @@
+using Fedandburk.iOS.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]

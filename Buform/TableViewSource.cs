@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
+using Fedandburk.Common.Extensions;
+using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
@@ -143,7 +145,7 @@ public abstract class TableViewSource : UITableViewSource
         }
     }
 
-    private void OnSectionItemsChanged(object sender, NotifyCollectionChangedEventArgs args)
+    private void OnSectionItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
         if (_items == null || _sectionsSubscription == null)
         {
@@ -153,7 +155,7 @@ public abstract class TableViewSource : UITableViewSource
         this.InvokeOnMainThreadIfNeeded(() => UpdateSections(args));
     }
 
-    private void OnItemsChanged(object sender, NotifyCollectionChangedEventArgs args)
+    private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
         if (_items == null || !_sectionItemsSubscriptions.TryGetValue(sender, out _))
         {

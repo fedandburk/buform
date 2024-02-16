@@ -1,3 +1,5 @@
+using Fedandburk.Common.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]

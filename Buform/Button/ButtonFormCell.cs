@@ -1,3 +1,5 @@
+using Fedandburk.Common.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -88,7 +90,7 @@ public class ButtonFormCell : FormCell<ButtonFormItem>
         UpdateInputType();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

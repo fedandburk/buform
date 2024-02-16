@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using Fedandburk.Common.Extensions;
 
 namespace Buform;
 

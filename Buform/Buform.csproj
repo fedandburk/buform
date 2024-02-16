@@ -1,13 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net7.0-ios</TargetFramework>
+        <TargetFrameworks>net7.0;net7.0-ios</TargetFrameworks>
         <UseMaui>false</UseMaui>
         <SingleProject>true</SingleProject>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
+        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>Fedandburk.Buform</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
@@ -37,14 +38,13 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
         <Compile Include="Button\ButtonFormCell.cs" />
         <Compile Include="Button\ButtonFormComponentIos.cs" />
+        <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.7" />
     </ItemGroup>
 
 
     <!--    DateTime    -->
 
     <ItemGroup>
-        <Compile Include="ColorExtensions.cs" />
-        <Compile Include="CommandExtensions.cs" />
         <Compile Include="DateTime\DateTimeFormItem.cs" />
         <Compile Include="DateTime\DateTimeInputType.cs" />
     </ItemGroup>
@@ -59,7 +59,6 @@
     <!--    List    -->
 
     <ItemGroup>
-        <Compile Include="EnumerableExtensions.cs" />
         <Compile Include="List\IListFormGroup.cs" />
         <Compile Include="List\IListFormItem.cs" />
         <Compile Include="List\ListFormGroup.cs" />
@@ -76,7 +75,6 @@
     <!--    Picker    -->
 
     <ItemGroup>
-        <Compile Include="NsObjectExtensions.cs" />
         <Compile Include="Picker\AsyncPickerFormItem.cs" />
         <Compile Include="Picker\AsyncPickerLoadingState.cs" />
         <Compile Include="Picker\CallbackPickerFormItem.cs" />
@@ -178,8 +176,6 @@
     <!--    Validation    -->
 
     <ItemGroup>
-        <Compile Include="UiApplicationExtensions.cs" />
-        <Compile Include="UiColorExtensions.cs" />
         <Compile Include="Validation\FormValidationError.cs" />
         <Compile Include="Validation\IValidatableFormItem.cs" />
         <Compile Include="Validation\ValidatableForm.cs" />
@@ -213,6 +209,10 @@
         <Compile Include="FormTableViewSource.cs" />
         <Compile Include="IExpandableCellController.cs" />
         <Compile Include="TableViewSource.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.7" />
     </ItemGroup>
 
 </Project>
