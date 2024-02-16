@@ -12,6 +12,7 @@
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <ApplicationId>com.fedandburk.buform</ApplicationId>
         <ApplicationTitle>Buform</ApplicationTitle>
+        <MtouchLink>SdkOnly</MtouchLink>
     </PropertyGroup>
 
     <ItemGroup>
