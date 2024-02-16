@@ -1,21 +1,18 @@
-﻿using System;
-using Buform.Example.Core;
-using Foundation;
+﻿using Buform.Example.Core;
 
-namespace Buform.Example.MvvmCross.iOS
+namespace Buform.Example.MvvmCross.iOS;
+
+[Preserve(AllMembers = true)]
+[Register(nameof(HeaderFormGroupHeader))]
+public sealed class HeaderFormGroupHeader : FormHeaderFooter<HeaderFormGroup>
 {
-    [Preserve(AllMembers = true)]
-    [Register(nameof(HeaderFormGroupHeader))]
-    public sealed class HeaderFormGroupHeader : FormHeaderFooter<HeaderFormGroup>
+    public HeaderFormGroupHeader()
     {
-        public HeaderFormGroupHeader()
-        {
-            /* Required constructor */
-        }
+        /* Required constructor */
+    }
 
-        public HeaderFormGroupHeader(IntPtr handle) : base(handle)
-        {
-            /* Required constructor */
-        }
+    public HeaderFormGroupHeader(IntPtr handle) : base(handle)
+    {
+        /* Required constructor */
     }
 }
