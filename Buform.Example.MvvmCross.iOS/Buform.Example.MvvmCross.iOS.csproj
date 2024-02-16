@@ -5,7 +5,6 @@
         <UseMaui>false</UseMaui>
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
-        <PublishTrimmed>false</PublishTrimmed>
         <Platforms>iPhoneSimulator;iPhone</Platforms>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
