@@ -31,9 +31,10 @@ jobs:
       run: dotnet nuget add source --username ${{ secrets.USERNAME }} --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github.com "https://nuget.pkg.github.com/fedandburk/index.json"
 
     - name: Upload to NuGet
-      run: dotnet nuget push Buform/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
-      run: dotnet nuget push Buform.FluentValidation/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
-      run: dotnet nuget push Buform.ColorPicker/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
+      run: |
+        dotnet nuget push Buform/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
+        dotnet nuget push Buform.FluentValidation/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
+        dotnet nuget push Buform.ColorPicker/bin/Release/*.nupkg --source nuget.org --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
 
     - name: Upload to GitHub Packages
       run: |
