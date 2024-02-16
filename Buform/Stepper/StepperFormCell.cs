@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -12,7 +15,7 @@ public class StepperFormCell : FormCell<StepperFormItem>
         /* Required constructor */
     }
 
-    public StepperFormCell(IntPtr handle) : base(handle)
+    public StepperFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

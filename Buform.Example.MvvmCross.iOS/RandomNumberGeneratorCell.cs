@@ -1,5 +1,6 @@
 using Buform.Example.Core;
 using Fedandburk.Common.Extensions;
+using ObjCRuntime;
 
 namespace Buform.Example.MvvmCross.iOS;
 
@@ -18,7 +19,7 @@ public sealed class RandomNumberGeneratorCell : FormCell<RandomNumberGeneratorIt
         /* Required constructor */
     }
 
-    public RandomNumberGeneratorCell(IntPtr handle) : base(handle)
+    public RandomNumberGeneratorCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

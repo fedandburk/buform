@@ -1,4 +1,5 @@
 ﻿using Buform.Example.Core;
+using ObjCRuntime;
 
 namespace Buform.Example.MvvmCross.iOS;
 
@@ -11,7 +12,7 @@ public sealed class HeaderFormGroupHeader : FormHeaderFooter<HeaderFormGroup>
         /* Required constructor */
     }
 
-    public HeaderFormGroupHeader(IntPtr handle) : base(handle)
+    public HeaderFormGroupHeader(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

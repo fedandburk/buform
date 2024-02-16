@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -11,7 +13,7 @@ public class CallbackPickerFormCell : PickerFormCellBase<ICallbackPickerFormItem
         /* Required constructor */
     }
 
-    public CallbackPickerFormCell(IntPtr handle) : base(handle)
+    public CallbackPickerFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

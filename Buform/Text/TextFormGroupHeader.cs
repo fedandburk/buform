@@ -1,3 +1,6 @@
+using System.Text.RegularExpressions;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -8,7 +11,7 @@ public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
         /* Required constructor */
     }
 
-    public TextFormGroupHeader(IntPtr handle) : base(handle)
+    public TextFormGroupHeader(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

@@ -1,4 +1,5 @@
 using Fedandburk.Common.Extensions;
+using ObjCRuntime;
 
 namespace Buform;
 
@@ -15,7 +16,7 @@ public class ButtonFormCell : FormCell<ButtonFormItem>
         /* Required constructor */
     }
 
-    public ButtonFormCell(IntPtr handle) : base(handle)
+    public ButtonFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

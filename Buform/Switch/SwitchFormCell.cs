@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -12,7 +16,7 @@ public class SwitchFormCell : FormCell<SwitchFormItem>
         /* Required constructor */
     }
 
-    public SwitchFormCell(IntPtr handle) : base(handle)
+    public SwitchFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

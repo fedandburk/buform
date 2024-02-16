@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -13,7 +15,7 @@ public class MultiValuePickerFormCell : PickerFormCellBase<IMultiValuePickerForm
         /* Required constructor */
     }
 
-    public MultiValuePickerFormCell(IntPtr handle) : base(handle)
+    public MultiValuePickerFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

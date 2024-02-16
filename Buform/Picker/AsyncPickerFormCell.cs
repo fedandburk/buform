@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -13,7 +15,7 @@ public class AsyncPickerFormCell : PickerFormCellBase<IAsyncPickerFormItem>
         /* Required constructor */
     }
 
-    public AsyncPickerFormCell(IntPtr handle) : base(handle)
+    public AsyncPickerFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

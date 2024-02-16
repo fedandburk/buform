@@ -1,3 +1,6 @@
+using System.Text.RegularExpressions;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -8,7 +11,7 @@ public sealed class ListFormGroupHeader : FormHeaderFooter<IListFormGroup>
         /* Required constructor */
     }
 
-    public ListFormGroupHeader(IntPtr handle) : base(handle)
+    public ListFormGroupHeader(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

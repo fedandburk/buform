@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -11,7 +13,7 @@ public class SliderFormCell : FormCell<SliderFormItem>
         /* Required constructor */
     }
 
-    public SliderFormCell(IntPtr handle) : base(handle)
+    public SliderFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

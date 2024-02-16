@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -11,7 +13,7 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
         /* Required constructor */
     }
 
-    public MultilineTextFormCell(IntPtr handle) : base(handle)
+    public MultilineTextFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

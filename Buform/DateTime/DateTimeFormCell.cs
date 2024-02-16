@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -12,7 +15,7 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
         /* Required constructor */
     }
 
-    public DateTimeFormCell(IntPtr handle) : base(handle)
+    public DateTimeFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

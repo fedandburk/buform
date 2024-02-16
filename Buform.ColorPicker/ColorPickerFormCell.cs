@@ -1,4 +1,6 @@
+using System.Reflection.Emit;
 using Fedandburk.iOS.Extensions;
+using ObjCRuntime;
 
 namespace Buform;
 
@@ -18,7 +20,7 @@ public class ColorPickerFormCell : FormCell<ColorPickerFormItem>
         /* Required constructor */
     }
 
-    public ColorPickerFormCell(IntPtr handle) : base(handle)
+    public ColorPickerFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

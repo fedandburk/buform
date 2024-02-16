@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -11,7 +14,7 @@ public class ListFormCell : FormCell<IListFormItem>
         /* Required constructor */
     }
 
-    public ListFormCell(IntPtr handle) : base(handle)
+    public ListFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -17,7 +20,7 @@ public class SegmentsFormCell : FormCell<ISegmentsFormItem>
         /* Required constructor */
     }
 
-    public SegmentsFormCell(IntPtr handle) : base(handle)
+    public SegmentsFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }

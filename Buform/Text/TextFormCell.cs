@@ -1,3 +1,6 @@
+using System.Reflection.Emit;
+using ObjCRuntime;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -17,7 +20,7 @@ public class TextFormCell : FormCell<ITextFormItem>
         /* Required constructor */
     }
 
-    public TextFormCell(IntPtr handle) : base(handle)
+    public TextFormCell(NativeHandle handle) : base(handle)
     {
         /* Required constructor */
     }
