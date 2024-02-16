@@ -105,7 +105,7 @@ public abstract class TableViewSource : UITableViewSource
             return;
         }
 
-        subscription?.Dispose();
+        subscription.Dispose();
 
         _sectionItemsSubscriptions.Remove(sectionItem);
     }
@@ -157,6 +157,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
+        if (sender == null)
+        {
+            return;
+        }
+
         if (_items == null || !_sectionItemsSubscriptions.TryGetValue(sender, out _))
         {
             return;
@@ -221,6 +226,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void AddSections(NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null)
+        {
+            return;
+        }
+
         TableView.InsertSections(
             CreateIndexSet(args.NewStartingIndex, args.NewItems.Count),
             AddSectionAnimation
@@ -237,6 +247,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void RemoveSections(NotifyCollectionChangedEventArgs args)
     {
+        if (args.OldItems == null)
+        {
+            return;
+        }
+
         TableView.DeleteSections(
             CreateIndexSet(args.OldStartingIndex, args.OldItems.Count),
             RemoveSectionAnimation
@@ -250,6 +265,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void ReplaceSections(NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null || args.OldItems == null)
+        {
+            return;
+        }
+
         if (args.NewItems.Count != args.OldItems.Count)
         {
             return;
@@ -263,6 +283,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void MoveSections(NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null || args.OldItems == null)
+        {
+            return;
+        }
+
         if (args.NewItems.Count != 1 && args.OldItems.Count != 1)
         {
             return;
@@ -273,6 +298,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void AddSectionItems(int section, NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null)
+        {
+            return;
+        }
+
         TableView.InsertRows(
             CreateIndexPaths(args.NewStartingIndex, args.NewItems.Count, section),
             AddRowAnimation
@@ -281,6 +311,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void RemoveSectionItems(int section, NotifyCollectionChangedEventArgs args)
     {
+        if (args.OldItems == null)
+        {
+            return;
+        }
+
         TableView.DeleteRows(
             CreateIndexPaths(args.OldStartingIndex, args.OldItems.Count, section),
             RemoveRowAnimation
@@ -299,6 +334,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void ReplaceSectionItems(int section, NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null || args.OldItems == null)
+        {
+            return;
+        }
+
         if (args.NewItems.Count != args.OldItems.Count)
         {
             return;
@@ -314,6 +354,11 @@ public abstract class TableViewSource : UITableViewSource
 
     private void MoveSectionItems(int section, NotifyCollectionChangedEventArgs args)
     {
+        if (args.NewItems == null || args.OldItems == null)
+        {
+            return;
+        }
+
         if (args.NewItems.Count != 1 && args.OldItems.Count != 1)
         {
             return;

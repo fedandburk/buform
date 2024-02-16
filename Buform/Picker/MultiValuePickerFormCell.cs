@@ -52,7 +52,7 @@ public class MultiValuePickerFormCell : PickerFormCellBase<IMultiValuePickerForm
         UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

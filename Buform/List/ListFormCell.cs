@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using ObjCRuntime;
 
 namespace Buform;
@@ -56,7 +55,7 @@ public class ListFormCell : FormCell<IListFormItem>
         UpdateValue();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

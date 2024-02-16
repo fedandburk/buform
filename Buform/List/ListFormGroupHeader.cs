@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -32,7 +31,7 @@ public sealed class ListFormGroupHeader : FormHeaderFooter<IListFormGroup>
         UpdateLabel();
     }
 
-    protected override void OnGroupPropertyChanged(string propertyName)
+    protected override void OnGroupPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

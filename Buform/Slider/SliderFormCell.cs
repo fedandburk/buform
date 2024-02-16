@@ -98,7 +98,7 @@ public class SliderFormCell : FormCell<SliderFormItem>
         UpdateValue(false);
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

@@ -52,7 +52,7 @@ public class AsyncPickerFormCell : PickerFormCellBase<IAsyncPickerFormItem>
         UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

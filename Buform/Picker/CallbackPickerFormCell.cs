@@ -26,7 +26,7 @@ public class CallbackPickerFormCell : PickerFormCellBase<ICallbackPickerFormItem
         UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

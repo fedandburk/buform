@@ -50,7 +50,7 @@ public abstract class ValidatableForm : Form
         }
     }
 
-    protected override void OnItemValueChanged(object sender, FormValueChangedEventArgs e)
+    protected override void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
         base.OnItemValueChanged(sender, e);
 

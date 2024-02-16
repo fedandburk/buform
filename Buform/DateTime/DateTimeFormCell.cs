@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using ObjCRuntime;
 
 namespace Buform;
@@ -54,7 +53,7 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
         });
     }
 
-    protected virtual void OnValueChanged(object sender, EventArgs e)
+    protected virtual void OnValueChanged(object? sender, EventArgs e)
     {
         if (Item == null)
         {
@@ -174,7 +173,7 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
         UpdateValidationErrorMessage();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

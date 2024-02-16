@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -26,7 +25,7 @@ public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
         UpdateLabel();
     }
 
-    protected override void OnGroupPropertyChanged(string propertyName)
+    protected override void OnGroupPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

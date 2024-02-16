@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using ObjCRuntime;
 
 namespace Buform;
@@ -177,7 +176,7 @@ public class SegmentsFormCell : FormCell<ISegmentsFormItem>
         UpdateValidationErrorMessage();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

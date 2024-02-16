@@ -109,7 +109,7 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
         UpdateValue();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {

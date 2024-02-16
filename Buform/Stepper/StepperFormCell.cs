@@ -1,4 +1,3 @@
-using System.Reflection.Emit;
 using ObjCRuntime;
 
 namespace Buform;
@@ -138,7 +137,7 @@ public class StepperFormCell : FormCell<StepperFormItem>
         UpdateValidationErrorMessage();
     }
 
-    protected override void OnItemPropertyChanged(string propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
