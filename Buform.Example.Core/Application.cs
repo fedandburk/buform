@@ -1,14 +1,13 @@
 using MvvmCross.ViewModels;
 
-namespace Buform.Example.Core
-{
-    public sealed class Application : MvxApplication
-    {
-        public override void Initialize()
-        {
-            base.Initialize();
+namespace Buform.Example.Core;
 
-            RegisterAppStart<MenuViewModel>();
-        }
+public sealed class Application : MvxApplication
+{
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        RegisterAppStart<MenuViewModel>();
     }
 }

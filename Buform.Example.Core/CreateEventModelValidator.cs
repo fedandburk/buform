@@ -1,12 +1,11 @@
 using FluentValidation;
 
-namespace Buform.Example.Core
+namespace Buform.Example.Core;
+
+public sealed class CreateEventModelValidator : AbstractValidator<CreateEventModel>
 {
-    public sealed class CreateEventModelValidator : AbstractValidator<CreateEventModel>
+    public CreateEventModelValidator()
     {
-        public CreateEventModelValidator()
-        {
-            RuleFor(item => item.Title).NotEmpty();
-        }
+        RuleFor(item => item.Title).NotEmpty();
     }
 }
