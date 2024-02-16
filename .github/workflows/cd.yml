@@ -35,9 +35,9 @@ jobs:
 
     - name: Upload to GitHub Packages
       run: |
-        dotnet nuget push Fedandburk.Buform/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
-        dotnet nuget push Fedandburk.Buform.FluentValidation/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
-        dotnet nuget push Fedandburk.Buform.ColorPicker/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
+        dotnet nuget push Buform/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
+        dotnet nuget push Buform.FluentValidation/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
+        dotnet nuget push Buform.ColorPicker/bin/Release/*.nupkg --source github.com --api-key ${{secrets.GITHUB_TOKEN}} --skip-duplicate
 
     - name: Create GitHub release
       uses: softprops/action-gh-release@v1
