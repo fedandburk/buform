@@ -10,10 +10,8 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-        <ApplicationDisplayVersion>0.1.10</ApplicationDisplayVersion>
         <ApplicationId>com.fedandburk.buform</ApplicationId>
         <ApplicationTitle>Buform</ApplicationTitle>
-        <ApplicationVersion>1</ApplicationVersion>
     </PropertyGroup>
 
     <ItemGroup>
