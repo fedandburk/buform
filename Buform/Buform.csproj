@@ -14,11 +14,12 @@
         <PackageVersion>0.1.0</PackageVersion>
         <Title>Buform</Title>
         <Description>A cross-platform form builder for .Net iOS/Android</Description>
-        <Copyright>Fedandburk</Copyright>
-        <Authors>Fedandburk</Authors>
-        <Owners>Fedandburk</Owners>
+        <Copyright>FEDANDBURK</Copyright>
+        <Authors>Prin53, FEDANDBURK</Authors>
+        <Owners>Prin53, FEDANDBURK</Owners>
         <NeutralLanguage>en</NeutralLanguage>
         <PackageTags>xamarin, forms, form</PackageTags>
+        <PackageIconUrl>https://static.fedandburk.com/logo.svg</PackageIconUrl>
         <PackageProjectUrl>https://github.com/fedandburk/buform</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
