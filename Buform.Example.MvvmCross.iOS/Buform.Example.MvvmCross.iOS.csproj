@@ -4,6 +4,7 @@
         <TargetFramework>net7.0-ios</TargetFramework>
         <UseMaui>false</UseMaui>
         <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
         <Platforms>iPhoneSimulator;iPhone</Platforms>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>

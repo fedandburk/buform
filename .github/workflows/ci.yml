@@ -3,16 +3,15 @@ name: ci
 on:
   push:
     branches: [ develop ]
-
   pull_request:
-    types: [ opened, synchronize, edited ]
-    
+    branches: [ develop ]
+
   workflow_dispatch:
 
 jobs:
 
   ci:
-  
+
     runs-on: macos-latest
 
     steps:
@@ -22,11 +21,9 @@ jobs:
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
-      
-    - name: Scan
-      uses: JetBrains/qodana-action@main
-      env:
-        QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+
+    - name: Restore workloads
+      run: dotnet workload restore
 
     - name: Build
       run: dotnet build --configuration Release

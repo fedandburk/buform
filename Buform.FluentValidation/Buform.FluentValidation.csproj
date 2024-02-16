@@ -5,7 +5,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageId>Fedandburk.Buform.FluentValidation</PackageId>
         <PackageVersion>0.1.0</PackageVersion>
         <Title>Buform.FluentValidation</Title>
