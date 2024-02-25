@@ -7,10 +7,10 @@ public sealed class TextFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterGroupHeaderClass<TextFormGroup, TextFormGroupHeader>();
-        Buform.RegisterGroupFooterClass<TextFormGroup, TextFormGroupFooter>();
+        FormPlatform.RegisterGroupHeaderClass<TextFormGroup, TextFormGroupHeader>();
+        FormPlatform.RegisterGroupFooterClass<TextFormGroup, TextFormGroupFooter>();
 
-        Buform.RegisterItemClass<IMultilineTextFormItem, MultilineTextFormCell>();
-        Buform.RegisterItemClass<ITextFormItem, TextFormCell>();
+        FormPlatform.RegisterItemClass<IMultilineTextFormItem, MultilineTextFormCell>();
+        FormPlatform.RegisterItemClass<ITextFormItem, TextFormCell>();
     }
 }

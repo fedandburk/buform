@@ -13,7 +13,7 @@ public class FormTableViewSource : TableViewSource
 
     public FormTableViewSource(UITableView tableView) : base(tableView)
     {
-        Buform.Register(TableView);
+        FormPlatform.Register(TableView);
     }
 
     private IFormItem? GetItem(NSIndexPath indexPath)
@@ -50,17 +50,17 @@ public class FormTableViewSource : TableViewSource
 
     protected override string? GetHeaderReuseIdentifier(object item)
     {
-        return Buform.TryGetHeaderReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
+        return FormPlatform.TryGetHeaderReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
     }
 
     protected override string? GetFooterReuseIdentifier(object item)
     {
-        return Buform.TryGetFooterReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
+        return FormPlatform.TryGetFooterReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
     }
 
     protected override string GetCellReuseIdentifier(object item)
     {
-        if (!Buform.TryGetReuseIdentifier(item.GetType(), out var reuseIdentifier))
+        if (!FormPlatform.TryGetReuseIdentifier(item.GetType(), out var reuseIdentifier))
         {
             throw new FormViewNotFoundException(item);
         }
@@ -70,7 +70,7 @@ public class FormTableViewSource : TableViewSource
 
     protected override string GetExpandedCellReuseIdentifier(object item)
     {
-        if (!Buform.TryGetExpandedReuseIdentifier(item.GetType(), out var reuseIdentifier))
+        if (!FormPlatform.TryGetExpandedReuseIdentifier(item.GetType(), out var reuseIdentifier))
         {
             throw new FormViewNotFoundException(item);
         }

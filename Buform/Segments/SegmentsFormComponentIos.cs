@@ -7,6 +7,6 @@ public sealed class SegmentsFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<ISegmentsFormItem, SegmentsFormCell>();
+        FormPlatform.RegisterItemClass<ISegmentsFormItem, SegmentsFormCell>();
     }
 }

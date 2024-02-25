@@ -37,8 +37,8 @@ public sealed class Setup : MvxIosSetup<Application>
     {
         base.InitializeLastChance(iocProvider);
 
-        Buform.RegisterGroupHeaderNib<HeaderFormGroup, HeaderFormGroupHeader>();
+        FormPlatform.RegisterGroupHeaderNib<HeaderFormGroup, HeaderFormGroupHeader>();
 
-        Buform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
+        FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
     }
 }

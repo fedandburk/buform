@@ -7,6 +7,6 @@ public sealed class SliderFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<SliderFormItem, SliderFormCell>();
+        FormPlatform.RegisterItemClass<SliderFormItem, SliderFormCell>();
     }
 }

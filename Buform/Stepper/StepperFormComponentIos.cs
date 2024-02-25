@@ -7,6 +7,6 @@ public sealed class StepperFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<StepperFormItem, StepperFormCell>();
+        FormPlatform.RegisterItemClass<StepperFormItem, StepperFormCell>();
     }
 }

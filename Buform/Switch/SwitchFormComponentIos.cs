@@ -7,6 +7,6 @@ public sealed class SwitchFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<SwitchFormItem, SwitchFormCell>();
+        FormPlatform.RegisterItemClass<SwitchFormItem, SwitchFormCell>();
     }
 }

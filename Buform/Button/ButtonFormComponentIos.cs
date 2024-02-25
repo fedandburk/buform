@@ -7,6 +7,6 @@ public sealed class ButtonFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<ButtonFormItem, ButtonFormCell>();
+        FormPlatform.RegisterItemClass<ButtonFormItem, ButtonFormCell>();
     }
 }

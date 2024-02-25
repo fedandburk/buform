@@ -1,11 +1,11 @@
 namespace Buform;
 
-public static class Buform
+public static class FormPlatform
 {
     private static readonly FormGroupRegistry GroupRegistry;
     private static readonly FormItemRegistry ItemRegistry;
 
-    static Buform()
+    static FormPlatform()
     {
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();

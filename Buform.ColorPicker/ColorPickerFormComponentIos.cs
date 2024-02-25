@@ -7,6 +7,6 @@ public sealed class ColorPickerFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<ColorPickerFormItem, ColorPickerFormCell>();
+        FormPlatform.RegisterItemClass<ColorPickerFormItem, ColorPickerFormCell>();
     }
 }

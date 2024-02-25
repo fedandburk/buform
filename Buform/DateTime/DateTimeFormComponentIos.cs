@@ -7,6 +7,6 @@ public sealed class DateTimeFormComponent : IFormComponent
 {
     public void Register()
     {
-        Buform.RegisterItemClass<DateTimeFormItem, DateTimeFormCell>();
+        FormPlatform.RegisterItemClass<DateTimeFormItem, DateTimeFormCell>();
     }
 }
