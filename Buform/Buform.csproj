@@ -44,23 +44,17 @@
         <Compile Include="IFormComponent.cs" />
         <Compile Include="IFormGroup.cs" />
         <Compile Include="IFormItem.cs" />
-        <Compile Include="WeakEventSubscription.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="FormPlatformIos.cs" />
-        <Compile Include="FormCell.cs" />
-        <Compile Include="FormGroupRegistry.cs" />
-        <Compile Include="FormHeaderFooter.cs" />
-        <Compile Include="FormItemRegistry.cs" />
-        <Compile Include="FormTableViewSource.cs" />
-        <Compile Include="IExpandableCellController.cs" />
-        <Compile Include="TableViewSource.cs" />
         <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.8" />
+        <Compile Include="Ios\*.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.3.2.2" />
         <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
+        <Compile Include="Android\*.cs" />
     </ItemGroup>
 
     <!--    Validation    -->
@@ -80,13 +74,12 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Button\ButtonFormCell.cs" />
         <Compile Include="Button\ButtonFormComponentIos.cs" />
+        <Compile Include="Button\ButtonFormCell.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
     </ItemGroup>
-
 
     <!--    DateTime    -->
 

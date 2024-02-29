@@ -1,4 +1,5 @@
 using Fedandburk.Common.Extensions;
+using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
