@@ -1,4 +1,5 @@
 using Android.Runtime;
+using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
@@ -56,26 +57,46 @@ public sealed class FormItemRegistry
         );
     }
 
-    public bool TryGetViewHolderAndResourceId(Type itemType, out Type? viewHolderType, out int? resourceId)
+    public bool TryGetViewType(Type itemType, out int? viewType)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
-
         var result = TryGetHolder(itemType, out var holder);
 
-        if (result)
+        if (!result)
         {
-            viewHolderType = holder!.ViewHolderType;
-            resourceId = holder.ResourceId;
+            viewType = default;
 
-            return true;
+            return false;
         }
 
-        viewHolderType = null;
-        resourceId = null;
+        var index = _holders.Values.IndexOf(holder);
 
-        return false;
+        if (index < 0)
+        {
+            viewType = default;
+
+            return false;
+        }
+
+        viewType = index;
+
+        return true;
+    }
+
+    public bool TryGetViewHolderAndResourceId(int viewType, out Type? viewHolderType, out int? resourceId)
+    {
+        var holder = _holders.Values.ElementAtOrDefault(viewType);
+
+        if (holder == null)
+        {
+            viewHolderType = null;
+            resourceId = null;
+
+            return false;
+        }
+
+        viewHolderType = holder.ViewHolderType;
+        resourceId = holder.ResourceId;
+
+        return true;
     }
 }

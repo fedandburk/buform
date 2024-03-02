@@ -17,4 +17,14 @@ public static class FormPlatform
     {
         ItemRegistry.RegisterItem<TItem, TViewHolder>(resourceId);
     }
+
+    public static bool TryGetViewType(Type itemType, out int? viewType)
+    {
+        return ItemRegistry.TryGetViewType(itemType, out viewType);
+    }
+
+    public static bool TryGetViewHolderAndResourceId(int viewType, out Type? viewHolderType, out int? resourceId)
+    {
+        return ItemRegistry.TryGetViewHolderAndResourceId(viewType, out viewHolderType, out resourceId);
+    }
 }
