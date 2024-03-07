@@ -38,9 +38,9 @@ public sealed class FormItemRegistry
             return true;
         }
 
-        var interfaceTypes = itemType.GetInterfaces().Except(
-            itemType.GetInterfaces().SelectMany(item => item.GetInterfaces())
-        );
+        var interfaceTypes = itemType
+            .GetInterfaces()
+            .Except(itemType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -57,11 +57,7 @@ public sealed class FormItemRegistry
         where TItem : class, IFormItem
         where TItemView : FormCell<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            null,
-            RegistrationType.Class
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null, RegistrationType.Class);
     }
 
     public void RegisterItemClass<TItem, TItemView, TExpandedItemView>()
@@ -80,11 +76,7 @@ public sealed class FormItemRegistry
         where TItem : class, IFormItem
         where TItemView : FormCell<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            null,
-            RegistrationType.Nib
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null, RegistrationType.Nib);
     }
 
     public void RegisterItemNib<TItem, TItemView, TExpandedItemView>()
@@ -108,13 +100,16 @@ public sealed class FormItemRegistry
 
         foreach (var holder in _holders.Values)
         {
-            switch(holder.RegistrationType)
+            switch (holder.RegistrationType)
             {
                 case RegistrationType.Class:
                     tableView.RegisterClassForCellReuse(holder.CellType, holder.CellType.Name);
                     if (holder.ExpandedCellType != null)
                     {
-                        tableView.RegisterClassForCellReuse(holder.ExpandedCellType, holder.ExpandedCellType.Name);
+                        tableView.RegisterClassForCellReuse(
+                            holder.ExpandedCellType,
+                            holder.ExpandedCellType.Name
+                        );
                     }
                     break;
                 case RegistrationType.Nib:

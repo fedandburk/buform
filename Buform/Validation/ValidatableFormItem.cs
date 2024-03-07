@@ -17,7 +17,8 @@ public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatab
         }
     }
 
-    protected ValidatableFormItem(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    protected ValidatableFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

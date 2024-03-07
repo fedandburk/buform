@@ -53,17 +53,15 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
 
     public virtual IEnumerable<SegmentsOptionFormItem<TValue>> Items { get; private set; }
 
-    public SegmentsFormItem(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         Items = Array.Empty<SegmentsOptionFormItem<TValue>>();
     }
 
     protected virtual SegmentsOptionFormItem<TValue> CreateItem(TValue value)
     {
-        return new SegmentsOptionFormItem<TValue>(value)
-        {
-            Formatter = Formatter
-        };
+        return new SegmentsOptionFormItem<TValue>(value) { Formatter = Formatter };
     }
 
     protected override void Dispose(bool isDisposing)
@@ -80,7 +78,8 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
 
 public class SegmentsFormItem : SegmentsFormItem<string?>
 {
-    public SegmentsFormItem(Expression<Func<string?>> targetProperty) : base(targetProperty)
+    public SegmentsFormItem(Expression<Func<string?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

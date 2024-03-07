@@ -5,12 +5,17 @@ using MvvmCross.Platforms.Ios.Views;
 namespace Buform.Example.MvvmCross.iOS;
 
 [Foundation.Preserve(AllMembers = true)]
-[MvxModalPresentation(WrapInNavigationController = true, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
-public sealed class CreateConnectionViewController : MvxTableViewController<CreateConnectionViewModel>
+[MvxModalPresentation(
+    WrapInNavigationController = true,
+    ModalPresentationStyle = UIModalPresentationStyle.FormSheet
+)]
+public sealed class CreateConnectionViewController
+    : MvxTableViewController<CreateConnectionViewModel>
 {
     private FormTableViewSource? _source;
 
-    public CreateConnectionViewController() : base(UITableViewStyle.InsetGrouped)
+    public CreateConnectionViewController()
+        : base(UITableViewStyle.InsetGrouped)
     {
         /* Required constructor */
     }

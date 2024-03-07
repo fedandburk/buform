@@ -5,12 +5,13 @@ public class AsyncPickerViewController : PickerViewController<IAsyncPickerFormIt
 {
     protected CancellationTokenSource? CancellationTokenSource { get; private set; }
 
-    public AsyncPickerViewController(UITableViewStyle style, IAsyncPickerFormItem item) : base(style, item)
+    public AsyncPickerViewController(UITableViewStyle style, IAsyncPickerFormItem item)
+        : base(style, item)
     {
         /* Required constructor */
     }
 
-    protected virtual  async Task LoadItemsIfNeeded()
+    protected virtual async Task LoadItemsIfNeeded()
     {
         if (Item == null)
         {
@@ -34,11 +35,13 @@ public class AsyncPickerViewController : PickerViewController<IAsyncPickerFormIt
 
         View!.AddSubview(activityIndicator);
 
-        View.AddConstraints(new[]
-        {
-            activityIndicator.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor),
-            activityIndicator.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor)
-        });
+        View.AddConstraints(
+            new[]
+            {
+                activityIndicator.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor),
+                activityIndicator.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor)
+            }
+        );
 
         activityIndicator.StartAnimating();
 
@@ -60,7 +63,9 @@ public class AsyncPickerViewController : PickerViewController<IAsyncPickerFormIt
 
     public override string TitleForFooter(UITableView tableView, nint section)
     {
-        return Item?.State != AsyncPickerLoadingState.Loaded ? string.Empty : Item?.Message ?? string.Empty;
+        return Item?.State != AsyncPickerLoadingState.Loaded
+            ? string.Empty
+            : Item?.Message ?? string.Empty;
     }
 
     protected override void Dispose(bool disposing)

@@ -5,12 +5,16 @@ using MvvmCross.Platforms.Ios.Views;
 namespace Buform.Example.MvvmCross.iOS;
 
 [Preserve(AllMembers = true)]
-[MvxModalPresentation(WrapInNavigationController = true, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
+[MvxModalPresentation(
+    WrapInNavigationController = true,
+    ModalPresentationStyle = UIModalPresentationStyle.FormSheet
+)]
 public sealed class CreateEventViewController : MvxTableViewController<CreateEventViewModel>
 {
     private FormTableViewSource? _source;
 
-    public CreateEventViewController() : base(UITableViewStyle.InsetGrouped)
+    public CreateEventViewController()
+        : base(UITableViewStyle.InsetGrouped)
     {
         /* Required constructor */
     }
@@ -20,7 +24,11 @@ public sealed class CreateEventViewController : MvxTableViewController<CreateEve
         base.ViewDidLoad();
 
         NavigationItem.LeftBarButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel);
-        NavigationItem.RightBarButtonItem = new UIBarButtonItem("Add", UIBarButtonItemStyle.Done, null);
+        NavigationItem.RightBarButtonItem = new UIBarButtonItem(
+            "Add",
+            UIBarButtonItemStyle.Done,
+            null
+        );
 
         TableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.Interactive;
 

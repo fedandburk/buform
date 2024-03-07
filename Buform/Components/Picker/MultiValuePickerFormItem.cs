@@ -2,7 +2,9 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<TValue>?>, IMultiValuePickerFormItem
+public class MultiValuePickerFormItem<TValue>
+    : PickerFormItemBase<IEnumerable<TValue>?>,
+        IMultiValuePickerFormItem
 {
     private Func<TValue?, string?>? _itemFormatter;
     private Func<IEnumerable<TValue>?, string?>? _valueFormatter;
@@ -52,17 +54,15 @@ public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<T
         }
     }
 
-    public MultiValuePickerFormItem(Expression<Func<IEnumerable<TValue>?>> targetProperty) : base(targetProperty)
+    public MultiValuePickerFormItem(Expression<Func<IEnumerable<TValue>?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value)
-        {
-            Formatter = ItemFormatter
-        };
+        return new PickerOptionFormItem<TValue>(value) { Formatter = ItemFormatter };
     }
 
     public override void Pick(IPickerOptionFormItem? option)
@@ -104,7 +104,8 @@ public class MultiValuePickerFormItem<TValue> : PickerFormItemBase<IEnumerable<T
 
 public class MultiValuePickerFormItem : MultiValuePickerFormItem<string>
 {
-    public MultiValuePickerFormItem(Expression<Func<IEnumerable<string>?>> targetProperty) : base(targetProperty)
+    public MultiValuePickerFormItem(Expression<Func<IEnumerable<string>?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

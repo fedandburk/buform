@@ -32,9 +32,9 @@ internal class FormItemRegistry
             return true;
         }
 
-        var interfaceTypes = itemType.GetInterfaces().Except(
-            itemType.GetInterfaces().SelectMany(item => item.GetInterfaces())
-        );
+        var interfaceTypes = itemType
+            .GetInterfaces()
+            .Except(itemType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -51,10 +51,7 @@ internal class FormItemRegistry
         where TItem : class, IFormItem
         where TItemView : FormItemView<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            null
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null);
     }
 
     public void RegisterItemClass<TItem, TItemView, TExpandedItemView>()
@@ -62,10 +59,7 @@ internal class FormItemRegistry
         where TItemView : FormItemView<TItem>
         where TExpandedItemView : FormItemView<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            typeof(TExpandedItemView)
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), typeof(TExpandedItemView));
     }
 
     public bool TryGetCellViewType(Type itemType, out Type? viewType)

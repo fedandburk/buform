@@ -1,6 +1,7 @@
 namespace Buform;
 
-public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase
+public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem>
+    where TItem : class, IPickerFormItemBase
 {
     protected Func<TItem, UIViewController> ViewControllerFactory { get; }
 

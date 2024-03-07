@@ -19,12 +19,15 @@ public class ColorPickerFormCell : FormCell<ColorPickerFormItem>
         /* Required constructor */
     }
 
-    public ColorPickerFormCell(NativeHandle handle) : base(handle)
+    public ColorPickerFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
 
-    protected virtual UIColorPickerViewController CreateColorPickerViewController(ColorPickerFormItem item)
+    protected virtual UIColorPickerViewController CreateColorPickerViewController(
+        ColorPickerFormItem item
+    )
     {
         Delegate?.Dispose();
         Delegate = new ColorPickerViewControllerDelegate(item);
@@ -47,11 +50,7 @@ public class ColorPickerFormCell : FormCell<ColorPickerFormItem>
             TextColor = UIColor.Label
         };
 
-        ColorView = new UIView
-        {
-            Frame = new CGRect(0, 0, 22, 22),
-            ClipsToBounds = true
-        };
+        ColorView = new UIView { Frame = new CGRect(0, 0, 22, 22), ClipsToBounds = true };
 
         ColorView.Layer.CornerRadius = 11;
 
@@ -59,13 +58,17 @@ public class ColorPickerFormCell : FormCell<ColorPickerFormItem>
 
         ContentView.AddSubviews(Label);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                Label.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void UpdateLabel()
@@ -139,7 +142,9 @@ public class ColorPickerFormCell : FormCell<ColorPickerFormItem>
             return;
         }
 
-        await viewController.PresentViewControllerAsync(colorPickerViewController, true).ConfigureAwait(false);
+        await viewController
+            .PresentViewControllerAsync(colorPickerViewController, true)
+            .ConfigureAwait(false);
     }
 
     protected override void Dispose(bool disposing)

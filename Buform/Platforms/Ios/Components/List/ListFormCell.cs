@@ -13,7 +13,8 @@ public class ListFormCell : FormCell<IListFormItem>
         /* Required constructor */
     }
 
-    public ListFormCell(NativeHandle handle) : base(handle)
+    public ListFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -31,13 +32,17 @@ public class ListFormCell : FormCell<IListFormItem>
 
         ContentView.AddSubviews(Label);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                Label.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void UpdateValue()

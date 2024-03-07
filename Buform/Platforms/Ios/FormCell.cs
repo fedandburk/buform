@@ -17,12 +17,14 @@ public abstract class FormCell : UITableViewCell
         /* Required constructor */
     }
 
-    protected FormCell(IntPtr handle) : base(handle)
+    protected FormCell(IntPtr handle)
+        : base(handle)
     {
         /* Required constructor */
     }
 
-    protected FormCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
+    protected FormCell(UITableViewCellStyle style, string reuseIdentifier)
+        : base(style, reuseIdentifier)
     {
         /* Required constructor */
     }
@@ -78,7 +80,8 @@ public abstract class FormCell : UITableViewCell
     }
 }
 
-public abstract class FormCell<TItem> : FormCell where TItem : class, IFormItem
+public abstract class FormCell<TItem> : FormCell
+    where TItem : class, IFormItem
 {
     protected TItem? Item { get; private set; }
 
@@ -87,12 +90,14 @@ public abstract class FormCell<TItem> : FormCell where TItem : class, IFormItem
         /* Required constructor */
     }
 
-    protected FormCell(IntPtr handle) : base(handle)
+    protected FormCell(IntPtr handle)
+        : base(handle)
     {
         /* Required constructor */
     }
 
-    protected FormCell(UITableViewCellStyle style, string reuseIdentifier) : base(style, reuseIdentifier)
+    protected FormCell(UITableViewCellStyle style, string reuseIdentifier)
+        : base(style, reuseIdentifier)
     {
         /* Required constructor */
     }

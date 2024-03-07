@@ -40,17 +40,15 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public PickerFormItem(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    public PickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value)
-        {
-            Formatter = Formatter
-        };
+        return new PickerOptionFormItem<TValue>(value) { Formatter = Formatter };
     }
 
     public override void Pick(IPickerOptionFormItem? item)
@@ -77,7 +75,8 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
 
 public class PickerFormItem : PickerFormItem<string?>
 {
-    public PickerFormItem(Expression<Func<string?>> targetProperty) : base(targetProperty)
+    public PickerFormItem(Expression<Func<string?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

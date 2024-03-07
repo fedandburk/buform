@@ -10,7 +10,8 @@ public abstract class FormHeaderFooterView : UITableViewHeaderFooterView
         /* Required constructor */
     }
 
-    protected FormHeaderFooterView(IntPtr handle) : base(handle)
+    protected FormHeaderFooterView(IntPtr handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -38,7 +39,8 @@ public abstract class FormHeaderFooterView : UITableViewHeaderFooterView
 }
 
 [Preserve(AllMembers = true)]
-public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView where TGroup : class, IFormGroup
+public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView
+    where TGroup : class, IFormGroup
 {
     protected TGroup? Group { get; private set; }
 
@@ -47,7 +49,8 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView where TGro
         /* Required constructor */
     }
 
-    protected FormHeaderFooter(IntPtr handle) : base(handle)
+    protected FormHeaderFooter(IntPtr handle)
+        : base(handle)
     {
         /* Required constructor */
     }

@@ -10,7 +10,8 @@ public sealed class ListFormGroupHeader : FormHeaderFooter<IListFormGroup>
         /* Required constructor */
     }
 
-    public ListFormGroupHeader(NativeHandle handle) : base(handle)
+    public ListFormGroupHeader(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }

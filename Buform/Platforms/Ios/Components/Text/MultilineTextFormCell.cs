@@ -13,7 +13,8 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
         /* Required constructor */
     }
 
-    public MultilineTextFormCell(NativeHandle handle) : base(handle)
+    public MultilineTextFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -22,22 +23,27 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 
-        TextView = new FormTextView
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false
-        };
+        TextView = new FormTextView { TranslatesAutoresizingMaskIntoConstraints = false };
 
         TextView.Changed += OnChanged;
 
         ContentView.AddSubviews(TextView);
 
-        ContentView.AddConstraints(new[]
-        {
-            TextView.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            TextView.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            TextView.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            TextView.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                TextView.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                TextView.BottomAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.BottomAnchor
+                ),
+                TextView.LeadingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.LeadingAnchor
+                ),
+                TextView.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void OnChanged(object? sender, EventArgs e)
@@ -46,7 +52,7 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
         {
             return;
         }
-            
+
         Item?.SetValue(TextView.Text);
     }
 
@@ -87,7 +93,12 @@ public class MultilineTextFormCell : FormCell<IMultilineTextFormItem>
             TextInputType.Url => UIKeyboardType.Url,
             TextInputType.EmailAddress => UIKeyboardType.EmailAddress,
             null => UIKeyboardType.Default,
-            _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType),  Item?.InputType, null)
+            _
+                => throw new ArgumentOutOfRangeException(
+                    nameof(Item.InputType),
+                    Item?.InputType,
+                    null
+                )
         };
     }
 

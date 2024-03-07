@@ -1,5 +1,3 @@
 namespace Buform;
 
-public interface IMultiValuePickerFormItem : IPickerFormItemBase
-{
-}
+public interface IMultiValuePickerFormItem : IPickerFormItemBase { }

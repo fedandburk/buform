@@ -14,7 +14,8 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
         /* Required constructor */
     }
 
-    public DateTimeFormCell(NativeHandle handle) : base(handle)
+    public DateTimeFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -30,10 +31,7 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
             TextColor = UIColor.Label
         };
 
-        DatePicker = new UIDatePicker()
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false
-        };
+        DatePicker = new UIDatePicker() { TranslatesAutoresizingMaskIntoConstraints = false };
 
         DatePicker.ValueChanged += OnValueChanged;
 
@@ -41,16 +39,20 @@ public class DateTimeFormCell : FormCell<DateTimeFormItem>
 
         ContentView.AddSubviews(Label, DatePicker);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            DatePicker.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 4),
-            DatePicker.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, -4),
-            DatePicker.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
-            DatePicker.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                DatePicker.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 4),
+                DatePicker.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, -4),
+                DatePicker.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
+                DatePicker.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void OnValueChanged(object? sender, EventArgs e)

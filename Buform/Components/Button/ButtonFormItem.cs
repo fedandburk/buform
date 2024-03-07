@@ -36,7 +36,8 @@ public class ButtonFormItem : FormItem<ICommand>
         }
     }
 
-    public ButtonFormItem(ICommand value) : base(value)
+    public ButtonFormItem(ICommand value)
+        : base(value)
     {
         if (Value == null)
         {

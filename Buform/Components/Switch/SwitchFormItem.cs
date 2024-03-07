@@ -17,7 +17,8 @@ public class SwitchFormItem : ValidatableFormItem<bool>
         }
     }
 
-    public SwitchFormItem(Expression<Func<bool>> targetProperty) : base(targetProperty)
+    public SwitchFormItem(Expression<Func<bool>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

@@ -13,7 +13,8 @@ public class SliderFormCell : FormCell<SliderFormItem>
         /* Required constructor */
     }
 
-    public SliderFormCell(NativeHandle handle) : base(handle)
+    public SliderFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -22,22 +23,25 @@ public class SliderFormCell : FormCell<SliderFormItem>
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 
-        Slider = new UISlider
-        {
-            TranslatesAutoresizingMaskIntoConstraints = false,
-        };
+        Slider = new UISlider { TranslatesAutoresizingMaskIntoConstraints = false, };
 
         Slider.ValueChanged += OnValueChanged;
 
         ContentView.AddSubviews(Slider);
 
-        ContentView.AddConstraints(new[]
-        {
-            Slider.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Slider.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Slider.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Slider.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Slider.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Slider.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Slider.LeadingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.LeadingAnchor
+                ),
+                Slider.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void OnValueChanged(object? sender, EventArgs e)

@@ -57,7 +57,8 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public IEnumerable<IPickerOptionFormItem> Options { get; protected set; }
 
-    protected PickerFormItemBase(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    protected PickerFormItemBase(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         Options = Array.Empty<IPickerOptionFormItem>();
     }

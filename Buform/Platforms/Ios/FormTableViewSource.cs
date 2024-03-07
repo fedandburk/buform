@@ -12,7 +12,8 @@ public class FormTableViewSource : TableViewSource
         set => Items = value;
     }
 
-    public FormTableViewSource(UITableView tableView) : base(tableView)
+    public FormTableViewSource(UITableView tableView)
+        : base(tableView)
     {
         FormPlatform.Register(TableView);
     }
@@ -51,12 +52,16 @@ public class FormTableViewSource : TableViewSource
 
     protected override string? GetHeaderReuseIdentifier(object item)
     {
-        return FormPlatform.TryGetHeaderReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
+        return FormPlatform.TryGetHeaderReuseIdentifier(item.GetType(), out var reuseIdentifier)
+            ? reuseIdentifier
+            : null;
     }
 
     protected override string? GetFooterReuseIdentifier(object item)
     {
-        return FormPlatform.TryGetFooterReuseIdentifier(item.GetType(), out var reuseIdentifier) ? reuseIdentifier : null;
+        return FormPlatform.TryGetFooterReuseIdentifier(item.GetType(), out var reuseIdentifier)
+            ? reuseIdentifier
+            : null;
     }
 
     protected override string GetCellReuseIdentifier(object item)
@@ -98,7 +103,11 @@ public class FormTableViewSource : TableViewSource
         return cell;
     }
 
-    protected override void WillDisplayHeader(nint section, UITableViewHeaderFooterView view, object item)
+    protected override void WillDisplayHeader(
+        nint section,
+        UITableViewHeaderFooterView view,
+        object item
+    )
     {
         base.WillDisplayHeader(section, view, item);
 
@@ -115,7 +124,11 @@ public class FormTableViewSource : TableViewSource
         headerFooterView.Initialize(formGroup);
     }
 
-    protected override void WillDisplayFooter(nint section, UITableViewHeaderFooterView view, object item)
+    protected override void WillDisplayFooter(
+        nint section,
+        UITableViewHeaderFooterView view,
+        object item
+    )
     {
         base.WillDisplayFooter(section, view, item);
 
@@ -174,7 +187,10 @@ public class FormTableViewSource : TableViewSource
         return false;
     }
 
-    protected override UITableViewCellEditingStyle EditingStyleForRow(NSIndexPath indexPath, object item)
+    protected override UITableViewCellEditingStyle EditingStyleForRow(
+        NSIndexPath indexPath,
+        object item
+    )
     {
         if (item is not IFormItem formItem)
         {
@@ -201,7 +217,11 @@ public class FormTableViewSource : TableViewSource
         return UITableViewCellEditingStyle.None;
     }
 
-    protected override void CommitEditingStyle(UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath, object item)
+    protected override void CommitEditingStyle(
+        UITableViewCellEditingStyle editingStyle,
+        NSIndexPath indexPath,
+        object item
+    )
     {
         if (item is not IFormItem formItem)
         {
@@ -242,8 +262,13 @@ public class FormTableViewSource : TableViewSource
         return group != null && group.MoveCommand.SafeCanExecute(formItem.Value);
     }
 
-    protected override void MoveRow(NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath, object item)
+    protected override void MoveRow(
+        NSIndexPath sourceIndexPath,
+        NSIndexPath destinationIndexPath,
+        object item
+    )
     {
-        GetGroup(sourceIndexPath.Section)?.MoveCommand.SafeExecute((sourceIndexPath.Row, destinationIndexPath.Row));
+        GetGroup(sourceIndexPath.Section)
+            ?.MoveCommand.SafeExecute((sourceIndexPath.Row, destinationIndexPath.Row));
     }
 }

@@ -2,7 +2,8 @@ using FluentValidation;
 
 namespace Buform.Example.Core;
 
-public sealed class CreateConnectionViewModelValidator : AbstractValidator<CreateConnectionViewModel>
+public sealed class CreateConnectionViewModelValidator
+    : AbstractValidator<CreateConnectionViewModel>
 {
     public CreateConnectionViewModelValidator()
     {

@@ -44,7 +44,8 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }
@@ -80,7 +81,8 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
 
 public class CallbackPickerFormItem : CallbackPickerFormItem<string?>
 {
-    public CallbackPickerFormItem(Expression<Func<string?>> targetProperty) : base(targetProperty)
+    public CallbackPickerFormItem(Expression<Func<string?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

@@ -19,7 +19,8 @@ public class SegmentsFormCell : FormCell<ISegmentsFormItem>
         /* Required constructor */
     }
 
-    public SegmentsFormCell(NativeHandle handle) : base(handle)
+    public SegmentsFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -42,25 +43,35 @@ public class SegmentsFormCell : FormCell<ISegmentsFormItem>
 
         SegmentedControl.ValueChanged += OnValueChanged;
 
-        SegmentedControl.SetContentCompressionResistancePriority(1000, UILayoutConstraintAxis.Horizontal);
+        SegmentedControl.SetContentCompressionResistancePriority(
+            1000,
+            UILayoutConstraintAxis.Horizontal
+        );
 
         ContentView.AddSubviews(Label, SegmentedControl);
 
-        _segmentedControlLeadingConstraint = SegmentedControl.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10);
+        _segmentedControlLeadingConstraint = SegmentedControl.LeadingAnchor.ConstraintEqualTo(
+            Label.TrailingAnchor,
+            10
+        );
 
         _labelWidthConstraint = Label.WidthAnchor.ConstraintEqualTo(0);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            _labelWidthConstraint,
-            SegmentedControl.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 8),
-            SegmentedControl.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, -8),
-            _segmentedControlLeadingConstraint,
-            SegmentedControl.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                _labelWidthConstraint,
+                SegmentedControl.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor, 8),
+                SegmentedControl.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor, -8),
+                _segmentedControlLeadingConstraint,
+                SegmentedControl.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void OnValueChanged(object? sender, EventArgs e)

@@ -13,7 +13,8 @@ public sealed class FormItemRegistry
 
         public Holder(Type viewHolderType, int resourceId)
         {
-            ViewHolderType = viewHolderType ?? throw new ArgumentNullException(nameof(viewHolderType));
+            ViewHolderType =
+                viewHolderType ?? throw new ArgumentNullException(nameof(viewHolderType));
             ResourceId = resourceId;
         }
     }
@@ -32,9 +33,9 @@ public sealed class FormItemRegistry
             return true;
         }
 
-        var interfaceTypes = itemType.GetInterfaces().Except(
-            itemType.GetInterfaces().SelectMany(item => item.GetInterfaces())
-        );
+        var interfaceTypes = itemType
+            .GetInterfaces()
+            .Except(itemType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -51,10 +52,7 @@ public sealed class FormItemRegistry
         where TItem : class, IFormItem
         where TViewHolder : FormViewHolder
     {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TViewHolder),
-            resourceId
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TViewHolder), resourceId);
     }
 
     public bool TryGetViewType(Type itemType, out int? viewType)
@@ -82,7 +80,11 @@ public sealed class FormItemRegistry
         return true;
     }
 
-    public bool TryGetViewHolderAndResourceId(int viewType, out Type? viewHolderType, out int? resourceId)
+    public bool TryGetViewHolderAndResourceId(
+        int viewType,
+        out Type? viewHolderType,
+        out int? resourceId
+    )
     {
         var holder = _holders.Values.ElementAtOrDefault(viewType);
 

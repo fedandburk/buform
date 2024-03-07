@@ -6,7 +6,11 @@ namespace Buform;
 [Register(nameof(AsyncPickerFormCell))]
 public class AsyncPickerFormCell : PickerFormCellBase<IAsyncPickerFormItem>
 {
-    protected virtual PickerPresenterBase<IAsyncPickerFormItem>? PickerPresenter { get; private set; }
+    protected virtual PickerPresenterBase<IAsyncPickerFormItem>? PickerPresenter
+    {
+        get;
+        private set;
+    }
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
@@ -15,7 +19,8 @@ public class AsyncPickerFormCell : PickerFormCellBase<IAsyncPickerFormItem>
         /* Required constructor */
     }
 
-    public AsyncPickerFormCell(NativeHandle handle) : base(handle)
+    public AsyncPickerFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -36,9 +41,12 @@ public class AsyncPickerFormCell : PickerFormCellBase<IAsyncPickerFormItem>
 
         PickerPresenter = Item.InputType switch
         {
-            PickerInputType.Default => new DefaultPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
-            PickerInputType.Dialog => new DialogPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
-            PickerInputType.PopUp => new DefaultPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
+            PickerInputType.Default
+                => new DefaultPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
+            PickerInputType.Dialog
+                => new DialogPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
+            PickerInputType.PopUp
+                => new DefaultPickerPresenter<IAsyncPickerFormItem>(CreateViewController),
             _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType), Item.InputType, null)
         };
     }

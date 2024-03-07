@@ -38,7 +38,10 @@ namespace Buform.Example.Forms.iOS
         {
             base.InitializeFirstChance(iocProvider);
 
-            iocProvider.LazyConstructAndRegisterSingleton<IMvxCommandHelper, MvxStrongCommandHelper>();
+            iocProvider.LazyConstructAndRegisterSingleton<
+                IMvxCommandHelper,
+                MvxStrongCommandHelper
+            >();
         }
     }
 }

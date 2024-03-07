@@ -11,16 +11,18 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
 
     public IFormItem? FormItem { get; private set; }
 
-    protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    protected FormViewHolder(View itemView) : base(itemView)
+    protected FormViewHolder(View itemView)
+        : base(itemView)
     {
         /* Required constructor */
     }
-    
+
     protected abstract void Initialize();
 
     public virtual void Initialize(IFormItem item)
@@ -43,16 +45,19 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
     }
 }
 
-public abstract class FormViewHolder<TItem> : FormViewHolder where TItem : class, IFormItem
+public abstract class FormViewHolder<TItem> : FormViewHolder
+    where TItem : class, IFormItem
 {
     protected TItem? Item { get; private set; }
 
-    protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    protected FormViewHolder(View itemView) : base(itemView)
+    protected FormViewHolder(View itemView)
+        : base(itemView)
     {
         /* Required constructor */
     }

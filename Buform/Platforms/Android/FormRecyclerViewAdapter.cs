@@ -84,7 +84,11 @@ public class FormRecyclerViewAdapter : RecyclerView.Adapter
                 NotifyDataSetChanged();
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(NotifyCollectionChangedEventArgs), args, null);
+                throw new ArgumentOutOfRangeException(
+                    nameof(NotifyCollectionChangedEventArgs),
+                    args,
+                    null
+                );
         }
     }
 
@@ -124,7 +128,13 @@ public class FormRecyclerViewAdapter : RecyclerView.Adapter
 
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
     {
-        if (!FormPlatform.TryGetViewHolderAndResourceId(viewType, out var viewHolderType, out var resourceId))
+        if (
+            !FormPlatform.TryGetViewHolderAndResourceId(
+                viewType,
+                out var viewHolderType,
+                out var resourceId
+            )
+        )
         {
             throw new FormViewNotFoundException(viewType);
         }

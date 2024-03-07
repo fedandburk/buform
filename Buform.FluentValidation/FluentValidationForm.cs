@@ -8,7 +8,8 @@ public sealed class FluentValidationForm<TTarget> : ValidatableForm
     private readonly TTarget _target;
     private readonly IValidator<TTarget> _validator;
 
-    public FluentValidationForm(TTarget target, IValidator<TTarget> validator) : base(target!)
+    public FluentValidationForm(TTarget target, IValidator<TTarget> validator)
+        : base(target!)
     {
         _target = target;
         _validator = validator;
@@ -27,8 +28,8 @@ public sealed class FluentValidationForm<TTarget> : ValidatableForm
 
     private static FormValidationError[] GetValidationErrors(ValidationResult result)
     {
-        return result.Errors
-            .GroupBy(item => item.PropertyName)
+        return result
+            .Errors.GroupBy(item => item.PropertyName)
             .Select(item => GetValidationError(item.Key, item.ToArray()))
             .ToArray();
     }

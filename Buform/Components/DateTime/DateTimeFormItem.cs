@@ -8,7 +8,7 @@ public class DateTimeFormItem : ValidatableFormItem<DateTime?>
     private DateTime _maxValue;
     private string? _label;
     private DateTimeInputType _inputType;
-        
+
     public virtual DateTime MinValue
     {
         get => _minValue;
@@ -53,7 +53,8 @@ public class DateTimeFormItem : ValidatableFormItem<DateTime?>
         }
     }
 
-    public DateTimeFormItem(Expression<Func<DateTime?>> targetProperty) : base(targetProperty)
+    public DateTimeFormItem(Expression<Func<DateTime?>> targetProperty)
+        : base(targetProperty)
     {
         _minValue = DateTime.MinValue;
         _maxValue = DateTime.MaxValue;

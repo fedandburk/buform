@@ -17,22 +17,26 @@ public class FormRecyclerView : RecyclerView
 
     public override bool HasFixedSize => false;
 
-    protected FormRecyclerView(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    protected FormRecyclerView(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public FormRecyclerView(Context context) : base(context)
+    public FormRecyclerView(Context context)
+        : base(context)
     {
         Initialize();
     }
 
-    public FormRecyclerView(Context context, IAttributeSet? attrs) : base(context, attrs)
+    public FormRecyclerView(Context context, IAttributeSet? attrs)
+        : base(context, attrs)
     {
         Initialize();
     }
 
-    public FormRecyclerView(Context context, IAttributeSet? attrs, int defStyleAttr) : base(context, attrs, defStyleAttr)
+    public FormRecyclerView(Context context, IAttributeSet? attrs, int defStyleAttr)
+        : base(context, attrs, defStyleAttr)
     {
         Initialize();
     }

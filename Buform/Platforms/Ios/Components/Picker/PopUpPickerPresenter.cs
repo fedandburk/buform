@@ -1,7 +1,8 @@
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class PopUpPickerPresenter<TItem> : PickerPresenterBase<TItem> where TItem : class, IPickerFormItemBase
+public class PopUpPickerPresenter<TItem> : PickerPresenterBase<TItem>
+    where TItem : class, IPickerFormItemBase
 {
     protected Func<TItem, UIAlertController> AlertControllerFactory { get; }
 
@@ -30,6 +31,8 @@ public class PopUpPickerPresenter<TItem> : PickerPresenterBase<TItem> where TIte
             }
         }
 
-        await viewController.PresentViewControllerAsync(alertController, true).ConfigureAwait(false);
+        await viewController
+            .PresentViewControllerAsync(alertController, true)
+            .ConfigureAwait(false);
     }
 }

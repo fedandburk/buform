@@ -9,12 +9,14 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 {
     private Button? _button;
 
-    public ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    public ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public ButtonFormViewHolder(View itemView) : base(itemView)
+    public ButtonFormViewHolder(View itemView)
+        : base(itemView)
     {
         /* Required constructor */
     }

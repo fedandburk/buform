@@ -10,7 +10,8 @@ namespace Buform.Example.MvvmCross.Droid;
 // ReSharper disable once UnusedType.Global
 public sealed class AndroidApplication : MvxAndroidApplication<Setup, Core.Application>
 {
-    public AndroidApplication(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+    public AndroidApplication(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
         /* Required constructor */
     }

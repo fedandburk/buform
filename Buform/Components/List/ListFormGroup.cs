@@ -58,7 +58,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
             }
 
             _source = value ?? Array.Empty<TValue>();
-                
+
             if (_source is INotifyCollectionChanged newNotifyCollectionChanged)
             {
                 newNotifyCollectionChanged.CollectionChanged += OnCollectionChanged;
@@ -94,10 +94,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
 
         foreach (var value in Source)
         {
-            var item = new ListFormItem<TValue>(value)
-            {
-                Formatter = Formatter
-            };
+            var item = new ListFormItem<TValue>(value) { Formatter = Formatter };
 
             Add(item);
         }

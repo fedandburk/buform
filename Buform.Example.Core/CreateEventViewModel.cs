@@ -34,14 +34,8 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
         {
             new TextFormGroup
             {
-                new TextFormItem(() => model.Title)
-                {
-                    Placeholder = "Title"
-                },
-                new TextFormItem(() => model.Location)
-                {
-                    Placeholder = "Location or Video Call"
-                }
+                new TextFormItem(() => model.Title) { Placeholder = "Title" },
+                new TextFormItem(() => model.Location) { Placeholder = "Location or Video Call" }
             },
             new TextFormGroup
             {
@@ -71,7 +65,8 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
                 new PickerFormItem<CreateEventModel.RepeatType>(() => model.Repeat)
                 {
                     Label = "Repeat",
-                    Source = Enum.GetValues(typeof(CreateEventModel.RepeatType)).OfType<CreateEventModel.RepeatType>(),
+                    Source = Enum.GetValues(typeof(CreateEventModel.RepeatType))
+                        .OfType<CreateEventModel.RepeatType>(),
                     Formatter = item => item.Humanize(LetterCasing.Title)
                 },
                 new PickerFormItem<CreateEventModel.TravelTimeType>(() => model.TravelTime)
@@ -84,10 +79,7 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
             },
             new TextFormGroup
             {
-                new ButtonFormItem(new MvxCommand(AddAttachment))
-                {
-                    Label = "Add attachment..."
-                }
+                new ButtonFormItem(new MvxCommand(AddAttachment)) { Label = "Add attachment..." }
             },
             new TextFormGroup
             {
@@ -96,10 +88,7 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
                     Placeholder = "URL",
                     InputType = TextInputType.Url
                 },
-                new MultilineTextFormItem(() => model.Notes)
-                {
-                    Placeholder = "Notes"
-                }
+                new MultilineTextFormItem(() => model.Notes) { Placeholder = "Notes" }
             },
         };
     }
@@ -115,11 +104,7 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
         return Form?.IsValid ?? false;
     }
 
-    private void Create()
-    {
-    }
+    private void Create() { }
 
-    private void AddAttachment()
-    {
-    }
+    private void AddAttachment() { }
 }

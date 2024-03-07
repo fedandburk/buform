@@ -1,6 +1,7 @@
 namespace Buform;
 
-public abstract class PickerFormCellBase<TItem> : FormCell<TItem> where TItem : class, IFormItem
+public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
+    where TItem : class, IFormItem
 {
     protected virtual UILabel? Label { get; set; }
     protected virtual UILabel? ValueLabel { get; set; }
@@ -10,7 +11,8 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem> where TItem : 
         /* Required constructor */
     }
 
-    protected PickerFormCellBase(IntPtr handle) : base(handle)
+    protected PickerFormCellBase(IntPtr handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -36,16 +38,22 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem> where TItem : 
 
         ContentView.AddSubviews(Label, ValueLabel);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            ValueLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            ValueLabel.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            ValueLabel.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
-            ValueLabel.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                ValueLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                ValueLabel.BottomAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.BottomAnchor
+                ),
+                ValueLabel.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
+                ValueLabel.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -55,9 +63,10 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem> where TItem : 
             return;
         }
 
-        SelectionStyle = Item?.IsReadOnly ?? true
-            ? UITableViewCellSelectionStyle.None
-            : UITableViewCellSelectionStyle.Default;
+        SelectionStyle =
+            Item?.IsReadOnly ?? true
+                ? UITableViewCellSelectionStyle.None
+                : UITableViewCellSelectionStyle.Default;
     }
 
     protected virtual void UpdateLabel(string? text)

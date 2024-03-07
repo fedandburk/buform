@@ -70,7 +70,8 @@ public class TextFormItem<TValue> : ValidatableFormItem<TValue>, ITextFormItem
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public TextFormItem(Expression<Func<TValue>> targetProperty, Func<string?, TValue?> converter) : base(targetProperty)
+    public TextFormItem(Expression<Func<TValue>> targetProperty, Func<string?, TValue?> converter)
+        : base(targetProperty)
     {
         _converter = converter ?? throw new ArgumentNullException(nameof(converter));
     }
@@ -100,7 +101,8 @@ public class TextFormItem<TValue> : ValidatableFormItem<TValue>, ITextFormItem
 
 public class TextFormItem : TextFormItem<string?>
 {
-    public TextFormItem(Expression<Func<string?>> targetProperty) : base(targetProperty, item => item)
+    public TextFormItem(Expression<Func<string?>> targetProperty)
+        : base(targetProperty, item => item)
     {
         /* Required constructor */
     }

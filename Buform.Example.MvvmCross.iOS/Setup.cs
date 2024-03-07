@@ -18,10 +18,7 @@ public sealed class Setup : MvxIosSetup<Application>
 
     protected override ILoggerFactory CreateLogFactory()
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.NSLog()
-            .CreateLogger();
+        Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.NSLog().CreateLogger();
 
         return new SerilogLoggerFactory();
     }

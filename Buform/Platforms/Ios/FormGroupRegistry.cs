@@ -41,9 +41,9 @@ public sealed class FormGroupRegistry
             return true;
         }
 
-        var interfaceTypes = groupType.GetInterfaces().Except(
-            groupType.GetInterfaces().SelectMany(item => item.GetInterfaces())
-        );
+        var interfaceTypes = groupType
+            .GetInterfaces()
+            .Except(groupType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -105,10 +105,13 @@ public sealed class FormGroupRegistry
 
         foreach (var holder in _holders.Values)
         {
-            switch(holder.RegistrationType)
+            switch (holder.RegistrationType)
             {
                 case RegistrationType.Class:
-                    tableView.RegisterClassForHeaderFooterViewReuse(holder.ViewType, holder.ViewType.Name);
+                    tableView.RegisterClassForHeaderFooterViewReuse(
+                        holder.ViewType,
+                        holder.ViewType.Name
+                    );
                     break;
                 case RegistrationType.Nib:
                     tableView.RegisterNibForHeaderFooterViewReuse(

@@ -16,10 +16,7 @@ internal sealed class TableViewHeaderFooterView : UITableViewHeaderFooterView
 
     private CGSize _estimatedSize;
 
-    public TableViewHeaderFooterView(
-        Type viewType,
-        object bindingContext
-    )
+    public TableViewHeaderFooterView(Type viewType, object bindingContext)
         : base((NSString)viewType.Name)
     {
         _formsHeaderFooterView = (Activator.CreateInstance(viewType) as FormsHeaderFooterView)!;
@@ -47,10 +44,7 @@ internal sealed class TableViewHeaderFooterView : UITableViewHeaderFooterView
 
         var verticalMargins = LayoutMargins.Top + LayoutMargins.Bottom;
 
-        _estimatedSize = new CGSize(
-            width,
-            Math.Ceiling(request.Request.Height - verticalMargins)
-        );
+        _estimatedSize = new CGSize(width, Math.Ceiling(request.Request.Height - verticalMargins));
     }
 
     public override CGSize SizeThatFits(CGSize size)
@@ -64,15 +58,13 @@ internal sealed class TableViewHeaderFooterView : UITableViewHeaderFooterView
 
         EstimateViewSize();
 
-        var bounds = new Rect(
-            0,
-            0,
-            _estimatedSize.Width,
-            _estimatedSize.Height
+        var bounds = new Rect(0, 0, _estimatedSize.Width, _estimatedSize.Height);
+
+        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(
+            _formsHeaderFooterView,
+            bounds
         );
 
-        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(_formsHeaderFooterView, bounds);
-        
         _viewHandler.PlatformView!.Frame = bounds.ToRectangleF();
     }
 }

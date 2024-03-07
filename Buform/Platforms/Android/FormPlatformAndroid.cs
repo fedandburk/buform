@@ -23,8 +23,16 @@ public static class FormPlatform
         return ItemRegistry.TryGetViewType(itemType, out viewType);
     }
 
-    public static bool TryGetViewHolderAndResourceId(int viewType, out Type? viewHolderType, out int? resourceId)
+    public static bool TryGetViewHolderAndResourceId(
+        int viewType,
+        out Type? viewHolderType,
+        out int? resourceId
+    )
     {
-        return ItemRegistry.TryGetViewHolderAndResourceId(viewType, out viewHolderType, out resourceId);
+        return ItemRegistry.TryGetViewHolderAndResourceId(
+            viewType,
+            out viewHolderType,
+            out resourceId
+        );
     }
 }

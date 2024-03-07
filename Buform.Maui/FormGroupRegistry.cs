@@ -26,9 +26,9 @@ internal sealed class FormGroupRegistry
             return true;
         }
 
-        var interfaceTypes = groupType.GetInterfaces().Except(
-            groupType.GetInterfaces().SelectMany(item => item.GetInterfaces())
-        );
+        var interfaceTypes = groupType
+            .GetInterfaces()
+            .Except(groupType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
         foreach (var interfaceType in interfaceTypes)
         {

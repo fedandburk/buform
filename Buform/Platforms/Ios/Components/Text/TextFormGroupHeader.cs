@@ -10,7 +10,8 @@ public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
         /* Required constructor */
     }
 
-    public TextFormGroupHeader(NativeHandle handle) : base(handle)
+    public TextFormGroupHeader(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }

@@ -14,7 +14,8 @@ public class SwitchFormCell : FormCell<SwitchFormItem>
         /* Required constructor */
     }
 
-    public SwitchFormCell(NativeHandle handle) : base(handle)
+    public SwitchFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -37,13 +38,17 @@ public class SwitchFormCell : FormCell<SwitchFormItem>
 
         ContentView.AddSubviews(Label);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                Label.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     private void OnValueChanged(object? sender, EventArgs e)
@@ -80,7 +85,7 @@ public class SwitchFormCell : FormCell<SwitchFormItem>
     {
         Switch?.SetState(Item?.Value ?? false, isAnimated);
     }
-        
+
     private void UpdateValidationErrorMessage()
     {
         if (Label == null)

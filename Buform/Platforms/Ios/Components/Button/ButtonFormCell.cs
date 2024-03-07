@@ -16,7 +16,8 @@ public class ButtonFormCell : FormCell<ButtonFormItem>
         /* Required constructor */
     }
 
-    public ButtonFormCell(NativeHandle handle) : base(handle)
+    public ButtonFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -32,13 +33,17 @@ public class ButtonFormCell : FormCell<ButtonFormItem>
 
         ContentView.AddSubviews(Label);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                Label.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -80,7 +85,12 @@ public class ButtonFormCell : FormCell<ButtonFormItem>
             ButtonInputType.Done => UIButton.Appearance.TintColor,
             ButtonInputType.Destructive => UIColor.SystemRed,
             null => UIColor.SystemBlue,
-            _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType), Item?.InputType, null)
+            _
+                => throw new ArgumentOutOfRangeException(
+                    nameof(Item.InputType),
+                    Item?.InputType,
+                    null
+                )
         };
     }
 

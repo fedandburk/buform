@@ -19,7 +19,8 @@ public class TextFormCell : FormCell<ITextFormItem>
         /* Required constructor */
     }
 
-    public TextFormCell(NativeHandle handle) : base(handle)
+    public TextFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -47,21 +48,30 @@ public class TextFormCell : FormCell<ITextFormItem>
 
         ContentView.AddSubviews(Label, TextField);
 
-        _textFieldLeadingConstraint = Label.TrailingAnchor.ConstraintEqualTo(TextField.LeadingAnchor, -10);
+        _textFieldLeadingConstraint = Label.TrailingAnchor.ConstraintEqualTo(
+            TextField.LeadingAnchor,
+            -10
+        );
 
         _labelWidthConstraint = Label.WidthAnchor.ConstraintEqualTo(0);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            _labelWidthConstraint,
-            TextField.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            TextField.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            _textFieldLeadingConstraint,
-            TextField.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                _labelWidthConstraint,
+                TextField.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                TextField.BottomAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.BottomAnchor
+                ),
+                _textFieldLeadingConstraint,
+                TextField.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     private void OnEditingChanged(object? sender, EventArgs e)
@@ -138,7 +148,12 @@ public class TextFormCell : FormCell<ITextFormItem>
             TextInputType.Url => UIKeyboardType.Url,
             TextInputType.EmailAddress => UIKeyboardType.EmailAddress,
             null => UIKeyboardType.Default,
-            _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType),  Item?.InputType, null)
+            _
+                => throw new ArgumentOutOfRangeException(
+                    nameof(Item.InputType),
+                    Item?.InputType,
+                    null
+                )
         };
     }
 

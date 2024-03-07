@@ -6,7 +6,7 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 {
     private Func<TValue?, string?>? _formatter;
     private Func<CancellationToken, Task<IEnumerable<TValue>>>? _sourceFactory;
-        
+
     public virtual Func<TValue?, string?>? Formatter
     {
         get => _formatter;
@@ -39,17 +39,15 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty) : base(targetProperty)
+    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value)
-        {
-            Formatter = Formatter
-        };
+        return new PickerOptionFormItem<TValue>(value) { Formatter = Formatter };
     }
 
     public virtual async Task LoadItemsAsync(CancellationToken cancellationToken)
@@ -72,7 +70,10 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
             State = AsyncPickerLoadingState.Loading;
             NotifyPropertyChanged(nameof(State));
 
-            var source = SourceFactory == null ? null : await SourceFactory(cancellationToken).ConfigureAwait(false);
+            var source =
+                SourceFactory == null
+                    ? null
+                    : await SourceFactory(cancellationToken).ConfigureAwait(false);
 
             Options = source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
             NotifyPropertyChanged(nameof(Options));
@@ -110,7 +111,8 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
 public class AsyncPickerFormItem : AsyncPickerFormItem<string?>
 {
-    public AsyncPickerFormItem(Expression<Func<string?>> targetProperty) : base(targetProperty)
+    public AsyncPickerFormItem(Expression<Func<string?>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

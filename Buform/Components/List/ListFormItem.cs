@@ -4,7 +4,7 @@ namespace Buform;
 public class ListFormItem<TValue> : FormItem<TValue>, IListFormItem
 {
     private Func<TValue?, string?>? _formatter;
-        
+
     public virtual Func<TValue?, string?>? Formatter
     {
         get => _formatter;
@@ -19,7 +19,8 @@ public class ListFormItem<TValue> : FormItem<TValue>, IListFormItem
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public ListFormItem(TValue value) : base(value)
+    public ListFormItem(TValue value)
+        : base(value)
     {
         /* Required constructor */
     }

@@ -15,7 +15,8 @@ public class PickerFormCell : PickerFormCellBase<IPickerFormItem>
         /* Required constructor */
     }
 
-    public PickerFormCell(NativeHandle handle) : base(handle)
+    public PickerFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -77,9 +78,12 @@ public class PickerFormCell : PickerFormCellBase<IPickerFormItem>
 
         PickerPresenter = Item.InputType switch
         {
-            PickerInputType.Default => new DefaultPickerPresenter<IPickerFormItem>(CreateViewController),
-            PickerInputType.Dialog => new DialogPickerPresenter<IPickerFormItem>(CreateViewController),
-            PickerInputType.PopUp => new PopUpPickerPresenter<IPickerFormItem>(CreateAlertController),
+            PickerInputType.Default
+                => new DefaultPickerPresenter<IPickerFormItem>(CreateViewController),
+            PickerInputType.Dialog
+                => new DialogPickerPresenter<IPickerFormItem>(CreateViewController),
+            PickerInputType.PopUp
+                => new PopUpPickerPresenter<IPickerFormItem>(CreateAlertController),
             _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType), Item.InputType, null)
         };
     }

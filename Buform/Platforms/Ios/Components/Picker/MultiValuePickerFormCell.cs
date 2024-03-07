@@ -6,7 +6,11 @@ namespace Buform;
 [Register(nameof(MultiValuePickerFormCell))]
 public class MultiValuePickerFormCell : PickerFormCellBase<IMultiValuePickerFormItem>
 {
-    protected virtual PickerPresenterBase<IMultiValuePickerFormItem>? PickerPresenter { get; private set; }
+    protected virtual PickerPresenterBase<IMultiValuePickerFormItem>? PickerPresenter
+    {
+        get;
+        private set;
+    }
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
@@ -15,14 +19,18 @@ public class MultiValuePickerFormCell : PickerFormCellBase<IMultiValuePickerForm
         /* Required constructor */
     }
 
-    public MultiValuePickerFormCell(NativeHandle handle) : base(handle)
+    public MultiValuePickerFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
 
     protected virtual UIViewController CreateViewController(IMultiValuePickerFormItem item)
     {
-        return new PickerViewController<IMultiValuePickerFormItem>(UITableViewStyle.InsetGrouped, item);
+        return new PickerViewController<IMultiValuePickerFormItem>(
+            UITableViewStyle.InsetGrouped,
+            item
+        );
     }
 
     private void UpdateInputType()
@@ -36,9 +44,12 @@ public class MultiValuePickerFormCell : PickerFormCellBase<IMultiValuePickerForm
 
         PickerPresenter = Item.InputType switch
         {
-            PickerInputType.Default => new DefaultPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
-            PickerInputType.Dialog => new DialogPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
-            PickerInputType.PopUp => new DefaultPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
+            PickerInputType.Default
+                => new DefaultPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
+            PickerInputType.Dialog
+                => new DialogPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
+            PickerInputType.PopUp
+                => new DefaultPickerPresenter<IMultiValuePickerFormItem>(CreateViewController),
             _ => throw new ArgumentOutOfRangeException(nameof(Item.InputType), Item.InputType, null)
         };
     }

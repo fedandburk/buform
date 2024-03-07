@@ -53,7 +53,8 @@ public class StepperFormItem : ValidatableFormItem<int>
         }
     }
 
-    public StepperFormItem(Expression<Func<int>> targetProperty) : base(targetProperty)
+    public StepperFormItem(Expression<Func<int>> targetProperty)
+        : base(targetProperty)
     {
         _minValue = int.MinValue;
         _maxValue = int.MaxValue;

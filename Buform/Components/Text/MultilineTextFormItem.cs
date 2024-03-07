@@ -46,7 +46,10 @@ public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMulti
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public MultilineTextFormItem(Expression<Func<TValue>> targetProperty, Func<string?, TValue?> converter) 
+    public MultilineTextFormItem(
+        Expression<Func<TValue>> targetProperty,
+        Func<string?, TValue?> converter
+    )
         : base(targetProperty)
     {
         _converter = converter ?? throw new ArgumentNullException(nameof(converter));
@@ -77,7 +80,7 @@ public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMulti
 
 public class MultilineTextFormItem : MultilineTextFormItem<string?>
 {
-    public MultilineTextFormItem(Expression<Func<string?>> targetProperty) 
+    public MultilineTextFormItem(Expression<Func<string?>> targetProperty)
         : base(targetProperty, item => item)
     {
         /* Required constructor */

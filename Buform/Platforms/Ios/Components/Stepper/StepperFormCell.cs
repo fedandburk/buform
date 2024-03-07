@@ -14,7 +14,8 @@ public class StepperFormCell : FormCell<StepperFormItem>
         /* Required constructor */
     }
 
-    public StepperFormCell(NativeHandle handle) : base(handle)
+    public StepperFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -37,13 +38,17 @@ public class StepperFormCell : FormCell<StepperFormItem>
 
         ContentView.AddSubviews(Label);
 
-        ContentView.AddConstraints(new[]
-        {
-            Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            Label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor)
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+                Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+                Label.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                )
+            }
+        );
     }
 
     protected virtual void OnValueChanged(object? sender, EventArgs e)

@@ -65,10 +65,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
         {
             new TextFormGroup("Color Pickers")
             {
-                new ColorPickerFormItem(() => Color)
-                {
-                    Label = "Color Picker"
-                }
+                new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
             },
             new ListFormGroup<int>("List")
             {
@@ -141,7 +138,8 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     Formatter = item => item?.ToWords() ?? "None",
                     SourceFactory = async cancellationToken =>
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
+                            .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
                     }
                 },
@@ -154,7 +152,8 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     Formatter = item => item?.ToRoman() ?? "None",
                     SourceFactory = async cancellationToken =>
                     {
-                        await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken).ConfigureAwait(false);
+                        await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
+                            .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
                     }
                 }
@@ -212,25 +211,14 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     Label = "Phone Text",
                     InputType = TextInputType.Phone
                 },
-                new TextFormItem(() => Text)
-                {
-                    Label = "Url Text",
-                    InputType = TextInputType.Url
-                },
+                new TextFormItem(() => Text) { Label = "Url Text", InputType = TextInputType.Url },
                 new TextFormItem(() => Text)
                 {
                     Label = "Email Address Text",
                     InputType = TextInputType.EmailAddress
                 },
-                new TextFormItem(() => Text)
-                {
-                    Label = "Password Text",
-                    IsSecured = true
-                },
-                new MultilineTextFormItem(() => MultilineText)
-                {
-                    Placeholder = "Multiline text"
-                }
+                new TextFormItem(() => Text) { Label = "Password Text", IsSecured = true },
+                new MultilineTextFormItem(() => MultilineText) { Placeholder = "Multiline text" }
             },
             new TextFormGroup("Sliders")
             {
@@ -242,26 +230,17 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     Label = "Slider value",
                     InputType = TextInputType.Decimal
                 },
-                new SliderFormItem(() => Slider)
-                {
-                    MinValue = 0,
-                    MaxValue = 10
-                }
+                new SliderFormItem(() => Slider) { MinValue = 0, MaxValue = 10 }
             },
             new TextFormGroup("Switches")
             {
                 new SwitchFormItem(() => Switch)
                 {
                     Label = "Switch",
-                    ValueChangedCallback = (form, value) => form.GetItem(() => HiddenText)!.IsVisible = value
+                    ValueChangedCallback = (form, value) =>
+                        form.GetItem(() => HiddenText)!.IsVisible = value
                 },
-                new TextFormItem(
-                    () => HiddenText
-                )
-                {
-                    Label = "Hidden text",
-                    IsVisible = false
-                }
+                new TextFormItem(() => HiddenText) { Label = "Hidden text", IsVisible = false }
             },
             new TextFormGroup("Steppers")
             {
