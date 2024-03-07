@@ -2,14 +2,12 @@
 
     <PropertyGroup>
         <TargetFrameworks>net7.0;net7.0-ios;net7.0-android</TargetFrameworks>
-        <UseMaui>false</UseMaui>
         <SingleProject>true</SingleProject>
-        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
-        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">21.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">26</SupportedOSPlatformVersion>
         <PackageId>Fedandburk.Buform</PackageId>
         <Title>Buform</Title>
         <Description>A cross-platform form builder for .NET iOS/Android</Description>
@@ -28,188 +26,32 @@
         <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
     </PropertyGroup>
 
-    <!--    Common    -->
-
     <ItemGroup>
         <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.8" />
-        <Compile Include="ExpressionExtensions.cs" />
-        <Compile Include="Form.cs" />
-        <Compile Include="FormCollection.cs" />
-        <Compile Include="FormComponentAttribute.cs" />
-        <Compile Include="FormComponentRegistry.cs" />
-        <Compile Include="FormGroup.cs" />
-        <Compile Include="FormItem.cs" />
-        <Compile Include="FormValueChangedEventArgs.cs" />
-        <Compile Include="FormViewNotFoundException.cs" />
-        <Compile Include="IFormComponent.cs" />
-        <Compile Include="IFormGroup.cs" />
-        <Compile Include="IFormItem.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
         <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.8" />
-        <Compile Include="Ios\*.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
-        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.3.2.2" />
+        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.3.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="Platforms\**\*.cs" />
+        <Compile Remove="Resources\*.cs" />
+        <None Include="Platforms\**\*.cs" />
+        <None Include="Resources\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
+        <Compile Include="Platforms\Ios\**\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+        <Compile Include="Platforms\Android\**\*.cs" />
         <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
-        <Compile Include="Android\*.cs" />
-    </ItemGroup>
-
-    <!--    Validation    -->
-
-    <ItemGroup>
-        <Compile Include="Validation\FormValidationError.cs" />
-        <Compile Include="Validation\IValidatableFormItem.cs" />
-        <Compile Include="Validation\ValidatableForm.cs" />
-        <Compile Include="Validation\ValidatableFormItem.cs" />
-    </ItemGroup>
-
-    <!--    Button    -->
-
-    <ItemGroup>
-        <Compile Include="Button\ButtonFormItem.cs" />
-        <Compile Include="Button\ButtonInputType.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Button\ButtonFormComponentIos.cs" />
-        <Compile Include="Button\ButtonFormCell.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
-    </ItemGroup>
-
-    <!--    DateTime    -->
-
-    <ItemGroup>
-        <Compile Include="DateTime\DateTimeFormItem.cs" />
-        <Compile Include="DateTime\DateTimeInputType.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="DateTime\DateTimeExtensions.cs" />
-        <Compile Include="DateTime\DateTimeFormCell.cs" />
-        <Compile Include="DateTime\DateTimeFormComponentIos.cs" />
-        <Compile Include="DateTime\NsDateExtensions.cs" />
-    </ItemGroup>
-
-    <!--    List    -->
-
-    <ItemGroup>
-        <Compile Include="List\IListFormGroup.cs" />
-        <Compile Include="List\IListFormItem.cs" />
-        <Compile Include="List\ListFormGroup.cs" />
-        <Compile Include="List\ListFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="List\ListFormCell.cs" />
-        <Compile Include="List\ListFormComponentIos.cs" />
-        <Compile Include="List\ListFormGroupFooter.cs" />
-        <Compile Include="List\ListFormGroupHeader.cs" />
-    </ItemGroup>
-
-    <!--    Picker    -->
-
-    <ItemGroup>
-        <Compile Include="Picker\AsyncPickerFormItem.cs" />
-        <Compile Include="Picker\AsyncPickerLoadingState.cs" />
-        <Compile Include="Picker\CallbackPickerFormItem.cs" />
-        <Compile Include="Picker\IAsyncPickerFormItem.cs" />
-        <Compile Include="Picker\ICallbackPickerFormItem.cs" />
-        <Compile Include="Picker\IMultiValuePickerFormItem.cs" />
-        <Compile Include="Picker\IPickerFormItem.cs" />
-        <Compile Include="Picker\IPickerFormItemBase.cs" />
-        <Compile Include="Picker\IPickerOptionFormItem.cs" />
-        <Compile Include="Picker\MultiValuePickerFormItem.cs" />
-        <Compile Include="Picker\PickerFormItem.cs" />
-        <Compile Include="Picker\PickerFormItemBase.cs" />
-        <Compile Include="Picker\PickerInputType.cs" />
-        <Compile Include="Picker\PickerOptionFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Picker\AsyncPickerFormCell.cs" />
-        <Compile Include="Picker\AsyncPickerViewController.cs" />
-        <Compile Include="Picker\CallbackPickerFormCell.cs" />
-        <Compile Include="Picker\DefaultPickerPresenter.cs" />
-        <Compile Include="Picker\DialogPickerPresenter.cs" />
-        <Compile Include="Picker\MultiValuePickerFormCell.cs" />
-        <Compile Include="Picker\PickerFormCell.cs" />
-        <Compile Include="Picker\PickerFormCellBase.cs" />
-        <Compile Include="Picker\PickerFormComponentIos.cs" />
-        <Compile Include="Picker\PickerPresenterBase.cs" />
-        <Compile Include="Picker\PickerViewController.cs" />
-        <Compile Include="Picker\PopUpPickerPresenter.cs" />
-    </ItemGroup>
-
-    <!--    Segments    -->
-
-    <ItemGroup>
-        <Compile Include="Segments\ISegmentsFormItem.cs" />
-        <Compile Include="Segments\ISegmentsOptionFormItem.cs" />
-        <Compile Include="Segments\SegmentsFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Segments\SegmentsFormCell.cs" />
-        <Compile Include="Segments\SegmentsFormComponentIos.cs" />
-    </ItemGroup>
-
-    <!--    Slider    -->
-
-    <ItemGroup>
-        <Compile Include="Segments\SegmentsOptionFormItem.cs" />
-        <Compile Include="Slider\SliderFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Slider\SliderFormCell.cs" />
-        <Compile Include="Slider\SliderFormComponentIos.cs" />
-    </ItemGroup>
-
-    <!--    Stepper    -->
-
-    <ItemGroup>
-        <Compile Include="Stepper\StepperFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Stepper\StepperFormCell.cs" />
-        <Compile Include="Stepper\StepperFormComponentIos.cs" />
-    </ItemGroup>
-
-    <!--    Switch    -->
-
-    <ItemGroup>
-        <Compile Include="Switch\SwitchFormItem.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Switch\SwitchFormCell.cs" />
-        <Compile Include="Switch\SwitchFormComponentIos.cs" />
-    </ItemGroup>
-
-    <!--    Text    -->
-
-    <ItemGroup>
-        <Compile Include="Text\IMultilineTextFormItem.cs" />
-        <Compile Include="Text\ITextFormItem.cs" />
-        <Compile Include="Text\MultilineTextFormItem.cs" />
-        <Compile Include="Text\TextFormGroup.cs" />
-        <Compile Include="Text\TextFormItem.cs" />
-        <Compile Include="Text\TextInputType.cs" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
-        <Compile Include="Text\FormTextView.cs" />
-        <Compile Include="Text\MultilineTextFormCell.cs" />
-        <Compile Include="Text\TextFormCell.cs" />
-        <Compile Include="Text\TextFormComponentIos.cs" />
-        <Compile Include="Text\TextFormGroupFooter.cs" />
-        <Compile Include="Text\TextFormGroupHeader.cs" />
     </ItemGroup>
 
 </Project>
