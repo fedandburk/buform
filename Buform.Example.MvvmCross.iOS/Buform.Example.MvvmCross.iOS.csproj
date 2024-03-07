@@ -2,13 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0-ios</TargetFramework>
-        <UseMaui>false</UseMaui>
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
-        <Platforms>iPhoneSimulator;iPhone</Platforms>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Buform</RootNamespace>
         <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <ApplicationId>com.fedandburk.buform</ApplicationId>
         <ApplicationTitle>Buform</ApplicationTitle>
@@ -16,18 +13,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Fedandburk.MvvmCross.Extensions" Version="1.0.3" />
-        <PackageReference Include="FluentValidation" Version="11.9.0" />
-        <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-        <PackageReference Include="MvvmCross" Version="9.1.1" />
-        <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="All" />
+        <PackageReference Include="MvvmCross" Version="9.2.0" />
         <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Xamarin" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
     </ItemGroup>
 
 </Project>
