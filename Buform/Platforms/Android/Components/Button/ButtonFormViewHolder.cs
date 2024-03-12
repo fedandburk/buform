@@ -23,7 +23,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
     private void OnButtonClick(object? sender, EventArgs e)
     {
-        Item?.Value.SafeExecute();
+        Data?.Value.SafeExecute();
     }
 
     protected override void Initialize()
@@ -39,7 +39,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             return;
         }
 
-        var isReadOnly = Item?.IsReadOnly ?? true;
+        var isReadOnly = Data?.IsReadOnly ?? true;
 
         _button.Enabled = !isReadOnly;
     }
@@ -51,7 +51,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             return;
         }
 
-        _button.Text = Item?.Label;
+        _button.Text = Data?.Label;
     }
 
     protected virtual void UpdateInputType()
@@ -64,24 +64,24 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         // TODO: Update button appearance.
     }
 
-    protected override void OnItemSet()
+    protected override void OnDataSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
         UpdateInputType();
     }
 
-    protected override void OnItemPropertyChanged(string? propertyName)
+    protected override void OnDataPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
-            case nameof(Item.IsReadOnly):
+            case nameof(Data.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
-            case nameof(Item.Label):
+            case nameof(Data.Label):
                 UpdateLabel();
                 break;
-            case nameof(Item.InputType):
+            case nameof(Data.InputType):
                 UpdateInputType();
                 break;
         }
