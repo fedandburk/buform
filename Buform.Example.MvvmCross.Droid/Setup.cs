@@ -1,6 +1,6 @@
 using Android.Runtime;
+using Buform.Example.Core;
 using Microsoft.Extensions.Logging;
-using MvvmCross.Commands;
 using MvvmCross.IoC;
 using MvvmCross.Platforms.Android.Core;
 using Serilog;
@@ -30,6 +30,12 @@ public sealed class Setup : MvxAndroidSetup<Core.Application>
     {
         base.InitializeFirstChance(iocProvider);
 
-        iocProvider.LazyConstructAndRegisterSingleton<IMvxCommandHelper, MvxStrongCommandHelper>();
+        FormPlatform.RegisterGroupHeader<HeaderFormGroup, HeaderFormGroupHeaderViewHolder>(
+            Resource.Layout.FormGroupTextHeaderLayout
+        );
+
+        FormPlatform.RegisterGroupFooter<HeaderFormGroup, HeaderFormGroupFooterViewHolder>(
+            Resource.Layout.FormGroupTextFooterLayout
+        );
     }
 }
