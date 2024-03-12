@@ -42,7 +42,7 @@ public class FormTableViewSource : TableViewSource
             return GetCell(TableView, indexPath) as FormCell;
         }
 
-        if (!ReferenceEquals(formCell.FormItem, formItem))
+        if (!ReferenceEquals(formCell.Item, formItem))
         {
             return GetCell(TableView, indexPath) as FormCell;
         }

@@ -10,7 +10,7 @@ public abstract class FormCell : UITableViewCell
 
     public virtual bool IsSelectable => false;
 
-    public IFormItem? FormItem { get; private set; }
+    public IFormItem? Item { get; private set; }
 
     protected FormCell()
     {
@@ -57,12 +57,12 @@ public abstract class FormCell : UITableViewCell
 
     public virtual void Initialize(IFormItem item)
     {
-        if (ReferenceEquals(FormItem, item))
+        if (ReferenceEquals(Item, item))
         {
             return;
         }
 
-        FormItem = item;
+        Item = item;
 
         if (_isInitialized)
         {
@@ -83,7 +83,7 @@ public abstract class FormCell : UITableViewCell
 public abstract class FormCell<TItem> : FormCell
     where TItem : class, IFormItem
 {
-    protected TItem? Item { get; private set; }
+    public new TItem? Item { get; private set; }
 
     protected FormCell()
     {
