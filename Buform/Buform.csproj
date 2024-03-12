@@ -9,6 +9,7 @@
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-ios'">15.0</SupportedOSPlatformVersion>
         <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net7.0-android'">26</SupportedOSPlatformVersion>
         <PackageId>Fedandburk.Buform</PackageId>
+        <PackageVersion>0.2.0</PackageVersion>
         <Title>Buform</Title>
         <Description>A cross-platform form builder for .NET iOS/Android</Description>
         <Copyright>FEDANDBURK</Copyright>
@@ -20,7 +21,7 @@
         <PackageProjectUrl>https://github.com/fedandburk/buform</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReleaseNotes>This is a first version of Buform.</PackageReleaseNotes>
+        <PackageReleaseNotes>Added base Android implementation.</PackageReleaseNotes>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
