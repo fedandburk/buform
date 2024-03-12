@@ -5,11 +5,12 @@ using AndroidX.RecyclerView.Widget;
 
 namespace Buform;
 
+[Preserve(AllMembers = true)]
 public abstract class FormViewHolder : RecyclerView.ViewHolder
 {
     private bool _isInitialized;
 
-    public IFormItem? FormItem { get; private set; }
+    public IDisposable? Data { get; private set; }
 
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -25,14 +26,14 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
 
     protected abstract void Initialize();
 
-    public virtual void Initialize(IFormItem item)
+    public virtual void Initialize(IDisposable data)
     {
-        if (ReferenceEquals(FormItem, item))
+        if (ReferenceEquals(Data, data))
         {
             return;
         }
 
-        FormItem = item;
+        Data = data;
 
         if (_isInitialized)
         {
@@ -45,10 +46,11 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
     }
 }
 
-public abstract class FormViewHolder<TItem> : FormViewHolder
-    where TItem : class, IFormItem
+[Preserve(AllMembers = true)]
+public abstract class FormViewHolder<TData> : FormViewHolder
+    where TData : class, INotifyPropertyChanged, IDisposable
 {
-    protected TItem? Item { get; private set; }
+    public new TData? Data { get; private set; }
 
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -62,57 +64,57 @@ public abstract class FormViewHolder<TItem> : FormViewHolder
         /* Required constructor */
     }
 
-    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnDataPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (Item == null)
+        if (Data == null)
         {
             return;
         }
 
-        OnItemPropertyChanged(e.PropertyName);
+        OnDataPropertyChanged(e.PropertyName);
     }
 
-    protected abstract void OnItemSet();
+    protected abstract void OnDataSet();
 
-    protected abstract void OnItemPropertyChanged(string? propertyName);
+    protected abstract void OnDataPropertyChanged(string? propertyName);
 
-    public override void Initialize(IFormItem item)
+    public override void Initialize(IDisposable data)
     {
-        base.Initialize(item);
+        base.Initialize(data);
 
-        if (ReferenceEquals(Item, item))
+        if (ReferenceEquals(Data, data))
         {
             return;
         }
 
-        if (Item != null)
+        if (Data != null)
         {
-            Item.PropertyChanged -= OnItemPropertyChanged;
+            Data.PropertyChanged -= OnDataPropertyChanged;
         }
 
-        Item = item as TItem;
+        Data = data as TData;
 
-        if (Item == null)
+        if (Data == null)
         {
             return;
         }
 
-        Item.PropertyChanged += OnItemPropertyChanged;
+        Data.PropertyChanged += OnDataPropertyChanged;
 
-        OnItemSet();
+        OnDataSet();
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            var item = Item;
-            if (item != null)
+            var data = Data;
+            if (data != null)
             {
-                item.PropertyChanged -= OnItemPropertyChanged;
+                data.PropertyChanged -= OnDataPropertyChanged;
             }
 
-            Item = null;
+            Data = null;
         }
 
         base.Dispose(disposing);
