@@ -65,7 +65,7 @@ public class FormRecyclerViewAdapter : RecyclerView.Adapter
         }
 
         // TODO: Use Looper.MainLooper.
-        UpdateItems(args);
+        NotifyDataSetChanged();
     }
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
