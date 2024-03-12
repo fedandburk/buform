@@ -18,10 +18,7 @@ public sealed class Setup : MvxIosSetup<Application>
 
     protected override ILoggerFactory CreateLogFactory()
     {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .WriteTo.NSLog()
-            .CreateLogger();
+        Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.NSLog().CreateLogger();
 
         return new SerilogLoggerFactory();
     }
@@ -37,8 +34,8 @@ public sealed class Setup : MvxIosSetup<Application>
     {
         base.InitializeLastChance(iocProvider);
 
-        Buform.RegisterGroupHeaderNib<HeaderFormGroup, HeaderFormGroupHeader>();
+        FormPlatform.RegisterGroupHeaderNib<HeaderFormGroup, HeaderFormGroupHeader>();
 
-        Buform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
+        FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
     }
 }

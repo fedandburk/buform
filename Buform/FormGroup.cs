@@ -2,7 +2,8 @@ using System.Windows.Input;
 
 namespace Buform;
 
-public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGroup where TFormItem : IFormItem
+public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGroup
+    where TFormItem : IFormItem
 {
     private readonly IDictionary<IFormItem, int> _hiddenItems = new Dictionary<IFormItem, int>();
 
@@ -49,7 +50,7 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
     {
         return (IEnumerator<IFormItem>)base.GetEnumerator();
     }
-        
+
     protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
         NotifyValueChanged(e);
@@ -87,7 +88,7 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
             base.RemoveItem(index);
         }
     }
-        
+
     protected virtual void ShiftHiddenItems(int index, int shift)
     {
         foreach (var hiddenItem in _hiddenItems)
@@ -122,7 +123,7 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
 
         existingItem.ValueChanged += OnItemValueChanged;
         existingItem.VisibilityChanged += OnItemVisibilityChanged;
-            
+
         base.SetItem(index, item);
 
         item.ValueChanged += OnItemValueChanged;
@@ -171,8 +172,8 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
 
     public virtual IFormItem? GetItem(string propertyName)
     {
-        return this.FirstOrDefault<IFormItem>(item => item.PropertyName == propertyName) 
-               ?? HiddenItems.FirstOrDefault(item => item.PropertyName == propertyName);
+        return this.FirstOrDefault<IFormItem>(item => item.PropertyName == propertyName)
+            ?? HiddenItems.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 
     protected override void Dispose(bool isDisposing)

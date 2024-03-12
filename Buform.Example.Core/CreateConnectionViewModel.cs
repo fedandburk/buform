@@ -40,7 +40,10 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
     public ICommand ConnectCommand { get; }
     public ICommand ResetCommand { get; }
 
-    public CreateConnectionViewModel(ILoggerFactory logFactory, IMvxNavigationService navigationService)
+    public CreateConnectionViewModel(
+        ILoggerFactory logFactory,
+        IMvxNavigationService navigationService
+    )
         : base(logFactory, navigationService)
     {
         SetDefaultValues();
@@ -51,7 +54,10 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
         ConnectCommand = new MvxCommand(Connect, CanConnect);
         ResetCommand = new MvxCommand(Reset);
 
-        Form = new FluentValidationForm<CreateConnectionViewModel>(this, new CreateConnectionViewModelValidator())
+        Form = new FluentValidationForm<CreateConnectionViewModel>(
+            this,
+            new CreateConnectionViewModelValidator()
+        )
         {
             new TextFormGroup("Server")
             {
@@ -72,11 +78,18 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
                 new SegmentsFormItem<ConnectionType>(() => Type)
                 {
                     Formatter = FormatConnectionType,
-                    Source = new[] { ConnectionType.Ftp, ConnectionType.FtpSsl, ConnectionType.WebDav }
+                    Source = new[]
+                    {
+                        ConnectionType.Ftp,
+                        ConnectionType.FtpSsl,
+                        ConnectionType.WebDav
+                    }
                 }
             },
-            new TextFormGroup("Authorization",
-                "Anonymous FTP logins are usually the username 'anonymous' with the user's email address as the password.")
+            new TextFormGroup(
+                "Authorization",
+                "Anonymous FTP logins are usually the username 'anonymous' with the user's email address as the password."
+            )
             {
                 new SwitchFormItem(() => IsAnonymousLogin)
                 {
@@ -164,9 +177,7 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
         return Form?.IsValid ?? false;
     }
 
-    private void Connect()
-    {
-    }
+    private void Connect() { }
 
     private void Reset()
     {

@@ -12,7 +12,11 @@ public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControl
         _item = item;
     }
 
-    public override void DidSelectColor(UIColorPickerViewController viewController, UIColor color, bool continuously)
+    public override void DidSelectColor(
+        UIColorPickerViewController viewController,
+        UIColor color,
+        bool continuously
+    )
     {
         if (continuously)
         {

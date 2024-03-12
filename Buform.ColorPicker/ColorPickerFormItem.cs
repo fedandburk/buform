@@ -18,7 +18,8 @@ public class ColorPickerFormItem : ValidatableFormItem<Color>
         }
     }
 
-    public ColorPickerFormItem(Expression<Func<Color>> targetProperty) : base(targetProperty)
+    public ColorPickerFormItem(Expression<Func<Color>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

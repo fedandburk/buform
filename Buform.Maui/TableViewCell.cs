@@ -15,10 +15,7 @@ internal sealed class TableViewCell : UITableViewCell
 
     private CGSize _estimatedSize;
 
-    public TableViewCell(
-        Type viewType,
-        object bindingContext
-    )
+    public TableViewCell(Type viewType, object bindingContext)
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 
@@ -42,10 +39,7 @@ internal sealed class TableViewCell : UITableViewCell
             MeasureFlags.IncludeMargins
         );
 
-        _estimatedSize = new CGSize(
-            width,
-            Math.Ceiling(request.Request.Height)
-        );
+        _estimatedSize = new CGSize(width, Math.Ceiling(request.Request.Height));
     }
 
     public override CGSize SizeThatFits(CGSize size)
@@ -59,15 +53,13 @@ internal sealed class TableViewCell : UITableViewCell
 
         EstimateViewSize();
 
-        var bounds = new Rect(
-            0,
-            0,
-            _estimatedSize.Width,
-            _estimatedSize.Height
+        var bounds = new Rect(0, 0, _estimatedSize.Width, _estimatedSize.Height);
+
+        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(
+            _formItemView,
+            bounds
         );
 
-        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(_formItemView, bounds);
-        
         _viewHandler.PlatformView!.Frame = bounds.ToRectangleF();
     }
 }

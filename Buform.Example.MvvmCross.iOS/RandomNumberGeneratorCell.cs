@@ -19,7 +19,8 @@ public sealed class RandomNumberGeneratorCell : FormCell<RandomNumberGeneratorIt
         /* Required constructor */
     }
 
-    public RandomNumberGeneratorCell(NativeHandle handle) : base(handle)
+    public RandomNumberGeneratorCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }
@@ -93,15 +94,25 @@ public sealed class RandomNumberGeneratorCell : FormCell<RandomNumberGeneratorIt
 
         ContentView.AddSubviews(_titleLabel, _valueLabel);
 
-        ContentView.AddConstraints(new[]
-        {
-            _titleLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            _titleLabel.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            _titleLabel.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
-            _valueLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-            _valueLabel.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-            _valueLabel.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor),
-        });
+        ContentView.AddConstraints(
+            new[]
+            {
+                _titleLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                _titleLabel.BottomAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.BottomAnchor
+                ),
+                _titleLabel.LeadingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.LeadingAnchor
+                ),
+                _valueLabel.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+                _valueLabel.BottomAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.BottomAnchor
+                ),
+                _valueLabel.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                ),
+            }
+        );
     }
 
     protected override void OnItemSet()

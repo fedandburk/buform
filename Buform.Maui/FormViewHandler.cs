@@ -7,12 +7,11 @@ namespace Buform;
 
 public class FormViewHandler : ViewHandler<FormView, UITableView>
 {
-    private static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper = new(ViewMapper)
-    {
-        [nameof(FormView.Form)] = MapForm
-    };
+    private static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper =
+        new(ViewMapper) { [nameof(FormView.Form)] = MapForm };
 
-    public FormViewHandler() : base(PropertyMapper)
+    public FormViewHandler()
+        : base(PropertyMapper)
     {
         /* Required constructor */
     }

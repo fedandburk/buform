@@ -10,7 +10,8 @@ public sealed class MenuViewController : MvxTableViewController<MenuViewModel>
 {
     private FormTableViewSource? _source;
 
-    public MenuViewController() : base(UITableViewStyle.InsetGrouped)
+    public MenuViewController()
+        : base(UITableViewStyle.InsetGrouped)
     {
         /* Required constructor */
     }

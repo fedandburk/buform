@@ -15,22 +15,23 @@ public abstract class ValidatableForm : Form
         }
     }
 
-    protected ValidatableForm(object target) : base(target)
+    protected ValidatableForm(object target)
+        : base(target)
     {
         _isValid = true;
     }
 
-    protected virtual void SetValidationErrors(bool isForced, params FormValidationError[] validationErrors)
+    protected virtual void SetValidationErrors(
+        bool isForced,
+        params FormValidationError[] validationErrors
+    )
     {
-        var items = this
-            .SelectMany(item => item)
-            .OfType<IValidatableFormItem>()
-            .ToArray();
+        var items = this.SelectMany(item => item).OfType<IValidatableFormItem>().ToArray();
 
         foreach (var item in items)
         {
-            var validationError = validationErrors.FirstOrDefault(
-                i => i.TargetPropertyName == item.PropertyName
+            var validationError = validationErrors.FirstOrDefault(i =>
+                i.TargetPropertyName == item.PropertyName
             );
 
             item.SetValidationError(validationError, isForced);
@@ -39,10 +40,7 @@ public abstract class ValidatableForm : Form
 
     protected virtual void ResetValidationErrors()
     {
-        var items = this
-            .SelectMany(item => item)
-            .OfType<IValidatableFormItem>()
-            .ToArray();
+        var items = this.SelectMany(item => item).OfType<IValidatableFormItem>().ToArray();
 
         foreach (var item in items)
         {

@@ -12,7 +12,8 @@ public sealed class HeaderFormGroupHeader : FormHeaderFooter<HeaderFormGroup>
         /* Required constructor */
     }
 
-    public HeaderFormGroupHeader(NativeHandle handle) : base(handle)
+    public HeaderFormGroupHeader(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }

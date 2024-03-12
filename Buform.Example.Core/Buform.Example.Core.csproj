@@ -2,15 +2,16 @@
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Fedandburk.MvvmCross.Extensions" Version="1.0.20" />
+      <PackageReference Include="Fedandburk.MvvmCross.Extensions" Version="1.0.3" />
       <PackageReference Include="FluentValidation" Version="11.9.0" />
       <PackageReference Include="Humanizer.Core" Version="2.14.1" />
-      <PackageReference Include="MvvmCross" Version="9.1.1" />
+      <PackageReference Include="MvvmCross" Version="9.2.0" />
       <PackageReference Include="NLipsum" Version="1.1.0" />
       <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="All" />
     </ItemGroup>

@@ -33,10 +33,7 @@ public sealed class MenuViewModel : MvxNavigationViewModel
             },
             new TextFormGroup("Random number")
             {
-                new RandomNumberGeneratorItem(() => RandomNumber)
-                {
-                    Label = "Number"
-                }
+                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" }
             },
             new TextFormGroup("Examples", "Contains some real-life examples.")
             {
@@ -56,16 +53,22 @@ public sealed class MenuViewModel : MvxNavigationViewModel
 
     private Task ShowControlsAsync(CancellationToken cancellationToken)
     {
-        return NavigationService.Navigate<ComponentsViewModel>(cancellationToken: cancellationToken);
+        return NavigationService.Navigate<ComponentsViewModel>(
+            cancellationToken: cancellationToken
+        );
     }
 
     private Task CreateConnectionAsync(CancellationToken cancellationToken)
     {
-        return NavigationService.Navigate<CreateConnectionViewModel>(cancellationToken: cancellationToken);
+        return NavigationService.Navigate<CreateConnectionViewModel>(
+            cancellationToken: cancellationToken
+        );
     }
 
     private Task CreateEventAsync(CancellationToken cancellationToken)
     {
-        return NavigationService.Navigate<CreateEventViewModel>(cancellationToken: cancellationToken);
+        return NavigationService.Navigate<CreateEventViewModel>(
+            cancellationToken: cancellationToken
+        );
     }
 }

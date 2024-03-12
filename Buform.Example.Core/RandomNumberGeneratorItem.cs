@@ -15,7 +15,8 @@ public sealed class RandomNumberGeneratorItem : FormItem<int>
     public string? Label { get; set; }
     public ICommand GenerateCommand { get; }
 
-    public RandomNumberGeneratorItem(Expression<Func<int>> property) : base(property)
+    public RandomNumberGeneratorItem(Expression<Func<int>> property)
+        : base(property)
     {
         _random = new Random();
 

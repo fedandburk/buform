@@ -26,8 +26,7 @@ public class Form : FormCollection<IFormGroup>
 
             NotifyPropertyChanged();
 
-            var items = this
-                .SelectMany(item => item)
+            var items = this.SelectMany(item => item)
                 .Concat(this.SelectMany(item => item.HiddenItems));
 
             UpdateItems(items);
@@ -109,7 +108,8 @@ public class Form : FormCollection<IFormGroup>
         base.ClearItems();
     }
 
-    public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property) where TItem : class, IFormItem
+    public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property)
+        where TItem : class, IFormItem
     {
         return GetItem<TItem>(property.GetMemberName());
     }
@@ -119,11 +119,12 @@ public class Form : FormCollection<IFormGroup>
         return GetItem(property.GetMemberName());
     }
 
-    public virtual TItem? GetItem<TItem>(string propertyName) where TItem : class, IFormItem
+    public virtual TItem? GetItem<TItem>(string propertyName)
+        where TItem : class, IFormItem
     {
         return GetItem(propertyName) as TItem;
     }
-        
+
     public virtual IFormItem? GetItem(string propertyName)
     {
         return this.Select(item => item.GetItem(propertyName)).FirstOrDefault(item => item != null);

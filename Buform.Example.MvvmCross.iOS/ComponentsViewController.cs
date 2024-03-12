@@ -5,12 +5,16 @@ using MvvmCross.Platforms.Ios.Views;
 namespace Buform.Example.MvvmCross.iOS;
 
 [Preserve(AllMembers = true)]
-[MvxModalPresentation(WrapInNavigationController = true, ModalPresentationStyle = UIModalPresentationStyle.FormSheet)]
+[MvxModalPresentation(
+    WrapInNavigationController = true,
+    ModalPresentationStyle = UIModalPresentationStyle.FormSheet
+)]
 public sealed class ComponentsViewController : MvxTableViewController<ComponentsViewModel>
 {
     private FormTableViewSource? _source;
 
-    public ComponentsViewController() : base(UITableViewStyle.InsetGrouped)
+    public ComponentsViewController()
+        : base(UITableViewStyle.InsetGrouped)
     {
         /* Required constructor */
     }

@@ -5,7 +5,8 @@ namespace Buform;
 
 public class MauiFormTableViewSource : FormTableViewSource
 {
-    public MauiFormTableViewSource(UITableView tableView) : base(tableView)
+    public MauiFormTableViewSource(UITableView tableView)
+        : base(tableView)
     {
         /* Required constructor */
     }
@@ -19,12 +20,13 @@ public class MauiFormTableViewSource : FormTableViewSource
             return base.GetCell(indexPath, item);
         }
 
-        return viewType == null
-            ? base.GetCell(indexPath, item)
-            : new TableViewCell(viewType, item);
+        return viewType == null ? base.GetCell(indexPath, item) : new TableViewCell(viewType, item);
     }
 
-    protected override UITableViewHeaderFooterView? GetViewForFooter(nint section, object sectionItem)
+    protected override UITableViewHeaderFooterView? GetViewForFooter(
+        nint section,
+        object sectionItem
+    )
     {
         var sectionType = sectionItem.GetType();
 
@@ -38,7 +40,10 @@ public class MauiFormTableViewSource : FormTableViewSource
             : new TableViewHeaderFooterView(viewType, sectionItem);
     }
 
-    protected override UITableViewHeaderFooterView? GetViewForHeader(nint section, object sectionItem)
+    protected override UITableViewHeaderFooterView? GetViewForHeader(
+        nint section,
+        object sectionItem
+    )
     {
         var sectionType = sectionItem.GetType();
 

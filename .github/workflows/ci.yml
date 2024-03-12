@@ -25,5 +25,10 @@ jobs:
     - name: Restore workloads
       run: dotnet workload restore
 
+    - name: Check code style with CSharpier
+      run: |
+          dotnet tool restore
+          dotnet csharpier --check .
+
     - name: Build
       run: dotnet build
