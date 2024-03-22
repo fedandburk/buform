@@ -37,5 +37,7 @@ public sealed class Setup : MvxIosSetup<Application>
         FormPlatform.RegisterGroupHeaderNib<HeaderFormGroup, HeaderFormGroupHeader>();
 
         FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
+
+        FormPlatform.RegisterItemClass<PrefixButtonFormItem, PrefixButtonFormCell>();
     }
 }

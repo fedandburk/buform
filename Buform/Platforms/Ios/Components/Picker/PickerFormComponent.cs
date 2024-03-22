@@ -10,7 +10,7 @@ public sealed class PickerFormComponent : IFormComponent
         FormPlatform.RegisterItemClass<IAsyncPickerFormItem, AsyncPickerFormCell>();
         FormPlatform.RegisterItemClass<ICallbackPickerFormItem, CallbackPickerFormCell>();
         FormPlatform.RegisterItemClass<IMultiValuePickerFormItem, MultiValuePickerFormCell>();
-        FormPlatform.RegisterItemClass<IPickerFormItem, PickerFormCell>();
+        FormPlatform.RegisterItemClass<IPickerFormItem, PopUpPickerFormCell>();
     }
 
     public static class Texts

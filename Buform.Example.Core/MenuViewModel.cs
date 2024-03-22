@@ -46,6 +46,12 @@ public sealed class MenuViewModel : MvxNavigationViewModel
                 {
                     Label = "Create New Event",
                     InputType = ButtonInputType.Done
+                },
+                new PrefixButtonFormItem(new MvxAsyncCommand(ShowControlsAsync))
+                {
+                    Label = "Label",
+                    Prefix = "Prefix",
+                    InputType = ButtonInputType.Destructive
                 }
             }
         };
