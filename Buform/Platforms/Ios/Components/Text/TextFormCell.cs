@@ -1,7 +1,7 @@
 using ObjCRuntime;
 
 namespace Buform;
-              
+
 [Preserve(AllMembers = true)]
 [Register(nameof(TextFormCell))]
 public sealed class TextFormCell : TextFormCellBase<ITextFormItem>

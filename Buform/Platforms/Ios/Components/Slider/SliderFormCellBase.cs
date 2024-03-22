@@ -7,12 +7,12 @@ public abstract class SliderFormCellBase<TSliderItem> : FormCell<TSliderItem> wh
 {
     protected virtual UISlider? Slider { get; set; }
 
-    public SliderFormCellBase()
+    protected SliderFormCellBase()
     {
         /* Required constructor */
     }
 
-    public SliderFormCellBase(NativeHandle handle)
+    protected SliderFormCellBase(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */

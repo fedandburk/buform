@@ -3,7 +3,7 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class SegmentsFormCellBase<TSegmentedItem> : FormCell<TSegmentedItem> where TSegmentedItem : class, ISegmentsFormItem
+public abstract class SegmentsFormCellBase<TSegmentedItem> : FormCell<TSegmentedItem> where TSegmentedItem : class, ISegmentsFormItem
 {
     private NSLayoutConstraint? _segmentedControlLeadingConstraint;
     private NSLayoutConstraint? _labelWidthConstraint;
@@ -13,12 +13,12 @@ public class SegmentsFormCellBase<TSegmentedItem> : FormCell<TSegmentedItem> whe
     protected virtual UILabel? Label { get; set; }
     protected virtual UISegmentedControl? SegmentedControl { get; set; }
 
-    public SegmentsFormCellBase()
+    protected SegmentsFormCellBase()
     {
         /* Required constructor */
     }
 
-    public SegmentsFormCellBase(NativeHandle handle)
+    protected SegmentsFormCellBase(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */

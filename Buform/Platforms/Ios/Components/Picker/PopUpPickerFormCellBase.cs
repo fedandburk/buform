@@ -5,8 +5,6 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public abstract class PopUpPickerFormCellBase<TPickerItem> : PresentedPickerFormCellBase<TPickerItem> where TPickerItem : class, IPickerFormItem
 {
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected PopUpPickerFormCellBase()
     {
         /* Required constructor */
