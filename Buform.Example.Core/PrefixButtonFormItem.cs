@@ -17,7 +17,8 @@ public class PrefixButtonFormItem : ButtonFormItem
         }
     }
 
-    public PrefixButtonFormItem(ICommand value) : base(value)
+    public PrefixButtonFormItem(ICommand value)
+        : base(value)
     {
         /* Required constructor */
     }

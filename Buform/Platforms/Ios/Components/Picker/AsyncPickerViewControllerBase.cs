@@ -1,7 +1,9 @@
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class AsyncPickerViewControllerBase<TAsyncPickerItem> : PickerViewController<TAsyncPickerItem> where TAsyncPickerItem : class, IAsyncPickerFormItem
+public abstract class AsyncPickerViewControllerBase<TAsyncPickerItem>
+    : PickerViewController<TAsyncPickerItem>
+    where TAsyncPickerItem : class, IAsyncPickerFormItem
 {
     protected CancellationTokenSource? CancellationTokenSource { get; private set; }
 

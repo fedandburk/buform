@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class StepperFormCellBase<TStepperItem> : FormCell<TStepperItem> where TStepperItem : StepperFormItem
+public abstract class StepperFormCellBase<TStepperItem> : FormCell<TStepperItem>
+    where TStepperItem : StepperFormItem
 {
     protected virtual UILabel? Label { get; set; }
     protected virtual UIStepper? Stepper { get; set; }

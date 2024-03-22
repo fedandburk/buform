@@ -6,7 +6,8 @@ namespace Buform;
 [Register(nameof(ButtonFormCell))]
 public sealed class ButtonFormCell : ButtonFormCellBase<ButtonFormItem>
 {
-    public ButtonFormCell(NSString reuseIdentifier) : base(reuseIdentifier)
+    public ButtonFormCell(NSString reuseIdentifier)
+        : base(reuseIdentifier)
     {
         /* Required constructor */
     }
@@ -22,4 +23,3 @@ public sealed class ButtonFormCell : ButtonFormCellBase<ButtonFormItem>
         /* Required constructor */
     }
 }
-

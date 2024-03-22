@@ -4,7 +4,7 @@ namespace Buform;
 
 [Preserve(AllMembers = true)]
 [Register(nameof(AsyncPickerFormCell))]
-public sealed class AsyncPickerFormCell : AsyncPickerFormCellBase<IAsyncPickerFormItem> 
+public sealed class AsyncPickerFormCell : AsyncPickerFormCellBase<IAsyncPickerFormItem>
 {
     public AsyncPickerFormCell()
     {

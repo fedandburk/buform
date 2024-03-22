@@ -3,7 +3,9 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class AsyncPickerFormCellBase<TAsyncPickerItem> : PresentedPickerFormCellBase<TAsyncPickerItem> where TAsyncPickerItem : class, IAsyncPickerFormItem
+public abstract class AsyncPickerFormCellBase<TAsyncPickerItem>
+    : PresentedPickerFormCellBase<TAsyncPickerItem>
+    where TAsyncPickerItem : class, IAsyncPickerFormItem
 {
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 

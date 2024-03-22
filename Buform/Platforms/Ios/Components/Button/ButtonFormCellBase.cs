@@ -4,13 +4,15 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class ButtonFormCellBase<TButtonFormItem> : FormCell<TButtonFormItem> where TButtonFormItem : ButtonFormItem
+public abstract class ButtonFormCellBase<TButtonFormItem> : FormCell<TButtonFormItem>
+    where TButtonFormItem : ButtonFormItem
 {
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
     protected virtual UILabel? Label { get; set; }
 
-    public ButtonFormCellBase(NSString reuseIdentifier) : base(UITableViewCellStyle.Default, reuseIdentifier)
+    public ButtonFormCellBase(NSString reuseIdentifier)
+        : base(UITableViewCellStyle.Default, reuseIdentifier)
     {
         /* Required constructor */
     }

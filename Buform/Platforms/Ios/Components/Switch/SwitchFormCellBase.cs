@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class SwitchFormCellBase<TSwitchItem> : FormCell<TSwitchItem> where TSwitchItem : SwitchFormItem
+public abstract class SwitchFormCellBase<TSwitchItem> : FormCell<TSwitchItem>
+    where TSwitchItem : SwitchFormItem
 {
     protected virtual UILabel? Label { get; set; }
     protected virtual UISwitch? Switch { get; set; }

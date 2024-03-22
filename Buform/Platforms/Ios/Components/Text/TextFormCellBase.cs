@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class TextFormCellBase<TTextItem> : FormCell<TTextItem> where TTextItem : class, ITextFormItem
+public abstract class TextFormCellBase<TTextItem> : FormCell<TTextItem>
+    where TTextItem : class, ITextFormItem
 {
     private NSLayoutConstraint? _textFieldLeadingConstraint;
     private NSLayoutConstraint? _labelWidthConstraint;

@@ -3,7 +3,9 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class PopUpPickerFormCellBase<TPickerItem> : PresentedPickerFormCellBase<TPickerItem> where TPickerItem : class, IPickerFormItem
+public abstract class PopUpPickerFormCellBase<TPickerItem>
+    : PresentedPickerFormCellBase<TPickerItem>
+    where TPickerItem : class, IPickerFormItem
 {
     protected PopUpPickerFormCellBase()
     {
@@ -57,12 +59,13 @@ public abstract class PopUpPickerFormCellBase<TPickerItem> : PresentedPickerForm
         return alertController;
     }
 
-    protected override PickerPresenterBase<TPickerItem>? GetPickerPresenter(PickerInputType inputType)
+    protected override PickerPresenterBase<TPickerItem>? GetPickerPresenter(
+        PickerInputType inputType
+    )
     {
         return inputType switch
         {
-            PickerInputType.PopUp
-                => new PopUpPickerPresenter<TPickerItem>(CreateAlertController),
+            PickerInputType.PopUp => new PopUpPickerPresenter<TPickerItem>(CreateAlertController),
             _ => base.GetPickerPresenter(inputType)
         };
     }

@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class SliderFormCellBase<TSliderItem> : FormCell<TSliderItem> where TSliderItem : SliderFormItem
+public abstract class SliderFormCellBase<TSliderItem> : FormCell<TSliderItem>
+    where TSliderItem : SliderFormItem
 {
     protected virtual UISlider? Slider { get; set; }
 

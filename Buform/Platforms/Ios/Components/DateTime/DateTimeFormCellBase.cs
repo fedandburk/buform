@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class DateTimeFormCellBase<TDateTimeItem> : FormCell<TDateTimeItem> where TDateTimeItem : DateTimeFormItem
+public abstract class DateTimeFormCellBase<TDateTimeItem> : FormCell<TDateTimeItem>
+    where TDateTimeItem : DateTimeFormItem
 {
     protected virtual UILabel? Label { get; set; }
     protected virtual UIDatePicker? DatePicker { get; set; }

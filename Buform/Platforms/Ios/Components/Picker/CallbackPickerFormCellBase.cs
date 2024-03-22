@@ -3,7 +3,9 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class CallbackPickerFormCellBase<TCallbackPickerItem> : PickerFormCellBase<TCallbackPickerItem> where TCallbackPickerItem : class, ICallbackPickerFormItem
+public abstract class CallbackPickerFormCellBase<TCallbackPickerItem>
+    : PickerFormCellBase<TCallbackPickerItem>
+    where TCallbackPickerItem : class, ICallbackPickerFormItem
 {
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 

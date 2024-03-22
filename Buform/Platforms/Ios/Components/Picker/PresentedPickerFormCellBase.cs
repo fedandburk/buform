@@ -2,7 +2,8 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBase<TFormItem> where TFormItem : class, IPickerFormItemBase
+public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBase<TFormItem>
+    where TFormItem : class, IPickerFormItemBase
 {
     protected virtual PickerPresenterBase<TFormItem>? PickerPresenter { get; set; }
 
@@ -21,10 +22,7 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
 
     protected virtual UIViewController CreateViewController(TFormItem item)
     {
-        return new PickerViewController<TFormItem>(
-            UITableViewStyle.InsetGrouped,
-            item
-        );
+        return new PickerViewController<TFormItem>(UITableViewStyle.InsetGrouped, item);
     }
 
     protected virtual void UpdateInputType()
@@ -48,10 +46,8 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
     {
         return inputType switch
         {
-            PickerInputType.Default
-                => new DefaultPickerPresenter<TFormItem>(CreateViewController),
-            PickerInputType.Dialog
-                => new DialogPickerPresenter<TFormItem>(CreateViewController),
+            PickerInputType.Default => new DefaultPickerPresenter<TFormItem>(CreateViewController),
+            PickerInputType.Dialog => new DialogPickerPresenter<TFormItem>(CreateViewController),
             _ => default
         };
     }

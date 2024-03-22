@@ -3,7 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class MultilineTextFormCellBase<TMultilineTextItem> : FormCell<TMultilineTextItem> where TMultilineTextItem : class, IMultilineTextFormItem
+public abstract class MultilineTextFormCellBase<TMultilineTextItem> : FormCell<TMultilineTextItem>
+    where TMultilineTextItem : class, IMultilineTextFormItem
 {
     protected virtual FormTextView? TextView { get; set; }
 

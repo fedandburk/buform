@@ -12,7 +12,8 @@ public class PrefixButtonFormCell : ButtonFormCellBase<PrefixButtonFormItem>
         /* Required constructor */
     }
 
-    public PrefixButtonFormCell(NativeHandle handle) : base(handle)
+    public PrefixButtonFormCell(NativeHandle handle)
+        : base(handle)
     {
         /* Required constructor */
     }

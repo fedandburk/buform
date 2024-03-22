@@ -4,7 +4,8 @@ namespace Buform;
 
 [Preserve(AllMembers = true)]
 [Register(nameof(MultiValuePickerFormCell))]
-public sealed class MultiValuePickerFormCell : PresentedPickerFormCellBase<IMultiValuePickerFormItem>
+public sealed class MultiValuePickerFormCell
+    : PresentedPickerFormCellBase<IMultiValuePickerFormItem>
 {
     public MultiValuePickerFormCell()
     {
