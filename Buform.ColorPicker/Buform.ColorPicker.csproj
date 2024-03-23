@@ -38,6 +38,7 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
         <Compile Include="ColorPickerFormCell.cs" />
+        <Compile Include="ColorPickerFormCellBase.cs" />
         <Compile Include="ColorPickerFormComponentIos.cs" />
         <Compile Include="ColorPickerViewControllerDelegate.cs" />
     </ItemGroup>
