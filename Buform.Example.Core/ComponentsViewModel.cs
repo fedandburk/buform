@@ -109,6 +109,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Default,
                     Formatter = item => item?.ToWords() ?? "None",
+                    OptionsFilterValueFactory = option => option?.ToWords() ?? "None",
                     Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
                 },
                 new PickerFormItem<int?>(() => Picker)
@@ -118,6 +119,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Dialog,
                     Formatter = item => item?.ToMetric() ?? "None",
+                    OptionsFilterValueFactory = option => option?.ToMetric() ?? "None",
                     Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
                 },
                 new PickerFormItem<int?>(() => Picker)
