@@ -83,6 +83,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Default,
                     ItemFormatter = item => item.ToWords(),
+                    OptionsFilterValueFactory = option => option.ToWords(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
                     Source = Enumerable.Range(1, 10).ToArray()
                 },
@@ -93,6 +94,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Dialog,
                     ItemFormatter = item => item.ToRoman(),
+                    OptionsFilterValueFactory = option => option.ToRoman(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
                     Source = Enumerable.Range(1, 10).ToArray()
                 },
@@ -138,6 +140,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Default,
                     Formatter = item => item?.ToWords() ?? "None",
+                    OptionsFilterValueFactory = option => option?.ToWords(),
                     SourceFactory = async cancellationToken =>
                     {
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
@@ -152,6 +155,7 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     CanBeCleared = true,
                     InputType = PickerInputType.Dialog,
                     Formatter = item => item?.ToRoman() ?? "None",
+                    OptionsFilterValueFactory = option => option?.ToRoman() ?? "None",
                     SourceFactory = async cancellationToken =>
                     {
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
