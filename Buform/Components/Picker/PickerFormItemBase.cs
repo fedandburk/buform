@@ -55,6 +55,8 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public abstract string? FormattedValue { get; }
 
+    public virtual string? FilterQuery { get; set; }
+
     public IEnumerable<IPickerOptionFormItem> Options { get; protected set; }
 
     protected PickerFormItemBase(Expression<Func<TValue>> targetProperty)

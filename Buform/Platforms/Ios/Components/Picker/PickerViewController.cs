@@ -83,6 +83,35 @@ public class PickerViewController<TItem> : UITableViewController
         {
             SetRightBarButtonClearItem();
         }
+
+        NavigationItem.SearchController = new UISearchController()
+        {
+            HidesNavigationBarDuringPresentation = false
+        };
+
+        NavigationItem.SearchController.SearchBar.TextChanged += OnSearchTextChanged;
+        NavigationItem.SearchController.SearchBar.CancelButtonClicked +=
+            OnSearchCancelButtonClicked;
+    }
+
+    private void OnSearchTextChanged(object? sender, UISearchBarTextChangedEventArgs e)
+    {
+        if (Item is null)
+        {
+            return;
+        }
+
+        Item.FilterQuery = e.SearchText;
+    }
+
+    private void OnSearchCancelButtonClicked(object? sender, EventArgs e)
+    {
+        if (Item is null)
+        {
+            return;
+        }
+
+        Item.FilterQuery = null;
     }
 
     public override nint RowsInSection(UITableView tableView, nint section)
@@ -169,6 +198,10 @@ public class PickerViewController<TItem> : UITableViewController
             }
 
             Item = null;
+
+            NavigationItem.SearchController!.SearchBar.TextChanged -= OnSearchTextChanged;
+            NavigationItem.SearchController!.SearchBar.CancelButtonClicked -=
+                OnSearchCancelButtonClicked;
         }
 
         base.Dispose(disposing);

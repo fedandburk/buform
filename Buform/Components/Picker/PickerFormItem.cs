@@ -5,7 +5,9 @@ namespace Buform;
 public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormItem
 {
     private Func<TValue?, string?>? _formatter;
+    private Func<TValue?, string?>? _optionsFilterValueFactory;
     private IEnumerable<TValue>? _source;
+    private IList<IPickerOptionFormItem> _options;
 
     public virtual Func<TValue?, string?>? Formatter
     {
@@ -24,6 +26,23 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
         }
     }
 
+    public virtual Func<TValue?, string?>? OptionsFilterValueFactory
+    {
+        get => _optionsFilterValueFactory;
+        set
+        {
+            _optionsFilterValueFactory = value;
+
+            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
+            {
+                option.FilterValueFactory = _optionsFilterValueFactory;
+            }
+
+            NotifyPropertyChanged();
+            UpdateOptions();
+        }
+    }
+
     public virtual IEnumerable<TValue>? Source
     {
         get => _source;
@@ -31,10 +50,45 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
         {
             _source = value;
 
-            Options = _source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
+            _options =
+                _source?.Select(CreateOption).ToList()
+                ?? Array.Empty<IPickerOptionFormItem>().ToList();
+
+            UpdateOptions();
 
             NotifyPropertyChanged();
-            NotifyPropertyChanged(nameof(Options));
+        }
+    }
+
+    private void UpdateOptions()
+    {
+        if (!string.IsNullOrEmpty(FilterQuery))
+        {
+            Options = _options
+                .Where(option =>
+                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
+                    ?? false
+                )
+                .ToList();
+        }
+        else
+        {
+            Options = _options;
+        }
+
+        NotifyPropertyChanged(nameof(Options));
+    }
+
+    public override string? FilterQuery
+    {
+        get => base.FilterQuery;
+        set
+        {
+            base.FilterQuery = value;
+
+            NotifyPropertyChanged();
+
+            UpdateOptions();
         }
     }
 
@@ -43,12 +97,16 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
     public PickerFormItem(Expression<Func<TValue>> targetProperty)
         : base(targetProperty)
     {
-        /* Required constructor */
+        _options = Array.Empty<IPickerOptionFormItem>();
     }
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value) { Formatter = Formatter };
+        return new PickerOptionFormItem<TValue>(value)
+        {
+            Formatter = Formatter,
+            FilterValueFactory = OptionsFilterValueFactory
+        };
     }
 
     public override void Pick(IPickerOptionFormItem? item)
