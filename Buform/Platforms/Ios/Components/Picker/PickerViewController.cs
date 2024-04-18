@@ -84,7 +84,11 @@ public class PickerViewController<TItem> : UITableViewController
             SetRightBarButtonClearItem();
         }
 
-        NavigationItem.SearchController = new UISearchController();
+        NavigationItem.SearchController = new UISearchController()
+        {
+            HidesNavigationBarDuringPresentation = false
+        };
+
         NavigationItem.SearchController.SearchBar.TextChanged += OnSearchTextChanged;
         NavigationItem.SearchController.SearchBar.CancelButtonClicked +=
             OnSearchCancelButtonClicked;
