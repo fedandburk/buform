@@ -96,7 +96,11 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value) { Formatter = Formatter, FilterValueFactory = OptionsFilterValueFactory};
+        return new PickerOptionFormItem<TValue>(value)
+        {
+            Formatter = Formatter,
+            FilterValueFactory = OptionsFilterValueFactory
+        };
     }
 
     public virtual async Task LoadItemsAsync(CancellationToken cancellationToken)

@@ -112,7 +112,11 @@ public class MultiValuePickerFormItem<TValue>
 
     protected virtual IPickerOptionFormItem CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value) { Formatter = ItemFormatter, FilterValueFactory = OptionsFilterValueFactory};
+        return new PickerOptionFormItem<TValue>(value)
+        {
+            Formatter = ItemFormatter,
+            FilterValueFactory = OptionsFilterValueFactory
+        };
     }
 
     public override void Pick(IPickerOptionFormItem? option)

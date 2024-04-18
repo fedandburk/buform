@@ -86,7 +86,8 @@ public class PickerViewController<TItem> : UITableViewController
 
         NavigationItem.SearchController = new UISearchController();
         NavigationItem.SearchController.SearchBar.TextChanged += OnSearchTextChanged;
-        NavigationItem.SearchController.SearchBar.CancelButtonClicked += OnSearchCancelButtonClicked;
+        NavigationItem.SearchController.SearchBar.CancelButtonClicked +=
+            OnSearchCancelButtonClicked;
     }
 
     private void OnSearchTextChanged(object? sender, UISearchBarTextChangedEventArgs e)
@@ -195,7 +196,8 @@ public class PickerViewController<TItem> : UITableViewController
             Item = null;
 
             NavigationItem.SearchController!.SearchBar.TextChanged -= OnSearchTextChanged;
-            NavigationItem.SearchController!.SearchBar.CancelButtonClicked -= OnSearchCancelButtonClicked;
+            NavigationItem.SearchController!.SearchBar.CancelButtonClicked -=
+                OnSearchCancelButtonClicked;
         }
 
         base.Dispose(disposing);
