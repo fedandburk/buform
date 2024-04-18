@@ -7,7 +7,7 @@ public class MultiValuePickerFormItem<TValue>
         IMultiValuePickerFormItem
 {
     private Func<TValue?, string?>? _itemFormatter;
-    private IEnumerable<IPickerOptionFormItem> _options;
+    private IList<IPickerOptionFormItem> _options;
     private Func<TValue?, string?>? _optionsFilterValueFactory;
     private Func<IEnumerable<TValue>?, string?>? _valueFormatter;
     private IEnumerable<TValue>? _source;
@@ -76,10 +76,12 @@ public class MultiValuePickerFormItem<TValue>
     {
         if (!string.IsNullOrEmpty(FilterString))
         {
-            Options = _options.Where(option =>
-                option.FilterValue?.Contains(FilterString, StringComparison.OrdinalIgnoreCase)
-                ?? false
-            );
+            Options = _options
+                .Where(option =>
+                    option.FilterValue?.Contains(FilterString, StringComparison.OrdinalIgnoreCase)
+                    ?? false
+                )
+                .ToList();
         }
         else
         {
@@ -96,7 +98,9 @@ public class MultiValuePickerFormItem<TValue>
         {
             _source = value;
 
-            _options = _source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
+            _options =
+                _source?.Select(CreateOption).ToList()
+                ?? Array.Empty<IPickerOptionFormItem>().ToList();
 
             UpdateOptions();
 

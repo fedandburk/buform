@@ -7,7 +7,7 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
     private Func<TValue?, string?>? _formatter;
     private Func<TValue?, string?>? _optionsFilterValueFactory;
     private IEnumerable<TValue>? _source;
-    private IEnumerable<IPickerOptionFormItem> _options;
+    private IList<IPickerOptionFormItem> _options;
 
     public virtual Func<TValue?, string?>? Formatter
     {
@@ -50,7 +50,9 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
         {
             _source = value;
 
-            _options = _source?.Select(CreateOption) ?? Array.Empty<IPickerOptionFormItem>();
+            _options =
+                _source?.Select(CreateOption).ToList()
+                ?? Array.Empty<IPickerOptionFormItem>().ToList();
 
             UpdateOptions();
 
@@ -62,10 +64,12 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
     {
         if (!string.IsNullOrEmpty(FilterString))
         {
-            Options = _options.Where(option =>
-                option.FilterValue?.Contains(FilterString, StringComparison.OrdinalIgnoreCase)
-                ?? false
-            );
+            Options = _options
+                .Where(option =>
+                    option.FilterValue?.Contains(FilterString, StringComparison.OrdinalIgnoreCase)
+                    ?? false
+                )
+                .ToList();
         }
         else
         {
