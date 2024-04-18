@@ -12,7 +12,7 @@ public interface IPickerFormItemBase : IValidatableFormItem
 
     public string? FormattedValue { get; }
 
-    public string? FilterString { get; set; }
+    public string? FilterQuery { get; set; }
 
     IEnumerable<IPickerOptionFormItem> Options { get; }
 

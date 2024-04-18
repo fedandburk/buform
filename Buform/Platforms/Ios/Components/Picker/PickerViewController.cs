@@ -97,7 +97,7 @@ public class PickerViewController<TItem> : UITableViewController
             return;
         }
 
-        Item.FilterString = e.SearchText;
+        Item.FilterQuery = e.SearchText;
     }
 
     private void OnSearchCancelButtonClicked(object? sender, EventArgs e)
@@ -107,7 +107,7 @@ public class PickerViewController<TItem> : UITableViewController
             return;
         }
 
-        Item.FilterString = null;
+        Item.FilterQuery = null;
     }
 
     public override nint RowsInSection(UITableView tableView, nint section)

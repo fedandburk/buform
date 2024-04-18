@@ -59,12 +59,12 @@ public class MultiValuePickerFormItem<TValue>
         }
     }
 
-    public override string? FilterString
+    public override string? FilterQuery
     {
-        get => base.FilterString;
+        get => base.FilterQuery;
         set
         {
-            base.FilterString = value;
+            base.FilterQuery = value;
 
             NotifyPropertyChanged();
 
@@ -74,11 +74,11 @@ public class MultiValuePickerFormItem<TValue>
 
     private void UpdateOptions()
     {
-        if (!string.IsNullOrEmpty(FilterString))
+        if (!string.IsNullOrEmpty(FilterQuery))
         {
             Options = _options
                 .Where(option =>
-                    option.FilterValue?.Contains(FilterString, StringComparison.OrdinalIgnoreCase)
+                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
                     ?? false
                 )
                 .ToList();
