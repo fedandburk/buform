@@ -3,10 +3,10 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 [FormComponent]
 // ReSharper disable once UnusedType.Global
-public sealed class SwitchFormComponent : IFormComponent
+public sealed class ListFormGroupComponent : IFormComponent
 {
     public void Register()
     {
-        FormPlatform.RegisterItemClass<SwitchFormItem, SwitchFormCell>();
+        FormPlatform.RegisterItemClass<IListFormItem, ListFormCell>();
     }
 }

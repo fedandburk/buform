@@ -48,7 +48,7 @@ public class PickerViewController<TItem> : UITableViewController
     protected virtual void SetRightBarButtonClearItem()
     {
         NavigationItem.RightBarButtonItem = new UIBarButtonItem(
-            PickerFormComponent.Texts.Clear,
+            PickerFormItemComponent.Texts.Clear,
             UIBarButtonItemStyle.Plain,
             (_, _) =>
             {

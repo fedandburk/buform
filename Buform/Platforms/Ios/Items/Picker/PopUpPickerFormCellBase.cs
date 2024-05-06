@@ -40,7 +40,7 @@ public abstract class PopUpPickerFormCellBase<TPickerItem>
         if (item.CanBeCleared)
         {
             var clearAlertAction = UIAlertAction.Create(
-                PickerFormComponent.Texts.Clear,
+                PickerFormItemComponent.Texts.Clear,
                 UIAlertActionStyle.Destructive,
                 _ => item.Pick(default)
             );
@@ -49,7 +49,7 @@ public abstract class PopUpPickerFormCellBase<TPickerItem>
         }
 
         var cancelAlertAction = UIAlertAction.Create(
-            PickerFormComponent.Texts.Cancel,
+            PickerFormItemComponent.Texts.Cancel,
             UIAlertActionStyle.Cancel,
             null
         );

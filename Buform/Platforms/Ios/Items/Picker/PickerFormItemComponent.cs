@@ -3,7 +3,7 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 [FormComponent]
 // ReSharper disable once UnusedType.Global
-public sealed class PickerFormComponent : IFormComponent
+public sealed class PickerFormItemComponent : IFormComponent
 {
     public void Register()
     {

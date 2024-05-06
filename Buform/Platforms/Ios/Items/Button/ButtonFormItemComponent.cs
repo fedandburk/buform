@@ -3,10 +3,10 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 [FormComponent]
 // ReSharper disable once UnusedType.Global
-public sealed class StepperFormComponent : IFormComponent
+public sealed class ButtonFormItemComponent : IFormComponent
 {
     public void Register()
     {
-        FormPlatform.RegisterItemClass<StepperFormItem, StepperFormCell>();
+        FormPlatform.RegisterItemClass<ButtonFormItem, ButtonFormCell>();
     }
 }

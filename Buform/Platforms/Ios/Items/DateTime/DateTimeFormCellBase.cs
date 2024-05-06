@@ -31,7 +31,7 @@ public abstract class DateTimeFormCellBase<TDateTimeItem> : FormCell<TDateTimeIt
             TextColor = UIColor.Label
         };
 
-        DatePicker = new UIDatePicker() { TranslatesAutoresizingMaskIntoConstraints = false };
+        DatePicker = new UIDatePicker { TranslatesAutoresizingMaskIntoConstraints = false };
 
         DatePicker.ValueChanged += OnValueChanged;
 
