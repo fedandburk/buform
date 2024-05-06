@@ -86,7 +86,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        if (!_items.Any())
+        if (_items.Count == 0)
         {
             Item.Value = null;
         }
@@ -156,7 +156,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        if (!_items.Any() || Item?.Value == null)
+        if (_items.Count == 0 || Item?.Value == null)
         {
             SegmentedControl.SelectedSegment = nint.MinValue;
         }
