@@ -1,5 +1,3 @@
-using System;
-
 namespace Buform.Example.Core;
 
 public sealed class CreateEventModel

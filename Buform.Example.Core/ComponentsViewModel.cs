@@ -1,9 +1,5 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Humanizer;
 using Microsoft.Extensions.Logging;
@@ -67,9 +63,11 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
             {
                 new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
             },
-            new ListFormGroup<int>("List")
+            new ListFormGroup<int, TextFormItem<int>>(
+                item => new TextFormItem<int>(item) { Formatter = i => i.ToWords() },
+                "List"
+            )
             {
-                Formatter = item => item.ToWords(),
                 Source = List,
                 RemoveCommand = new MvxCommand<int>(item => List.Remove(item)),
                 MoveCommand = new MvxCommand<(int, int)>(item => List.Move(item.Item1, item.Item2))
@@ -192,43 +190,50 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
             },
             new TextFormGroup("Texts")
             {
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
                 {
                     Placeholder = "Default text",
                     InputType = TextInputType.Default
                 },
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
                 {
                     Label = "Number & Punctuation Text",
                     InputType = TextInputType.NumberAndPunctuation
                 },
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
                 {
                     Label = "Number Text",
                     InputType = TextInputType.Number
                 },
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
                 {
                     Label = "Decimal Text",
                     InputType = TextInputType.Decimal
                 },
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
                 {
                     Label = "Phone Text",
                     InputType = TextInputType.Phone
                 },
-                new TextFormItem(() => Text) { Label = "Url Text", InputType = TextInputType.Url },
-                new TextFormItem(() => Text)
+                new TextInputFormItem(() => Text)
+                {
+                    Label = "Url Text",
+                    InputType = TextInputType.Url
+                },
+                new TextInputFormItem(() => Text)
                 {
                     Label = "Email Address Text",
                     InputType = TextInputType.EmailAddress
                 },
-                new TextFormItem(() => Text) { Label = "Password Text", IsSecured = true },
-                new MultilineTextFormItem(() => MultilineText) { Placeholder = "Multiline text" }
+                new TextInputFormItem(() => Text) { Label = "Password Text", IsSecured = true },
+                new MultilineTextInputFormItem(() => MultilineText)
+                {
+                    Placeholder = "Multiline text"
+                }
             },
             new TextFormGroup("Sliders")
             {
-                new TextFormItem<float>(
+                new TextInputFormItem<float>(
                     () => Slider,
                     @string => float.TryParse(@string, out var value) ? value : 0
                 )
@@ -246,11 +251,11 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                     ValueChangedCallback = (form, value) =>
                         form.GetItem(() => HiddenText)!.IsVisible = value
                 },
-                new TextFormItem(() => HiddenText) { Label = "Hidden text", IsVisible = false }
+                new TextInputFormItem(() => HiddenText) { Label = "Hidden text", IsVisible = false }
             },
             new TextFormGroup("Steppers")
             {
-                new TextFormItem<int>(
+                new TextInputFormItem<int>(
                     () => Stepper,
                     @string => int.TryParse(@string, out var value) ? value : 0
                 )

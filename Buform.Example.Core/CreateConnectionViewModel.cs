@@ -1,6 +1,3 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Fedandburk.MvvmCross.Extensions;
 using Microsoft.Extensions.Logging;
@@ -61,12 +58,12 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
         {
             new TextFormGroup("Server")
             {
-                new TextFormItem(() => Server)
+                new TextInputFormItem(() => Server)
                 {
                     Placeholder = "Server",
                     InputType = TextInputType.Url
                 },
-                new TextFormItem<int?>(
+                new TextInputFormItem<int?>(
                     () => Port,
                     @string => int.TryParse(@string, out var port) ? port : null
                 )
@@ -101,13 +98,13 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
                         Password = null;
                     }
                 },
-                new TextFormItem(() => Username)
+                new TextInputFormItem(() => Username)
                 {
                     Label = "Username",
                     Placeholder = "Username",
                     InputType = TextInputType.EmailAddress
                 },
-                new TextFormItem(() => Password)
+                new TextInputFormItem(() => Password)
                 {
                     Label = "Password",
                     Placeholder = "Password",
