@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Humanizer;
 using Microsoft.Extensions.Logging;
@@ -34,8 +30,11 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
         {
             new TextFormGroup
             {
-                new TextFormItem(() => model.Title) { Placeholder = "Title" },
-                new TextFormItem(() => model.Location) { Placeholder = "Location or Video Call" }
+                new TextInputFormItem(() => model.Title) { Placeholder = "Title" },
+                new TextInputFormItem(() => model.Location)
+                {
+                    Placeholder = "Location or Video Call"
+                }
             },
             new TextFormGroup
             {
@@ -83,12 +82,12 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
             },
             new TextFormGroup
             {
-                new TextFormItem(() => model.Url)
+                new TextInputFormItem(() => model.Url)
                 {
                     Placeholder = "URL",
                     InputType = TextInputType.Url
                 },
-                new MultilineTextFormItem(() => model.Notes) { Placeholder = "Notes" }
+                new MultilineTextInputFormItem(() => model.Notes) { Placeholder = "Notes" }
             },
         };
     }

@@ -2,11 +2,12 @@ using System.Collections.Specialized;
 
 namespace Buform;
 
-public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormGroup
+public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
+    where TItem : FormItem<TValue>
 {
+    private Func<TValue, TItem>? _itemFactory;
     private string? _headerLabel;
     private string? _footerLabel;
-    private Func<TValue?, string?>? _formatter;
     private IEnumerable<TValue>? _source;
 
     public virtual string? HeaderLabel
@@ -26,22 +27,6 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
         set
         {
             _footerLabel = value;
-
-            NotifyPropertyChanged();
-        }
-    }
-
-    public virtual Func<TValue?, string?>? Formatter
-    {
-        get => _formatter;
-        set
-        {
-            _formatter = value;
-
-            foreach (var item in this)
-            {
-                item.Formatter = Formatter;
-            }
 
             NotifyPropertyChanged();
         }
@@ -70,8 +55,13 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
         }
     }
 
-    public ListFormGroup(string? headerLabel = null, string? footerLabel = null)
+    public ListFormGroup(
+        Func<TValue, TItem> itemFactory,
+        string? headerLabel = null,
+        string? footerLabel = null
+    )
     {
+        _itemFactory = itemFactory ?? throw new ArgumentNullException(nameof(itemFactory));
         _headerLabel = headerLabel;
         _footerLabel = footerLabel;
     }
@@ -85,6 +75,11 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
 
     protected virtual void Reset()
     {
+        if (_itemFactory == null)
+        {
+            return;
+        }
+
         ClearItems();
 
         if (Source == null)
@@ -94,7 +89,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
 
         foreach (var value in Source)
         {
-            var item = new ListFormItem<TValue>(value) { Formatter = Formatter };
+            var item = _itemFactory(value);
 
             Add(item);
         }
@@ -110,7 +105,7 @@ public class ListFormGroup<TValue> : FormGroup<ListFormItem<TValue>>, IListFormG
             }
         }
 
-        _formatter = null;
+        _itemFactory = null;
         _source = null;
 
         base.Dispose(isDisposing);

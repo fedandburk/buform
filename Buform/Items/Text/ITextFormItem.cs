@@ -1,16 +1,6 @@
 namespace Buform;
 
-public interface ITextFormItem : IValidatableFormItem
+public interface ITextFormItem : IFormItem
 {
-    string? Label { get; }
-
-    string? Placeholder { get; }
-
-    TextInputType InputType { get; }
-
-    bool IsSecured { get; }
-
     string? FormattedValue { get; }
-
-    void SetValue(string? value);
 }

@@ -7,6 +7,7 @@ public sealed class ListFormGroupComponent : IFormComponent
 {
     public void Register()
     {
-        FormPlatform.RegisterItemClass<IListFormItem, ListFormCell>();
+        FormPlatform.RegisterGroupHeaderClass<IListFormGroup, ListFormGroupHeader>();
+        FormPlatform.RegisterGroupFooterClass<IListFormGroup, ListFormGroupFooter>();
     }
 }
