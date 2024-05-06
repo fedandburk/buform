@@ -35,7 +35,9 @@ public class Form : FormCollection<IFormGroup>
 
     public Form(object target)
     {
-        Target = target ?? throw new ArgumentNullException(nameof(target));
+        ArgumentNullException.ThrowIfNull(target);
+
+        Target = target;
     }
 
     protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)

@@ -18,7 +18,9 @@ public sealed class FormItemRegistry
 
         public Holder(Type cellType, Type? expandedCellType, RegistrationType registrationType)
         {
-            CellType = cellType ?? throw new ArgumentNullException(nameof(cellType));
+            ArgumentNullException.ThrowIfNull(cellType);
+
+            CellType = cellType;
             ExpandedCellType = expandedCellType;
             RegistrationType = registrationType;
         }
@@ -93,10 +95,7 @@ public sealed class FormItemRegistry
 
     public void Register(UITableView tableView)
     {
-        if (tableView == null)
-        {
-            throw new ArgumentNullException(nameof(tableView));
-        }
+        ArgumentNullException.ThrowIfNull(tableView);
 
         foreach (var holder in _holders.Values)
         {
@@ -133,10 +132,7 @@ public sealed class FormItemRegistry
 
     public bool TryGetReuseIdentifier(Type itemType, out string? reuseIdentifier)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 
@@ -154,10 +150,7 @@ public sealed class FormItemRegistry
 
     public bool TryGetExpandedReuseIdentifier(Type itemType, out string? reuseIdentifier)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 

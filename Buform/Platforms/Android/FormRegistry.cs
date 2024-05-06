@@ -14,8 +14,9 @@ public sealed class FormRegistry
 
         public Holder(Type viewHolderType, int resourceId)
         {
-            ViewHolderType =
-                viewHolderType ?? throw new ArgumentNullException(nameof(viewHolderType));
+            ArgumentNullException.ThrowIfNull(viewHolderType);
+
+            ViewHolderType = viewHolderType;
             ResourceId = resourceId;
         }
     }
@@ -81,10 +82,7 @@ public sealed class FormRegistry
 
     private bool TryGetViewType(Type dataType, FormViewHolderType viewHolderType, out int? viewType)
     {
-        if (dataType == null)
-        {
-            throw new ArgumentNullException(nameof(dataType));
-        }
+        ArgumentNullException.ThrowIfNull(dataType);
 
         var result = TryGetHolder(dataType, viewHolderType, out var holder);
 
