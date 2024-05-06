@@ -17,7 +17,9 @@ public static class FormComponentRegistry
 
         var components = assemblies
             .SelectMany(item => item.GetTypes())
-            .Where(item => item.GetCustomAttributes(typeof(FormComponentAttribute), false).Any())
+            .Where(item =>
+                item.GetCustomAttributes(typeof(FormComponentAttribute), false).Length != 0
+            )
             .Select(item => Activator.CreateInstance(item) as IFormComponent)
             .ToArray();
 
