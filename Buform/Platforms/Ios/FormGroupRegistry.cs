@@ -22,7 +22,9 @@ public sealed class FormGroupRegistry
 
         public Holder(Type viewType, RegistrationType registrationType)
         {
-            ViewType = viewType ?? throw new ArgumentNullException(nameof(viewType));
+            ArgumentNullException.ThrowIfNull(viewType);
+
+            ViewType = viewType;
             RegistrationType = registrationType;
         }
     }
@@ -98,10 +100,7 @@ public sealed class FormGroupRegistry
 
     public void Register(UITableView tableView)
     {
-        if (tableView == null)
-        {
-            throw new ArgumentNullException(nameof(tableView));
-        }
+        ArgumentNullException.ThrowIfNull(tableView);
 
         foreach (var holder in _holders.Values)
         {
@@ -127,10 +126,7 @@ public sealed class FormGroupRegistry
 
     public bool TryGetHeaderReuseIdentifier(Type groupType, out string? reuseIdentifier)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         var result = TryGetHolder(groupType, HolderType.Header, out var holder);
 
@@ -148,10 +144,7 @@ public sealed class FormGroupRegistry
 
     public bool TryGetFooterReuseIdentifier(Type groupType, out string? reuseIdentifier)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         var result = TryGetHolder(groupType, HolderType.Footer, out var holder);
 

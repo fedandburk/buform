@@ -6,6 +6,8 @@ public sealed class FormValueChangedEventArgs : EventArgs
 
     public FormValueChangedEventArgs(string propertyName)
     {
-        PropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
+        ArgumentNullException.ThrowIfNull(propertyName);
+
+        PropertyName = propertyName;
     }
 }

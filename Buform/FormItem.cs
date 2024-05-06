@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -71,7 +72,9 @@ public abstract class FormItem<TValue> : IFormItem
 
     protected FormItem(Expression<Func<TValue>> property)
     {
-        _property = property ?? throw new ArgumentNullException(nameof(property));
+        ArgumentNullException.ThrowIfNull(property);
+
+        _property = property;
 
         PropertyName = _property.GetMemberName();
 
@@ -80,7 +83,9 @@ public abstract class FormItem<TValue> : IFormItem
 
     protected FormItem(TValue value)
     {
-        _value = value ?? throw new ArgumentNullException(nameof(value));
+        ArgumentNullException.ThrowIfNull(value);
+
+        _value = value;
 
         _isVisible = true;
     }
@@ -157,12 +162,10 @@ public abstract class FormItem<TValue> : IFormItem
 
     public void Initialize(Form form, object target)
     {
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target));
-        }
+        ArgumentNullException.ThrowIfNull(form);
+        ArgumentNullException.ThrowIfNull(target);
 
-        Form = form ?? throw new ArgumentNullException(nameof(form));
+        Form = form;
 
         if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)
         {

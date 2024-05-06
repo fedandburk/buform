@@ -54,7 +54,9 @@ public class MultilineTextInputFormItem<TValue>
     )
         : base(targetProperty)
     {
-        _converter = converter ?? throw new ArgumentNullException(nameof(converter));
+        ArgumentNullException.ThrowIfNull(converter);
+
+        _converter = converter;
     }
 
     protected override void OnValueChanged()

@@ -61,7 +61,9 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
         string? footerLabel = null
     )
     {
-        _itemFactory = itemFactory ?? throw new ArgumentNullException(nameof(itemFactory));
+        ArgumentNullException.ThrowIfNull(itemFactory);
+
+        _itemFactory = itemFactory;
         _headerLabel = headerLabel;
         _footerLabel = footerLabel;
     }

@@ -32,7 +32,9 @@ public class PickerViewController<TItem> : UITableViewController
     public PickerViewController(UITableViewStyle style, TItem item)
         : base(style)
     {
-        Item = item ?? throw new ArgumentNullException(nameof(item));
+        ArgumentNullException.ThrowIfNull(item);
+
+        Item = item;
 
         Item.PropertyChanged += OnPropertyChanged;
     }
