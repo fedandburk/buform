@@ -2,6 +2,7 @@ using ObjCRuntime;
 
 namespace Buform;
 
+[Preserve(AllMembers = true)]
 public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBase<TFormItem>
     where TFormItem : class, IPickerFormItemBase
 {

@@ -5,7 +5,7 @@ namespace Buform.Example.MvvmCross.iOS;
 
 [Preserve(AllMembers = true)]
 [Register(nameof(PrefixButtonFormCell))]
-public class PrefixButtonFormCell : ButtonFormCellBase<PrefixButtonFormItem>
+public class PrefixButtonFormCell : ButtonFormCell<PrefixButtonFormItem>
 {
     public PrefixButtonFormCell()
     {
