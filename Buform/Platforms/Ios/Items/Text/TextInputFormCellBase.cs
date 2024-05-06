@@ -3,8 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class TextFormCellBase<TTextItem> : FormCell<TTextItem>
-    where TTextItem : class, ITextFormItem
+public abstract class TextInputFormCellBase<TTextItem> : FormCell<TTextItem>
+    where TTextItem : class, ITextInputFormItem
 {
     private NSLayoutConstraint? _textFieldLeadingConstraint;
     private NSLayoutConstraint? _labelWidthConstraint;
@@ -14,12 +14,12 @@ public abstract class TextFormCellBase<TTextItem> : FormCell<TTextItem>
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
-    protected TextFormCellBase()
+    protected TextInputFormCellBase()
     {
         /* Required constructor */
     }
 
-    protected TextFormCellBase(NativeHandle handle)
+    protected TextInputFormCellBase(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */

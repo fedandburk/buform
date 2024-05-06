@@ -1,10 +1,14 @@
 namespace Buform;
 
-public interface IMultilineTextFormItem : IValidatableFormItem
+public interface ITextInputFormItem : IValidatableFormItem
 {
+    string? Label { get; }
+
     string? Placeholder { get; }
 
     TextInputType InputType { get; }
+
+    bool IsSecured { get; }
 
     string? FormattedValue { get; }
 

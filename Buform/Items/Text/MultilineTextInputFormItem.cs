@@ -2,7 +2,9 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMultilineTextFormItem
+public class MultilineTextInputFormItem<TValue>
+    : ValidatableFormItem<TValue>,
+        IMultilineTextInputFormItem
 {
     private readonly Func<string?, TValue?> _converter;
 
@@ -46,7 +48,7 @@ public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMulti
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public MultilineTextFormItem(
+    public MultilineTextInputFormItem(
         Expression<Func<TValue>> targetProperty,
         Func<string?, TValue?> converter
     )
@@ -78,9 +80,9 @@ public class MultilineTextFormItem<TValue> : ValidatableFormItem<TValue>, IMulti
     }
 }
 
-public class MultilineTextFormItem : MultilineTextFormItem<string?>
+public class MultilineTextInputFormItem : MultilineTextInputFormItem<string?>
 {
-    public MultilineTextFormItem(Expression<Func<string?>> targetProperty)
+    public MultilineTextInputFormItem(Expression<Func<string?>> targetProperty)
         : base(targetProperty, item => item)
     {
         /* Required constructor */
