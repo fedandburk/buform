@@ -1,6 +1,9 @@
+using Microsoft.Maui.Controls.Internals;
+
 namespace Buform;
 
-internal class FormItemRegistry
+[Preserve(AllMembers = true)]
+internal sealed class FormItemRegistry
 {
     private sealed class Holder
     {

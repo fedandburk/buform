@@ -1,16 +1,17 @@
+using Microsoft.Maui.Controls.Internals;
+
 namespace Buform;
 
-public static class BuformMauiPlatform
+[Preserve(AllMembers = true)]
+public static class FormPlatform
 {
     private static readonly FormGroupRegistry GroupRegistry;
     private static readonly FormItemRegistry ItemRegistry;
 
-    static BuformMauiPlatform()
+    static FormPlatform()
     {
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();
-
-        FormComponentRegistry.Register();
     }
 
     public static void Initialize(MauiAppBuilder builder)
@@ -23,14 +24,14 @@ public static class BuformMauiPlatform
 
     public static void RegisterGroupHeaderClass<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
-        where TGroupView : FormsHeaderFooterView<TGroup>
+        where TGroupView : FormHeaderFooterView<TGroup>
     {
         GroupRegistry.RegisterGroupHeaderClass<TGroup, TGroupView>();
     }
 
     public static void RegisterGroupFooterClass<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
-        where TGroupView : FormsHeaderFooterView<TGroup>
+        where TGroupView : FormHeaderFooterView<TGroup>
     {
         GroupRegistry.RegisterGroupFooterClass<TGroup, TGroupView>();
     }
