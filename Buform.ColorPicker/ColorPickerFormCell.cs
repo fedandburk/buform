@@ -1,5 +1,8 @@
+using CoreGraphics;
 using Fedandburk.iOS.Extensions;
+using Foundation;
 using ObjCRuntime;
+using UIKit;
 
 namespace Buform;
 
