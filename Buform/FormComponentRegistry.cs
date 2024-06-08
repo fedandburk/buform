@@ -1,6 +1,6 @@
 namespace Buform;
 
-public static class FormComponentRegistry
+internal static class FormComponentRegistry
 {
     public static void Register()
     {

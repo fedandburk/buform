@@ -1,7 +1,7 @@
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public sealed class FormGroupRegistry
+internal sealed class FormGroupRegistry
 {
     private enum RegistrationType
     {

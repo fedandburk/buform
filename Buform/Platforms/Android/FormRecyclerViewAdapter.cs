@@ -7,7 +7,7 @@ using Fedandburk.Common.Extensions;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class FormRecyclerViewAdapter : RecyclerView.Adapter
+internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
 {
     private Form? _form;
     private IEnumerable<IFormItem>? _items;
