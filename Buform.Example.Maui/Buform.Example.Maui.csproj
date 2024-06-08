@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-ios</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <SingleProject>true</SingleProject>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Buform</RootNamespace>
+        <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+        <ApplicationId>com.fedandburk.buform.maui</ApplicationId>
+        <ApplicationTitle>Buform Maui</ApplicationTitle>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+        <MauiImage Include="Resources\Images\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Buform.Maui\Buform.Maui.csproj" />
+        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
+      <PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
+    </ItemGroup>
+
+</Project>
