@@ -1,46 +1,39 @@
 using MvvmCross.Binding.BindingContext;
-using MvvmCross.Platforms.Ios.Binding.Views;
 
 namespace Buform;
 
-public abstract class MvxFormCell<TItem> : FormCell<TItem>, IMvxBindable
+public abstract class MvxFormCell<TItem> : FormCell<TItem>, IMvxBindingContextOwner
     where TItem : class, IFormItem
 {
-    public IMvxBindingContext BindingContext { get; set; } = null!;
-
-    public object? DataContext
-    {
-        get => BindingContext.DataContext;
-        set => BindingContext.DataContext = value;
-    }
+    public IMvxBindingContext? BindingContext { get; set; }
 
     protected MvxFormCell()
     {
-        this.CreateBindingContext(string.Empty);
+        /* Required constructor */
     }
 
     protected MvxFormCell(IntPtr handle)
         : base(handle)
     {
-        this.CreateBindingContext(string.Empty);
+        /* Required constructor */
     }
 
     protected MvxFormCell(UITableViewCellStyle style, string reuseIdentifier)
         : base(style, reuseIdentifier)
     {
-        this.CreateBindingContext(string.Empty);
+        /* Required constructor */
     }
 
     protected override void OnItemSet()
     {
-        DataContext = Item;
+        BindingContext = new MvxBindingContext(Item);
 
-        this.DelayBind(InitializeBindings);
+        InitializeBindings();
     }
 
     protected MvxFluentBindingDescriptionSet<MvxFormCell<TItem>, TItem> CreateBindingSet()
     {
-        return this.CreateBindingSet<MvxFormCell<TItem>, TItem>();
+        return new MvxFluentBindingDescriptionSet<MvxFormCell<TItem>, TItem>(this);
     }
 
     protected abstract void InitializeBindings();
@@ -56,7 +49,7 @@ public abstract class MvxFormCell<TItem> : FormCell<TItem>, IMvxBindable
 
         if (disposing)
         {
-            BindingContext.ClearAllBindings();
+            BindingContext?.ClearAllBindings();
         }
     }
 }

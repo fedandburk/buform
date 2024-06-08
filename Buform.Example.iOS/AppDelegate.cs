@@ -1,6 +1,6 @@
 ﻿namespace Buform;
 
-[Preserve(AllMembers = true)]
+[Foundation.Preserve(AllMembers = true)]
 [Register(nameof(AppDelegate))]
 public sealed class AppDelegate : UIApplicationDelegate
 {
@@ -26,6 +26,7 @@ public sealed class AppDelegate : UIApplicationDelegate
 
         FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
         FormPlatform.RegisterItemClass<PrefixButtonFormItem, PrefixButtonFormCell>();
+        FormPlatform.RegisterItemClass<MvxButtonFormItem, MvxButtonFormCell>();
 
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
 

@@ -1,3 +1,5 @@
+using Fedandburk.Common.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -29,7 +31,7 @@ public sealed class CreateEventViewController : UITableViewController
         _createButtonItem = new UIBarButtonItem(
             "Add",
             UIBarButtonItemStyle.Done,
-            (_, _) => _viewModel.CreateCommand.Execute(null)
+            (_, _) => _viewModel.CreateCommand.SafeExecute()
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;
