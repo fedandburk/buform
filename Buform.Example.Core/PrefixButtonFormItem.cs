@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
 public class PrefixButtonFormItem : ButtonFormItem
 {
