@@ -1,8 +1,7 @@
-using Buform.Example.Core;
 using Fedandburk.Common.Extensions;
 using ObjCRuntime;
 
-namespace Buform.Example.MvvmCross.iOS;
+namespace Buform;
 
 [Preserve(AllMembers = true)]
 [Register(nameof(RandomNumberGeneratorCell))]

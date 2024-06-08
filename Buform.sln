@@ -2,7 +2,7 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.Example.MvvmCross.iOS", "Buform.Example.MvvmCross.iOS\Buform.Example.MvvmCross.iOS.csproj", "{8432E788-117D-4E76-BCA8-9A4962CE7D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.Example.iOS", "Buform.Example.iOS\Buform.Example.iOS.csproj", "{8432E788-117D-4E76-BCA8-9A4962CE7D97}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform", "Buform\Buform.csproj", "{1682526B-53D6-4995-BE43-553A2848D5C0}"
 EndProject
