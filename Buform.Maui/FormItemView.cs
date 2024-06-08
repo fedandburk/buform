@@ -1,5 +1,3 @@
-using Microsoft.Maui.Controls;
-
 namespace Buform;
 
 public class FormItemView : ContentView { }

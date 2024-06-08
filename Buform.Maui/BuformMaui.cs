@@ -1,14 +1,11 @@
-using System;
-using Microsoft.Maui.Hosting;
-
 namespace Buform;
 
-public static class BuformMaui
+public static class BuformMauiPlatform
 {
     private static readonly FormGroupRegistry GroupRegistry;
     private static readonly FormItemRegistry ItemRegistry;
 
-    static BuformMaui()
+    static BuformMauiPlatform()
     {
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();

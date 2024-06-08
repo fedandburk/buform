@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Buform;
 
 internal class FormItemRegistry
@@ -64,10 +60,7 @@ internal class FormItemRegistry
 
     public bool TryGetCellViewType(Type itemType, out Type? viewType)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 
@@ -85,10 +78,7 @@ internal class FormItemRegistry
 
     public bool TryGetExpandedCellViewType(Type itemType, out Type? viewType)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 

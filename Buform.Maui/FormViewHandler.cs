@@ -1,5 +1,4 @@
 using CoreGraphics;
-using Microsoft.Maui;
 using Microsoft.Maui.Handlers;
 using UIKit;
 

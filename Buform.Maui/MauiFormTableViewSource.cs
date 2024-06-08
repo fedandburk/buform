@@ -15,7 +15,7 @@ public class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = item.GetType();
 
-        if (!BuformMaui.TryGetCellViewType(sectionType, out var viewType))
+        if (!BuformMauiPlatform.TryGetCellViewType(sectionType, out var viewType))
         {
             return base.GetCell(indexPath, item);
         }
@@ -30,7 +30,7 @@ public class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!BuformMaui.TryGetFooterViewType(sectionType, out var viewType))
+        if (!BuformMauiPlatform.TryGetFooterViewType(sectionType, out var viewType))
         {
             return base.GetViewForFooter(section, sectionItem);
         }
@@ -47,7 +47,7 @@ public class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!BuformMaui.TryGetHeaderViewType(sectionType, out var viewType))
+        if (!BuformMauiPlatform.TryGetHeaderViewType(sectionType, out var viewType))
         {
             return base.GetViewForHeader(section, sectionItem);
         }

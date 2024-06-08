@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Buform;
 
 internal sealed class FormGroupRegistry
@@ -57,20 +53,14 @@ internal sealed class FormGroupRegistry
 
     public bool TryGetHeaderViewType(Type groupType, out Type? viewType)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         return TryGetViewType(groupType, HolderType.Header, out viewType);
     }
 
     public bool TryGetFooterViewType(Type groupType, out Type? viewType)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         return TryGetViewType(groupType, HolderType.Footer, out viewType);
     }
