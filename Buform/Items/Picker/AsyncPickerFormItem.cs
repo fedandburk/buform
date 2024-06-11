@@ -56,25 +56,6 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
         }
     }
 
-    private void UpdateOptions()
-    {
-        if (!string.IsNullOrEmpty(FilterQuery))
-        {
-            Options = _options
-                .Where(option =>
-                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
-                    ?? false
-                )
-                .ToList();
-        }
-        else
-        {
-            Options = _options;
-        }
-
-        NotifyPropertyChanged(nameof(Options));
-    }
-
     public virtual Func<CancellationToken, Task<IEnumerable<TValue>>>? SourceFactory
     {
         get => _sourceFactory;
@@ -130,9 +111,7 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
                     ? null
                     : await SourceFactory(cancellationToken).ConfigureAwait(false);
 
-            _options =
-                source?.Select(CreateOption).ToList()
-                ?? Array.Empty<IPickerOptionFormItem>().ToList();
+            _options = InitOptions(source!);
 
             UpdateOptions();
 
@@ -144,6 +123,30 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
             State = AsyncPickerLoadingState.Failed;
             NotifyPropertyChanged(nameof(State));
         }
+    }
+
+    protected virtual IList<IPickerOptionFormItem> InitOptions(IEnumerable<TValue> source)
+    {
+        return source.Select(CreateOption).ToList();
+    }
+
+    protected virtual void UpdateOptions()
+    {
+        if (!string.IsNullOrEmpty(FilterQuery))
+        {
+            Options = _options
+                .Where(option =>
+                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
+                    ?? false
+                )
+                .ToList();
+        }
+        else
+        {
+            Options = _options;
+        }
+
+        NotifyPropertyChanged(nameof(Options));
     }
 
     public override void Pick(IPickerOptionFormItem? item)
