@@ -1,19 +1,18 @@
 using Android.Runtime;
 using Android.Views;
-using Buform.Example.Core;
 
-namespace Buform.Example.MvvmCross.Droid;
+namespace Buform;
 
 [Preserve(AllMembers = true)]
-public sealed class HeaderFormGroupHeaderViewHolder : FormViewHolder<HeaderFormGroup>
+public sealed class LogoFormGroupFooterViewHolder : FormViewHolder<LogoFormGroup>
 {
-    public HeaderFormGroupHeaderViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    public LogoFormGroupFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public HeaderFormGroupHeaderViewHolder(View itemView)
+    public LogoFormGroupFooterViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
