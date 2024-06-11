@@ -1,14 +1,22 @@
-using System.Windows.Input;
-using Fedandburk.MvvmCross.Extensions;
-using Microsoft.Extensions.Logging;
-using MvvmCross.Commands;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FluentValidation;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
-public sealed class CreateConnectionViewModel : MvxNavigationViewModel
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class CreateConnectionViewModel : ObservableObject
 {
+    public class Validator : AbstractValidator<CreateConnectionViewModel>
+    {
+        public Validator()
+        {
+            RuleFor(item => item.Server).NotEmpty();
+            RuleFor(item => item.Port).NotEmpty().GreaterThan(0);
+            RuleFor(item => item.Password).NotEmpty();
+        }
+    }
+
     public enum ConnectionType
     {
         Ftp,
@@ -18,43 +26,38 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
 
     private const string AnonymousUsername = "anonymous";
 
-    // ReSharper disable once NotAccessedField.Local
-    private readonly IDisposable? _connectCommandSubscription;
+    [ObservableProperty]
+    private string? _server;
 
-    public string? Server { get; set; }
-    public int? Port { get; set; }
-    public ConnectionType Type { get; set; }
-    public bool IsAnonymousLogin { get; set; }
-    public string? Username { get; set; }
-    public string? Password { get; set; }
-    public string? SshPrivateKey { get; set; }
+    [ObservableProperty]
+    private int? _port;
 
-    public string Title { get; }
+    [ObservableProperty]
+    private ConnectionType _type;
 
-    public FluentValidationForm<CreateConnectionViewModel> Form { get; }
+    [ObservableProperty]
+    private bool _isAnonymousLogin;
 
-    public ICommand CancelCommand { get; }
-    public ICommand ConnectCommand { get; }
-    public ICommand ResetCommand { get; }
+    [ObservableProperty]
+    private string? _username;
 
-    public CreateConnectionViewModel(
-        ILoggerFactory logFactory,
-        IMvxNavigationService navigationService
-    )
-        : base(logFactory, navigationService)
+    [ObservableProperty]
+    private string? _password;
+
+    [ObservableProperty]
+    private string? _sshPrivateKey;
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    private FluentValidationForm<CreateConnectionViewModel> _form;
+
+    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+    private bool CanConnect => Form?.IsValid ?? false;
+
+    public CreateConnectionViewModel()
     {
-        SetDefaultValues();
+        Reset();
 
-        Title = "New Connection";
-
-        CancelCommand = new MvxAsyncCommand(CancelAsync);
-        ConnectCommand = new MvxCommand(Connect, CanConnect);
-        ResetCommand = new MvxCommand(Reset);
-
-        Form = new FluentValidationForm<CreateConnectionViewModel>(
-            this,
-            new CreateConnectionViewModelValidator()
-        )
+        Form = new FluentValidationForm<CreateConnectionViewModel>(this, new Validator())
         {
             new TextFormGroup("Server")
             {
@@ -137,8 +140,6 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
                 }
             }
         };
-
-        _connectCommandSubscription = ConnectCommand.RelayOn(Form, () => Form.IsValid);
     }
 
     private static string FormatConnectionType(ConnectionType value)
@@ -152,8 +153,18 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
         };
     }
 
-    private void SetDefaultValues()
+    [RelayCommand(CanExecute = nameof(CanConnect))]
+    private static void Connect()
     {
+        Console.WriteLine("Connect command executed");
+    }
+
+    [RelayCommand]
+    private void Reset()
+    {
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+        Form?.ResetValidation();
+
         Server = null;
         Port = 21;
         Type = ConnectionType.Ftp;
@@ -161,25 +172,5 @@ public sealed class CreateConnectionViewModel : MvxNavigationViewModel
         Username = null;
         Password = null;
         SshPrivateKey = null;
-    }
-
-    private Task CancelAsync(CancellationToken cancellationToken)
-    {
-        return NavigationService.Close(this, cancellationToken);
-    }
-
-    private bool CanConnect()
-    {
-        // ReSharper disable once ConstantConditionalAccessQualifier
-        return Form?.IsValid ?? false;
-    }
-
-    private void Connect() { }
-
-    private void Reset()
-    {
-        Form.ResetValidation();
-
-        SetDefaultValues();
     }
 }

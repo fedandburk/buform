@@ -5,7 +5,7 @@ using Fedandburk.Common.Extensions;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public sealed class FormRegistry
+internal sealed class FormRegistry
 {
     private sealed class Holder
     {

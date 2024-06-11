@@ -1,16 +1,15 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
-using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Humanizer;
-using Microsoft.Extensions.Logging;
-using MvvmCross.Commands;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
 using NLipsum.Core;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
-public sealed class ComponentsViewModel : MvxNavigationViewModel
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class ComponentsViewModel : ObservableObject
 {
     public enum Enum
     {
@@ -19,58 +18,63 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
         Third
     }
 
-    public ICommand CloseCommand { get; }
-    public ICommand ToggleReadOnlyModeCommand { get; }
-    public Color Color { get; set; }
-    public ObservableCollection<int> List { get; }
-    public Enum Segments { get; set; }
-    public string? Text { get; set; }
-    public string? MultilineText { get; set; }
-    public float Slider { get; set; }
-    public int Stepper { get; set; }
-    public DateTime DateTime { get; set; }
-    public bool Switch { get; set; }
-    public string? HiddenText { get; set; }
-    public string? CallbackPicker { get; set; }
-    public int? Picker { get; set; }
-    public int? AsyncPicker { get; set; }
-    public int[]? MultiValuePicker { get; set; }
+    [ObservableProperty]
+    private Color _color = Color.Gold;
 
-    public ICommand Command { get; }
+    [ObservableProperty]
+    private ObservableCollection<int> _list = new(Enumerable.Range(1, 10));
 
-    public string Title { get; }
+    [ObservableProperty]
+    private Enum _segments;
 
-    public Form Form { get; }
+    [ObservableProperty]
+    private string? _text;
 
-    public ComponentsViewModel(ILoggerFactory logFactory, IMvxNavigationService navigationService)
-        : base(logFactory, navigationService)
+    [ObservableProperty]
+    private string? _multilineText = new LipsumGenerator().GenerateLipsum(1);
+
+    [ObservableProperty]
+    private float _slider;
+
+    [ObservableProperty]
+    private int _stepper;
+
+    [ObservableProperty]
+    private DateTime _dateTime = DateTime.UtcNow;
+
+    [ObservableProperty]
+    private bool _switch;
+
+    [ObservableProperty]
+    private string? _hiddenText;
+
+    [ObservableProperty]
+    private string? _callbackPicker;
+
+    [ObservableProperty]
+    private int? _picker;
+
+    [ObservableProperty]
+    private int? _asyncPicker;
+
+    [ObservableProperty]
+    private int[]? _multiValuePicker;
+
+    [ObservableProperty]
+    private Form _form;
+
+    public ComponentsViewModel()
     {
-        List = new ObservableCollection<int>(Enumerable.Range(1, 10));
-        Color = Color.Gold;
-        MultilineText = new LipsumGenerator().GenerateLipsum(1);
-        DateTime = DateTime.UtcNow;
-
-        CloseCommand = new MvxAsyncCommand(CloseAsync);
-        ToggleReadOnlyModeCommand = new MvxCommand(() => Form!.IsReadOnly = !Form.IsReadOnly);
-
-        Command = new MvxCommand(Execute);
-
-        Title = "Components";
-
         Form = new Form(this)
         {
-            new TextFormGroup("Color Pickers")
-            {
-                new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
-            },
             new ListFormGroup<int, TextFormItem<int>>(
                 item => new TextFormItem<int>(item) { Formatter = i => i.ToWords() },
                 "List"
             )
             {
                 Source = List,
-                RemoveCommand = new MvxCommand<int>(item => List.Remove(item)),
-                MoveCommand = new MvxCommand<(int, int)>(item => List.Move(item.Item1, item.Item2))
+                RemoveCommand = RemoveListItemCommand,
+                MoveCommand = MoveListItemCommand
             },
             new TextFormGroup("Pickers")
             {
@@ -160,21 +164,22 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                             .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
                     }
-                }
+                },
+                new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
             },
             new TextFormGroup("Buttons")
             {
-                new ButtonFormItem(Command)
+                new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Default Button",
                     InputType = ButtonInputType.Default
                 },
-                new ButtonFormItem(Command)
+                new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Destructive Button",
                     InputType = ButtonInputType.Destructive
                 },
-                new ButtonFormItem(Command)
+                new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Done Button",
                     InputType = ButtonInputType.Done
@@ -265,10 +270,10 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
                 },
                 new StepperFormItem(() => Stepper)
                 {
-                    MinValue = -10,
-                    MaxValue = 10,
+                    Label = "Stepper",
                     StepAmount = 5,
-                    Label = "Stepper"
+                    MinValue = -10,
+                    MaxValue = 10
                 }
             },
             new TextFormGroup("Date & Time")
@@ -292,21 +297,55 @@ public sealed class ComponentsViewModel : MvxNavigationViewModel
         };
     }
 
-    private Task CloseAsync(CancellationToken cancellationToken)
+    [RelayCommand]
+    private void ToggleReadOnlyMode()
     {
-        return NavigationService.Close(this, cancellationToken);
+        Form.IsReadOnly = !Form.IsReadOnly;
     }
 
-    private static void Execute()
+    [RelayCommand]
+    private static void WriteLine()
     {
         Console.WriteLine("Command executed");
     }
 
-    // ReSharper disable once UnusedMember.Global
-    public void OnPropertyChanged(string propertyName, object before, object after)
+    [RelayCommand]
+    private void RemoveListItem(int item)
     {
-        RaisePropertyChanged(propertyName);
+        List.Remove(item);
+    }
 
-        Console.WriteLine($"{propertyName}: {before} -> {after}");
+    [RelayCommand]
+    private void MoveListItem((int oldIndex, int newIndex) move)
+    {
+        List.Move(move.oldIndex, move.newIndex);
+    }
+
+    protected override void OnPropertyChanging(PropertyChangingEventArgs e)
+    {
+        base.OnPropertyChanging(e);
+
+        if (e.PropertyName == null)
+        {
+            return;
+        }
+
+        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
+
+        Console.WriteLine($"{e.PropertyName} changing: {value}");
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == null)
+        {
+            return;
+        }
+
+        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
+
+        Console.WriteLine($"{e.PropertyName} changed: {value}");
     }
 }

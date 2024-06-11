@@ -1,10 +1,9 @@
 using System.Linq.Expressions;
-using System.Windows.Input;
-using MvvmCross.Commands;
+using CommunityToolkit.Mvvm.Input;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
-public sealed class RandomNumberGeneratorItem : FormItem<int>
+public partial class RandomNumberGeneratorItem : FormItem<int>
 {
     private const int MinValue = 0;
     private const int MaxValue = 1000;
@@ -12,16 +11,14 @@ public sealed class RandomNumberGeneratorItem : FormItem<int>
     private readonly Random _random;
 
     public string? Label { get; set; }
-    public ICommand GenerateCommand { get; }
 
     public RandomNumberGeneratorItem(Expression<Func<int>> property)
         : base(property)
     {
         _random = new Random();
-
-        GenerateCommand = new MvxCommand(Generate);
     }
 
+    [RelayCommand]
     private void Generate()
     {
         Value = _random.Next(MinValue, MaxValue);

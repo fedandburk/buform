@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Maui.Controls.Internals;
 
 namespace Buform;
 
-internal class FormItemRegistry
+[Preserve(AllMembers = true)]
+internal sealed class FormItemRegistry
 {
     private sealed class Holder
     {
@@ -64,10 +63,7 @@ internal class FormItemRegistry
 
     public bool TryGetCellViewType(Type itemType, out Type? viewType)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 
@@ -85,10 +81,7 @@ internal class FormItemRegistry
 
     public bool TryGetExpandedCellViewType(Type itemType, out Type? viewType)
     {
-        if (itemType == null)
-        {
-            throw new ArgumentNullException(nameof(itemType));
-        }
+        ArgumentNullException.ThrowIfNull(itemType);
 
         var result = TryGetHolder(itemType, out var holder);
 

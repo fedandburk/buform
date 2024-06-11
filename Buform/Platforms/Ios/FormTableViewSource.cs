@@ -111,7 +111,7 @@ public class FormTableViewSource : TableViewSource
     {
         base.WillDisplayHeader(section, view, item);
 
-        if (view is not FormHeaderFooterView headerFooterView)
+        if (view is not FormHeaderFooter headerFooterView)
         {
             return;
         }
@@ -132,7 +132,7 @@ public class FormTableViewSource : TableViewSource
     {
         base.WillDisplayFooter(section, view, item);
 
-        if (view is not FormHeaderFooterView headerFooterView)
+        if (view is not FormHeaderFooter headerFooterView)
         {
             return;
         }

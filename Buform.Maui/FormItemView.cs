@@ -1,10 +1,12 @@
-using Microsoft.Maui.Controls;
+using Microsoft.Maui.Controls.Internals;
 
 namespace Buform;
 
-public class FormItemView : ContentView { }
+[Preserve(AllMembers = true)]
+public abstract class FormItemView : ContentView { }
 
-public class FormItemView<TItem> : FormItemView
+[Preserve(AllMembers = true)]
+public abstract class FormItemView<TItem> : FormItemView
     where TItem : class, IFormItem
 {
     protected TItem? Item => BindingContext as TItem;

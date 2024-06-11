@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public static class ExpressionExtensions
+internal static class ExpressionExtensions
 {
     public static string GetMemberName<TValue>(this Expression<Func<TValue>>? expression)
     {

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-ios</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Buform</RootNamespace>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+        <ApplicationId>com.fedandburk.buform</ApplicationId>
+        <ApplicationTitle>Buform</ApplicationTitle>
+        <MtouchLink>SdkOnly</MtouchLink>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+        <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MvvmCross" Version="9.2.0" />
+    </ItemGroup>
+
+</Project>

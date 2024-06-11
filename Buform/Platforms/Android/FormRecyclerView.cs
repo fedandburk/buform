@@ -7,7 +7,7 @@ namespace Buform;
 
 [Preserve(AllMembers = true)]
 [Register("Buform.FormRecyclerView")]
-public class FormRecyclerView : RecyclerView
+public sealed class FormRecyclerView : RecyclerView
 {
     public Form? Form
     {
@@ -17,7 +17,7 @@ public class FormRecyclerView : RecyclerView
 
     public override bool HasFixedSize => false;
 
-    protected FormRecyclerView(IntPtr javaReference, JniHandleOwnership transfer)
+    public FormRecyclerView(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
@@ -47,7 +47,7 @@ public class FormRecyclerView : RecyclerView
         SetAdapter(CreateAdapter());
     }
 
-    protected virtual LayoutManager CreateLayoutManager()
+    private LayoutManager CreateLayoutManager()
     {
         // TODO: Add support for multiple columns.
         var layoutManager = new GridLayoutManager(Context, 1);
@@ -57,7 +57,7 @@ public class FormRecyclerView : RecyclerView
         return layoutManager;
     }
 
-    protected virtual Adapter CreateAdapter()
+    private static Adapter CreateAdapter()
     {
         return new FormRecyclerViewAdapter();
     }

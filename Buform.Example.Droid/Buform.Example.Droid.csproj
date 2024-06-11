@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-android</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Buform</RootNamespace>
+        <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+        <ApplicationId>com.fedandburk.buform</ApplicationId>
+        <ApplicationTitle>Buform</ApplicationTitle>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.10.0.5" />
+    </ItemGroup>
+
+</Project>

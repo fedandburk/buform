@@ -3,14 +3,14 @@ using System.ComponentModel;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public abstract class FormHeaderFooterView : UITableViewHeaderFooterView
+public abstract class FormHeaderFooter : UITableViewHeaderFooterView
 {
-    protected FormHeaderFooterView()
+    protected FormHeaderFooter()
     {
         /* Required constructor */
     }
 
-    protected FormHeaderFooterView(IntPtr handle)
+    protected FormHeaderFooter(IntPtr handle)
         : base(handle)
     {
         /* Required constructor */
@@ -39,7 +39,7 @@ public abstract class FormHeaderFooterView : UITableViewHeaderFooterView
 }
 
 [Preserve(AllMembers = true)]
-public abstract class FormHeaderFooter<TGroup> : FormHeaderFooterView
+public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
     where TGroup : class, IFormGroup
 {
     protected TGroup? Group { get; private set; }

@@ -1,9 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Maui.Controls.Internals;
 
 namespace Buform;
 
+[Preserve(AllMembers = true)]
 internal sealed class FormGroupRegistry
 {
     private enum HolderType
@@ -43,34 +42,28 @@ internal sealed class FormGroupRegistry
 
     public void RegisterGroupHeaderClass<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
-        where TGroupView : FormsHeaderFooterView<TGroup>
+        where TGroupView : FormHeaderFooterView<TGroup>
     {
         _groups[(typeof(TGroup), HolderType.Header)] = typeof(TGroupView);
     }
 
     public void RegisterGroupFooterClass<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
-        where TGroupView : FormsHeaderFooterView<TGroup>
+        where TGroupView : FormHeaderFooterView<TGroup>
     {
         _groups[(typeof(TGroup), HolderType.Footer)] = typeof(TGroupView);
     }
 
     public bool TryGetHeaderViewType(Type groupType, out Type? viewType)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         return TryGetViewType(groupType, HolderType.Header, out viewType);
     }
 
     public bool TryGetFooterViewType(Type groupType, out Type? viewType)
     {
-        if (groupType == null)
-        {
-            throw new ArgumentNullException(nameof(groupType));
-        }
+        ArgumentNullException.ThrowIfNull(groupType);
 
         return TryGetViewType(groupType, HolderType.Footer, out viewType);
     }

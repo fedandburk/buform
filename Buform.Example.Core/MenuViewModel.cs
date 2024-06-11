@@ -1,78 +1,79 @@
-using Microsoft.Extensions.Logging;
-using MvvmCross.Commands;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
-public sealed class MenuViewModel : MvxNavigationViewModel
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class MenuViewModel : ObservableObject
 {
-    public string Title { get; }
+    private readonly INavigationService _navigationService;
 
-    public Form Form { get; }
+    [ObservableProperty]
+    private int _randomNumber;
 
-    public int RandomNumber { get; set; }
+    [ObservableProperty]
+    private Form _form;
 
-    public MenuViewModel(ILoggerFactory logFactory, IMvxNavigationService navigationService)
-        : base(logFactory, navigationService)
+    public MenuViewModel(INavigationService navigationService)
     {
-        Title = "Menu";
+        _navigationService = navigationService;
 
         Form = new Form(this)
         {
-            new HeaderFormGroup(),
+            new LogoFormGroup(),
             new TextFormGroup("Gallery")
             {
-                new ButtonFormItem(new MvxAsyncCommand(ShowControlsAsync))
+                new ButtonFormItem(ShowControlsCommand)
                 {
                     Label = "Show All Components",
                     InputType = ButtonInputType.Done
                 }
             },
-            new TextFormGroup("Random number")
-            {
-                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" }
-            },
             new TextFormGroup("Examples", "Contains some real-life examples.")
             {
-                new ButtonFormItem(new MvxAsyncCommand(CreateConnectionAsync))
+                new ButtonFormItem(CreateConnectionCommand)
                 {
                     Label = "Setup New Connection",
                     InputType = ButtonInputType.Done
                 },
-                new ButtonFormItem(new MvxAsyncCommand(CreateEventAsync))
+                new ButtonFormItem(CreateEventCommand)
                 {
                     Label = "Create New Event",
                     InputType = ButtonInputType.Done
                 },
-                new PrefixButtonFormItem(new MvxAsyncCommand(ShowControlsAsync))
+                new PrefixButtonFormItem(ShowControlsCommand)
                 {
                     Label = "Label",
                     Prefix = "Prefix",
                     InputType = ButtonInputType.Destructive
                 }
+            },
+            new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
+            {
+                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" }
+            },
+            new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
+            {
+                new MvxButtonFormItem(ShowControlsCommand) { Label = "Show All Components" }
             }
         };
     }
 
-    private Task ShowControlsAsync(CancellationToken cancellationToken)
+    [RelayCommand]
+    private Task CreateConnectionAsync()
     {
-        return NavigationService.Navigate<ComponentsViewModel>(
-            cancellationToken: cancellationToken
-        );
+        return _navigationService.OpenCreateConnectionAsync();
     }
 
-    private Task CreateConnectionAsync(CancellationToken cancellationToken)
-    {
-        return NavigationService.Navigate<CreateConnectionViewModel>(
-            cancellationToken: cancellationToken
-        );
-    }
-
+    [RelayCommand]
     private Task CreateEventAsync(CancellationToken cancellationToken)
     {
-        return NavigationService.Navigate<CreateEventViewModel>(
-            cancellationToken: cancellationToken
-        );
+        return _navigationService.OpenCreateEventAsync();
+    }
+
+    [RelayCommand]
+    private Task ShowControlsAsync()
+    {
+        return _navigationService.OpenComponentsAsync();
     }
 }

@@ -1,32 +1,69 @@
-using System.Windows.Input;
+using System.Diagnostics.CodeAnalysis;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using FluentValidation;
 using Humanizer;
-using Microsoft.Extensions.Logging;
-using MvvmCross.Commands;
-using MvvmCross.Navigation;
-using MvvmCross.ViewModels;
 
-namespace Buform.Example.Core;
+namespace Buform;
 
-public sealed class CreateEventViewModel : MvxNavigationViewModel
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class CreateEventViewModel : ObservableObject
 {
-    public string Title { get; }
-
-    public ICommand CancelCommand { get; }
-    public ICommand CreateCommand { get; }
-
-    public FluentValidationForm<CreateEventModel> Form { get; }
-
-    public CreateEventViewModel(ILoggerFactory logFactory, IMvxNavigationService navigationService)
-        : base(logFactory, navigationService)
+    public enum RepeatType
     {
-        var model = new CreateEventModel();
+        Never,
+        EveryDay,
+        EveryWeek,
+        Every2Weeks,
+        EveryMonth,
+        EveryYear
+    }
 
-        Title = "New Event";
+    public enum TravelTimeType
+    {
+        None,
+        FiveMinutes,
+        FifteenMinutes,
+        ThirtyMinutes,
+        OneHour,
+        OneHourThirtyMinutes,
+        TwoHours
+    }
 
-        CancelCommand = new MvxAsyncCommand(CancelAsync);
-        CreateCommand = new MvxCommand(Create, CanCreate);
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
+    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
+    public class Model
+    {
+        public string? Title { get; set; }
+        public string? Location { get; set; }
+        public bool IsAllDay { get; set; }
+        public DateTime? StartsAt { get; set; } = DateTime.UtcNow;
+        public DateTime? EndsAt { get; set; } = DateTime.UtcNow + TimeSpan.FromHours(1);
+        public RepeatType Repeat { get; set; }
+        public TravelTimeType TravelTime { get; set; }
+        public string? Url { get; set; }
+        public string? Notes { get; set; }
+    }
 
-        Form = new FluentValidationForm<CreateEventModel>(model, new CreateEventModelValidator())
+    public class Validator : AbstractValidator<Model>
+    {
+        public Validator()
+        {
+            RuleFor(item => item.Title).NotEmpty();
+        }
+    }
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
+    private FluentValidationForm<Model> _form;
+
+    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+    private bool CanCreate => Form?.IsValid ?? false;
+
+    public CreateEventViewModel()
+    {
+        var model = new Model();
+
+        Form = new FluentValidationForm<Model>(model, new Validator())
         {
             new TextFormGroup
             {
@@ -61,24 +98,22 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
                     Label = "Ends",
                     InputType = DateTimeInputType.DateTime
                 },
-                new PickerFormItem<CreateEventModel.RepeatType>(() => model.Repeat)
+                new PickerFormItem<RepeatType>(() => model.Repeat)
                 {
                     Label = "Repeat",
-                    Source = Enum.GetValues(typeof(CreateEventModel.RepeatType))
-                        .OfType<CreateEventModel.RepeatType>(),
+                    Source = Enum.GetValues(typeof(RepeatType)).OfType<RepeatType>(),
                     Formatter = item => item.Humanize(LetterCasing.Title)
                 },
-                new PickerFormItem<CreateEventModel.TravelTimeType>(() => model.TravelTime)
+                new PickerFormItem<TravelTimeType>(() => model.TravelTime)
                 {
                     Label = "Travel Time",
-                    Source = Enum.GetValues(typeof(CreateEventModel.TravelTimeType))
-                        .OfType<CreateEventModel.TravelTimeType>(),
+                    Source = Enum.GetValues(typeof(TravelTimeType)).OfType<TravelTimeType>(),
                     Formatter = item => item.Humanize(LetterCasing.Title)
                 }
             },
             new TextFormGroup
             {
-                new ButtonFormItem(new MvxCommand(AddAttachment)) { Label = "Add attachment..." }
+                new ButtonFormItem(AddAttachmentCommand) { Label = "Add attachment..." }
             },
             new TextFormGroup
             {
@@ -92,18 +127,15 @@ public sealed class CreateEventViewModel : MvxNavigationViewModel
         };
     }
 
-    private Task CancelAsync(CancellationToken cancellationToken)
+    [RelayCommand(CanExecute = nameof(CanCreate))]
+    private static void Create()
     {
-        return NavigationService.Close(this, cancellationToken);
+        Console.WriteLine("Create command executed");
     }
 
-    private bool CanCreate()
+    [RelayCommand]
+    private static void AddAttachment()
     {
-        // ReSharper disable once ConstantConditionalAccessQualifier
-        return Form?.IsValid ?? false;
+        Console.WriteLine("AddAttachment command executed");
     }
-
-    private void Create() { }
-
-    private void AddAttachment() { }
 }
