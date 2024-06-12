@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net8.0; net8.0-ios</TargetFrameworks>
+        <SingleProject>true</SingleProject>
         <IsPackable>false</IsPackable>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -17,8 +18,25 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Buform.ColorPicker\Buform.ColorPicker.csproj" />
+      <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
       <ProjectReference Include="..\Buform\Buform.csproj" />
       <ProjectReference Include="..\Buform.FluentValidation\Buform.FluentValidation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="Platforms\**\*.cs" />
+        <Compile Remove="Resources\*.cs" />
+        <None Include="Platforms\**\*.cs" />
+        <None Include="Resources\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-ios'">
+        <Compile Include="Platforms\Ios\**\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
+        <Compile Include="Platforms\Android\**\*.cs" />
+        <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
     </ItemGroup>
 
 </Project>

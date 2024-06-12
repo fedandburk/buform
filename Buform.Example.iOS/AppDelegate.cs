@@ -1,6 +1,6 @@
 ﻿namespace Buform;
 
-[Foundation.Preserve(AllMembers = true)]
+[Preserve(AllMembers = true)]
 [Register(nameof(AppDelegate))]
 public sealed class AppDelegate : UIApplicationDelegate
 {
