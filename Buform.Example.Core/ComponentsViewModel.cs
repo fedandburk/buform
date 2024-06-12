@@ -61,6 +61,9 @@ public partial class ComponentsViewModel : ObservableObject
     private int[]? _multiValuePicker;
 
     [ObservableProperty]
+    private int _randomNumber;
+
+    [ObservableProperty]
     private Form _form;
 
     public ComponentsViewModel()
@@ -293,6 +296,20 @@ public partial class ComponentsViewModel : ObservableObject
                     Label = "Time",
                     InputType = DateTimeInputType.Time
                 }
+            },
+            new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
+            {
+                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" },
+                new PrefixButtonFormItem(WriteLineCommand)
+                {
+                    Label = "Label",
+                    Prefix = "Prefix -> ",
+                    InputType = ButtonInputType.Destructive
+                }
+            },
+            new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
+            {
+                new MvxButtonFormItem(WriteLineCommand) { Label = "MvvmCross Button" }
             }
         };
     }
