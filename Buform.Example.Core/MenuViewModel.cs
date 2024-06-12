@@ -9,9 +9,6 @@ public partial class MenuViewModel : ObservableObject
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
-    private int _randomNumber;
-
-    [ObservableProperty]
     private Form _form;
 
     public MenuViewModel(INavigationService navigationService)
@@ -40,21 +37,7 @@ public partial class MenuViewModel : ObservableObject
                 {
                     Label = "Create New Event",
                     InputType = ButtonInputType.Done
-                },
-                new PrefixButtonFormItem(ShowControlsCommand)
-                {
-                    Label = "Label",
-                    Prefix = "Prefix",
-                    InputType = ButtonInputType.Destructive
                 }
-            },
-            new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
-            {
-                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" }
-            },
-            new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
-            {
-                new MvxButtonFormItem(ShowControlsCommand) { Label = "Show All Components" }
             }
         };
     }

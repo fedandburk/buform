@@ -7,6 +7,11 @@
              x:Class="Buform.CreateEventPage"
              x:DataType="core:CreateEventViewModel"
              Title="New Event">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Add"
+            Command="{Binding CreateCommand}" />
+    </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <buform:FormView Form="{Binding Form}" />
     </ContentPage.Content>
