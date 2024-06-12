@@ -309,7 +309,7 @@ public partial class ComponentsViewModel : ObservableObject
             },
             new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
             {
-                new MvxButtonFormItem(WriteLineCommand) { Label = "MvvmCross Button" }
+                // new MvxButtonFormItem(WriteLineCommand) { Label = "MvvmCross Button" }
             }
         };
     }
