@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -53,11 +54,11 @@ public partial class CreateEventViewModel : ObservableObject
         }
     }
 
-    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
+    [ObservableProperty]
     private FluentValidationForm<Model> _form;
 
-    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-    private bool CanCreate => Form?.IsValid ?? false;
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
+    private bool _canCreate;
 
     public CreateEventViewModel()
     {
@@ -125,6 +126,13 @@ public partial class CreateEventViewModel : ObservableObject
                 new MultilineTextInputFormItem(() => model.Notes) { Placeholder = "Notes" }
             },
         };
+
+        (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CanCreate = Form.IsValid;
     }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]
