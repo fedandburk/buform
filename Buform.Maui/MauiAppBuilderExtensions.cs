@@ -7,7 +7,7 @@ public static class MauiAppBuilderExtensions
 {
     public static MauiAppBuilder UseBuform(this MauiAppBuilder builder)
     {
-        FormPlatform.Initialize(builder);
+        MauiFormPlatform.Initialize(builder);
 
         return builder;
     }

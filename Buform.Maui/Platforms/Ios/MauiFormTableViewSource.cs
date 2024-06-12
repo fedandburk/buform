@@ -16,7 +16,7 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = item.GetType();
 
-        if (!FormPlatform.TryGetCellViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetCellViewType(sectionType, out var viewType))
         {
             return base.GetCell(indexPath, item);
         }
@@ -31,7 +31,7 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!FormPlatform.TryGetFooterViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetFooterViewType(sectionType, out var viewType))
         {
             return base.GetViewForFooter(section, sectionItem);
         }
@@ -48,7 +48,7 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!FormPlatform.TryGetHeaderViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetHeaderViewType(sectionType, out var viewType))
         {
             return base.GetViewForHeader(section, sectionItem);
         }

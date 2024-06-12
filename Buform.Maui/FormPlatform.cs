@@ -3,12 +3,12 @@ using Microsoft.Maui.Controls.Internals;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public static class FormPlatform
+public static class MauiFormPlatform
 {
     private static readonly FormGroupRegistry GroupRegistry;
     private static readonly FormItemRegistry ItemRegistry;
 
-    static FormPlatform()
+    static MauiFormPlatform()
     {
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();
