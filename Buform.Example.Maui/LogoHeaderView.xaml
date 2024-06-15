@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<maui:FormHeaderFooterView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                           xmlns:maui="clr-namespace:Buform;assembly=Buform.Maui"
+                           xmlns:buform="clr-namespace:Buform;assembly=Buform.Example"
+                           x:Class="Buform.LogoHeaderView"
+                           x:TypeArguments="buform:LogoFormGroup"
+                           x:DataType="buform:LogoFormGroup">
+    <maui:FormItemView.Content>
+        <Image
+            Source="Logo"
+            HorizontalOptions="CenterAndExpand"
+            WidthRequest="206"
+            HeightRequest="128" />
+    </maui:FormItemView.Content>
+</maui:FormHeaderFooterView>

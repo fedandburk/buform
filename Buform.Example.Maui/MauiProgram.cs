@@ -30,12 +30,9 @@ public static class MauiProgram
 
     public static MauiApp CreateMauiApp()
     {
-#if IOS
-        FormPlatform.RegisterGroupHeaderNib<LogoFormGroup, LogoFormHeader>();
-        FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
-        FormPlatform.RegisterItemClass<PrefixButtonFormItem, PrefixButtonFormCell>();
-        FormPlatform.RegisterItemClass<MvxButtonFormItem, MvxButtonFormCell>();
-#endif
+        MauiFormPlatform.RegisterGroupHeader<LogoFormGroup, LogoHeaderView>();
+        MauiFormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorView>();
+
         return MauiApp
             .CreateBuilder()
             .UseMauiApp<App>()

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<maui:FormItemView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                   xmlns:maui="clr-namespace:Buform;assembly=Buform.Maui"
+                   xmlns:buform="clr-namespace:Buform;assembly=Buform.Example"
+                   x:Class="Buform.RandomNumberGeneratorView"
+                   x:TypeArguments="buform:RandomNumberGeneratorItem"
+                   x:DataType="buform:RandomNumberGeneratorItem">
+    <maui:FormItemView.Content>
+        <Grid
+            Padding="16, 4"
+            ColumnSpacing="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label
+                Grid.Column="0"
+                Text="{Binding FormattedValue}"
+                FontSize="18"
+                VerticalOptions="CenterAndExpand" />
+            <Button
+                Grid.Column="1"
+                FontSize="18"
+                Text="Generate random number"
+                Command="{Binding GenerateCommand}" />
+        </Grid>
+    </maui:FormItemView.Content>
+</maui:FormItemView>
