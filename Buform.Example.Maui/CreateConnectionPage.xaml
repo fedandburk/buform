@@ -2,7 +2,7 @@
 
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:core="clr-namespace:Buform;assembly=Buform.Example.Core"
+             xmlns:core="clr-namespace:Buform;assembly=Buform.Example"
              xmlns:buform="clr-namespace:Buform;assembly=Buform.Maui"
              x:Class="Buform.CreateConnectionPage"
              x:DataType="core:CreateConnectionViewModel"
