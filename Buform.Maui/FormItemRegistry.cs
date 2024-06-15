@@ -46,14 +46,14 @@ internal sealed class FormItemRegistry
         return false;
     }
 
-    public void RegisterItemClass<TItem, TItemView>()
+    public void RegisterItem<TItem, TItemView>()
         where TItem : class, IFormItem
         where TItemView : FormItemView<TItem>
     {
         _holders[typeof(TItem)] = new Holder(typeof(TItemView), null);
     }
 
-    public void RegisterItemClass<TItem, TItemView, TExpandedItemView>()
+    public void RegisterItem<TItem, TItemView, TExpandedItemView>()
         where TItem : class, IFormItem
         where TItemView : FormItemView<TItem>
         where TExpandedItemView : FormItemView<TItem>

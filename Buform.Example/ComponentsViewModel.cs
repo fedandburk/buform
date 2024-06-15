@@ -299,13 +299,7 @@ public partial class ComponentsViewModel : ObservableObject
             },
             new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
             {
-                new RandomNumberGeneratorItem(() => RandomNumber) { Label = "Number" },
-                new PrefixButtonFormItem(WriteLineCommand)
-                {
-                    Label = "Label",
-                    Prefix = "Prefix -> ",
-                    InputType = ButtonInputType.Destructive
-                }
+                new RandomNumberGeneratorItem(() => RandomNumber)
             },
             new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
             {

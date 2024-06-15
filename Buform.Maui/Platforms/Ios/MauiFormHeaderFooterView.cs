@@ -8,21 +8,21 @@ using UIKit;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-[Register(nameof(MauiFormCell))]
-internal sealed class MauiFormCell : UITableViewCell
+[Register(nameof(MauiFormHeaderFooterView))]
+internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
 {
-    private FormItemView? _formItemView;
+    private FormHeaderFooterView? _formHeaderFooterView;
     private UIView? _view;
     private CGSize _estimatedSize;
 
     // ReSharper disable once UnusedMember.Global
-    public MauiFormCell()
+    public MauiFormHeaderFooterView()
     {
         /* Required constructor */
     }
 
     // ReSharper disable once UnusedMember.Global
-    public MauiFormCell(NativeHandle handle)
+    public MauiFormHeaderFooterView(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -30,13 +30,11 @@ internal sealed class MauiFormCell : UITableViewCell
 
     public void Initialize(Type viewType, object bindingContext)
     {
-        SelectionStyle = UITableViewCellSelectionStyle.None;
-
-        _formItemView = (Activator.CreateInstance(viewType) as FormItemView)!;
-        _formItemView.BindingContext = bindingContext;
+        _formHeaderFooterView = (Activator.CreateInstance(viewType) as FormHeaderFooterView)!;
+        _formHeaderFooterView.BindingContext = bindingContext;
 
         _view?.RemoveFromSuperview();
-        _view = _formItemView.ToPlatform(Application.Current!.Handler!.MauiContext!);
+        _view = _formHeaderFooterView.ToPlatform(Application.Current!.Handler!.MauiContext!);
 
         ContentView.AddSubviews(_view);
 
@@ -45,22 +43,24 @@ internal sealed class MauiFormCell : UITableViewCell
 
     private void EstimateViewSize()
     {
-        if (_formItemView == null || _view == null)
+        if (_formHeaderFooterView == null || _view == null)
         {
             return;
         }
 
-        var width = Bounds.Width;
+        var horizontalMargins = ContentView.LayoutMargins.Left + ContentView.LayoutMargins.Right;
+        var width = Bounds.Width - horizontalMargins;
 
-        var request = _formItemView.Measure(
+        var request = _formHeaderFooterView.Measure(
             width,
             double.PositiveInfinity,
             MeasureFlags.IncludeMargins
         );
 
-        var height = Math.Ceiling(request.Request.Height);
+        var verticalMargins = ContentView.LayoutMargins.Top + ContentView.LayoutMargins.Bottom;
+        var height = request.Request.Height - verticalMargins;
 
-        _estimatedSize = new CGSize(width, height);
+        _estimatedSize = new CGSize(width, Math.Ceiling(height));
     }
 
     public override CGSize SizeThatFits(CGSize size)
@@ -72,7 +72,7 @@ internal sealed class MauiFormCell : UITableViewCell
     {
         base.LayoutSubviews();
 
-        if (_formItemView == null || _view == null)
+        if (_formHeaderFooterView == null || _view == null)
         {
             return;
         }
@@ -82,7 +82,7 @@ internal sealed class MauiFormCell : UITableViewCell
         var bounds = new Rect(0, 0, _estimatedSize.Width, _estimatedSize.Height);
 
         Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(
-            _formItemView,
+            _formHeaderFooterView,
             bounds
         );
 
