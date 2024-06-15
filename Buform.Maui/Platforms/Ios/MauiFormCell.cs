@@ -35,6 +35,7 @@ internal sealed class MauiFormCell : UITableViewCell
         _formItemView = (Activator.CreateInstance(viewType) as FormItemView)!;
         _formItemView.BindingContext = bindingContext;
 
+        _view?.RemoveFromSuperview();
         _view = _formItemView.ToPlatform(Application.Current!.Handler!.MauiContext!);
 
         ContentView.AddSubviews(_view);

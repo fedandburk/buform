@@ -33,6 +33,7 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
         _formHeaderFooterView = (Activator.CreateInstance(viewType) as FormHeaderFooterView)!;
         _formHeaderFooterView.BindingContext = bindingContext;
 
+        _view?.RemoveFromSuperview();
         _view = _formHeaderFooterView.ToPlatform(Application.Current!.Handler!.MauiContext!);
 
         ContentView.AddSubviews(_view);
