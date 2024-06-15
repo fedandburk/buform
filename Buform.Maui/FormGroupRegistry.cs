@@ -40,14 +40,14 @@ internal sealed class FormGroupRegistry
         return false;
     }
 
-    public void RegisterGroupHeaderClass<TGroup, TGroupView>()
+    public void RegisterGroupHeader<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooterView<TGroup>
     {
         _groups[(typeof(TGroup), HolderType.Header)] = typeof(TGroupView);
     }
 
-    public void RegisterGroupFooterClass<TGroup, TGroupView>()
+    public void RegisterGroupFooter<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooterView<TGroup>
     {

@@ -22,25 +22,25 @@ public static class MauiFormPlatform
         });
     }
 
-    public static void RegisterGroupHeaderClass<TGroup, TGroupView>()
+    public static void RegisterGroupHeader<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooterView<TGroup>
     {
-        GroupRegistry.RegisterGroupHeaderClass<TGroup, TGroupView>();
+        GroupRegistry.RegisterGroupHeader<TGroup, TGroupView>();
     }
 
-    public static void RegisterGroupFooterClass<TGroup, TGroupView>()
+    public static void RegisterGroupFooter<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooterView<TGroup>
     {
-        GroupRegistry.RegisterGroupFooterClass<TGroup, TGroupView>();
+        GroupRegistry.RegisterGroupFooter<TGroup, TGroupView>();
     }
 
-    public static void RegisterItemClass<TItem, TItemView>()
+    public static void RegisterItem<TItem, TItemView>()
         where TItem : class, IFormItem
         where TItemView : FormItemView<TItem>
     {
-        ItemRegistry.RegisterItemClass<TItem, TItemView>();
+        ItemRegistry.RegisterItem<TItem, TItemView>();
     }
 
     public static bool TryGetHeaderViewType(Type groupType, out Type? viewType)

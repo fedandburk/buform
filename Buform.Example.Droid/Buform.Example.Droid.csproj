@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+        <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
     </ItemGroup>
 
     <ItemGroup>

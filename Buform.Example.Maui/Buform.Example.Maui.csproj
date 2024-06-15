@@ -20,18 +20,17 @@
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+        <MauiImage Include="Resources\Images\*" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Buform.Maui\Buform.Maui.csproj" />
-        <ProjectReference Include="..\Buform.Example.Core\Buform.Example.Core.csproj" />
+        <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
-      <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
       <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
     </ItemGroup>
 
 </Project>
