@@ -247,19 +247,26 @@ public class FormTableViewSource : TableViewSource
         }
     }
 
-    public override NSIndexPath CustomizeMoveTarget(UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath proposedIndexPath)
+    public override NSIndexPath CustomizeMoveTarget(
+        UITableView tableView,
+        NSIndexPath sourceIndexPath,
+        NSIndexPath proposedIndexPath
+    )
     {
         var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
         var proposedGroupHandler = GetGroupHandler(proposedIndexPath);
 
         var formItem = GetItem(sourceIndexPath)!;
 
-        if(sourceGroupHandler == proposedGroupHandler)
+        if (sourceGroupHandler == proposedGroupHandler)
         {
             return proposedIndexPath;
         }
-        
-        if(sourceGroupHandler.CanRemoveItem(formItem) && proposedGroupHandler.CanInsertItem(formItem, proposedIndexPath.Row))
+
+        if (
+            sourceGroupHandler.CanRemoveItem(formItem)
+            && proposedGroupHandler.CanInsertItem(formItem, proposedIndexPath.Row)
+        )
         {
             return proposedIndexPath;
         }
