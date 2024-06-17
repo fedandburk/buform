@@ -67,9 +67,9 @@ public partial class ComponentsViewModel : ObservableObject
     {
         Form = new Form(this)
         {
-            new ListFormGroup<int, TextFormItem<int>>(
+            new PickingListFormGroup<int, TextFormItem<int>>(
                 item => new TextFormItem<int>(item) { Formatter = i => i.ToWords() },
-                "List"
+                "Picking List"
             )
             {
                 Source = List,

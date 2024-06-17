@@ -1,3 +1,4 @@
+using Buform.Groups;
 using Fedandburk.Common.Extensions;
 using Fedandburk.iOS.Extensions;
 
@@ -6,6 +7,8 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public class FormTableViewSource : TableViewSource
 {
+    private Dictionary<Type, IFormGroupHandler> _groupHandlers = new();
+
     public Form? Form
     {
         get => Items as Form;
@@ -100,6 +103,11 @@ public class FormTableViewSource : TableViewSource
 
         formCell.Initialize(formItem);
 
+        if(TryGetGroupHandler(GetGroup(indexPath.Section)!, out var handler))
+        {
+            handler?.InitializeCell(formCell, formItem);
+        }
+
         return cell;
     }
 
@@ -147,6 +155,15 @@ public class FormTableViewSource : TableViewSource
 
     protected override NSIndexPath WillSelectRow(NSIndexPath indexPath, object item)
     {
+        var group = GetGroup(indexPath.Section);
+
+        if (TryGetGroupHandler(group, out var handler))
+        {
+            var formItem = GetItem(indexPath);
+
+            return handler!.CanSelectRow(formItem!) ? indexPath : null!;
+        }
+
         return FindCell(indexPath)?.IsSelectable ?? false ? indexPath : null!;
     }
 
@@ -157,6 +174,13 @@ public class FormTableViewSource : TableViewSource
 
     protected override void RowSelected(NSIndexPath indexPath, object item)
     {
+        if (TryGetGroupHandler(GetGroup(indexPath.Section)!, out var handler))
+        {
+            var formItem = GetItem(indexPath);
+
+            handler?.OnRowSelected(formItem!);
+        }
+
         FindCell(indexPath)?.OnSelected();
     }
 
@@ -270,5 +294,25 @@ public class FormTableViewSource : TableViewSource
     {
         GetGroup(sourceIndexPath.Section)
             ?.MoveCommand.SafeExecute((sourceIndexPath.Row, destinationIndexPath.Row));
+    }
+
+    private bool TryGetGroupHandler(IFormGroup group, out IFormGroupHandler? groupHandler)
+    {
+        if (_groupHandlers.TryGetValue(group.GetType(), out groupHandler))
+        {
+            return true;
+        }
+
+        if(FormPlatform.TryGetGroupHandler(group, out groupHandler))
+        {
+            groupHandler?.Initialize(group);
+
+            _groupHandlers[group.GetType()] = groupHandler!;
+
+            return true;
+        }
+
+        groupHandler = null;
+        return false;
     }
 }

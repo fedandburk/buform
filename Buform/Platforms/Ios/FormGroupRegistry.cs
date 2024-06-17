@@ -1,3 +1,5 @@
+using Buform.Groups;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -31,9 +33,12 @@ internal sealed class FormGroupRegistry
 
     private readonly IDictionary<(Type, HolderType), Holder> _holders;
 
+    private readonly Dictionary<Type, Type> _handlers;
+
     public FormGroupRegistry()
     {
         _holders = new Dictionary<(Type, HolderType), Holder>();
+        _handlers = new Dictionary<Type, Type>();
     }
 
     private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
@@ -55,6 +60,40 @@ internal sealed class FormGroupRegistry
             }
         }
 
+        return false;
+    }
+
+    public void RegisterGroupHandler<TGroup, THandler>()
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandler<TGroup>
+    {
+        _handlers[typeof(TGroup)] = typeof(THandler);
+    }
+
+    public bool TryGetGroupHandler(IFormGroup group, out IFormGroupHandler? handler)
+    {
+        if (_handlers.TryGetValue(group.GetType(), out var type))
+        {
+            handler = Activator.CreateInstance(type) as IFormGroupHandler;
+
+            return true;
+        }
+
+        var interfaceTypes = group.GetType()
+            .GetInterfaces()
+            .Except(group.GetType().GetInterfaces().SelectMany(item => item.GetInterfaces()));
+
+        foreach (var interfaceType in interfaceTypes)
+        {
+            if (_handlers.TryGetValue(interfaceType, out var handlerType))
+            {
+                handler = Activator.CreateInstance(handlerType) as IFormGroupHandler;
+
+                return true;
+            }
+        }
+
+        handler = null;
         return false;
     }
 
