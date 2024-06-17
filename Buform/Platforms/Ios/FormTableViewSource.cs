@@ -152,7 +152,7 @@ public class FormTableViewSource : TableViewSource
     {
         if (item is IFormItem formItem)
         {
-            return GetGroupHandler(indexPath).CanSelectRow(formItem) ? indexPath : null!;
+            return GetGroupHandler(indexPath).CanSelectItem(formItem) ? indexPath : null!;
         }
 
         return null!;
@@ -165,14 +165,14 @@ public class FormTableViewSource : TableViewSource
             return false;
         }
 
-        return GetGroupHandler(indexPath).ShouldAutomaticallyDeselectRow(formItem);
+        return GetGroupHandler(indexPath).ShouldAutomaticallyDeselectItem(formItem);
     }
 
     protected override void RowSelected(NSIndexPath indexPath, object item)
     {
         if (item is IFormItem formItem)
         {
-            GetGroupHandler(indexPath).OnRowSelected(formItem);
+            GetGroupHandler(indexPath).OnItemSelected(formItem);
         }
 
         FindCell(indexPath)?.OnSelected();
@@ -185,7 +185,7 @@ public class FormTableViewSource : TableViewSource
             return false;
         }
 
-        return GetGroupHandler(indexPath).CanEditRow(formItem);
+        return GetGroupHandler(indexPath).CanEditItem(formItem);
     }
 
     protected override UITableViewCellEditingStyle EditingStyleForRow(
@@ -198,7 +198,7 @@ public class FormTableViewSource : TableViewSource
             return UITableViewCellEditingStyle.None;
         }
 
-        return GetGroupHandler(indexPath).EditingStyleForRow(formItem);
+        return GetGroupHandler(indexPath).EditingStyleForItem(formItem);
     }
 
     protected override void CommitEditingStyle(
@@ -212,7 +212,7 @@ public class FormTableViewSource : TableViewSource
             return;
         }
 
-        GetGroupHandler(indexPath).CommitEditingStyle(editingStyle, formItem);
+        GetGroupHandler(indexPath).CommitEditingStyleForItem(editingStyle, formItem);
     }
 
     protected override bool CanMoveRow(NSIndexPath indexPath, object item)
@@ -222,7 +222,7 @@ public class FormTableViewSource : TableViewSource
             return false;
         }
 
-        return GetGroupHandler(indexPath).CanMoveRow(formItem);
+        return GetGroupHandler(indexPath).CanMoveItem(formItem);
     }
 
     protected override void MoveRow(
@@ -238,16 +238,33 @@ public class FormTableViewSource : TableViewSource
 
         if (sourceGroupHandler == destinationGroupHandler)
         {
-            sourceGroupHandler.MoveRow(formItem, sourceIndexPath.Row, destinationIndexPath.Row);
+            sourceGroupHandler.MoveItem(formItem, sourceIndexPath.Row, destinationIndexPath.Row);
         }
-        else if (
-            sourceGroupHandler.CanRemoveRow(formItem)
-            && destinationGroupHandler.CanInsertRow(formItem, destinationIndexPath.Row)
-        )
+        else
         {
-            sourceGroupHandler.RemoveRow(formItem);
-            destinationGroupHandler.InsertRow(formItem, destinationIndexPath.Row);
+            sourceGroupHandler.RemoveItem(formItem);
+            destinationGroupHandler.InsertItem(formItem, destinationIndexPath.Row);
         }
+    }
+
+    public override NSIndexPath CustomizeMoveTarget(UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath proposedIndexPath)
+    {
+        var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
+        var proposedGroupHandler = GetGroupHandler(proposedIndexPath);
+
+        var formItem = GetItem(sourceIndexPath)!;
+
+        if(sourceGroupHandler == proposedGroupHandler)
+        {
+            return proposedIndexPath;
+        }
+        
+        if(sourceGroupHandler.CanRemoveItem(formItem) && proposedGroupHandler.CanInsertItem(formItem, proposedIndexPath.Row))
+        {
+            return proposedIndexPath;
+        }
+
+        return sourceIndexPath;
     }
 
     private IFormGroupHandler GetGroupHandler(NSIndexPath indexPath)

@@ -15,28 +15,28 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         }
     }
 
-    public virtual bool CanSelectRow(IFormItem item)
+    public virtual bool CanSelectItem(IFormItem item)
     {
         return !item.IsReadOnly;
     }
 
-    public virtual bool CanEditRow(IFormItem item)
+    public virtual bool CanEditItem(IFormItem item)
     {
         return Group.RemoveCommand.SafeCanExecute(item.Value)
             || Group.InsertCommand.SafeCanExecute(item.Value);
     }
 
-    public virtual void OnRowSelected(IFormItem item)
+    public virtual void OnItemSelected(IFormItem item)
     {
         /* Nothing to do */
     }
 
-    public bool ShouldAutomaticallyDeselectRow(IFormItem item)
+    public bool ShouldAutomaticallyDeselectItem(IFormItem item)
     {
         return !item.IsReadOnly;
     }
 
-    public UITableViewCellEditingStyle EditingStyleForRow(IFormItem item)
+    public UITableViewCellEditingStyle EditingStyleForItem(IFormItem item)
     {
         if (Group.RemoveCommand.SafeCanExecute(item.Value))
         {
@@ -51,7 +51,7 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         return UITableViewCellEditingStyle.None;
     }
 
-    public void CommitEditingStyle(UITableViewCellEditingStyle editingStyle, IFormItem item)
+    public void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item)
     {
         switch (editingStyle)
         {
@@ -68,34 +68,34 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         }
     }
 
-    public virtual bool CanMoveRow(IFormItem item)
+    public virtual bool CanMoveItem(IFormItem item)
     {
         return Group.MoveCommand.SafeCanExecute(item.Value);
     }
 
-    public virtual void MoveRow(IFormItem item, int sourceIndex, int destinationIndex)
+    public virtual void MoveItem(IFormItem item, int sourceIndex, int destinationIndex)
     {
-        Group.MoveCommand.SafeCanExecute((sourceIndex, destinationIndex));
+        Group.MoveCommand?.Execute((sourceIndex, destinationIndex));
     }
 
-    public virtual bool CanRemoveRow(IFormItem item)
+    public virtual bool CanRemoveItem(IFormItem item)
     {
         return Group.RemoveCommand.SafeCanExecute(item.Value);
     }
 
-    public virtual void RemoveRow(IFormItem item)
+    public virtual void RemoveItem(IFormItem item)
     {
-        Group.RemoveCommand.SafeExecute(item.Value);
+        Group.RemoveCommand?.SafeExecute(item.Value);
     }
 
-    public virtual bool CanInsertRow(IFormItem item, int index)
+    public virtual bool CanInsertItem(IFormItem item, int index)
     {
         return Group.InsertCommand.SafeCanExecute(item.Value);
     }
 
-    public virtual void InsertRow(IFormItem item, int index)
+    public virtual void InsertItem(IFormItem item, int index)
     {
-        Group.InsertCommand.SafeExecute(item.Value);
+        Group.InsertCommand?.SafeExecute(item.Value);
     }
 
     public virtual void InitializeCell(FormCell cell, IFormItem item)

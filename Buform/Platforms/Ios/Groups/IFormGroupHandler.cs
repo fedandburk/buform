@@ -1,21 +1,20 @@
-using Fedandburk.Common.Extensions;
 
 namespace Buform.Groups;
 
 public interface IFormGroupHandler
 {
-    bool CanSelectRow(IFormItem item);
-    bool CanEditRow(IFormItem item);
-    void OnRowSelected(IFormItem item);
-    bool ShouldAutomaticallyDeselectRow(IFormItem item);
-    UITableViewCellEditingStyle EditingStyleForRow(IFormItem item);
-    void CommitEditingStyle(UITableViewCellEditingStyle editingStyle, IFormItem item);
-    bool CanMoveRow(IFormItem item);
-    void MoveRow(IFormItem item, int sourceIndex, int destinationIndex);
-    bool CanRemoveRow(IFormItem item);
-    void RemoveRow(IFormItem item);
-    bool CanInsertRow(IFormItem item, int index);
-    void InsertRow(IFormItem item, int index);
+    bool CanSelectItem(IFormItem item);
+    bool CanEditItem(IFormItem item);
+    void OnItemSelected(IFormItem item);
+    bool ShouldAutomaticallyDeselectItem(IFormItem item);
+    UITableViewCellEditingStyle EditingStyleForItem(IFormItem item);
+    void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item);
+    bool CanMoveItem(IFormItem item);
+    void MoveItem(IFormItem item, int sourceIndex, int destinationIndex);
+    bool CanRemoveItem(IFormItem item);
+    void RemoveItem(IFormItem item);
+    bool CanInsertItem(IFormItem item, int index);
+    void InsertItem(IFormItem item, int index);
     void InitializeCell(FormCell cell, IFormItem item);
     void Initialize(IFormGroup group);
 }

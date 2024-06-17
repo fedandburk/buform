@@ -4,17 +4,22 @@ namespace Buform;
 
 public class PickingListFormGroupHandler : FormGroupHandlerBase<IPickingListFormGroup>
 {
-    public override bool CanSelectRow(IFormItem item)
+    public override bool CanSelectItem(IFormItem item)
     {
         return true;
     }
 
-    public override bool CanEditRow(IFormItem item)
+    public override bool CanEditItem(IFormItem item)
     {
-        return false;
+        return true;
     }
 
-    public override void OnRowSelected(IFormItem item)
+    public override bool CanMoveItem(IFormItem item)
+    {
+        return true;
+    }
+
+    public override void OnItemSelected(IFormItem item)
     {
         if (item is TextFormItem<int> textFormItem)
         {
