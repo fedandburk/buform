@@ -1,4 +1,4 @@
-using System.Collections.Specialized;
+sing System.Collections.Specialized;
 
 namespace Buform;
 

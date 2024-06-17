@@ -30,6 +30,9 @@ public static class MauiProgram
 
     public static MauiApp CreateMauiApp()
     {
+        MauiFormPlatform.RegisterGroupHeader<LogoFormGroup, LogoHeaderView>();
+        MauiFormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorView>();
+
         return MauiApp
             .CreateBuilder()
             .UseMauiApp<App>()

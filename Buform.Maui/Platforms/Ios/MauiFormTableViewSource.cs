@@ -9,19 +9,36 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     public MauiFormTableViewSource(UITableView tableView)
         : base(tableView)
     {
-        /* Required constructor */
+        TableView.RegisterClassForCellReuse(typeof(MauiFormCell), nameof(MauiFormCell));
+
+        TableView.RegisterClassForHeaderFooterViewReuse(
+            typeof(MauiFormHeaderFooterView),
+            nameof(MauiFormHeaderFooterView)
+        );
     }
 
     protected override UITableViewCell GetCell(NSIndexPath indexPath, object item)
     {
         var sectionType = item.GetType();
 
-        if (!FormPlatform.TryGetCellViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetCellViewType(sectionType, out var viewType))
         {
             return base.GetCell(indexPath, item);
         }
 
-        return viewType == null ? base.GetCell(indexPath, item) : new MauiFormCell(viewType, item);
+        if (viewType == null)
+        {
+            return base.GetCell(indexPath, item);
+        }
+
+        var cell = TableView.DequeueReusableCell(nameof(MauiFormCell), indexPath);
+
+        if (cell is MauiFormCell mauiCell)
+        {
+            mauiCell.Initialize(viewType, item);
+        }
+
+        return cell;
     }
 
     protected override UITableViewHeaderFooterView? GetViewForFooter(
@@ -31,14 +48,24 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!FormPlatform.TryGetFooterViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetFooterViewType(sectionType, out var viewType))
         {
             return base.GetViewForFooter(section, sectionItem);
         }
 
-        return viewType == null
-            ? base.GetViewForFooter(section, sectionItem)
-            : new MauiFormHeaderFooter(viewType, sectionItem);
+        if (viewType == null)
+        {
+            return base.GetViewForFooter(section, sectionItem);
+        }
+
+        var view = TableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView));
+
+        if (view is MauiFormHeaderFooterView mauiHeaderFooterView)
+        {
+            mauiHeaderFooterView.Initialize(viewType, sectionItem);
+        }
+
+        return view;
     }
 
     protected override UITableViewHeaderFooterView? GetViewForHeader(
@@ -48,13 +75,23 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     {
         var sectionType = sectionItem.GetType();
 
-        if (!FormPlatform.TryGetHeaderViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetHeaderViewType(sectionType, out var viewType))
         {
             return base.GetViewForHeader(section, sectionItem);
         }
 
-        return viewType == null
-            ? base.GetViewForHeader(section, sectionItem)
-            : new MauiFormHeaderFooter(viewType, sectionItem);
+        if (viewType == null)
+        {
+            return base.GetViewForHeader(section, sectionItem);
+        }
+
+        var view = TableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView));
+
+        if (view is MauiFormHeaderFooterView mauiHeaderFooterView)
+        {
+            mauiHeaderFooterView.Initialize(viewType, sectionItem);
+        }
+
+        return view;
     }
 }

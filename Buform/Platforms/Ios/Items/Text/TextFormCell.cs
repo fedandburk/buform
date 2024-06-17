@@ -3,8 +3,8 @@ using ObjCRuntime;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-[Register(nameof(TextFormCell))]
-public class TextFormCell : FormCell<ITextFormItem>
+public class TextFormCell<TItem> : FormCell<TItem>
+    where TItem : class, ITextFormItem
 {
     protected virtual UILabel? Label { get; set; }
 
@@ -33,15 +33,14 @@ public class TextFormCell : FormCell<ITextFormItem>
         ContentView.AddSubviews(Label);
 
         ContentView.AddConstraints(
-            new[]
-            {
+            [
                 Label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
                 Label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
                 Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
                 Label.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
                 )
-            }
+            ]
         );
     }
 
@@ -79,5 +78,21 @@ public class TextFormCell : FormCell<ITextFormItem>
         }
 
         base.Dispose(disposing);
+    }
+}
+
+[Preserve(AllMembers = true)]
+[Register(nameof(TextFormCell))]
+public sealed class TextFormCell : TextFormCell<ITextFormItem>
+{
+    public TextFormCell()
+    {
+        /* Required constructor */
+    }
+
+    public TextFormCell(NativeHandle handle)
+        : base(handle)
+    {
+        /* Required constructor */
     }
 }

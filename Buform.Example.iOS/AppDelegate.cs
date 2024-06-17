@@ -1,6 +1,6 @@
 ﻿namespace Buform;
 
-[Foundation.Preserve(AllMembers = true)]
+[Preserve(AllMembers = true)]
 [Register(nameof(AppDelegate))]
 public sealed class AppDelegate : UIApplicationDelegate
 {
@@ -25,7 +25,6 @@ public sealed class AppDelegate : UIApplicationDelegate
         FormPlatform.RegisterGroupHeaderNib<LogoFormGroup, LogoFormHeader>();
 
         FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
-        FormPlatform.RegisterItemClass<PrefixButtonFormItem, PrefixButtonFormCell>();
         FormPlatform.RegisterItemClass<MvxButtonFormItem, MvxButtonFormCell>();
         FormPlatform.RegisterGroupHandler<IPickingListFormGroup, PickingListFormGroupHandler>();
 

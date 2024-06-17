@@ -6,7 +6,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.Example.iOS", "Bufor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform", "Buform\Buform.csproj", "{1682526B-53D6-4995-BE43-553A2848D5C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.Example.Core", "Buform.Example.Core\Buform.Example.Core.csproj", "{8738CA21-E070-4D53-9E19-84DFB385152C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.Example", "Buform.Example\Buform.Example.csproj", "{8738CA21-E070-4D53-9E19-84DFB385152C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Buform.FluentValidation", "Buform.FluentValidation\Buform.FluentValidation.csproj", "{93B30462-F203-47A4-8C5C-7984C473D486}"
 EndProject

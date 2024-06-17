@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
@@ -47,11 +48,11 @@ public partial class CreateConnectionViewModel : ObservableObject
     [ObservableProperty]
     private string? _sshPrivateKey;
 
-    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    [ObservableProperty]
     private FluentValidationForm<CreateConnectionViewModel> _form;
 
-    // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-    private bool CanConnect => Form?.IsValid ?? false;
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    private bool _canConnect;
 
     public CreateConnectionViewModel()
     {
@@ -140,6 +141,13 @@ public partial class CreateConnectionViewModel : ObservableObject
                 }
             }
         };
+
+        (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CanConnect = Form.IsValid;
     }
 
     private static string FormatConnectionType(ConnectionType value)
@@ -172,5 +180,19 @@ public partial class CreateConnectionViewModel : ObservableObject
         Username = null;
         Password = null;
         SshPrivateKey = null;
+    }
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == null)
+        {
+            return;
+        }
+
+        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
+
+        Console.WriteLine($"{e.PropertyName} changed: {value}");
     }
 }
