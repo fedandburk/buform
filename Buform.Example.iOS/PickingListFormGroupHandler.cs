@@ -2,18 +2,8 @@ using Buform.Groups;
 
 namespace Buform;
 
-public class PickingListFormGroupHandler : FormGroupHandler<IPickingListFormGroup>
+public class PickingListFormGroupHandler : FormGroupHandlerBase<IPickingListFormGroup>
 {
-    private IPickingListFormGroup ? _group;
-
-    public override void Initialize(IFormGroup group)
-    {
-        if (group is IPickingListFormGroup pickingListFormGroup)
-        {
-            _group = pickingListFormGroup;
-        }  
-    }
-
     public override bool CanSelectRow(IFormItem item)
     {
         return true;
@@ -26,15 +16,17 @@ public class PickingListFormGroupHandler : FormGroupHandler<IPickingListFormGrou
 
     public override void OnRowSelected(IFormItem item)
     {
-        if(item is TextFormItem<int> textFormItem)
+        if (item is TextFormItem<int> textFormItem)
         {
-            _group!.SelectItem(textFormItem);
+            Group.SelectItem(textFormItem);
         }
     }
 
-    public override void InitializeCell(UITableViewCell cell, IFormItem item)
+    public override void InitializeCell(FormCell cell, IFormItem item)
     {
-        if (_group!.IsItemSelected(item))
+        base.InitializeCell(cell, item);
+
+        if (Group.IsItemSelected(item))
         {
             cell.Accessory = UITableViewCellAccessory.Checkmark;
         }

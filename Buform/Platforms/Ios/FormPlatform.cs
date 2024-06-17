@@ -64,8 +64,8 @@ public static class FormPlatform
     }
 
     public static void RegisterGroupHandler<TGroup, THandler>()
-        where TGroup : class, IFormGroup 
-        where THandler : FormGroupHandler<TGroup>
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandlerBase<TGroup>
     {
         GroupRegistry.RegisterGroupHandler<TGroup, THandler>();
     }
@@ -90,8 +90,8 @@ public static class FormPlatform
         return ItemRegistry.TryGetExpandedReuseIdentifier(itemType, out reuseIdentifier);
     }
 
-    public static bool TryGetGroupHandler(IFormGroup group, out IFormGroupHandler? handler)
+    public static IFormGroupHandler GetGroupHandler(IFormGroup group)
     {
-        return GroupRegistry.TryGetGroupHandler(group, out handler);
+        return GroupRegistry.GetGroupHandler(group);
     }
 }

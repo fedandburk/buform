@@ -65,21 +65,20 @@ internal sealed class FormGroupRegistry
 
     public void RegisterGroupHandler<TGroup, THandler>()
         where TGroup : class, IFormGroup
-        where THandler : FormGroupHandler<TGroup>
+        where THandler : FormGroupHandlerBase<TGroup>
     {
         _handlers[typeof(TGroup)] = typeof(THandler);
     }
 
-    public bool TryGetGroupHandler(IFormGroup group, out IFormGroupHandler? handler)
+    public IFormGroupHandler GetGroupHandler(IFormGroup group)
     {
         if (_handlers.TryGetValue(group.GetType(), out var type))
         {
-            handler = Activator.CreateInstance(type) as IFormGroupHandler;
-
-            return true;
+            return (IFormGroupHandler)Activator.CreateInstance(type)!;
         }
 
-        var interfaceTypes = group.GetType()
+        var interfaceTypes = group
+            .GetType()
             .GetInterfaces()
             .Except(group.GetType().GetInterfaces().SelectMany(item => item.GetInterfaces()));
 
@@ -87,14 +86,11 @@ internal sealed class FormGroupRegistry
         {
             if (_handlers.TryGetValue(interfaceType, out var handlerType))
             {
-                handler = Activator.CreateInstance(handlerType) as IFormGroupHandler;
-
-                return true;
+                return (IFormGroupHandler)Activator.CreateInstance(handlerType)!;
             }
         }
 
-        handler = null;
-        return false;
+        return new DefaultFormGroupHandler();
     }
 
     public void RegisterGroupHeaderClass<TGroup, TGroupView>()

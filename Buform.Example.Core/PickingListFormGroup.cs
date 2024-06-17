@@ -2,14 +2,18 @@ using System.Collections.Specialized;
 
 namespace Buform;
 
-public class PickingListFormGroup<TValue, TFormItem> : ListFormGroup<TValue, TFormItem>, IPickingListFormGroup where TFormItem : FormItem<TValue>, IFormItem
+public class PickingListFormGroup<TValue, TFormItem>
+    : ListFormGroup<TValue, TFormItem>,
+        IPickingListFormGroup
+    where TFormItem : FormItem<TValue>, IFormItem
 {
     public List<TValue> SelectedValues { get; } = new();
 
-    public PickingListFormGroup(Func<TValue, TFormItem> itemFactory,
+    public PickingListFormGroup(
+        Func<TValue, TFormItem> itemFactory,
         string? headerLabel = null,
         string? footerLabel = null
-        )
+    )
         : base(itemFactory, headerLabel, footerLabel)
     {
         /* Required constructor */
@@ -31,9 +35,10 @@ public class PickingListFormGroup<TValue, TFormItem> : ListFormGroup<TValue, TFo
             SelectedValues.Add(formItem.Value!);
         }
 
-        OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        OnCollectionChanged(
+            new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset)
+        );
     }
-
 
     public bool IsItemSelected(IFormItem item)
     {
