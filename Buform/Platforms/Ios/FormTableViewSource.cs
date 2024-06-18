@@ -263,9 +263,11 @@ public class FormTableViewSource : TableViewSource
             return proposedIndexPath;
         }
 
+        var targetGroup = GetGroup(proposedIndexPath.Section)!;
+
         if (
-            sourceGroupHandler.CanRemoveItem(formItem)
-            && proposedGroupHandler.CanInsertItem(formItem, proposedIndexPath.Row)
+            sourceGroupHandler.CanMoveItemIntoGroup(formItem, targetGroup)
+            && proposedGroupHandler.CanInsertItem(formItem)
         )
         {
             return proposedIndexPath;
@@ -287,7 +289,7 @@ public class FormTableViewSource : TableViewSource
 
         groupHandler.Initialize(group);
 
-        _groupHandlers[group.GetType()] = groupHandler!;
+        _groupHandlers[group.GetType()] = groupHandler;
 
         return groupHandler;
     }

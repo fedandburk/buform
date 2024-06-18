@@ -22,8 +22,12 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
 
     public virtual bool CanEditItem(IFormItem item)
     {
-        return Group.RemoveCommand.SafeCanExecute(item.Value)
-            || Group.InsertCommand.SafeCanExecute(item.Value);
+        return CanRemoveItem(item) || CanInsertItem(item);
+    }
+
+    public void OnItemSelected(FormCell cell, IFormItem item)
+    {
+        throw new NotImplementedException();
     }
 
     public virtual void OnItemSelected(IFormItem item)
@@ -38,12 +42,12 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
 
     public UITableViewCellEditingStyle EditingStyleForItem(IFormItem item)
     {
-        if (Group.RemoveCommand.SafeCanExecute(item.Value))
+        if (CanRemoveItem(item))
         {
             return UITableViewCellEditingStyle.Delete;
         }
 
-        if (Group.InsertCommand.SafeCanExecute(item.Value))
+        if (CanInsertItem(item))
         {
             return UITableViewCellEditingStyle.Insert;
         }
@@ -73,6 +77,11 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         return Group.MoveCommand.SafeCanExecute(item.Value);
     }
 
+    public virtual bool CanMoveItemIntoGroup(IFormItem item, IFormGroup targetGroup)
+    {
+        return false;
+    }
+
     public virtual void MoveItem(IFormItem item, int sourceIndex, int destinationIndex)
     {
         Group.MoveCommand?.Execute((sourceIndex, destinationIndex));
@@ -88,7 +97,7 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         Group.RemoveCommand?.SafeExecute(item.Value);
     }
 
-    public virtual bool CanInsertItem(IFormItem item, int index)
+    public virtual bool CanInsertItem(IFormItem item)
     {
         return Group.InsertCommand.SafeCanExecute(item.Value);
     }
