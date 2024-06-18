@@ -84,7 +84,7 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
 
     public virtual void MoveItem(IFormItem item, int sourceIndex, int destinationIndex)
     {
-        Group.MoveCommand?.Execute((sourceIndex, destinationIndex));
+        Group.MoveCommand?.SafeExecute((sourceIndex, destinationIndex));
     }
 
     public virtual bool CanRemoveItem(IFormItem item)
