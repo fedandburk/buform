@@ -25,11 +25,6 @@ public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
         return CanRemoveItem(item) || CanInsertItem(item);
     }
 
-    public void OnItemSelected(FormCell cell, IFormItem item)
-    {
-        throw new NotImplementedException();
-    }
-
     public virtual void OnItemSelected(IFormItem item)
     {
         /* Nothing to do */
