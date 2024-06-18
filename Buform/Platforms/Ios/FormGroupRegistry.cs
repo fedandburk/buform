@@ -1,5 +1,3 @@
-using Buform.Groups;
-
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -65,7 +63,7 @@ internal sealed class FormGroupRegistry
 
     public void RegisterGroupHandler<TGroup, THandler>()
         where TGroup : class, IFormGroup
-        where THandler : FormGroupHandlerBase<TGroup>
+        where THandler : FormGroupHandler<TGroup>
     {
         _handlers[typeof(TGroup)] = typeof(THandler);
     }
@@ -90,7 +88,7 @@ internal sealed class FormGroupRegistry
             }
         }
 
-        return new DefaultFormGroupHandler();
+        return new FormGroupHandler<IFormGroup>();
     }
 
     public void RegisterGroupHeaderClass<TGroup, TGroupView>()

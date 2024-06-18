@@ -1,8 +1,8 @@
 using Fedandburk.Common.Extensions;
 
-namespace Buform.Groups;
+namespace Buform;
 
-public abstract class FormGroupHandlerBase<TGroup> : IFormGroupHandler
+public class FormGroupHandler<TGroup> : IFormGroupHandler
     where TGroup : IFormGroup
 {
     protected TGroup Group { get; set; } = default!;

@@ -1,4 +1,4 @@
-namespace Buform.Groups;
+namespace Buform;
 
 public interface IFormGroupHandler
 {

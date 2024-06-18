@@ -1,5 +1,3 @@
-using Buform.Groups;
-using Fedandburk.Common.Extensions;
 using Fedandburk.iOS.Extensions;
 
 namespace Buform;
@@ -7,7 +5,7 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public class FormTableViewSource : TableViewSource
 {
-    private Dictionary<Type, IFormGroupHandler> _groupHandlers = new();
+    private readonly Dictionary<Type, IFormGroupHandler> _groupHandlers = new();
 
     public Form? Form
     {

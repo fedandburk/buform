@@ -1,5 +1,3 @@
-using Buform.Groups;
-
 namespace Buform;
 
 public static class FormPlatform
@@ -65,7 +63,7 @@ public static class FormPlatform
 
     public static void RegisterGroupHandler<TGroup, THandler>()
         where TGroup : class, IFormGroup
-        where THandler : FormGroupHandlerBase<TGroup>
+        where THandler : FormGroupHandler<TGroup>
     {
         GroupRegistry.RegisterGroupHandler<TGroup, THandler>();
     }

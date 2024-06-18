@@ -1,9 +1,8 @@
-using Buform.Groups;
 using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-public class ListFormGroupHandler : FormGroupHandlerBase<IListFormGroup>
+public class ListFormGroupHandler : FormGroupHandler<IListFormGroup>
 {
     public override bool CanSelectItem(IFormItem item)
     {
