@@ -70,14 +70,15 @@ public partial class ComponentsViewModel : ObservableObject
     {
         Form = new Form(this)
         {
-            new PickingListFormGroup<int, TextFormItem<int>>(
+            new ListFormGroup<int, TextFormItem<int>>(
                 item => new TextFormItem<int>(item) { Formatter = i => i.ToWords() },
-                "Picking List"
+                "List"
             )
             {
                 Source = List,
                 RemoveCommand = RemoveListItemCommand,
-                MoveCommand = MoveListItemCommand
+                MoveCommand = MoveListItemCommand,
+                SelectCommand = SelectListItemCommand
             },
             new TextFormGroup("Pickers")
             {
@@ -318,6 +319,12 @@ public partial class ComponentsViewModel : ObservableObject
     private static void WriteLine()
     {
         Console.WriteLine("Command executed");
+    }
+
+    [RelayCommand]
+    private static void SelectListItem(int item)
+    {
+        Console.WriteLine($"Selected item: {item}");
     }
 
     [RelayCommand]

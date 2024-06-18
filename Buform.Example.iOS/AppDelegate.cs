@@ -26,7 +26,6 @@ public sealed class AppDelegate : UIApplicationDelegate
 
         FormPlatform.RegisterItemClass<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
         FormPlatform.RegisterItemClass<MvxButtonFormItem, MvxButtonFormCell>();
-        FormPlatform.RegisterGroupHandler<IPickingListFormGroup, PickingListFormGroupHandler>();
 
         Window = new UIWindow(UIScreen.MainScreen.Bounds);
 
