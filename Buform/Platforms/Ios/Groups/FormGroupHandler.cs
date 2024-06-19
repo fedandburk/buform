@@ -69,7 +69,7 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
 
     public virtual bool CanMoveItem(IFormItem item)
     {
-        return Group.MoveCommand.SafeCanExecute(item.Value);
+        return Group.MoveCommand is not null;
     }
 
     public virtual bool CanMoveItemIntoGroup(IFormItem item, IFormGroup targetGroup)
