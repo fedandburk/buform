@@ -31,9 +31,12 @@ internal sealed class FormGroupRegistry
 
     private readonly IDictionary<(Type, HolderType), Holder> _holders;
 
+    private readonly Dictionary<Type, Type> _handlers;
+
     public FormGroupRegistry()
     {
         _holders = new Dictionary<(Type, HolderType), Holder>();
+        _handlers = new Dictionary<Type, Type>();
     }
 
     private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
@@ -56,6 +59,36 @@ internal sealed class FormGroupRegistry
         }
 
         return false;
+    }
+
+    public void RegisterGroupHandler<TGroup, THandler>()
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandler<TGroup>
+    {
+        _handlers[typeof(TGroup)] = typeof(THandler);
+    }
+
+    public IFormGroupHandler GetGroupHandler(IFormGroup group)
+    {
+        if (_handlers.TryGetValue(group.GetType(), out var type))
+        {
+            return (IFormGroupHandler)Activator.CreateInstance(type)!;
+        }
+
+        var interfaceTypes = group
+            .GetType()
+            .GetInterfaces()
+            .Except(group.GetType().GetInterfaces().SelectMany(item => item.GetInterfaces()));
+
+        foreach (var interfaceType in interfaceTypes)
+        {
+            if (_handlers.TryGetValue(interfaceType, out var handlerType))
+            {
+                return (IFormGroupHandler)Activator.CreateInstance(handlerType)!;
+            }
+        }
+
+        return new FormGroupHandler<IFormGroup>();
     }
 
     public void RegisterGroupHeaderClass<TGroup, TGroupView>()

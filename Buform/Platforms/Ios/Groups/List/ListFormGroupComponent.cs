@@ -9,5 +9,6 @@ public sealed class ListFormGroupComponent : IFormComponent
     {
         FormPlatform.RegisterGroupHeaderClass<IListFormGroup, ListFormGroupHeader>();
         FormPlatform.RegisterGroupFooterClass<IListFormGroup, ListFormGroupFooter>();
+        FormPlatform.RegisterGroupHandler<IListFormGroup, ListFormGroupHandler>();
     }
 }
