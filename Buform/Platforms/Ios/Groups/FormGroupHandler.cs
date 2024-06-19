@@ -30,12 +30,12 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
         /* Nothing to do */
     }
 
-    public bool ShouldAutomaticallyDeselectItem(IFormItem item)
+    public virtual bool ShouldAutomaticallyDeselectItem(IFormItem item)
     {
         return !item.IsReadOnly;
     }
 
-    public UITableViewCellEditingStyle EditingStyleForItem(IFormItem item)
+    public virtual UITableViewCellEditingStyle EditingStyleForItem(IFormItem item)
     {
         if (CanRemoveItem(item))
         {
@@ -50,7 +50,7 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
         return UITableViewCellEditingStyle.None;
     }
 
-    public void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item)
+    public virtual void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item)
     {
         switch (editingStyle)
         {

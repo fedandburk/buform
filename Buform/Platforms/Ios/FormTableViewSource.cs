@@ -5,7 +5,7 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public class FormTableViewSource : TableViewSource
 {
-    private readonly Dictionary<Type, IFormGroupHandler> _groupHandlers = new();
+    private readonly Dictionary<IFormGroup, IFormGroupHandler> _groupHandlers = new();
 
     public Form? Form
     {
@@ -278,7 +278,7 @@ public class FormTableViewSource : TableViewSource
     {
         var group = GetGroup(indexPath.Section)!;
 
-        if (_groupHandlers.TryGetValue(group.GetType(), out var groupHandler))
+        if (_groupHandlers.TryGetValue(group, out var groupHandler))
         {
             return groupHandler;
         }
@@ -287,7 +287,7 @@ public class FormTableViewSource : TableViewSource
 
         groupHandler.Initialize(group);
 
-        _groupHandlers[group.GetType()] = groupHandler;
+        _groupHandlers[group] = groupHandler;
 
         return groupHandler;
     }
