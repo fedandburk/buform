@@ -50,7 +50,10 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
         return UITableViewCellEditingStyle.None;
     }
 
-    public virtual void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item)
+    public virtual void CommitEditingStyleForItem(
+        UITableViewCellEditingStyle editingStyle,
+        IFormItem item
+    )
     {
         switch (editingStyle)
         {
