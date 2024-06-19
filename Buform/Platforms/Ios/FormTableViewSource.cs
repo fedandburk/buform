@@ -1,4 +1,3 @@
-using Fedandburk.Common.Extensions;
 using Fedandburk.iOS.Extensions;
 
 namespace Buform;
@@ -6,6 +5,8 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public class FormTableViewSource : TableViewSource
 {
+    private readonly Dictionary<IFormGroup, IFormGroupHandler> _groupHandlers = new();
+
     public Form? Form
     {
         get => Items as Form;
@@ -98,9 +99,9 @@ public class FormTableViewSource : TableViewSource
             return cell;
         }
 
-        formCell.Initialize(formItem);
+        GetGroupHandler(indexPath).InitializeCell(formCell, formItem);
 
-        return cell;
+        return formCell;
     }
 
     protected override void WillDisplayHeader(
@@ -147,16 +148,31 @@ public class FormTableViewSource : TableViewSource
 
     protected override NSIndexPath WillSelectRow(NSIndexPath indexPath, object item)
     {
-        return FindCell(indexPath)?.IsSelectable ?? false ? indexPath : null!;
+        if (item is IFormItem formItem)
+        {
+            return GetGroupHandler(indexPath).CanSelectItem(formItem) ? indexPath : null!;
+        }
+
+        return null!;
     }
 
     protected override bool ShouldBeAutomaticallyDeselected(NSIndexPath indexPath, object item)
     {
-        return FindCell(indexPath)?.IsSelectable ?? false;
+        if (item is not IFormItem formItem)
+        {
+            return false;
+        }
+
+        return GetGroupHandler(indexPath).ShouldAutomaticallyDeselectItem(formItem);
     }
 
     protected override void RowSelected(NSIndexPath indexPath, object item)
     {
+        if (item is IFormItem formItem)
+        {
+            GetGroupHandler(indexPath).OnItemSelected(formItem);
+        }
+
         FindCell(indexPath)?.OnSelected();
     }
 
@@ -167,24 +183,7 @@ public class FormTableViewSource : TableViewSource
             return false;
         }
 
-        var group = GetGroup(indexPath.Section);
-
-        if (group == null)
-        {
-            return false;
-        }
-
-        if (group.RemoveCommand.SafeCanExecute(formItem.Value))
-        {
-            return true;
-        }
-
-        if (group.InsertCommand.SafeCanExecute(formItem.Value))
-        {
-            return true;
-        }
-
-        return false;
+        return GetGroupHandler(indexPath).CanEditItem(formItem);
     }
 
     protected override UITableViewCellEditingStyle EditingStyleForRow(
@@ -197,24 +196,7 @@ public class FormTableViewSource : TableViewSource
             return UITableViewCellEditingStyle.None;
         }
 
-        var group = GetGroup(indexPath.Section);
-
-        if (group == null)
-        {
-            return UITableViewCellEditingStyle.None;
-        }
-
-        if (group.RemoveCommand.SafeCanExecute(formItem.Value))
-        {
-            return UITableViewCellEditingStyle.Delete;
-        }
-
-        if (group.InsertCommand.SafeCanExecute(formItem.Value))
-        {
-            return UITableViewCellEditingStyle.Insert;
-        }
-
-        return UITableViewCellEditingStyle.None;
+        return GetGroupHandler(indexPath).EditingStyleForItem(formItem);
     }
 
     protected override void CommitEditingStyle(
@@ -228,26 +210,7 @@ public class FormTableViewSource : TableViewSource
             return;
         }
 
-        var group = GetGroup(indexPath.Section);
-
-        if (group == null)
-        {
-            return;
-        }
-
-        switch (editingStyle)
-        {
-            case UITableViewCellEditingStyle.None:
-                return;
-            case UITableViewCellEditingStyle.Delete:
-                group.RemoveCommand.SafeExecute(formItem.Value);
-                break;
-            case UITableViewCellEditingStyle.Insert:
-                group.InsertCommand.SafeExecute(formItem.Value);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(editingStyle), editingStyle, null);
-        }
+        GetGroupHandler(indexPath).CommitEditingStyleForItem(editingStyle, formItem);
     }
 
     protected override bool CanMoveRow(NSIndexPath indexPath, object item)
@@ -257,9 +220,7 @@ public class FormTableViewSource : TableViewSource
             return false;
         }
 
-        var group = GetGroup(indexPath.Section);
-
-        return group != null && group.MoveCommand.SafeCanExecute(formItem.Value);
+        return GetGroupHandler(indexPath).CanMoveItem(formItem);
     }
 
     protected override void MoveRow(
@@ -268,7 +229,66 @@ public class FormTableViewSource : TableViewSource
         object item
     )
     {
-        GetGroup(sourceIndexPath.Section)
-            ?.MoveCommand.SafeExecute((sourceIndexPath.Row, destinationIndexPath.Row));
+        var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
+        var destinationGroupHandler = GetGroupHandler(destinationIndexPath);
+
+        var formItem = GetItem(sourceIndexPath)!;
+
+        if (sourceGroupHandler == destinationGroupHandler)
+        {
+            sourceGroupHandler.MoveItem(formItem, sourceIndexPath.Row, destinationIndexPath.Row);
+        }
+        else
+        {
+            sourceGroupHandler.RemoveItem(formItem);
+            destinationGroupHandler.InsertItem(formItem, destinationIndexPath.Row);
+        }
+    }
+
+    public override NSIndexPath CustomizeMoveTarget(
+        UITableView tableView,
+        NSIndexPath sourceIndexPath,
+        NSIndexPath proposedIndexPath
+    )
+    {
+        var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
+        var proposedGroupHandler = GetGroupHandler(proposedIndexPath);
+
+        var formItem = GetItem(sourceIndexPath)!;
+
+        if (sourceGroupHandler == proposedGroupHandler)
+        {
+            return proposedIndexPath;
+        }
+
+        var targetGroup = GetGroup(proposedIndexPath.Section)!;
+
+        if (
+            sourceGroupHandler.CanMoveItemIntoGroup(formItem, targetGroup)
+            && proposedGroupHandler.CanInsertItem(formItem)
+        )
+        {
+            return proposedIndexPath;
+        }
+
+        return sourceIndexPath;
+    }
+
+    private IFormGroupHandler GetGroupHandler(NSIndexPath indexPath)
+    {
+        var group = GetGroup(indexPath.Section)!;
+
+        if (_groupHandlers.TryGetValue(group, out var groupHandler))
+        {
+            return groupHandler;
+        }
+
+        groupHandler = FormPlatform.GetGroupHandler(group);
+
+        groupHandler.Initialize(group);
+
+        _groupHandlers[group] = groupHandler;
+
+        return groupHandler;
     }
 }

@@ -61,6 +61,13 @@ public static class FormPlatform
         ItemRegistry.Register(tableView);
     }
 
+    public static void RegisterGroupHandler<TGroup, THandler>()
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandler<TGroup>
+    {
+        GroupRegistry.RegisterGroupHandler<TGroup, THandler>();
+    }
+
     public static bool TryGetHeaderReuseIdentifier(Type groupType, out string? reuseIdentifier)
     {
         return GroupRegistry.TryGetHeaderReuseIdentifier(groupType, out reuseIdentifier);
@@ -79,5 +86,10 @@ public static class FormPlatform
     public static bool TryGetExpandedReuseIdentifier(Type itemType, out string? reuseIdentifier)
     {
         return ItemRegistry.TryGetExpandedReuseIdentifier(itemType, out reuseIdentifier);
+    }
+
+    public static IFormGroupHandler GetGroupHandler(IFormGroup group)
+    {
+        return GroupRegistry.GetGroupHandler(group);
     }
 }

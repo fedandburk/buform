@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Windows.Input;
 
 namespace Buform;
 
@@ -9,6 +10,18 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
     private string? _headerLabel;
     private string? _footerLabel;
     private IEnumerable<TValue>? _source;
+    private ICommand? _selectCommand;
+
+    public virtual ICommand? SelectCommand
+    {
+        get => _selectCommand;
+        set
+        {
+            _selectCommand = value;
+
+            NotifyPropertyChanged();
+        }
+    }
 
     public virtual string? HeaderLabel
     {
