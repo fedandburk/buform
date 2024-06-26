@@ -6,13 +6,16 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
     where TGroup : IFormGroup
 {
     protected TGroup Group { get; set; } = default!;
+    protected UITableView TableView { get; set; } = default!;
 
-    public virtual void Initialize(IFormGroup group)
+    public virtual void Initialize(IFormGroup group, UITableView tableView)
     {
         if (group is TGroup tGroup)
         {
             Group = tGroup;
         }
+
+        TableView = tableView;
     }
 
     public virtual bool CanSelectItem(IFormItem item)
@@ -26,6 +29,11 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
     }
 
     public virtual void OnItemSelected(IFormItem item)
+    {
+        /* Nothing to do */
+    }
+
+    public virtual void OnItemDeselected(IFormItem item)
     {
         /* Nothing to do */
     }
@@ -105,7 +113,7 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
         Group.InsertCommand?.SafeExecute(item.Value);
     }
 
-    public virtual void InitializeCell(FormCell cell, IFormItem item)
+    public virtual void InitializeCell(FormCell cell, NSIndexPath indexPath, IFormItem item)
     {
         cell.Initialize(item);
     }
