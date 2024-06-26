@@ -99,7 +99,7 @@ public class FormTableViewSource : TableViewSource
             return cell;
         }
 
-        GetGroupHandler(indexPath).InitializeCell(formCell, formItem);
+        GetGroupHandler(indexPath).InitializeCell(formCell, indexPath, formItem);
 
         return formCell;
     }
@@ -174,6 +174,13 @@ public class FormTableViewSource : TableViewSource
         }
 
         FindCell(indexPath)?.OnSelected();
+    }
+
+    public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
+    {
+        var item = GetItem(indexPath);
+
+        GetGroupHandler(indexPath).OnItemDeselected(item!);
     }
 
     protected override bool CanEditRow(NSIndexPath indexPath, object item)
@@ -285,7 +292,7 @@ public class FormTableViewSource : TableViewSource
 
         groupHandler = FormPlatform.GetGroupHandler(group);
 
-        groupHandler.Initialize(group);
+        groupHandler.Initialize(group, TableView);
 
         _groupHandlers[group] = groupHandler;
 
