@@ -5,6 +5,7 @@ public interface IFormGroupHandler
     bool CanSelectItem(IFormItem item);
     bool CanEditItem(IFormItem item);
     void OnItemSelected(IFormItem item);
+    void OnItemDeselected(IFormItem item);
     bool ShouldAutomaticallyDeselectItem(IFormItem item);
     UITableViewCellEditingStyle EditingStyleForItem(IFormItem item);
     void CommitEditingStyleForItem(UITableViewCellEditingStyle editingStyle, IFormItem item);
@@ -14,6 +15,6 @@ public interface IFormGroupHandler
     void RemoveItem(IFormItem item);
     bool CanInsertItem(IFormItem item);
     void InsertItem(IFormItem item, int index);
-    void InitializeCell(FormCell cell, IFormItem item);
-    void Initialize(IFormGroup group);
+    void InitializeCell(FormCell cell, NSIndexPath indexPath, IFormItem item);
+    void Initialize(IFormGroup group, UITableView tableView);
 }
