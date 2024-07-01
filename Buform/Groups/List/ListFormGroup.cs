@@ -83,9 +83,43 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
 
     protected virtual void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        Reset();
+        switch (e.Action)
+        {
+            case NotifyCollectionChangedAction.Remove:
+            {
+                for (var i = 0; i < e.OldItems!.Count; i++)
+                {
+                    RemoveItem(e.OldStartingIndex);
+                }
 
-        NotifyPropertyChanged(nameof(Source));
+                break;
+            }
+            case NotifyCollectionChangedAction.Add:
+            {
+                var items = e.NewItems!.Cast<TValue>()
+                    .Select((item, index) => (_itemFactory!(item), e.NewStartingIndex + index))
+                    .ToList();
+
+                foreach (var (item, index) in items)
+                {
+                    InsertItem(index, item);
+                }
+
+                break;
+            }
+            case NotifyCollectionChangedAction.Reset:
+            {
+                Reset();
+
+                break;
+            }
+            case NotifyCollectionChangedAction.Move:
+            {
+                MoveItem(e.OldStartingIndex, e.NewStartingIndex);
+
+                break;
+            }
+        }
     }
 
     protected virtual void Reset()
@@ -106,7 +140,7 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
         {
             var item = _itemFactory(value);
 
-            Add(item);
+            AddItem(item);
         }
     }
 
