@@ -88,11 +88,11 @@ public partial class ComponentsViewModel : ObservableObject
                 "List"
             )
             {
-            Source = List2,
-            RemoveCommand = RemoveListItemCommand,
-            MoveCommand = MoveListItemCommand,
-            SelectCommand = SelectListItemCommand
-        }                                        
+                Source = List2,
+                RemoveCommand = RemoveListItemCommand,
+                MoveCommand = MoveListItemCommand,
+                SelectCommand = SelectListItemCommand
+            }
         };
     }
 
