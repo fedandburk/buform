@@ -100,6 +100,11 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
         }
     }
 
+    protected void AddItem(TFormItem item)
+    {
+        InsertItem(Count, item);
+    }
+
     protected override void InsertItem(int index, TFormItem item)
     {
         ShiftHiddenItems(index, 1);
