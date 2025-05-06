@@ -134,7 +134,7 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
         else
         {
             var index = IndexOf(item);
-            
+
             if (index < 0)
             {
                 return;
@@ -188,13 +188,13 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
         for (var i = 0; i < originalIndex; i++)
         {
             var item = _originalItems[i];
-            
+
             if (item.IsVisible)
             {
                 count++;
             }
         }
-        
+
         return count;
     }
 
