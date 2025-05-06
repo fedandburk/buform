@@ -9,7 +9,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
-        <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <ApplicationId>com.fedandburk.buform.maui</ApplicationId>
         <ApplicationTitle>Buform Maui</ApplicationTitle>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
