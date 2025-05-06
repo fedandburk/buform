@@ -1,6 +1,5 @@
 using CoreGraphics;
 using Foundation;
-using Microsoft.Maui.Controls.Compatibility.Platform.iOS;
 using Microsoft.Maui.Platform;
 using ObjCRuntime;
 using UIKit;
@@ -86,6 +85,6 @@ internal sealed class MauiFormCell : UITableViewCell
             bounds
         );
 
-        _view.Frame = bounds.ToRectangleF();
+        _view.Frame = bounds;
     }
 }
