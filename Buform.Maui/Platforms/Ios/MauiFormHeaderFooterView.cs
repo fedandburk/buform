@@ -50,14 +50,10 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
         var horizontalMargins = ContentView.LayoutMargins.Left + ContentView.LayoutMargins.Right;
         var width = Bounds.Width - horizontalMargins;
 
-        var request = _formHeaderFooterView.Measure(
-            width,
-            double.PositiveInfinity,
-            MeasureFlags.IncludeMargins
-        );
+        var measuredSize = _formHeaderFooterView.Measure(width, double.PositiveInfinity);
 
         var verticalMargins = ContentView.LayoutMargins.Top + ContentView.LayoutMargins.Bottom;
-        var height = request.Request.Height - verticalMargins;
+        var height = measuredSize.Height - verticalMargins;
 
         _estimatedSize = new CGSize(width, Math.Ceiling(height));
     }
@@ -80,10 +76,7 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
 
         var bounds = new Rect(0, 0, _estimatedSize.Width, _estimatedSize.Height);
 
-        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(
-            _formHeaderFooterView,
-            bounds
-        );
+        _formHeaderFooterView.Arrange(bounds);
 
         _view.Frame = bounds;
     }

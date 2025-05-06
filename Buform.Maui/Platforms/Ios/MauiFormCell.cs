@@ -51,13 +51,9 @@ internal sealed class MauiFormCell : UITableViewCell
 
         var width = Bounds.Width;
 
-        var request = _formItemView.Measure(
-            width,
-            double.PositiveInfinity,
-            MeasureFlags.IncludeMargins
-        );
+        var measuredSize = _formItemView.Measure(width, double.PositiveInfinity);
 
-        var height = Math.Ceiling(request.Request.Height);
+        var height = Math.Ceiling(measuredSize.Height);
 
         _estimatedSize = new CGSize(width, height);
     }
@@ -80,10 +76,7 @@ internal sealed class MauiFormCell : UITableViewCell
 
         var bounds = new Rect(0, 0, _estimatedSize.Width, _estimatedSize.Height);
 
-        Microsoft.Maui.Controls.Compatibility.Layout.LayoutChildIntoBoundingRegion(
-            _formItemView,
-            bounds
-        );
+        _formItemView.Arrange(bounds);
 
         _view.Frame = bounds;
     }
