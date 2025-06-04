@@ -1,3 +1,5 @@
+using Buform.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -46,9 +48,7 @@ internal sealed class FormGroupRegistry
             return true;
         }
 
-        var interfaceTypes = groupType
-            .GetInterfaces()
-            .Except(groupType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
+        var interfaceTypes = groupType.GetInterfacesTopDown();
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -75,10 +75,7 @@ internal sealed class FormGroupRegistry
             return (IFormGroupHandler)Activator.CreateInstance(type)!;
         }
 
-        var interfaceTypes = group
-            .GetType()
-            .GetInterfaces()
-            .Except(group.GetType().GetInterfaces().SelectMany(item => item.GetInterfaces()));
+        var interfaceTypes = group.GetType().GetInterfacesTopDown();
 
         foreach (var interfaceType in interfaceTypes)
         {
@@ -99,6 +96,8 @@ internal sealed class FormGroupRegistry
             typeof(TGroupView),
             RegistrationType.Class
         );
+
+        var t = typeof(TGroupView).ToString();
     }
 
     public void RegisterGroupFooterClass<TGroup, TGroupView>()
