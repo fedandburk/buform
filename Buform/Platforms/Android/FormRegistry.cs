@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Android.Runtime;
+using Buform.Extensions;
 using Fedandburk.Common.Extensions;
 
 namespace Buform;
@@ -65,9 +66,7 @@ internal sealed class FormRegistry
             return true;
         }
 
-        var interfaceTypes = dataType
-            .GetInterfaces()
-            .Except(dataType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
+        var interfaceTypes = dataType.GetInterfacesTopDown();
 
         foreach (var interfaceType in interfaceTypes)
         {
