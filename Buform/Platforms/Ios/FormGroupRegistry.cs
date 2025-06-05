@@ -96,8 +96,6 @@ internal sealed class FormGroupRegistry
             typeof(TGroupView),
             RegistrationType.Class
         );
-
-        var t = typeof(TGroupView).ToString();
     }
 
     public void RegisterGroupFooterClass<TGroup, TGroupView>()
