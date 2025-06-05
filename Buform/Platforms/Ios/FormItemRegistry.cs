@@ -1,3 +1,5 @@
+using Buform.Extensions;
+
 namespace Buform;
 
 [Preserve(AllMembers = true)]
@@ -40,9 +42,7 @@ internal sealed class FormItemRegistry
             return true;
         }
 
-        var interfaceTypes = itemType
-            .GetInterfaces()
-            .Except(itemType.GetInterfaces().SelectMany(item => item.GetInterfaces()));
+        var interfaceTypes = itemType.GetInterfacesTopDown();
 
         foreach (var interfaceType in interfaceTypes)
         {
