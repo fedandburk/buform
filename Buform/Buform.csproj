@@ -27,16 +27,14 @@
         <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
     </PropertyGroup>
 
+    
+    
     <ItemGroup>
         <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.8" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
         <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.9" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.3.2.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -53,6 +51,7 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
         <Compile Include="Platforms\Android\**\*.cs" />
         <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
+        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.4" />           
     </ItemGroup>
 
 </Project>
