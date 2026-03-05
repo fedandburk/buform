@@ -26,9 +26,7 @@
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
     </PropertyGroup>
-
-    
-    
+      
     <ItemGroup>
         <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.8" />
     </ItemGroup>
