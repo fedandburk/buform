@@ -37,8 +37,8 @@ jobs:
         
     - name: Verify environment
       run: |
-      xcodebuild -version
-      dotnet --info
+          xcodebuild -version
+          dotnet --info
 
     - name: Build
       run: dotnet build
