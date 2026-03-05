@@ -19,6 +19,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Setup Xcode 26.0.1 (required for .NET iOS build)
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '26.0.1'
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
 
@@ -29,6 +34,11 @@ jobs:
       run: |
           dotnet tool restore
           dotnet csharpier --check .
+        
+    - name: Verify environment
+      run: |
+      xcodebuild -version
+      dotnet --info
 
     - name: Build
       run: dotnet build
