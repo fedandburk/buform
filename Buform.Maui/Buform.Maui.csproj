@@ -45,7 +45,11 @@
     <ItemGroup>
         <Compile Remove="Platforms\**\*.cs" />
         <Compile Remove="Resources\*.cs" />
+        <Compile Include="Platforms\Android\FormAdapterItem.cs" />
+        <Compile Include="Platforms\Android\FormRowViewHolder.cs" />
         <Compile Include="Platforms\Android\FormViewHandler.cs" />
+        <Compile Include="Platforms\Android\MauiFormRecyclerAdapter.cs" />
+        <Compile Include="Platforms\Android\SectionHeaderViewHolder.cs" />
         <None Include="Platforms\**\*.cs" />
         <None Include="Resources\*.cs" />
     </ItemGroup>
