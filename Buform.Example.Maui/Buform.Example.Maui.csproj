@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0-ios</TargetFramework>
+        <TargetFrameworks>net9.0-ios;net9.0-android</TargetFrameworks>
         <UseMaui>true</UseMaui>
         <OutputType>Exe</OutputType>
         <IsPackable>false</IsPackable>
@@ -9,7 +9,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <RootNamespace>Buform</RootNamespace>
-        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
         <ApplicationId>com.fedandburk.buform.maui</ApplicationId>
         <ApplicationTitle>Buform Maui</ApplicationTitle>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -17,6 +16,14 @@
         <MtouchLink>SdkOnly</MtouchLink>
     </PropertyGroup>
 
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+        <SupportedOSPlatformVersion>23.0</SupportedOSPlatformVersion>
+    </PropertyGroup>
+    
     <ItemGroup>
         <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#FFFFFF" />
         <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
@@ -29,7 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
+        <PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     </ItemGroup>
 
