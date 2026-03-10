@@ -30,6 +30,7 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
     protected override void ConnectHandler(RecyclerView platformView)
     {
         base.ConnectHandler(platformView);
+        
         UpdateForm();
     }
 
@@ -52,12 +53,12 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
 
     private void UpdateForm()
     {
-        if (PlatformView?.GetAdapter() is not MauiFormRecyclerAdapter adapter)
+        if (PlatformView.GetAdapter() is not MauiFormRecyclerAdapter adapter)
         {
             return;
         }
 
-        adapter.SetForm(VirtualView?.Form);
+        adapter.SetForm(VirtualView.Form);
     }
 }
 

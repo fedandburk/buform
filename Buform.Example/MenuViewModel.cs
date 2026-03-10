@@ -14,7 +14,7 @@ public partial class MenuViewModel : ObservableObject
     public MenuViewModel(INavigationService navigationService)
     {
         _navigationService = navigationService;
-
+        
         Form = new Form(this)
         {
             new LogoFormGroup(),

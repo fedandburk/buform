@@ -1,9 +1,7 @@
 using Android.Content;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using AView = Android.Views.View;
 
 namespace Buform;
 
@@ -39,66 +37,101 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
             return;
         }
 
-        foreach (var group in _form)
+        foreach (var section in _form)
         {
-            foreach (var row in group)
+            if (HasHeader(section))
+            {
+                _items.Add(FormAdapterItem.CreateSectionHeader(section));
+            }
+
+            foreach (var row in section)
             {
                 _items.Add(FormAdapterItem.CreateRow(row));
+            }
+
+            if (HasFooter(section))
+            {
+                _items.Add(FormAdapterItem.CreateSectionFooter(section));
             }
         }
     }
 
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
     {
+        var container = CreateContainer();
+
         return (FormAdapterItemKind)viewType switch
         {
-            FormAdapterItemKind.Row => new FormRowViewHolder(CreateRowView()),
+            FormAdapterItemKind.Row => new MauiFormItemViewHolder(container),
+            FormAdapterItemKind.SectionHeader => new MauiFormHeaderFooterViewHolder(container),
+            FormAdapterItemKind.SectionFooter => new MauiFormHeaderFooterViewHolder(container),
             _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null)
         };
     }
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        var item = _items[position];
+        var adapterItem = _items[position];
 
-        switch (holder)
+        if (adapterItem.Item is not ButtonFormItem item)
         {
-            case FormRowViewHolder row:
-                row.Bind(item);
+            return;
+        }
+
+        switch (adapterItem.Kind)
+        {
+            case FormAdapterItemKind.Row:
+                if (holder is MauiFormItemViewHolder rowHolder)
+                {
+                    rowHolder.Bind(_context, item);
+                }
+                break;
+
+            case FormAdapterItemKind.SectionHeader:
+                if (holder is MauiFormHeaderFooterViewHolder headerHolder)
+                {
+                    var sectionType = item.GetType();
+                    if (MauiFormPlatform.TryGetHeaderViewType(sectionType, out var headerType) && headerType != null)
+                    {
+                        headerHolder.Bind(item, headerType);
+                    }
+                }
+                break;
+
+            case FormAdapterItemKind.SectionFooter:
+                if (holder is MauiFormHeaderFooterViewHolder footerHolder)
+                {
+                    var sectionType = item.GetType();
+                    if (MauiFormPlatform.TryGetFooterViewType(sectionType, out var footerType) && footerType != null)
+                    {
+                        footerHolder.Bind(item, footerType);
+                    }
+                }
                 break;
         }
     }
 
-    private AView CreateRowView()
+    private FrameLayout CreateContainer()
     {
-        var container = new LinearLayout(_context)
-        {
-            Orientation = Orientation.Vertical
-        };
-
+        var container = new FrameLayout(_context);
         container.LayoutParameters = new RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MatchParent,
             ViewGroup.LayoutParams.WrapContent);
 
-        var textView = new TextView(_context);
-        textView.LayoutParameters = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent);
-
-        textView.SetPadding(DpToPx(16), DpToPx(16), DpToPx(16), DpToPx(16));
-        textView.TextSize = 16;
-
-        container.AddView(textView);
-
         return container;
     }
 
-    private int DpToPx(int dp)
+    private static bool HasHeader(object section)
     {
-        return (int)TypedValue.ApplyDimension(
-            ComplexUnitType.Dip,
-            dp,
-            _context.Resources?.DisplayMetrics);
+        var title = section.GetType().GetProperty("HeaderLabel")?.GetValue(section) as string;
+        return !string.IsNullOrWhiteSpace(title);
+    }
+
+    private static bool HasFooter(object section)
+    {
+        var footer = section.GetType().GetProperty("FooterLabel")?.GetValue(section) as string;
+
+        return !string.IsNullOrWhiteSpace(footer);
     }
 }
 
