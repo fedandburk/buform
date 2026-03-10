@@ -28,4 +28,3 @@ internal sealed class FormAdapterItem
     public static FormAdapterItem CreateSectionFooter(object section)
         => new(FormAdapterItemKind.SectionFooter, section);
 }
-

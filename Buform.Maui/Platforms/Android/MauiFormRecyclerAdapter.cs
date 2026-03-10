@@ -127,4 +127,3 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         return !string.IsNullOrWhiteSpace(footer);
     }
 }
-

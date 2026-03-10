@@ -61,4 +61,3 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
         adapter.SetForm(VirtualView.Form);
     }
 }
-
