@@ -3,6 +3,7 @@ using Android.Views;
 using Android.Widget;
 using Microsoft.Maui.Platform;
 using AndroidX.RecyclerView.Widget;
+using Fedandburk.Common.Extensions;
 using AView = Android.Views.View;
 
 namespace Buform;
@@ -51,12 +52,47 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
 
     private void BindFallback(Context context, object item)
     {
-        var textView = new TextView(context);
-        textView.Text = ResolveItemTitle(item);
-        textView.SetPadding(32, 32, 32, 32);
+        var title = ResolveItemTitle(item);
+
+        var root = new LinearLayout(context)
+        {
+            Orientation = Orientation.Vertical
+        };
+
+        root.LayoutParameters = new ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MatchParent,
+            ViewGroup.LayoutParams.WrapContent);
+
+        var horizontal = (int)(16 * context.Resources!.DisplayMetrics!.Density);
+        var vertical = (int)(14 * context.Resources.DisplayMetrics.Density);
+
+        root.SetPadding(horizontal, vertical, horizontal, vertical);
+        root.Clickable = true;
+        root.Focusable = true;
+
+        var typedValue = new Android.Util.TypedValue();
+        context.Theme?.ResolveAttribute(Android.Resource.Attribute.SelectableItemBackground, typedValue, true);
+        root.SetBackgroundResource(typedValue.ResourceId);
+
+        var titleView = new TextView(context);
+        titleView.Text = title;
+        titleView.SetTextSize(Android.Util.ComplexUnitType.Sp, 16);
+        titleView.SetSingleLine(true);
+        titleView.Ellipsize = Android.Text.TextUtils.TruncateAt.End;
+        titleView.SetTextColor(Android.Graphics.Color.Black);
+
+        root.AddView(titleView);
+
+        if (item is ButtonFormItem buttonItem)
+        {
+            root.Click += (_, _) =>
+            {
+                buttonItem.Value.SafeExecute();
+            };
+        }
 
         _container.RemoveAllViews();
-        _container.AddView(textView);
+        _container.AddView(root);
     }
 
     private static string ResolveItemTitle(object item)

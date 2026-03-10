@@ -72,8 +72,9 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
         var adapterItem = _items[position];
+        var item = adapterItem.Item;
 
-        if (adapterItem.Item is not ButtonFormItem item)
+        if (item == null)
         {
             return;
         }
