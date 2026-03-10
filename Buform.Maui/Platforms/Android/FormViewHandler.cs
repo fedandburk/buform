@@ -24,9 +24,6 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
         var adapter = new MauiFormRecyclerAdapter(Context);
         recyclerView.SetAdapter(adapter);
 
-        var divider = new DividerItemDecoration(Context, DividerItemDecoration.Vertical);
-        recyclerView.AddItemDecoration(divider);
-
         return recyclerView;
     }
 

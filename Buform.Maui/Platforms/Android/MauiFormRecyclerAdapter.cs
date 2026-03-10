@@ -78,9 +78,16 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         {
             return;
         }
-
+        
         switch (adapterItem.Kind)
         {
+            case FormAdapterItemKind.SectionHeader:
+                if (holder is MauiFormHeaderFooterViewHolder headerHolder)
+                {
+                    headerHolder.Bind(_context, item,FormAdapterItemKind.SectionHeader);
+                }
+                break;
+            
             case FormAdapterItemKind.Row:
                 if (holder is MauiFormItemViewHolder rowHolder)
                 {
@@ -88,25 +95,10 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
                 }
                 break;
 
-            case FormAdapterItemKind.SectionHeader:
-                if (holder is MauiFormHeaderFooterViewHolder headerHolder)
-                {
-                    var sectionType = item.GetType();
-                    if (MauiFormPlatform.TryGetHeaderViewType(sectionType, out var headerType) && headerType != null)
-                    {
-                        headerHolder.Bind(item, headerType);
-                    }
-                }
-                break;
-
             case FormAdapterItemKind.SectionFooter:
                 if (holder is MauiFormHeaderFooterViewHolder footerHolder)
                 {
-                    var sectionType = item.GetType();
-                    if (MauiFormPlatform.TryGetFooterViewType(sectionType, out var footerType) && footerType != null)
-                    {
-                        footerHolder.Bind(item, footerType);
-                    }
+                    footerHolder.Bind(_context, item, FormAdapterItemKind.SectionFooter);
                 }
                 break;
         }
