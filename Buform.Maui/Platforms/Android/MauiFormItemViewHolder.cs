@@ -1,9 +1,9 @@
 using Android.Content;
 using Android.Views;
 using Android.Widget;
-using Microsoft.Maui.Platform;
 using AndroidX.RecyclerView.Widget;
 using Fedandburk.Common.Extensions;
+using Microsoft.Maui.Platform;
 using AView = Android.Views.View;
 
 namespace Buform;
@@ -47,21 +47,21 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
             _platformView,
             new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MatchParent,
-                ViewGroup.LayoutParams.WrapContent));
+                ViewGroup.LayoutParams.WrapContent
+            )
+        );
     }
 
     private void BindFallback(Context context, object item)
     {
         var title = ResolveItemTitle(item);
 
-        var root = new LinearLayout(context)
-        {
-            Orientation = Orientation.Vertical
-        };
+        var root = new LinearLayout(context) { Orientation = Orientation.Vertical };
 
         root.LayoutParameters = new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent);
+            ViewGroup.LayoutParams.WrapContent
+        );
 
         var horizontal = (int)(16 * context.Resources!.DisplayMetrics!.Density);
         var vertical = (int)(14 * context.Resources.DisplayMetrics.Density);
@@ -71,7 +71,11 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
         root.Focusable = true;
 
         var typedValue = new Android.Util.TypedValue();
-        context.Theme?.ResolveAttribute(Android.Resource.Attribute.SelectableItemBackground, typedValue, true);
+        context.Theme?.ResolveAttribute(
+            Android.Resource.Attribute.SelectableItemBackground,
+            typedValue,
+            true
+        );
         root.SetBackgroundResource(typedValue.ResourceId);
 
         var titleView = new TextView(context);
@@ -99,7 +103,6 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
     {
         var itemType = item.GetType();
 
-        return itemType.GetProperty("Label")?.GetValue(item) as string
-               ?? itemType.Name;
+        return itemType.GetProperty("Label")?.GetValue(item) as string ?? itemType.Name;
     }
 }

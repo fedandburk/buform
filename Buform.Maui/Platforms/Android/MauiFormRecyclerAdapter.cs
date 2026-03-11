@@ -18,8 +18,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     public override int ItemCount => _items.Count;
 
-    public override int GetItemViewType(int position)
-        => (int)_items[position].Kind;
+    public override int GetItemViewType(int position) => (int)_items[position].Kind;
 
     public void SetForm(Form? form)
     {
@@ -65,7 +64,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
             FormAdapterItemKind.Row => new MauiFormItemViewHolder(container),
             FormAdapterItemKind.SectionHeader => new MauiFormHeaderFooterViewHolder(container),
             FormAdapterItemKind.SectionFooter => new MauiFormHeaderFooterViewHolder(container),
-            _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null),
         };
     }
 
@@ -78,16 +77,16 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         {
             return;
         }
-        
+
         switch (adapterItem.Kind)
         {
             case FormAdapterItemKind.SectionHeader:
                 if (holder is MauiFormHeaderFooterViewHolder headerHolder)
                 {
-                    headerHolder.Bind(_context, item,FormAdapterItemKind.SectionHeader);
+                    headerHolder.Bind(_context, item, FormAdapterItemKind.SectionHeader);
                 }
                 break;
-            
+
             case FormAdapterItemKind.Row:
                 if (holder is MauiFormItemViewHolder rowHolder)
                 {
@@ -109,7 +108,8 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         var container = new FrameLayout(_context);
         container.LayoutParameters = new RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent);
+            ViewGroup.LayoutParams.WrapContent
+        );
 
         return container;
     }

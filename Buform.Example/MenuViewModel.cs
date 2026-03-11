@@ -14,7 +14,7 @@ public partial class MenuViewModel : ObservableObject
     public MenuViewModel(INavigationService navigationService)
     {
         _navigationService = navigationService;
-        
+
         Form = new Form(this)
         {
             new LogoFormGroup(),
@@ -23,22 +23,22 @@ public partial class MenuViewModel : ObservableObject
                 new ButtonFormItem(ShowControlsCommand)
                 {
                     Label = "Show All Components",
-                    InputType = ButtonInputType.Done
-                }
+                    InputType = ButtonInputType.Done,
+                },
             },
             new TextFormGroup("Examples", "Contains some real-life examples.")
             {
                 new ButtonFormItem(CreateConnectionCommand)
                 {
                     Label = "Setup New Connection",
-                    InputType = ButtonInputType.Done
+                    InputType = ButtonInputType.Done,
                 },
                 new ButtonFormItem(CreateEventCommand)
                 {
                     Label = "Create New Event",
-                    InputType = ButtonInputType.Done
-                }
-            }
+                    InputType = ButtonInputType.Done,
+                },
+            },
         };
     }
 

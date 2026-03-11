@@ -1,19 +1,19 @@
-using Microsoft.Maui.Handlers;
 using AndroidX.RecyclerView.Widget;
+using Microsoft.Maui.Handlers;
 
 namespace Buform;
 
 internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
 {
-    public static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper =
-        new(ViewMapper)
-        {
-            [nameof(FormView.Form)] = MapForm
-        };
-
-    public FormViewHandler() : base(PropertyMapper)
+    public static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper = new(
+        ViewMapper
+    )
     {
-    }
+        [nameof(FormView.Form)] = MapForm,
+    };
+
+    public FormViewHandler()
+        : base(PropertyMapper) { }
 
     protected override RecyclerView CreatePlatformView()
     {
@@ -30,7 +30,7 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
     protected override void ConnectHandler(RecyclerView platformView)
     {
         base.ConnectHandler(platformView);
-        
+
         UpdateForm();
     }
 
