@@ -55,6 +55,7 @@
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
         <Compile Include="Platforms\Android\**\*.cs" />
+        <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.8.6.1" />
     </ItemGroup>
 
 </Project>
