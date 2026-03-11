@@ -19,7 +19,7 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
     {
         _container = container;
     }
-    
+
     public void Unbind()
     {
         _formItemView = null;
@@ -89,7 +89,10 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
 
     private void BindFallback(Context context, object item)
     {
-        var title = FormReflectionHelper.GetLabel(item) ?? item.GetType().Name;
+        var title =
+            FormReflectionHelper.GetLabel(item)
+            ?? FormReflectionHelper.GetFormattedValue(item)
+            ?? item.GetType().Name;
 
         var root = new LinearLayout(context) { Orientation = Orientation.Vertical };
         root.LayoutParameters = new ViewGroup.LayoutParams(

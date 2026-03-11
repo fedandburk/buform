@@ -10,4 +10,7 @@ internal static class FormReflectionHelper
 
     public static string? GetLabel(object item) =>
         item.GetType().GetProperty(FormReflectionKeys.Label)?.GetValue(item) as string;
+
+    public static string? GetFormattedValue(object item) =>
+        item.GetType().GetProperty(FormReflectionKeys.FormattedValue)?.GetValue(item) as string;
 }
