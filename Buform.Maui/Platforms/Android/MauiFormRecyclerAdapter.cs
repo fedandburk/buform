@@ -2,14 +2,12 @@ using Android.Content;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Object = Java.Lang.Object;
 
 namespace Buform;
 
 internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 {
-    public const string HeaderLabel = "HeaderLabel";
-    public const string FooterLabel = "FooterLabel";
-
     private readonly Context _context;
     private readonly List<FormAdapterItem> _items = [];
     private Form? _form;
@@ -23,6 +21,24 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     public override int GetItemViewType(int position) => (int)_items[position].Kind;
 
+    public override long GetItemId(int position) => position;
+
+    public override void OnViewRecycled(Object holder)
+    {
+        switch (holder)
+        {
+            case MauiFormItemViewHolder itemHolder:
+                itemHolder.Unbind();
+                break;
+
+            case MauiFormHeaderFooterViewHolder headerFooterHolder:
+                headerFooterHolder.Unbind();
+                break;
+        }
+
+        base.OnViewRecycled(holder);
+    }
+
     public void SetForm(Form? form)
     {
         _form = form;
@@ -34,7 +50,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
     {
         _items.Clear();
 
-        if (_form is null)
+        if (_form == null)
         {
             return;
         }
@@ -60,7 +76,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
     {
-        var container = CreateContainer();
+        var container = CreateContainer(parent.Context);
 
         return (FormAdapterItemKind)viewType switch
         {
@@ -74,41 +90,34 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
         var adapterItem = _items[position];
-        var item = adapterItem.Item;
-
-        if (item == null)
-        {
-            return;
-        }
 
         switch (adapterItem.Kind)
         {
-            case FormAdapterItemKind.SectionHeader:
-                if (holder is MauiFormHeaderFooterViewHolder headerHolder)
-                {
-                    headerHolder.Bind(_context, item, FormAdapterItemKind.SectionHeader);
-                }
+            case FormAdapterItemKind.Row:
+                ((MauiFormItemViewHolder)holder).Bind(_context, adapterItem.Item);
                 break;
 
-            case FormAdapterItemKind.Row:
-                if (holder is MauiFormItemViewHolder rowHolder)
-                {
-                    rowHolder.Bind(_context, item);
-                }
+            case FormAdapterItemKind.SectionHeader:
+                ((MauiFormHeaderFooterViewHolder)holder).Bind(
+                    _context,
+                    adapterItem.Item,
+                    FormAdapterItemKind.SectionHeader
+                );
                 break;
 
             case FormAdapterItemKind.SectionFooter:
-                if (holder is MauiFormHeaderFooterViewHolder footerHolder)
-                {
-                    footerHolder.Bind(_context, item, FormAdapterItemKind.SectionFooter);
-                }
+                ((MauiFormHeaderFooterViewHolder)holder).Bind(
+                    _context,
+                    adapterItem.Item,
+                    FormAdapterItemKind.SectionFooter
+                );
                 break;
         }
     }
 
-    private FrameLayout CreateContainer()
+    private static FrameLayout CreateContainer(Context context)
     {
-        var container = new FrameLayout(_context);
+        var container = new FrameLayout(context);
         container.LayoutParameters = new RecyclerView.LayoutParams(
             ViewGroup.LayoutParams.MatchParent,
             ViewGroup.LayoutParams.WrapContent
@@ -117,16 +126,9 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         return container;
     }
 
-    private static bool HasHeader(object section)
-    {
-        var title = section.GetType().GetProperty(HeaderLabel)?.GetValue(section) as string;
-        return !string.IsNullOrWhiteSpace(title);
-    }
+    private static bool HasHeader(object section) =>
+        !string.IsNullOrWhiteSpace(FormReflectionHelper.GetHeaderLabel(section));
 
-    private static bool HasFooter(object section)
-    {
-        var footer = section.GetType().GetProperty(FooterLabel)?.GetValue(section) as string;
-
-        return !string.IsNullOrWhiteSpace(footer);
-    }
+    private static bool HasFooter(object section) =>
+        !string.IsNullOrWhiteSpace(FormReflectionHelper.GetFooterLabel(section));
 }

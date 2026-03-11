@@ -19,6 +19,13 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
     {
         _container = container;
     }
+    
+    public void Unbind()
+    {
+        _formItemView = null;
+        _platformView = null;
+        _container.RemoveAllViews();
+    }
 
     public void Bind(Context context, object item)
     {
@@ -51,23 +58,49 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
                 ViewGroup.LayoutParams.WrapContent
             )
         );
+
+        MeasureAndArrange();
+    }
+
+    private void MeasureAndArrange()
+    {
+        if (_formItemView == null || _platformView == null || _container.Width <= 0)
+        {
+            return;
+        }
+
+        var width = _container.Width - _container.PaddingLeft - _container.PaddingRight;
+
+        if (width <= 0)
+        {
+            return;
+        }
+
+        var measured = _formItemView.Measure(width, double.PositiveInfinity);
+        var height = (int)Math.Ceiling(measured.Height);
+
+        _formItemView.Arrange(new Rect(0, 0, width, height));
+
+        _platformView.LayoutParameters = new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MatchParent,
+            height
+        );
     }
 
     private void BindFallback(Context context, object item)
     {
-        var title = ResolveItemTitle(item);
+        var title = FormReflectionHelper.GetLabel(item) ?? item.GetType().Name;
 
         var root = new LinearLayout(context) { Orientation = Orientation.Vertical };
-
         root.LayoutParameters = new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MatchParent,
             ViewGroup.LayoutParams.WrapContent
         );
 
-        var horizontal = (int)(16 * context.Resources!.DisplayMetrics!.Density);
-        var vertical = (int)(14 * context.Resources.DisplayMetrics.Density);
+        var density = context.Resources?.DisplayMetrics?.Density ?? 1f;
+        int Dp(int value) => (int)(value * density);
 
-        root.SetPadding(horizontal, vertical, horizontal, vertical);
+        root.SetPadding(Dp(16), Dp(14), Dp(16), Dp(14));
         root.Clickable = true;
         root.Focusable = true;
 
@@ -90,20 +123,10 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
 
         if (item is ButtonFormItem buttonItem)
         {
-            root.Click += (_, _) =>
-            {
-                buttonItem.Value.SafeExecute();
-            };
+            root.Click += (_, _) => buttonItem.Value.SafeExecute();
         }
 
         _container.RemoveAllViews();
         _container.AddView(root);
-    }
-
-    private static string ResolveItemTitle(object item)
-    {
-        var itemType = item.GetType();
-
-        return itemType.GetProperty("Label")?.GetValue(item) as string ?? itemType.Name;
     }
 }

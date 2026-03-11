@@ -16,6 +16,12 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
         var recyclerView = new RecyclerView(Context);
 
         recyclerView.SetLayoutManager(new LinearLayoutManager(Context));
+        recyclerView.SetClipToPadding(false);
+
+        var density = Context.Resources?.DisplayMetrics?.Density ?? 1f;
+        int Dp(int value) => (int)(value * density);
+
+        recyclerView.SetPadding(0, Dp(12), 0, Dp(12));
 
         var adapter = new MauiFormRecyclerAdapter(Context);
         recyclerView.SetAdapter(adapter);
