@@ -11,10 +11,11 @@ internal sealed class FormAdapterItem
 {
     public FormAdapterItemKind Kind { get; }
 
-    public object? Item { get; }
+    public object Item { get; }
 
     private FormAdapterItem(FormAdapterItemKind kind, object? item)
     {
+        ArgumentNullException.ThrowIfNull(item);
         Kind = kind;
         Item = item;
     }

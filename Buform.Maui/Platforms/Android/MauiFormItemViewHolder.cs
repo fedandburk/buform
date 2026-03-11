@@ -30,16 +30,17 @@ internal sealed class MauiFormItemViewHolder : RecyclerView.ViewHolder
             return;
         }
 
+        var mauiContext = Application.Current?.Handler?.MauiContext;
+        if (mauiContext == null)
+        {
+            BindFallback(context, item);
+            return;
+        }
+
         _container.RemoveAllViews();
 
         _formItemView = (Activator.CreateInstance(viewType) as FormItemView)!;
         _formItemView.BindingContext = item;
-
-        var mauiContext = Application.Current?.Handler?.MauiContext;
-        if (mauiContext == null)
-        {
-            return;
-        }
 
         _platformView = _formItemView.ToPlatform(mauiContext);
 

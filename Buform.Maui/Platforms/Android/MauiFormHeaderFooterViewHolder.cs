@@ -9,6 +9,9 @@ namespace Buform;
 
 internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
 {
+    public const string HeaderLabel = "HeaderLabel";
+    public const string FooterLabel = "FooterLabel";
+
     private readonly FrameLayout _container;
     private FormHeaderFooterView? _formHeaderFooterView;
     private AView? _platformView;
@@ -29,16 +32,17 @@ internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
             return;
         }
 
+        var mauiContext = Application.Current?.Handler?.MauiContext;
+        if (mauiContext == null)
+        {
+            BindFallback(context, item, kind);
+            return;
+        }
+
         _container.RemoveAllViews();
 
         _formHeaderFooterView = (Activator.CreateInstance(viewType) as FormHeaderFooterView)!;
         _formHeaderFooterView.BindingContext = item;
-
-        var mauiContext = Application.Current?.Handler?.MauiContext;
-        if (mauiContext == null)
-        {
-            return;
-        }
 
         _platformView = _formHeaderFooterView.ToPlatform(mauiContext);
 
@@ -119,13 +123,11 @@ internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
 
         return kind switch
         {
-            FormAdapterItemKind.SectionHeader => itemType.GetProperty("HeaderLabel")?.GetValue(item)
-                as string
-                ?? itemType.Name,
+            FormAdapterItemKind.SectionHeader
+                => itemType.GetProperty(HeaderLabel)?.GetValue(item) as string ?? itemType.Name,
 
-            FormAdapterItemKind.SectionFooter => itemType.GetProperty("FooterLabel")?.GetValue(item)
-                as string
-                ?? itemType.Name,
+            FormAdapterItemKind.SectionFooter
+                => itemType.GetProperty(FooterLabel)?.GetValue(item) as string ?? itemType.Name,
 
             _ => itemType.Name,
         };

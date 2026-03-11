@@ -7,6 +7,9 @@ namespace Buform;
 
 internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 {
+    public const string HeaderLabel = "HeaderLabel";
+    public const string FooterLabel = "FooterLabel";
+
     private readonly Context _context;
     private readonly List<FormAdapterItem> _items = [];
     private Form? _form;
@@ -116,13 +119,13 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     private static bool HasHeader(object section)
     {
-        var title = section.GetType().GetProperty("HeaderLabel")?.GetValue(section) as string;
+        var title = section.GetType().GetProperty(HeaderLabel)?.GetValue(section) as string;
         return !string.IsNullOrWhiteSpace(title);
     }
 
     private static bool HasFooter(object section)
     {
-        var footer = section.GetType().GetProperty("FooterLabel")?.GetValue(section) as string;
+        var footer = section.GetType().GetProperty(FooterLabel)?.GetValue(section) as string;
 
         return !string.IsNullOrWhiteSpace(footer);
     }

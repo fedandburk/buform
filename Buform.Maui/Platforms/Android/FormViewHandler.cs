@@ -5,12 +5,8 @@ namespace Buform;
 
 internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
 {
-    public static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper = new(
-        ViewMapper
-    )
-    {
-        [nameof(FormView.Form)] = MapForm,
-    };
+    public static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper =
+        new(ViewMapper) { [nameof(FormView.Form)] = MapForm, };
 
     public FormViewHandler()
         : base(PropertyMapper) { }

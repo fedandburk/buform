@@ -45,17 +45,16 @@
     <ItemGroup>
         <Compile Remove="Platforms\**\*.cs" />
         <Compile Remove="Resources\*.cs" />
-        <Compile Include="Platforms\Android\FormAdapterItem.cs" />
-        <Compile Include="Platforms\Android\FormViewHandler.cs" />
-        <Compile Include="Platforms\Android\MauiFormHeaderFooterViewHolder.cs" />
-        <Compile Include="Platforms\Android\MauiFormItemViewHolder.cs" />
-        <Compile Include="Platforms\Android\MauiFormRecyclerAdapter.cs" />
         <None Include="Platforms\**\*.cs" />
         <None Include="Resources\*.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-ios'">
         <Compile Include="Platforms\Ios\**\*.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
+        <Compile Include="Platforms\Android\**\*.cs" />
     </ItemGroup>
 
 </Project>
