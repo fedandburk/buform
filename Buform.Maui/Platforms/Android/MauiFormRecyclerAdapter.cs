@@ -9,12 +9,15 @@ namespace Buform;
 internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 {
     private readonly Context _context;
+    private readonly IMauiContext _mauiContext;
     private readonly List<FormAdapterItem> _items = [];
+
     private Form? _form;
 
-    public MauiFormRecyclerAdapter(Context context)
+    public MauiFormRecyclerAdapter(Context context, IMauiContext mauiContext)
     {
         _context = context;
+        _mauiContext = mauiContext;
     }
 
     public override int ItemCount => _items.Count;
@@ -46,43 +49,20 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         NotifyDataSetChanged();
     }
 
-    private void RebuildItems()
-    {
-        _items.Clear();
-
-        if (_form == null)
-        {
-            return;
-        }
-
-        foreach (var section in _form)
-        {
-            if (HasHeader(section))
-            {
-                _items.Add(FormAdapterItem.CreateSectionHeader(section));
-            }
-
-            foreach (var row in section)
-            {
-                _items.Add(FormAdapterItem.CreateRow(row));
-            }
-
-            if (HasFooter(section))
-            {
-                _items.Add(FormAdapterItem.CreateSectionFooter(section));
-            }
-        }
-    }
-
     public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
     {
         var container = CreateContainer(parent.Context);
 
         return (FormAdapterItemKind)viewType switch
         {
-            FormAdapterItemKind.Row => new MauiFormItemViewHolder(container),
-            FormAdapterItemKind.SectionHeader => new MauiFormHeaderFooterViewHolder(container),
-            FormAdapterItemKind.SectionFooter => new MauiFormHeaderFooterViewHolder(container),
+            FormAdapterItemKind.Row => new MauiFormItemViewHolder(container, _mauiContext),
+
+            FormAdapterItemKind.SectionHeader
+                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
+
+            FormAdapterItemKind.SectionFooter
+                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
+
             _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null),
         };
     }
@@ -115,6 +95,34 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         }
     }
 
+    private void RebuildItems()
+    {
+        _items.Clear();
+
+        if (_form == null)
+        {
+            return;
+        }
+
+        foreach (var section in _form)
+        {
+            if (HasHeader(section))
+            {
+                _items.Add(FormAdapterItem.CreateSectionHeader(section));
+            }
+
+            foreach (var row in section)
+            {
+                _items.Add(FormAdapterItem.CreateRow(row));
+            }
+
+            if (HasFooter(section))
+            {
+                _items.Add(FormAdapterItem.CreateSectionFooter(section));
+            }
+        }
+    }
+
     private static FrameLayout CreateContainer(Context context)
     {
         var container = new FrameLayout(context);
@@ -126,9 +134,19 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         return container;
     }
 
-    private static bool HasHeader(object section) =>
-        !string.IsNullOrWhiteSpace(FormReflectionHelper.GetHeaderLabel(section));
+    private static bool HasHeader(object section)
+    {
+        var sectionType = section.GetType();
 
-    private static bool HasFooter(object section) =>
-        !string.IsNullOrWhiteSpace(FormReflectionHelper.GetFooterLabel(section));
+        return !string.IsNullOrWhiteSpace(FormReflectionHelper.GetHeaderLabel(section))
+            || MauiFormPlatform.TryGetHeaderViewType(sectionType, out _);
+    }
+
+    private static bool HasFooter(object section)
+    {
+        var sectionType = section.GetType();
+
+        return !string.IsNullOrWhiteSpace(FormReflectionHelper.GetFooterLabel(section))
+            || MauiFormPlatform.TryGetFooterViewType(sectionType, out _);
+    }
 }

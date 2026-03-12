@@ -1,109 +1,56 @@
 using Android.Content;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
-using AndroidX.RecyclerView.Widget;
-using Microsoft.Maui.Platform;
-using AView = Android.Views.View;
 
 namespace Buform;
 
-internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
+internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolderBase<FormHeaderFooterView>
 {
-    private readonly FrameLayout _container;
-    private FormHeaderFooterView? _formHeaderFooterView;
-    private AView? _platformView;
+    private LinearLayout? _fallbackRoot;
+    private TextView? _fallbackTextView;
 
-    public MauiFormHeaderFooterViewHolder(FrameLayout container)
-        : base(container)
-    {
-        _container = container;
-    }
+    public MauiFormHeaderFooterViewHolder(FrameLayout container, IMauiContext mauiContext)
+        : base(container, mauiContext) { }
 
     public void Bind(Context context, object item, FormAdapterItemKind kind)
     {
-        Type? viewType = kind switch
+        if (TryBindMauiView(item, ResolveViewType(item.GetType(), kind)))
         {
-            FormAdapterItemKind.SectionHeader => ResolveHeaderViewType(item.GetType()),
-            FormAdapterItemKind.SectionFooter => ResolveFooterViewType(item.GetType()),
+            return;
+        }
+
+        BindFallback(context, item, kind);
+    }
+
+    private static Type? ResolveViewType(Type itemType, FormAdapterItemKind kind)
+    {
+        return kind switch
+        {
+            FormAdapterItemKind.SectionHeader
+                => MauiFormPlatform.TryGetHeaderViewType(itemType, out var headerViewType)
+                    ? headerViewType
+                    : null,
+
+            FormAdapterItemKind.SectionFooter
+                => MauiFormPlatform.TryGetFooterViewType(itemType, out var footerViewType)
+                    ? footerViewType
+                    : null,
+
             _ => null,
         };
-
-        if (viewType == null)
-        {
-            BindFallback(context, item, kind);
-            return;
-        }
-
-        var mauiContext = Application.Current?.Handler?.MauiContext;
-        if (mauiContext == null)
-        {
-            BindFallback(context, item, kind);
-            return;
-        }
-
-        _container.RemoveAllViews();
-
-        _formHeaderFooterView = (Activator.CreateInstance(viewType) as FormHeaderFooterView)!;
-        _formHeaderFooterView.BindingContext = item;
-
-        _platformView = _formHeaderFooterView.ToPlatform(mauiContext);
-
-        _container.AddView(
-            _platformView,
-            new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MatchParent,
-                ViewGroup.LayoutParams.WrapContent
-            )
-        );
-
-        MeasureAndArrange();
-    }
-
-    public void Unbind()
-    {
-        _formHeaderFooterView = null;
-        _platformView = null;
-        _container.RemoveAllViews();
-    }
-
-    private static Type? ResolveHeaderViewType(Type itemType)
-    {
-        return MauiFormPlatform.TryGetHeaderViewType(itemType, out var viewType) ? viewType : null;
-    }
-
-    private static Type? ResolveFooterViewType(Type itemType)
-    {
-        return MauiFormPlatform.TryGetFooterViewType(itemType, out var viewType) ? viewType : null;
-    }
-
-    private void MeasureAndArrange()
-    {
-        if (_formHeaderFooterView == null || _platformView == null || _container.Width <= 0)
-        {
-            return;
-        }
-
-        var width = _container.Width - _container.PaddingLeft - _container.PaddingRight;
-
-        if (width <= 0)
-        {
-            return;
-        }
-
-        var measured = _formHeaderFooterView.Measure(width, double.PositiveInfinity);
-        var height = (int)Math.Ceiling(measured.Height);
-
-        _formHeaderFooterView.Arrange(new Rect(0, 0, width, height));
-
-        _platformView.LayoutParameters = new FrameLayout.LayoutParams(
-            ViewGroup.LayoutParams.MatchParent,
-            height
-        );
     }
 
     private void BindFallback(Context context, object item, FormAdapterItemKind kind)
     {
-        var text = kind switch
+        EnsureFallbackView(context);
+
+        if (_fallbackRoot == null || _fallbackTextView == null)
+        {
+            return;
+        }
+
+        _fallbackTextView.Text = kind switch
         {
             FormAdapterItemKind.SectionHeader
                 => FormReflectionHelper.GetHeaderLabel(item) ?? item.GetType().Name,
@@ -117,9 +64,33 @@ internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
         var density = context.Resources?.DisplayMetrics?.Density ?? 1f;
         int Dp(int value) => (int)(value * density);
 
-        var textView = new TextView(context);
-        textView.Text = text;
-        textView.SetSingleLine(false);
+        switch (kind)
+        {
+            case FormAdapterItemKind.SectionHeader:
+                _fallbackRoot.SetPadding(Dp(16), Dp(24), Dp(16), Dp(8));
+                _fallbackTextView.SetTextSize(ComplexUnitType.Sp, 14);
+                _fallbackTextView.SetAllCaps(false);
+                break;
+            case FormAdapterItemKind.SectionFooter:
+                _fallbackRoot.SetPadding(Dp(16), Dp(4), Dp(16), Dp(16));
+                _fallbackTextView.SetTextSize(ComplexUnitType.Sp, 12);
+                _fallbackTextView.SetAllCaps(false);
+                break;
+            case FormAdapterItemKind.Row:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+        }
+
+        ShowFallback(_fallbackRoot);
+    }
+
+    private void EnsureFallbackView(Context context)
+    {
+        if (_fallbackRoot != null)
+        {
+            return;
+        }
 
         var root = new LinearLayout(context) { Orientation = Orientation.Vertical };
         root.LayoutParameters = new ViewGroup.LayoutParams(
@@ -127,22 +98,12 @@ internal sealed class MauiFormHeaderFooterViewHolder : RecyclerView.ViewHolder
             ViewGroup.LayoutParams.WrapContent
         );
 
-        switch (kind)
-        {
-            case FormAdapterItemKind.SectionHeader:
-                root.SetPadding(Dp(16), Dp(24), Dp(16), Dp(8));
-                textView.SetTextSize(Android.Util.ComplexUnitType.Sp, 14);
-                break;
-
-            case FormAdapterItemKind.SectionFooter:
-                root.SetPadding(Dp(16), Dp(4), Dp(16), Dp(16));
-                textView.SetTextSize(Android.Util.ComplexUnitType.Sp, 12);
-                break;
-        }
+        var textView = new TextView(context);
+        textView.SetSingleLine(false);
 
         root.AddView(textView);
 
-        _container.RemoveAllViews();
-        _container.AddView(root);
+        _fallbackRoot = root;
+        _fallbackTextView = textView;
     }
 }

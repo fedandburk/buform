@@ -21,9 +21,9 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
         var density = Context.Resources?.DisplayMetrics?.Density ?? 1f;
         int Dp(int value) => (int)(value * density);
 
-        recyclerView.SetPadding(0, Dp(12), 0, Dp(12));
+        recyclerView.SetPadding(0, Dp(8), 0, Dp(16));
 
-        var adapter = new MauiFormRecyclerAdapter(Context);
+        var adapter = new MauiFormRecyclerAdapter(Context, MauiContext!);
         recyclerView.SetAdapter(adapter);
 
         return recyclerView;
@@ -32,7 +32,6 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
     protected override void ConnectHandler(RecyclerView platformView)
     {
         base.ConnectHandler(platformView);
-
         UpdateForm();
     }
 
