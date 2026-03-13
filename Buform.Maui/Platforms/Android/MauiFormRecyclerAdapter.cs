@@ -22,7 +22,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     public override int ItemCount => _items.Count;
 
-    public override int GetItemViewType(int position) => (int)_items[position].Kind;
+    public override int GetItemViewType(int position) => (int)_items[position].HolderType;
 
     public override long GetItemId(int position) => position;
 
@@ -53,14 +53,14 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
     {
         var container = CreateContainer(parent.Context);
 
-        return (FormAdapterItemKind)viewType switch
+        return (FormViewHolderType)viewType switch
         {
-            FormAdapterItemKind.Row => new MauiFormItemViewHolder(container, _mauiContext),
+            FormViewHolderType.Item => new MauiFormItemViewHolder(container, _mauiContext),
 
-            FormAdapterItemKind.SectionHeader
+            FormViewHolderType.Header
                 => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
 
-            FormAdapterItemKind.SectionFooter
+            FormViewHolderType.Footer
                 => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
 
             _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null),
@@ -71,25 +71,25 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
     {
         var adapterItem = _items[position];
 
-        switch (adapterItem.Kind)
+        switch (adapterItem.HolderType)
         {
-            case FormAdapterItemKind.Row:
+            case FormViewHolderType.Item:
                 ((MauiFormItemViewHolder)holder).Bind(_context, adapterItem.Item);
                 break;
 
-            case FormAdapterItemKind.SectionHeader:
+            case FormViewHolderType.Header:
                 ((MauiFormHeaderFooterViewHolder)holder).Bind(
                     _context,
                     adapterItem.Item,
-                    FormAdapterItemKind.SectionHeader
+                    FormViewHolderType.Header
                 );
                 break;
 
-            case FormAdapterItemKind.SectionFooter:
+            case FormViewHolderType.Footer:
                 ((MauiFormHeaderFooterViewHolder)holder).Bind(
                     _context,
                     adapterItem.Item,
-                    FormAdapterItemKind.SectionFooter
+                    FormViewHolderType.Footer
                 );
                 break;
         }

@@ -1,30 +1,23 @@
 namespace Buform;
 
-internal enum FormAdapterItemKind
-{
-    SectionHeader = 0,
-    Row = 1,
-    SectionFooter = 2,
-}
-
 internal sealed class FormAdapterItem
 {
-    public FormAdapterItemKind Kind { get; }
+    public FormViewHolderType HolderType { get; }
 
     public object Item { get; }
 
-    private FormAdapterItem(FormAdapterItemKind kind, object? item)
+    private FormAdapterItem(FormViewHolderType holderType, object? item)
     {
         ArgumentNullException.ThrowIfNull(item);
-        Kind = kind;
+        HolderType = holderType;
         Item = item;
     }
 
     public static FormAdapterItem CreateSectionHeader(object section) =>
-        new(FormAdapterItemKind.SectionHeader, section);
+        new(FormViewHolderType.Header, section);
 
-    public static FormAdapterItem CreateRow(object item) => new(FormAdapterItemKind.Row, item);
+    public static FormAdapterItem CreateRow(object item) => new(FormViewHolderType.Item, item);
 
     public static FormAdapterItem CreateSectionFooter(object section) =>
-        new(FormAdapterItemKind.SectionFooter, section);
+        new(FormViewHolderType.Footer, section);
 }

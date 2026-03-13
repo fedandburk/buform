@@ -50,9 +50,15 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         _fallbackTitleView.Text = title;
         _fallbackButtonItem = item as ButtonFormItem;
 
+        //Console.WriteLine(" +++++++++++++ _fallbackButtonItem: "+ (_fallbackButtonItem == null));
+
+        myItem = item;
+            
         ShowFallback(_fallbackRoot);
     }
 
+    public object myItem;
+    
     private void EnsureFallbackView(Context context)
     {
         if (_fallbackRoot != null)
@@ -96,6 +102,16 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
 
     private void OnFallbackRootClick(object? sender, EventArgs e)
     {
+         
+        
+        Console.WriteLine(" +++++++++++++ myItem : "+myItem.GetType());
         _fallbackButtonItem?.Value.SafeExecute();
+
+        var tmp = myItem as MultiValuePickerFormItem;
+        if (tmp != null)
+        {
+            Console.WriteLine(" +++++++++++++ nice!!!!");
+            tmp.Pick(null);
+        }
     }
 }

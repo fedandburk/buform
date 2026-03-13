@@ -13,26 +13,26 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolderBase<Fo
     public MauiFormHeaderFooterViewHolder(FrameLayout container, IMauiContext mauiContext)
         : base(container, mauiContext) { }
 
-    public void Bind(Context context, object item, FormAdapterItemKind kind)
+    public void Bind(Context context, object item, FormViewHolderType holderType)
     {
-        if (TryBindMauiView(item, ResolveViewType(item.GetType(), kind)))
+        if (TryBindMauiView(item, ResolveViewType(item.GetType(), holderType)))
         {
             return;
         }
 
-        BindFallback(context, item, kind);
+        BindFallback(context, item, holderType);
     }
 
-    private static Type? ResolveViewType(Type itemType, FormAdapterItemKind kind)
+    private static Type? ResolveViewType(Type itemType, FormViewHolderType holderType)
     {
-        return kind switch
+        return holderType switch
         {
-            FormAdapterItemKind.SectionHeader
+            FormViewHolderType.Header
                 => MauiFormPlatform.TryGetHeaderViewType(itemType, out var headerViewType)
                     ? headerViewType
                     : null,
 
-            FormAdapterItemKind.SectionFooter
+            FormViewHolderType.Footer
                 => MauiFormPlatform.TryGetFooterViewType(itemType, out var footerViewType)
                     ? footerViewType
                     : null,
@@ -41,7 +41,7 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolderBase<Fo
         };
     }
 
-    private void BindFallback(Context context, object item, FormAdapterItemKind kind)
+    private void BindFallback(Context context, object item, FormViewHolderType holderType)
     {
         EnsureFallbackView(context);
 
@@ -50,12 +50,12 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolderBase<Fo
             return;
         }
 
-        _fallbackTextView.Text = kind switch
+        _fallbackTextView.Text = holderType switch
         {
-            FormAdapterItemKind.SectionHeader
+            FormViewHolderType.Header
                 => FormReflectionHelper.GetHeaderLabel(item) ?? item.GetType().Name,
 
-            FormAdapterItemKind.SectionFooter
+            FormViewHolderType.Footer
                 => FormReflectionHelper.GetFooterLabel(item) ?? item.GetType().Name,
 
             _ => item.GetType().Name,
@@ -64,22 +64,22 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolderBase<Fo
         var density = context.Resources?.DisplayMetrics?.Density ?? 1f;
         int Dp(int value) => (int)(value * density);
 
-        switch (kind)
+        switch (holderType)
         {
-            case FormAdapterItemKind.SectionHeader:
+            case FormViewHolderType.Header:
                 _fallbackRoot.SetPadding(Dp(16), Dp(24), Dp(16), Dp(8));
                 _fallbackTextView.SetTextSize(ComplexUnitType.Sp, 14);
                 _fallbackTextView.SetAllCaps(false);
                 break;
-            case FormAdapterItemKind.SectionFooter:
+            case FormViewHolderType.Footer:
                 _fallbackRoot.SetPadding(Dp(16), Dp(4), Dp(16), Dp(16));
                 _fallbackTextView.SetTextSize(ComplexUnitType.Sp, 12);
                 _fallbackTextView.SetAllCaps(false);
                 break;
-            case FormAdapterItemKind.Row:
+            case FormViewHolderType.Item:
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+                throw new ArgumentOutOfRangeException(nameof(holderType), holderType, null);
         }
 
         ShowFallback(_fallbackRoot);

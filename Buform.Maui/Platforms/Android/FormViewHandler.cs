@@ -3,7 +3,7 @@ using Microsoft.Maui.Handlers;
 
 namespace Buform;
 
-internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
+internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
 {
     public static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper =
         new(ViewMapper) { [nameof(FormView.Form)] = MapForm, };
@@ -11,9 +11,9 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
     public FormViewHandler()
         : base(PropertyMapper) { }
 
-    protected override RecyclerView CreatePlatformView()
+    protected override FormRecyclerView CreatePlatformView()
     {
-        var recyclerView = new RecyclerView(Context);
+        var recyclerView = new FormRecyclerView(Context);
 
         recyclerView.SetLayoutManager(new LinearLayoutManager(Context));
         recyclerView.SetClipToPadding(false);
@@ -29,13 +29,13 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
         return recyclerView;
     }
 
-    protected override void ConnectHandler(RecyclerView platformView)
+    protected override void ConnectHandler(FormRecyclerView platformView)
     {
         base.ConnectHandler(platformView);
         UpdateForm();
     }
 
-    protected override void DisconnectHandler(RecyclerView platformView)
+    protected override void DisconnectHandler(FormRecyclerView platformView)
     {
         if (platformView.GetAdapter() is MauiFormRecyclerAdapter adapter)
         {
