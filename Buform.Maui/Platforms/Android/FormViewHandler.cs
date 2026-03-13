@@ -1,4 +1,3 @@
-using AndroidX.RecyclerView.Widget;
 using Microsoft.Maui.Handlers;
 
 namespace Buform;
@@ -13,18 +12,17 @@ internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
 
     protected override FormRecyclerView CreatePlatformView()
     {
+        if (MauiContext is null)
+        {
+            throw new InvalidOperationException("MauiContext is not available.");
+        }
+
         var recyclerView = new FormRecyclerView(Context);
 
-        recyclerView.SetLayoutManager(new LinearLayoutManager(Context));
         recyclerView.SetClipToPadding(false);
-
-        var density = Context.Resources?.DisplayMetrics?.Density ?? 1f;
-        int Dp(int value) => (int)(value * density);
-
         recyclerView.SetPadding(0, Dp(8), 0, Dp(16));
 
-        var adapter = new MauiFormRecyclerAdapter(Context, MauiContext!);
-        recyclerView.SetAdapter(adapter);
+        recyclerView.SetAdapter(new MauiFormRecyclerAdapter(Context, MauiContext));
 
         return recyclerView;
     }
@@ -42,8 +40,6 @@ internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
             adapter.SetForm(null);
         }
 
-        platformView.SetAdapter(null);
-
         base.DisconnectHandler(platformView);
     }
 
@@ -54,11 +50,15 @@ internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
 
     private void UpdateForm()
     {
-        if (PlatformView.GetAdapter() is not MauiFormRecyclerAdapter adapter)
+        if (PlatformView?.GetAdapter() is MauiFormRecyclerAdapter adapter)
         {
-            return;
+            adapter.SetForm(VirtualView?.Form);
         }
+    }
 
-        adapter.SetForm(VirtualView.Form);
+    private int Dp(int value)
+    {
+        var density = Context.Resources?.DisplayMetrics?.Density ?? 1f;
+        return (int)(value * density);
     }
 }
