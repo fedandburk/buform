@@ -37,6 +37,9 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
             case MauiFormHeaderFooterViewHolder headerFooterHolder:
                 headerFooterHolder.Unbind();
                 break;
+
+            default:
+                break;
         }
 
         base.OnViewRecycled(holder);
@@ -91,6 +94,9 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
                     adapterItem.Item,
                     FormViewHolderType.Footer
                 );
+                break;
+
+            default:
                 break;
         }
     }
