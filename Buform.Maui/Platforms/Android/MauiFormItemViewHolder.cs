@@ -6,6 +6,7 @@ using Android.Widget;
 using AndroidX.Core.Content;
 using Fedandburk.Common.Extensions;
 using Microsoft.Maui.Controls.PlatformConfiguration;
+using AView = Android.Views.View;
 
 namespace Buform;
 
@@ -14,6 +15,9 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
     private LinearLayout? _fallbackRoot;
     private TextView? _fallbackTitleView;
     private ButtonFormItem? _fallbackButtonItem;
+
+    private AView? _legacyView;
+    private FormViewHolder? _legacyViewHolder;
 
     public MauiFormItemViewHolder(FrameLayout container, IMauiContext mauiContext)
         : base(container, mauiContext) { }
@@ -25,14 +29,78 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         if (
             TryBindMauiView(
                 item,
-                MauiFormPlatform.TryGetCellViewType(itemType, out var viewType) ? viewType : null
+                MauiFormPlatform.TryGetCellViewType(itemType, out var mauiViewType)
+                    ? mauiViewType
+                    : null
             )
         )
         {
             return;
         }
 
+        if (TryBindLegacyView(context, item))
+        {
+            return;
+        }
+
         BindFallback(context, item);
+    }
+
+    public void Unbind()
+    {
+        UnbindMaui();
+        UnbindLegacy();
+        UnbindFallback();
+
+        _container.RemoveAllViews();
+    }
+
+    private bool TryBindLegacyView(Context context, object item)
+    {
+        var itemType = item.GetType();
+
+        if (!FormPlatform.TryGetItemViewType(itemType, out var viewType) || viewType == null)
+        {
+            return false;
+        }
+
+        var result = FormPlatform.TryGetViewHolderAndResourceId(
+            viewType.Value,
+            out var viewHolderType,
+            out var resourceId
+        );
+
+        if (!result || viewHolderType == null || resourceId == null)
+        {
+            return false;
+        }
+
+        var view = LayoutInflater.From(context)?.Inflate(resourceId.Value, _container, false);
+        if (view == null)
+        {
+            return false;
+        }
+
+        if (Activator.CreateInstance(viewHolderType, view) is not FormViewHolder viewHolder)
+        {
+            return false;
+        }
+
+        _container.RemoveAllViews();
+
+        _legacyView = view;
+        _legacyViewHolder = viewHolder;
+
+        _container.AddView(view);
+        
+        if (item is not IDisposable disposable)
+        {
+            return false;
+        }
+
+        viewHolder.Initialize(disposable);
+
+        return true;
     }
 
     private void BindFallback(Context context, object item)
@@ -44,74 +112,70 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
             return;
         }
 
-        var title =
-            FormReflectionHelper.GetLabel(item)
-            ?? FormReflectionHelper.GetFormattedValue(item)
-            ?? item.GetType().Name;
+        _container.RemoveAllViews();
+        _container.AddView(_fallbackRoot);
 
-        _fallbackTitleView.Text = title;
-        _fallbackButtonItem = item as ButtonFormItem;
+        switch (item)
+        {
+            case ButtonFormItem buttonItem:
+                _fallbackButtonItem = buttonItem;
+                _fallbackTitleView.Text = buttonItem.Label;
+                _fallbackTitleView.Enabled = !(buttonItem.IsReadOnly);
+                break;
 
-        ShowFallback(_fallbackRoot);
+            default:
+                _fallbackButtonItem = null;
+                _fallbackTitleView.Text = item.GetType().Name;
+                _fallbackTitleView.Enabled = false;
+                break;
+        }
     }
 
     private void EnsureFallbackView(Context context)
     {
-        if (_fallbackRoot != null)
+        if (_fallbackRoot != null && _fallbackTitleView != null)
         {
             return;
         }
 
-        var density = context.Resources?.DisplayMetrics?.Density ?? 1f;
-        int Dp(int value) => (int)(value * density);
-
-        var root = new LinearLayout(context) { Orientation = Orientation.Vertical };
-        root.LayoutParameters = new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MatchParent,
-            ViewGroup.LayoutParams.WrapContent
-        );
-
-        root.SetPadding(Dp(16), Dp(14), Dp(16), Dp(14));
-        root.Clickable = true;
-        root.Focusable = true;
-
-        var typedValue = new TypedValue();
-        context.Theme?.ResolveAttribute(
-            Android.Resource.Attribute.SelectableItemBackground,
-            typedValue,
-            true
-        );
-        root.SetBackgroundResource(typedValue.ResourceId);
-
-        var titleView = new TextView(context);
-        titleView.SetSingleLine(true);
-        titleView.Ellipsize = TextUtils.TruncateAt.End;
-        titleView.SetTextSize(ComplexUnitType.Sp, 16);
-
-        if (
-            context.Theme?.ResolveAttribute(
-                Android.Resource.Attribute.TextColorPrimary,
-                typedValue,
-                true
-            ) == true
-        )
+        _fallbackRoot = new LinearLayout(context)
         {
-            var color = new Android.Graphics.Color(
-                ContextCompat.GetColor(context, typedValue.ResourceId)
-            );
+            Orientation = Orientation.Vertical
+        };
 
-            titleView.SetTextColor(color);
-        }
+        _fallbackTitleView = new TextView(context);
+        _fallbackTitleView.SetSingleLine(true);
+        _fallbackTitleView.Ellipsize = TextUtils.TruncateAt.End;
 
-        root.AddView(titleView);
-        root.Click += OnFallbackRootClick;
-
-        _fallbackRoot = root;
-        _fallbackTitleView = titleView;
+        _fallbackRoot.AddView(_fallbackTitleView);
     }
 
-    private void OnFallbackRootClick(object? sender, EventArgs e)
+    private void UnbindMaui()
     {
-        _fallbackButtonItem?.Value.SafeExecute();
+        //ClearMauiView();
+    }
+
+    
+    
+    private void UnbindLegacy()
+    {
+        if (_legacyViewHolder is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        _legacyViewHolder = null;
+        _legacyView = null;
+    }
+
+    private void UnbindFallback()
+    {
+        _fallbackButtonItem = null;
+
+        if (_fallbackTitleView != null)
+        {
+            _fallbackTitleView.Text = null;
+            _fallbackTitleView.Enabled = true;
+        }
     }
 }
