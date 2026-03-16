@@ -2,7 +2,6 @@ using Android.Content;
 using Android.Text;
 using Android.Views;
 using Android.Widget;
-using AView = Android.Views.View;
 
 namespace Buform;
 
@@ -10,9 +9,7 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
 {
     private LinearLayout? _fallbackRoot;
     private TextView? _fallbackTitleView;
-    private ButtonFormItem? _fallbackButtonItem;
 
-    private AView? _legacyView;
     private FormViewHolder? _legacyViewHolder;
 
     public MauiFormItemViewHolder(FrameLayout container, IMauiContext mauiContext)
@@ -42,9 +39,8 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         BindFallback(context, item);
     }
 
-    public void Unbind()
+    public override void Unbind()
     {
-        UnbindMaui();
         UnbindLegacy();
         UnbindFallback();
 
@@ -84,7 +80,6 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
 
         _container.RemoveAllViews();
 
-        _legacyView = view;
         _legacyViewHolder = viewHolder;
 
         _container.AddView(view);
@@ -111,20 +106,8 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         _container.RemoveAllViews();
         _container.AddView(_fallbackRoot);
 
-        switch (item)
-        {
-            case ButtonFormItem buttonItem:
-                _fallbackButtonItem = buttonItem;
-                _fallbackTitleView.Text = buttonItem.Label;
-                _fallbackTitleView.Enabled = !(buttonItem.IsReadOnly);
-                break;
-
-            default:
-                _fallbackButtonItem = null;
-                _fallbackTitleView.Text = item.GetType().Name;
-                _fallbackTitleView.Enabled = false;
-                break;
-        }
+        _fallbackTitleView.Text = item.GetType().Name;
+        _fallbackTitleView.Enabled = false;
     }
 
     private void EnsureFallbackView(Context context)
@@ -143,11 +126,6 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         _fallbackRoot.AddView(_fallbackTitleView);
     }
 
-    private void UnbindMaui()
-    {
-        //ClearMauiView();
-    }
-
     private void UnbindLegacy()
     {
         if (_legacyViewHolder is IDisposable disposable)
@@ -156,17 +134,14 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         }
 
         _legacyViewHolder = null;
-        _legacyView = null;
     }
 
     private void UnbindFallback()
     {
-        _fallbackButtonItem = null;
+        if (_fallbackTitleView == null)
+            return;
 
-        if (_fallbackTitleView != null)
-        {
-            _fallbackTitleView.Text = null;
-            _fallbackTitleView.Enabled = true;
-        }
+        _fallbackTitleView.Text = null;
+        _fallbackTitleView.Enabled = true;
     }
 }
