@@ -3,7 +3,9 @@ using Android.Text;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using AndroidX.Core.Content;
 using Fedandburk.Common.Extensions;
+using Microsoft.Maui.Controls.PlatformConfiguration;
 
 namespace Buform;
 
@@ -50,12 +52,8 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         _fallbackTitleView.Text = title;
         _fallbackButtonItem = item as ButtonFormItem;
 
-        myItem = item;
-
         ShowFallback(_fallbackRoot);
     }
-
-    public object myItem;
 
     private void EnsureFallbackView(Context context)
     {
@@ -89,7 +87,21 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         titleView.SetSingleLine(true);
         titleView.Ellipsize = TextUtils.TruncateAt.End;
         titleView.SetTextSize(ComplexUnitType.Sp, 16);
-        titleView.SetTextColor(Android.Graphics.Color.Black);
+
+        if (
+            context.Theme?.ResolveAttribute(
+                Android.Resource.Attribute.TextColorPrimary,
+                typedValue,
+                true
+            ) == true
+        )
+        {
+            var color = new Android.Graphics.Color(
+                ContextCompat.GetColor(context, typedValue.ResourceId)
+            );
+
+            titleView.SetTextColor(color);
+        }
 
         root.AddView(titleView);
         root.Click += OnFallbackRootClick;
@@ -101,8 +113,5 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
     private void OnFallbackRootClick(object? sender, EventArgs e)
     {
         _fallbackButtonItem?.Value.SafeExecute();
-
-        var tmp = myItem as MultiValuePickerFormItem;
-        tmp?.Pick(null);
     }
 }

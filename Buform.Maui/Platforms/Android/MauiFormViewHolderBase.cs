@@ -27,6 +27,20 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
         _mauiContext = mauiContext;
     }
 
+    public virtual void Unbind()
+    {
+        if (_mauiView != null)
+        {
+            OnUnbind(_mauiView);
+            _mauiView.BindingContext = null;
+        }
+
+        if (_fallbackView != null)
+        {
+            OnFallbackUnbind(_fallbackView);
+        }
+    }
+
     protected FrameLayout Container => _container;
 
     protected TMauiView? MauiView => _mauiView;
@@ -90,20 +104,6 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
         );
 
         _contentMode = ContentMode.Fallback;
-    }
-
-    public virtual void Unbind()
-    {
-        if (_mauiView != null)
-        {
-            OnUnbind(_mauiView);
-            _mauiView.BindingContext = null;
-        }
-
-        if (_fallbackView != null)
-        {
-            OnFallbackUnbind(_fallbackView);
-        }
     }
 
     protected virtual void OnBeforeBind(TMauiView view, object bindingContext) { }

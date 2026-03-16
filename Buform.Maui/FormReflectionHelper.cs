@@ -3,14 +3,17 @@ namespace Buform;
 internal static class FormReflectionHelper
 {
     public static string? GetHeaderLabel(object item) =>
-        item.GetType().GetProperty(FormReflectionKeys.HeaderLabel)?.GetValue(item) as string;
+        GetStringProperty(item, FormReflectionKeys.HeaderLabel);
 
     public static string? GetFooterLabel(object item) =>
-        item.GetType().GetProperty(FormReflectionKeys.FooterLabel)?.GetValue(item) as string;
+        GetStringProperty(item, FormReflectionKeys.FooterLabel);
 
     public static string? GetLabel(object item) =>
-        item.GetType().GetProperty(FormReflectionKeys.Label)?.GetValue(item) as string;
+        GetStringProperty(item, FormReflectionKeys.Label);
 
     public static string? GetFormattedValue(object item) =>
-        item.GetType().GetProperty(FormReflectionKeys.FormattedValue)?.GetValue(item) as string;
+        GetStringProperty(item, FormReflectionKeys.FormattedValue);
+
+    private static string? GetStringProperty(object item, string propertyName) =>
+        item.GetType().GetProperty(propertyName)?.GetValue(item) as string;
 }

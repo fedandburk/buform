@@ -77,10 +77,12 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         switch (adapterItem.HolderType)
         {
             case FormViewHolderType.Item:
+                ((MauiFormItemViewHolder)holder).Unbind();
                 ((MauiFormItemViewHolder)holder).Bind(_context, adapterItem.Item);
                 break;
 
             case FormViewHolderType.Header:
+                ((MauiFormHeaderFooterViewHolder)holder).Unbind();
                 ((MauiFormHeaderFooterViewHolder)holder).Bind(
                     _context,
                     adapterItem.Item,
@@ -89,6 +91,7 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
                 break;
 
             case FormViewHolderType.Footer:
+                ((MauiFormHeaderFooterViewHolder)holder).Unbind();
                 ((MauiFormHeaderFooterViewHolder)holder).Bind(
                     _context,
                     adapterItem.Item,
