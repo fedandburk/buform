@@ -106,7 +106,8 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         button.TranslationZ = 0;
 
         var lp = _button?.LayoutParameters;
-        if (lp == null) return;
+        if (lp == null)
+            return;
         lp.Height = Dp(40);
         _button!.LayoutParameters = lp;
     }
