@@ -37,7 +37,7 @@ internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
     {
         if (platformView.GetAdapter() is MauiFormRecyclerAdapter adapter)
         {
-            adapter.SetForm(null);
+            adapter.Form = null;
         }
 
         base.DisconnectHandler(platformView);
@@ -52,7 +52,7 @@ internal sealed class FormViewHandler : ViewHandler<FormView, FormRecyclerView>
     {
         if (PlatformView?.GetAdapter() is MauiFormRecyclerAdapter adapter)
         {
-            adapter.SetForm(VirtualView?.Form);
+            adapter.Form = VirtualView.Form;
         }
     }
 
