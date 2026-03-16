@@ -1,11 +1,7 @@
 using Android.Content;
 using Android.Text;
-using Android.Util;
 using Android.Views;
 using Android.Widget;
-using AndroidX.Core.Content;
-using Fedandburk.Common.Extensions;
-using Microsoft.Maui.Controls.PlatformConfiguration;
 using AView = Android.Views.View;
 
 namespace Buform;
@@ -92,7 +88,7 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         _legacyViewHolder = viewHolder;
 
         _container.AddView(view);
-        
+
         if (item is not IDisposable disposable)
         {
             return false;
@@ -138,10 +134,7 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
             return;
         }
 
-        _fallbackRoot = new LinearLayout(context)
-        {
-            Orientation = Orientation.Vertical
-        };
+        _fallbackRoot = new LinearLayout(context) { Orientation = Orientation.Vertical };
 
         _fallbackTitleView = new TextView(context);
         _fallbackTitleView.SetSingleLine(true);
@@ -155,8 +148,6 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
         //ClearMauiView();
     }
 
-    
-    
     private void UnbindLegacy()
     {
         if (_legacyViewHolder is IDisposable disposable)
