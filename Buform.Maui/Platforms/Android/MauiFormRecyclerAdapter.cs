@@ -1,18 +1,24 @@
+using System.Collections.Specialized;
 using Android.Content;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
+using Fedandburk.Common.Extensions;
 using Object = Java.Lang.Object;
 
 namespace Buform;
 
+[Preserve(AllMembers = true)]
 internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 {
     private readonly Context _context;
     private readonly IMauiContext _mauiContext;
-    private readonly List<FormAdapterItem> _items = [];
 
     private Form? _form;
+    private IEnumerable<IFormItem>? _items;
+    private IDisposable? _formSubscription;
+    private IDisposable? _itemsSubscription;
 
     public MauiFormRecyclerAdapter(Context context, IMauiContext mauiContext)
     {
@@ -20,13 +26,185 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
         _mauiContext = mauiContext;
     }
 
-    public override int ItemCount => _items.Count;
+    public Form? Form
+    {
+        get => _form;
+        set
+        {
+            if (ReferenceEquals(_form, value))
+            {
+                return;
+            }
 
-    public override int GetItemViewType(int position) => (int)_items[position].HolderType;
+            ResetState();
+            _form = value;
+
+            if (_form == null)
+            {
+                NotifyDataSetChanged();
+                return;
+            }
+
+            _formSubscription = _form.WeakSubscribe(OnFormChanged);
+            _items = _form.ObservableFlatten();
+
+            if (_items is INotifyCollectionChanged notifyCollectionChanged)
+            {
+                _itemsSubscription = notifyCollectionChanged.WeakSubscribe(OnItemsChanged);
+            }
+
+            NotifyDataSetChanged();
+        }
+    }
+
+    public override int ItemCount => GetItemsCount();
 
     public override long GetItemId(int position) => position;
 
+    public override int GetItemViewType(int position)
+    {
+        if (!TryGetData(position, out _, out var holderType) || holderType == null)
+        {
+            throw new FormViewNotFoundException(position);
+        }
+
+        return (int)holderType.Value;
+    }
+
+    public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
+    {
+        var container = CreateContainer(parent.Context!);
+
+        return (FormViewHolderType)viewType switch
+        {
+            FormViewHolderType.Item => new MauiFormItemViewHolder(container, _mauiContext),
+            FormViewHolderType.Header
+                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
+            FormViewHolderType.Footer
+                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
+            _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null),
+        };
+    }
+
+    public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
+    {
+        if (
+            !TryGetData(position, out var data, out var holderType)
+            || data == null
+            || holderType == null
+        )
+        {
+            throw new FormViewNotFoundException(position);
+        }
+
+        switch (holderType.Value)
+        {
+            case FormViewHolderType.Item:
+                BindItemHolder(holder, data, position);
+                break;
+
+            case FormViewHolderType.Header:
+            case FormViewHolderType.Footer:
+                BindHeaderFooterHolder(holder, data, holderType.Value, position);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
     public override void OnViewRecycled(Object holder)
+    {
+        UnbindHolder(holder);
+        base.OnViewRecycled(holder);
+    }
+
+    public override bool OnFailedToRecycleView(Object holder)
+    {
+        UnbindHolder(holder);
+        return base.OnFailedToRecycleView(holder);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+
+        if (!disposing)
+        {
+            return;
+        }
+
+        ResetState();
+        _form = null;
+    }
+
+    private void OnFormChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    {
+        if (_form == null)
+        {
+            return;
+        }
+
+        NotifyDataSetChanged();
+    }
+
+    private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    {
+        if (_items == null)
+        {
+            return;
+        }
+
+        NotifyDataSetChanged();
+    }
+
+    private void ResetState()
+    {
+        _formSubscription?.Dispose();
+        _itemsSubscription?.Dispose();
+
+        if (_items is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+
+        _formSubscription = null;
+        _itemsSubscription = null;
+        _items = null;
+    }
+
+    private void BindItemHolder(RecyclerView.ViewHolder holder, object data, int position)
+    {
+        if (holder is not MauiFormItemViewHolder itemHolder)
+        {
+            throw new InvalidOperationException(
+                $"Expected {nameof(MauiFormItemViewHolder)} for position {position}."
+            );
+        }
+
+        itemHolder.Unbind();
+        itemHolder.Bind(_context, data);
+    }
+
+    private void BindHeaderFooterHolder(
+        RecyclerView.ViewHolder holder,
+        object data,
+        FormViewHolderType holderType,
+        int position
+    )
+    {
+        if (holder is not MauiFormHeaderFooterViewHolder headerFooterHolder)
+        {
+            throw new InvalidOperationException(
+                $"Expected {nameof(MauiFormHeaderFooterViewHolder)} for {holderType} at position {position}."
+            );
+        }
+
+        headerFooterHolder.Unbind();
+        headerFooterHolder.Bind(_context, data, holderType);
+    }
+
+    private static void UnbindHolder(Object holder)
     {
         switch (holder)
         {
@@ -37,99 +215,97 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
             case MauiFormHeaderFooterViewHolder headerFooterHolder:
                 headerFooterHolder.Unbind();
                 break;
+        }
+    }
 
-            default:
-                break;
+    private int GetItemsCount()
+    {
+        if (_form == null || _items == null)
+        {
+            return 0;
         }
 
-        base.OnViewRecycled(holder);
-    }
-
-    public void SetForm(Form? form)
-    {
-        _form = form;
-        RebuildItems();
-        NotifyDataSetChanged();
-    }
-
-    public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        var container = CreateContainer(parent.Context);
-
-        return (FormViewHolderType)viewType switch
+        var rowsCount = _items switch
         {
-            FormViewHolderType.Item => new MauiFormItemViewHolder(container, _mauiContext),
-
-            FormViewHolderType.Header
-                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
-
-            FormViewHolderType.Footer
-                => new MauiFormHeaderFooterViewHolder(container, _mauiContext),
-
-            _ => throw new ArgumentOutOfRangeException(nameof(viewType), viewType, null),
+            ICollection<IFormItem> collection => collection.Count,
+            IReadOnlyCollection<IFormItem> readOnlyCollection => readOnlyCollection.Count,
+            _ => _items.Count()
         };
-    }
 
-    public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
-    {
-        var adapterItem = _items[position];
-
-        switch (adapterItem.HolderType)
-        {
-            case FormViewHolderType.Item:
-                ((MauiFormItemViewHolder)holder).Unbind();
-                ((MauiFormItemViewHolder)holder).Bind(_context, adapterItem.Item);
-                break;
-
-            case FormViewHolderType.Header:
-                ((MauiFormHeaderFooterViewHolder)holder).Unbind();
-                ((MauiFormHeaderFooterViewHolder)holder).Bind(
-                    _context,
-                    adapterItem.Item,
-                    FormViewHolderType.Header
-                );
-                break;
-
-            case FormViewHolderType.Footer:
-                ((MauiFormHeaderFooterViewHolder)holder).Unbind();
-                ((MauiFormHeaderFooterViewHolder)holder).Bind(
-                    _context,
-                    adapterItem.Item,
-                    FormViewHolderType.Footer
-                );
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void RebuildItems()
-    {
-        _items.Clear();
-
-        if (_form == null)
-        {
-            return;
-        }
+        var chromeCount = 0;
 
         foreach (var section in _form)
         {
             if (HasHeader(section))
             {
-                _items.Add(FormAdapterItem.CreateSectionHeader(section));
-            }
-
-            foreach (var row in section)
-            {
-                _items.Add(FormAdapterItem.CreateRow(row));
+                chromeCount++;
             }
 
             if (HasFooter(section))
             {
-                _items.Add(FormAdapterItem.CreateSectionFooter(section));
+                chromeCount++;
             }
         }
+
+        return rowsCount + chromeCount;
+    }
+
+    private bool TryGetData(int position, out object? data, out FormViewHolderType? viewHolderType)
+    {
+        if (_form == null)
+        {
+            data = null;
+            viewHolderType = null;
+            return false;
+        }
+
+        var index = 0;
+
+        foreach (var section in _form)
+        {
+            var hasHeader = HasHeader(section);
+            var hasFooter = HasFooter(section);
+
+            if (hasHeader)
+            {
+                if (index == position)
+                {
+                    data = section;
+                    viewHolderType = FormViewHolderType.Header;
+                    return true;
+                }
+
+                index++;
+            }
+
+            foreach (var item in section)
+            {
+                if (index == position)
+                {
+                    data = item;
+                    viewHolderType = FormViewHolderType.Item;
+                    return true;
+                }
+
+                index++;
+            }
+
+            if (hasFooter)
+            {
+                if (index == position)
+                {
+                    data = section;
+                    viewHolderType = FormViewHolderType.Footer;
+                    return true;
+                }
+
+                index++;
+            }
+        }
+
+        data = null;
+        viewHolderType = null;
+        return false;
     }
 
     private static FrameLayout CreateContainer(Context context)
