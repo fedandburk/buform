@@ -49,7 +49,7 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
         if (_textView == null)
             return;
 
-        _textView.Text = Data?.FormattedValue ?? string.Empty;
+        _textView.Text = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
     }
 
     protected override void OnDataSet()
