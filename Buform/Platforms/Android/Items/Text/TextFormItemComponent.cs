@@ -10,7 +10,7 @@ public sealed class TextFormItemComponent : IFormComponent
     public void Register()
     {
         FormPlatform.RegisterItem<ITextFormItem, TextFormViewHolder>(
-            Resource.Layout.FormItemButtonLayout
+            Resource.Layout.FormItemTextLayout
         );
     }
 }

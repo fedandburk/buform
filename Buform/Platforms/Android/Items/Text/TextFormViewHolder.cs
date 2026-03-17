@@ -1,12 +1,14 @@
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
+using Google.Android.Material.TextView;
 
 namespace Buform;
 
 [Preserve(AllMembers = true)]
 public class TextFormViewHolder : FormViewHolder<ITextFormItem>
 {
-    private Button? _button;
+    private MaterialTextView? _textView;
 
     public TextFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -20,59 +22,58 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
         /* Required constructor */
     }
 
-    private void OnButtonClick(object? sender, EventArgs e) { }
-
     protected override void Initialize()
     {
-        _button = ItemView.FindViewById<Button>(Resource.Id.Button)!;
-        _button.Click += OnButtonClick;
+        _textView = ItemView.FindViewById<MaterialTextView>(Resource.Id.Text)!;
+
+        _textView.SetTextSize(ComplexUnitType.Sp, 18);
+
+        ApplyTextColorFromTheme();
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (_button == null)
-        {
+        if (_textView == null)
             return;
-        }
 
         var isReadOnly = Data?.IsReadOnly ?? true;
 
-        _button.Enabled = !isReadOnly;
+        ItemView.Enabled = !isReadOnly;
+        ItemView.Clickable = !isReadOnly;
+        ItemView.Focusable = !isReadOnly;
+        _textView.Enabled = !isReadOnly;
     }
 
     protected virtual void UpdateLabel()
     {
-        if (_button == null)
-        {
+        if (_textView == null)
             return;
-        }
 
-        _button.Text = Data?.Value.ToString();
-    }
-
-    protected virtual void UpdateInputType()
-    {
-        if (_button == null)
-        {
-            return;
-        }
-
-        // TODO: Update button appearance.
+        _textView.Text = Data?.Value?.ToString() ?? string.Empty;
     }
 
     protected override void OnDataSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
-        UpdateInputType();
     }
 
     protected override void OnDataPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
-            case nameof(Data.IsReadOnly):
+            case nameof(ITextFormItem.IsReadOnly):
                 UpdateReadOnlyState();
+                break;
+
+            case nameof(ITextFormItem.Value):
+                UpdateLabel();
+                break;
+
+            case null:
+            case "":
+                UpdateReadOnlyState();
+                UpdateLabel();
                 break;
         }
     }
@@ -81,15 +82,26 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
     {
         if (disposing)
         {
-            var button = _button;
-            if (button != null)
-            {
-                button.Click -= OnButtonClick;
-            }
-
-            _button = null;
+            _textView = null;
         }
 
         base.Dispose(disposing);
+    }
+
+    private void ApplyTextColorFromTheme()
+    {
+        if (_textView == null)
+            return;
+
+        var typedValue = new TypedValue();
+        var theme = _textView.Context?.Theme;
+
+        if (
+            theme != null
+            && theme.ResolveAttribute(Resource.Attribute.colorOnSurface, typedValue, true)
+        )
+        {
+            _textView.SetTextColor(new Android.Graphics.Color(typedValue.Data));
+        }
     }
 }
