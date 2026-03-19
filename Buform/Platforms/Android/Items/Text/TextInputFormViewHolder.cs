@@ -43,21 +43,16 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
             case nameof(ITextInputFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
-
             case nameof(ITextInputFormItem.Value):
                 UpdateValue();
                 break;
-
             case nameof(ITextInputFormItem.Placeholder):
                 UpdateHint();
                 break;
-
             case nameof(ITextInputFormItem.Label):
                 UpdateHelperText();
                 break;
-
-            case null:
-            case "":
+            default:
                 UpdateReadOnlyState();
                 UpdateValue();
                 UpdateHint();
@@ -68,7 +63,9 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     protected virtual void UpdateReadOnlyState()
     {
         if (_input == null)
+        {
             return;
+        }
 
         var isReadOnly = Data?.IsReadOnly ?? true;
 
@@ -81,29 +78,39 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     protected virtual void UpdateValue()
     {
         if (_input == null)
+        {
             return;
+        }
 
         var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
         if (_input.Text != value)
+        {
             _input.Text = value;
+        }
     }
 
     protected virtual void UpdateHint()
     {
         if (_input == null)
+        {
             return;
+        }
 
         _input.Hint = Data?.Placeholder ?? string.Empty;
 
         if (_layout != null)
+        {
             _layout.HintEnabled = false;
+        }
     }
 
     protected virtual void UpdateInputType()
     {
         if (_input == null)
+        {
             return;
+        }
 
         var type = Data?.InputType ?? TextInputType.Default;
 
@@ -113,7 +120,9 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     protected virtual void UpdateHelperText()
     {
         if (_layout == null)
+        {
             return;
+        }
 
         var helper = Data?.Label;
 
@@ -131,7 +140,9 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     private void AttachListeners()
     {
         if (_input == null)
+        {
             return;
+        }
 
         _input.TextChanged += OnTextChanged;
     }
@@ -139,7 +150,9 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
         if (Data?.Value == null)
+        {
             return;
+        }
 
         var text = _input?.Text?.Trim() ?? string.Empty;
         var targetType = Data.Value.GetType();
@@ -153,7 +166,9 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     private void ApplyTheme()
     {
         if (_input == null)
+        {
             return;
+        }
 
         var typedValue = new Android.Util.TypedValue();
         var theme = _input.Context?.Theme;
@@ -180,42 +195,33 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         if (targetType == typeof(int))
         {
             if (
-                int.TryParse(
+                !int.TryParse(
                     text,
                     NumberStyles.Integer,
                     CultureInfo.InvariantCulture,
                     out var intValue
                 )
             )
-            {
-                result = intValue;
-                return true;
-            }
-
-            return false;
+                return false;
+            result = intValue;
+            return true;
         }
 
-        if (targetType == typeof(float))
-        {
-            var normalized = text.Replace(',', '.');
+        if (targetType != typeof(float))
+            return false;
+        var normalized = text.Replace(',', '.');
 
-            if (
-                float.TryParse(
-                    normalized,
-                    NumberStyles.Float,
-                    CultureInfo.InvariantCulture,
-                    out var floatValue
-                )
+        if (
+            !float.TryParse(
+                normalized,
+                NumberStyles.Float,
+                CultureInfo.InvariantCulture,
+                out var floatValue
             )
-            {
-                result = floatValue;
-                return true;
-            }
-
+        )
             return false;
-        }
-
-        return false;
+        result = floatValue;
+        return true;
     }
 
     protected override void Dispose(bool disposing)

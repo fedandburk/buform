@@ -91,7 +91,9 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
     private void ApplyTextColorFromTheme()
     {
         if (_textView == null)
+        {
             return;
+        }
 
         var typedValue = new TypedValue();
         var theme = _textView.Context?.Theme;
