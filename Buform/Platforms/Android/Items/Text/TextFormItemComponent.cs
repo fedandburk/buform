@@ -12,7 +12,7 @@ public sealed class TextFormItemComponent : IFormComponent
         FormPlatform.RegisterItem<IMultilineTextInputFormItem, TextMultilineFormViewHolder>(
             Resource.Layout.FormItemTexMultilineLayout
         );
-        
+
         FormPlatform.RegisterItem<ITextInputFormItem, TextInputFormViewHolder>(
             Resource.Layout.FormItemTexInputLayout
         );
