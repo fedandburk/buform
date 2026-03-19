@@ -214,7 +214,8 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
         var normalized = text.Replace(',', '.');
 
-        if (!float.TryParse(
+        if (
+            !float.TryParse(
                 normalized,
                 NumberStyles.Float,
                 CultureInfo.InvariantCulture,
