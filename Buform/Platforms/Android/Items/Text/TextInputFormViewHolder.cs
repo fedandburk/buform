@@ -84,10 +84,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
         var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
-        if (_input.Text != value)
-        {
-            _input.Text = value;
-        }
+        _input.Text = value;
     }
 
     protected virtual void UpdateHint()
