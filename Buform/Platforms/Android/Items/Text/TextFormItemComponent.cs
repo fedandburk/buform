@@ -9,6 +9,10 @@ public sealed class TextFormItemComponent : IFormComponent
 {
     public void Register()
     {
+        FormPlatform.RegisterItem<ITextInputFormItem, TextInputFormViewHolder>(
+            Resource.Layout.FormItemTexInputLayout
+        );
+
         FormPlatform.RegisterItem<ITextFormItem, TextFormViewHolder>(
             Resource.Layout.FormItemTextLayout
         );
