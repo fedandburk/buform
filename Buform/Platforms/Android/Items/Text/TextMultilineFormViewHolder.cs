@@ -7,15 +7,15 @@ using Google.Android.Material.TextField;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
+public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFormItem>
 {
     private TextInputLayout? _layout;
     private TextInputEditText? _input;
 
-    public TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    public TextMultilineFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer) { }
 
-    public TextInputFormViewHolder(View itemView)
+    public TextMultilineFormViewHolder(View itemView)
         : base(itemView) { }
 
     protected override void Initialize()
@@ -33,24 +33,21 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         UpdateValue();
         UpdateHint();
         UpdateInputType();
-        UpdateHelperText();
+        
     }
 
     protected override void OnDataPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
-            case nameof(ITextInputFormItem.IsReadOnly):
+            case nameof(IMultilineTextInputFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
-            case nameof(ITextInputFormItem.Value):
+            case nameof(IMultilineTextInputFormItem.Value):
                 UpdateValue();
                 break;
-            case nameof(ITextInputFormItem.Placeholder):
+            case nameof(IMultilineTextInputFormItem.Placeholder):
                 UpdateHint();
-                break;
-            case nameof(ITextInputFormItem.Label):
-                UpdateHelperText();
                 break;
             default:
                 UpdateReadOnlyState();
@@ -84,7 +81,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
         var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
-        //_input.Text = value;
+        _input.Text = value;
     }
 
     protected virtual void UpdateHint()
@@ -112,27 +109,12 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         var type = Data?.InputType ?? TextInputType.Default;
 
         _input.InputType = type.ToAndroidInputType();
+
+        _input.SetSingleLine(false);
+        _input.SetHorizontallyScrolling(false);
     }
 
-    protected virtual void UpdateHelperText()
-    {
-        if (_layout == null)
-        {
-            return;
-        }
-
-        var helper = Data?.Label;
-
-        if (!string.IsNullOrEmpty(helper))
-        {
-            _layout.HelperTextEnabled = true;
-            _layout.HelperText = helper;
-        }
-        else
-        {
-            _layout.HelperTextEnabled = false;
-        }
-    }
+   
 
     private void AttachListeners()
     {
@@ -153,10 +135,10 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
         var text = _input?.Text?.Trim() ?? string.Empty;
         var targetType = Data.Value.GetType();
-
+        
         if (TryConvertText(text, targetType, out var converted))
         {
-            Data.Value = converted;
+            //Data.Value = converted;
         }
     }
 
@@ -234,32 +216,5 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         }
 
         base.Dispose(disposing);
-    }
-}
-
-public static class TextInputTypeExtensions
-{
-    public static InputTypes ToAndroidInputType(this TextInputType type)
-    {
-        return type switch
-        {
-            TextInputType.Default => InputTypes.ClassText,
-
-            TextInputType.NumberAndPunctuation
-                => InputTypes.ClassText | InputTypes.TextFlagNoSuggestions,
-
-            TextInputType.Number => InputTypes.ClassNumber,
-
-            TextInputType.Decimal => InputTypes.ClassNumber | InputTypes.NumberFlagDecimal,
-
-            TextInputType.Phone => InputTypes.ClassPhone,
-
-            TextInputType.Url => InputTypes.ClassText | InputTypes.TextVariationUri,
-
-            TextInputType.EmailAddress
-                => InputTypes.ClassText | InputTypes.TextVariationEmailAddress,
-
-            _ => InputTypes.ClassText
-        };
     }
 }
