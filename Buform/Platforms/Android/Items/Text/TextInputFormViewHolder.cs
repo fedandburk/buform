@@ -208,11 +208,13 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         }
 
         if (targetType != typeof(float))
+        {
             return false;
+        }
+
         var normalized = text.Replace(',', '.');
 
-        if (
-            !float.TryParse(
+        if (!float.TryParse(
                 normalized,
                 NumberStyles.Float,
                 CultureInfo.InvariantCulture,

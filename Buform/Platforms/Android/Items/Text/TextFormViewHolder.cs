@@ -34,7 +34,9 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
     protected virtual void UpdateReadOnlyState()
     {
         if (_textView == null)
+        {
             return;
+        }
 
         var isReadOnly = Data?.IsReadOnly ?? true;
 
@@ -47,7 +49,9 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
     protected virtual void UpdateLabel()
     {
         if (_textView == null)
+        {
             return;
+        }
 
         _textView.Text = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
     }
@@ -65,13 +69,10 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
             case nameof(ITextFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
-
             case nameof(ITextFormItem.Value):
                 UpdateLabel();
                 break;
-
-            case null:
-            case "":
+            default:
                 UpdateReadOnlyState();
                 UpdateLabel();
                 break;
