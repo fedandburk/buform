@@ -11,24 +11,43 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
     private MaterialTextView? _textView;
 
     public TextFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
-        : base(javaReference, transfer)
-    {
-        /* Required constructor */
-    }
+        : base(javaReference, transfer) { }
 
     public TextFormViewHolder(View itemView)
-        : base(itemView)
-    {
-        /* Required constructor */
-    }
+        : base(itemView) { }
 
     protected override void Initialize()
     {
         _textView = ItemView.FindViewById<MaterialTextView>(Resource.Id.Text)!;
-
         _textView.SetTextSize(ComplexUnitType.Sp, 18);
 
         ApplyTextColorFromTheme();
+    }
+
+    protected override void OnDataSet()
+    {
+        UpdateReadOnlyState();
+        UpdateLabel();
+    }
+
+    protected override void OnDataPropertyChanged(string? propertyName)
+    {
+        switch (propertyName)
+        {
+            case nameof(ITextFormItem.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
+
+            case nameof(ITextFormItem.Value):
+            case nameof(ITextFormItem.FormattedValue):
+                UpdateLabel();
+                break;
+
+            default:
+                UpdateReadOnlyState();
+                UpdateLabel();
+                break;
+        }
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -53,29 +72,11 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
             return;
         }
 
-        _textView.Text = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
-    }
+        var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
-    protected override void OnDataSet()
-    {
-        UpdateReadOnlyState();
-        UpdateLabel();
-    }
-
-    protected override void OnDataPropertyChanged(string? propertyName)
-    {
-        switch (propertyName)
+        if (!string.Equals(_textView.Text, value, StringComparison.Ordinal))
         {
-            case nameof(ITextFormItem.IsReadOnly):
-                UpdateReadOnlyState();
-                break;
-            case nameof(ITextFormItem.Value):
-                UpdateLabel();
-                break;
-            default:
-                UpdateReadOnlyState();
-                UpdateLabel();
-                break;
+            _textView.Text = value;
         }
     }
 

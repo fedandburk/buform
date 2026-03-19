@@ -11,6 +11,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 {
     private TextInputLayout? _layout;
     private TextInputEditText? _input;
+    private bool _isUpdatingText;
 
     public TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer) { }
@@ -30,10 +31,10 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
     protected override void OnDataSet()
     {
         UpdateReadOnlyState();
-        UpdateValue();
         UpdateHint();
         UpdateInputType();
         UpdateHelperText();
+        UpdateValue();
     }
 
     protected override void OnDataPropertyChanged(string? propertyName)
@@ -43,19 +44,30 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
             case nameof(ITextInputFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
+
             case nameof(ITextInputFormItem.Value):
+            case nameof(ITextInputFormItem.FormattedValue):
                 UpdateValue();
                 break;
+
             case nameof(ITextInputFormItem.Placeholder):
                 UpdateHint();
                 break;
+
             case nameof(ITextInputFormItem.Label):
                 UpdateHelperText();
                 break;
+
+            case nameof(ITextInputFormItem.InputType):
+                UpdateInputType();
+                break;
+
             default:
                 UpdateReadOnlyState();
-                UpdateValue();
                 UpdateHint();
+                UpdateInputType();
+                UpdateHelperText();
+                UpdateValue();
                 break;
         }
     }
@@ -73,6 +85,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         _input.Focusable = !isReadOnly;
         _input.FocusableInTouchMode = !isReadOnly;
         _input.Clickable = !isReadOnly;
+        _input.LongClickable = !isReadOnly;
     }
 
     protected virtual void UpdateValue()
@@ -84,7 +97,21 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
         var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
-        //_input.Text = value;
+        if (string.Equals(_input.Text, value, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _isUpdatingText = true;
+        try
+        {
+            _input.Text = value;
+            _input.SetSelection(_input.Text?.Length ?? 0);
+        }
+        finally
+        {
+            _isUpdatingText = false;
+        }
     }
 
     protected virtual void UpdateHint()
@@ -110,8 +137,12 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         }
 
         var type = Data?.InputType ?? TextInputType.Default;
-
         _input.InputType = type.ToAndroidInputType();
+
+        if (Data?.IsSecured == true)
+        {
+            _input.InputType |= InputTypes.TextVariationPassword;
+        }
     }
 
     protected virtual void UpdateHelperText()
@@ -131,6 +162,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         else
         {
             _layout.HelperTextEnabled = false;
+            _layout.HelperText = null;
         }
     }
 
@@ -146,18 +178,33 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (Data?.Value == null)
+        if (_isUpdatingText || Data == null || _input == null)
         {
             return;
         }
 
-        var text = _input?.Text?.Trim() ?? string.Empty;
-        var targetType = Data.Value.GetType();
+        var text = _input.Text ?? string.Empty;
+        var currentValue = Data.Value;
 
-        if (TryConvertText(text, targetType, out var converted))
+        if (currentValue == null)
         {
-            Data.Value = converted;
+            Data.SetValue(text);
+            return;
         }
+
+        var targetType = currentValue.GetType();
+
+        if (!TryConvertText(text, targetType, out var converted))
+        {
+            return;
+        }
+
+        if (Equals(currentValue, converted))
+        {
+            return;
+        }
+
+        Data.SetValue(converted?.ToString());
     }
 
     private void ApplyTheme()
@@ -189,6 +236,11 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
             return true;
         }
 
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return false;
+        }
+
         if (targetType == typeof(int))
         {
             if (
@@ -199,29 +251,75 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
                     out var intValue
                 )
             )
+            {
                 return false;
+            }
+
             result = intValue;
             return true;
         }
 
-        if (targetType != typeof(float))
+        if (targetType == typeof(float))
         {
-            return false;
+            var normalized = text.Replace(',', '.');
+
+            if (
+                !float.TryParse(
+                    normalized,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out var floatValue
+                )
+            )
+            {
+                return false;
+            }
+
+            result = floatValue;
+            return true;
         }
 
-        var normalized = text.Replace(',', '.');
+        if (targetType == typeof(double))
+        {
+            var normalized = text.Replace(',', '.');
 
-        if (
-            !float.TryParse(
-                normalized,
-                NumberStyles.Float,
-                CultureInfo.InvariantCulture,
-                out var floatValue
+            if (
+                !double.TryParse(
+                    normalized,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out var doubleValue
+                )
             )
-        )
-            return false;
-        result = floatValue;
-        return true;
+            {
+                return false;
+            }
+
+            result = doubleValue;
+            return true;
+        }
+
+        if (targetType == typeof(decimal))
+        {
+            var normalized = text.Replace(',', '.');
+
+            if (
+                !decimal.TryParse(
+                    normalized,
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out var decimalValue
+                )
+            )
+            {
+                return false;
+            }
+
+            result = decimalValue;
+            return true;
+        }
+
+        return false;
     }
 
     protected override void Dispose(bool disposing)

@@ -1,4 +1,3 @@
-using System.Globalization;
 using Android.Runtime;
 using Android.Text;
 using Android.Views;
@@ -11,6 +10,7 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 {
     private TextInputLayout? _layout;
     private TextInputEditText? _input;
+    private bool _isUpdatingText;
 
     public TextMultilineFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer) { }
@@ -30,10 +30,9 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
     protected override void OnDataSet()
     {
         UpdateReadOnlyState();
-        UpdateValue();
         UpdateHint();
         UpdateInputType();
-        
+        UpdateValue();
     }
 
     protected override void OnDataPropertyChanged(string? propertyName)
@@ -43,16 +42,25 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
             case nameof(IMultilineTextInputFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
+
             case nameof(IMultilineTextInputFormItem.Value):
+            case nameof(IMultilineTextInputFormItem.FormattedValue):
                 UpdateValue();
                 break;
+
             case nameof(IMultilineTextInputFormItem.Placeholder):
                 UpdateHint();
                 break;
+
+            case nameof(IMultilineTextInputFormItem.InputType):
+                UpdateInputType();
+                break;
+
             default:
                 UpdateReadOnlyState();
-                UpdateValue();
                 UpdateHint();
+                UpdateInputType();
+                UpdateValue();
                 break;
         }
     }
@@ -70,6 +78,7 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
         _input.Focusable = !isReadOnly;
         _input.FocusableInTouchMode = !isReadOnly;
         _input.Clickable = !isReadOnly;
+        _input.LongClickable = !isReadOnly;
     }
 
     protected virtual void UpdateValue()
@@ -81,7 +90,21 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
         var value = Data?.FormattedValue ?? Data?.Value?.ToString() ?? string.Empty;
 
-        _input.Text = value;
+        if (string.Equals(_input.Text, value, StringComparison.Ordinal))
+        {
+            return;
+        }
+
+        _isUpdatingText = true;
+        try
+        {
+            _input.Text = value;
+            _input.SetSelection(_input.Text?.Length ?? 0);
+        }
+        finally
+        {
+            _isUpdatingText = false;
+        }
     }
 
     protected virtual void UpdateHint()
@@ -108,13 +131,11 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
         var type = Data?.InputType ?? TextInputType.Default;
 
-        _input.InputType = type.ToAndroidInputType();
-
+        _input.InputType = type.ToAndroidInputType() | InputTypes.TextFlagMultiLine;
         _input.SetSingleLine(false);
         _input.SetHorizontallyScrolling(false);
+        _input.SetMaxLines(int.MaxValue);
     }
-
-   
 
     private void AttachListeners()
     {
@@ -128,18 +149,25 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (Data?.Value == null)
+        if (_isUpdatingText || Data == null)
         {
             return;
         }
 
-        var text = _input?.Text?.Trim() ?? string.Empty;
-        var targetType = Data.Value.GetType();
-        
-        if (TryConvertText(text, targetType, out var converted))
+        var text = _input?.Text;
+
+        if (
+            string.Equals(
+                Data.FormattedValue ?? Data.Value?.ToString(),
+                text,
+                StringComparison.Ordinal
+            )
+        )
         {
-            //Data.Value = converted;
+            return;
         }
+
+        Data.SetValue(text);
     }
 
     private void ApplyTheme()
@@ -159,51 +187,6 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
         {
             _input.SetTextColor(new Android.Graphics.Color(typedValue.Data));
         }
-    }
-
-    private bool TryConvertText(string text, Type targetType, out object? result)
-    {
-        result = null;
-
-        if (targetType == typeof(string))
-        {
-            result = text;
-            return true;
-        }
-
-        if (targetType == typeof(int))
-        {
-            if (
-                !int.TryParse(
-                    text,
-                    NumberStyles.Integer,
-                    CultureInfo.InvariantCulture,
-                    out var intValue
-                )
-            )
-                return false;
-            result = intValue;
-            return true;
-        }
-
-        if (targetType != typeof(float))
-        {
-            return false;
-        }
-
-        var normalized = text.Replace(',', '.');
-
-        if (
-            !float.TryParse(
-                normalized,
-                NumberStyles.Float,
-                CultureInfo.InvariantCulture,
-                out var floatValue
-            )
-        )
-            return false;
-        result = floatValue;
-        return true;
     }
 
     protected override void Dispose(bool disposing)
