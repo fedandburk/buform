@@ -19,8 +19,15 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Xcode 26.2 (required for .NET iOS build)
-      run: sudo xcode-select -s /Applications/Xcode_26.2.app
+     name: Setup Xcode 26.2 (required for .NET iOS build)
+          run: |
+            if [ -d "/Applications/Xcode_26.2.app" ]; then
+              sudo xcode-select -s /Applications/Xcode_26.2.app
+            else
+              echo "Xcode 26.2 not found on this runner image" >&2
+              ls -1 /Applications | grep Xcode || true
+              exit 1
+            fi
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
