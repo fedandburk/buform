@@ -100,7 +100,10 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
         var lp = button.LayoutParameters;
         if (lp == null)
+        {
             return;
+        }
+
         lp.Height = Dp(40);
         button.LayoutParameters = lp;
     }
