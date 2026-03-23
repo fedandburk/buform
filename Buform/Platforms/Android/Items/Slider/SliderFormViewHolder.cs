@@ -8,7 +8,7 @@ namespace Buform;
 public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
 {
     private const float Tolerance = 0.0001f;
-
+    private bool _isUpdatingFromModel;
     private Slider? _slider;
 
     public SliderFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
@@ -20,6 +20,8 @@ public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
     protected override void Initialize()
     {
         _slider = ItemView.FindViewById<Slider>(Resource.Id.Slider)!;
+
+        _slider.Touch += OnSliderTouch;
     }
 
     protected override void OnDataSet()
@@ -124,13 +126,40 @@ public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
             return;
         }
 
-        _slider.Value = value;
+        _isUpdatingFromModel = true;
+        try
+        {
+            _slider.Value = value;
+        }
+        finally
+        {
+            _isUpdatingFromModel = false;
+        }
+    }
+
+    private void OnSliderTouch(object? sender, View.TouchEventArgs e)
+    {
+        e.Handled = false;
+
+        if (_isUpdatingFromModel || Data == null || _slider == null)
+        {
+            return;
+        }
+
+        if (Math.Abs(Data.Value - _slider.Value) > Tolerance)
+        {
+            Data.Value = _slider.Value;
+        }
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            if (_slider != null)
+            {
+                _slider.Touch -= OnSliderTouch;
+            }
             _slider = null;
         }
 

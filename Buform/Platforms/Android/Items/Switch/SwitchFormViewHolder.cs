@@ -1,13 +1,12 @@
 using Android.Runtime;
 using Android.Views;
 using AndroidX.AppCompat.Widget;
-using Google.Android.Material.MaterialSwitch;
 using Google.Android.Material.TextView;
 
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
+public sealed class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 {
     private SwitchCompat? _switch;
     private MaterialTextView? _title;
