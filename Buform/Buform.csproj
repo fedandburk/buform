@@ -55,6 +55,8 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
         <Compile Include="Platforms\Android\**\*.cs" />
         <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
+        <BundleResource Remove="Resources\drawable\ic_stepper_plus.xml" />
+        <AndroidResource Include="Resources\drawable\ic_stepper_plus.xml" />
     </ItemGroup>
 
 </Project>

@@ -127,10 +127,7 @@ public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
             newValue = Data.MaxValue;
         }
 
-        if (newValue != Data.Value)
-        {
-            Data.Value = newValue;
-        }
+        Data.Value = newValue;
     }
 
     private void OnPlusClicked(object? sender, EventArgs e)
