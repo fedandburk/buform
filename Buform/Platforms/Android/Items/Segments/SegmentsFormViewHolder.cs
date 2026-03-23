@@ -63,6 +63,11 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
                 UpdateValidationErrorMessage();
                 break;
             default:
+                UpdateReadOnlyState();
+                UpdateLabel();
+                UpdateItems();
+                UpdateValue();
+                UpdateValidationErrorMessage();
                 break;
         }
     }

@@ -10,7 +10,7 @@ namespace Buform;
 internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHolder
     where TMauiView : MView
 {
-    public FrameLayout _container;
+    public readonly FrameLayout _container;
     private readonly IMauiContext _mauiContext;
 
     private TMauiView? _mauiView;

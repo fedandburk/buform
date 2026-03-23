@@ -5,7 +5,7 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 [FormComponent]
 // ReSharper disable once UnusedType.Global
-public class SegmentsFormItemComponent : IFormComponent
+public sealed class SegmentsFormItemComponent : IFormComponent
 {
     public void Register()
     {
