@@ -62,6 +62,8 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
             case nameof(ISegmentsFormItem.ValidationErrorMessage):
                 UpdateValidationErrorMessage();
                 break;
+            default:
+                break;
         }
     }
 
@@ -240,7 +242,7 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
             _owner = owner;
         }
 
-        public void OnButtonChecked(MaterialButtonToggleGroup group, int checkedId, bool isChecked)
+        public void OnButtonChecked(MaterialButtonToggleGroup? group, int checkedId, bool isChecked)
         {
             _owner.OnButtonChecked(checkedId, isChecked);
         }
