@@ -144,10 +144,7 @@ public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
             newValue = Data.MinValue;
         }
 
-        if (newValue != Data.Value)
-        {
-            Data.Value = newValue;
-        }
+        Data.Value = newValue;
     }
 
     protected override void Dispose(bool disposing)

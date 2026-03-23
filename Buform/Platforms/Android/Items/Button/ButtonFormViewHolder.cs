@@ -84,14 +84,6 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
         var ripple = CreateColorStateList(ApplyAlpha(colorPrimary, 0.12f));
 
-        button.StrokeWidth = 0;
-        button.StrokeColor = null;
-        button.BackgroundTintList = null;
-        button.SetTextColor(colorPrimary);
-        button.RippleColor = ripple;
-        button.Elevation = 0;
-        button.StateListAnimator = null;
-
         ApplyTextStyle(button, colorPrimary, ripple);
     }
 
@@ -104,12 +96,13 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         button.StrokeColor = null;
         button.Elevation = 0;
         button.TranslationZ = 0;
+        button.StateListAnimator = null;
 
-        var lp = _button?.LayoutParameters;
+        var lp = button.LayoutParameters;
         if (lp == null)
             return;
         lp.Height = Dp(40);
-        _button!.LayoutParameters = lp;
+        button.LayoutParameters = lp;
     }
 
     protected override void OnDataSet()
