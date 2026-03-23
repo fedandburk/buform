@@ -215,9 +215,14 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
         var hasError = !string.IsNullOrWhiteSpace(Data?.ValidationErrorMessage);
 
-        _label.SetTextColor(
-            hasError ? Android.Graphics.Color.Rgb(176, 0, 32) : Android.Graphics.Color.Black
-        );
+        var typedValue = new Android.Util.TypedValue();
+        var attribute = hasError
+            ? Resource.Attribute.colorError
+            : Resource.Attribute.colorOnSurface;
+        if (_label.Context?.Theme?.ResolveAttribute(attribute, typedValue, true) == true)
+        {
+            _label.SetTextColor(new Android.Graphics.Color(typedValue.Data));
+        }
     }
 
     protected override void Dispose(bool disposing)
