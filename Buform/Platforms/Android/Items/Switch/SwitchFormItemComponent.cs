@@ -5,12 +5,12 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 [FormComponent]
 // ReSharper disable once UnusedType.Global
-public sealed class StepperFormItemComponent : IFormComponent
+public class SwitchFormItemComponent : IFormComponent
 {
     public void Register()
     {
-        FormPlatform.RegisterItem<StepperFormItem, StepperFormViewHolder>(
-            Resource.Layout.FormItemStepperLayout
+        FormPlatform.RegisterItem<SwitchFormItem, SwitchFormViewHolder>(
+            Resource.Layout.FormItemSwitchLayout
         );
     }
 }
