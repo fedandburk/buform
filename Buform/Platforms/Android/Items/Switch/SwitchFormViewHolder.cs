@@ -1,5 +1,6 @@
 using Android.Runtime;
 using Android.Views;
+using AndroidX.AppCompat.Widget;
 using Google.Android.Material.MaterialSwitch;
 using Google.Android.Material.TextView;
 
@@ -8,7 +9,7 @@ namespace Buform;
 [Preserve(AllMembers = true)]
 public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 {
-    private MaterialSwitch? _switch;
+    private SwitchCompat? _switch;
     private MaterialTextView? _title;
     private bool _isUpdatingFromModel;
 
@@ -20,7 +21,7 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
     protected override void Initialize()
     {
-        _switch = ItemView.FindViewById<MaterialSwitch>(Resource.Id.Switch)!;
+        _switch = ItemView.FindViewById<SwitchCompat>(Resource.Id.Switch)!;
         _title = ItemView.FindViewById<MaterialTextView>(Resource.Id.Title)!;
 
         AttachListeners();
