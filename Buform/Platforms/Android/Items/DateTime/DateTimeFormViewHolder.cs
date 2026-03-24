@@ -48,6 +48,8 @@ public class DateTimeFormViewHolder : FormViewHolder<DateTimeFormItem>
             case nameof(DateTimeFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
+            default:
+                break;
         }
     }
 
@@ -235,10 +237,7 @@ public class DateTimeFormViewHolder : FormViewHolder<DateTimeFormItem>
             value = Data.MaxValue;
         }
 
-        if (Data.Value != value)
-        {
-            Data.Value = value;
-        }
+        Data.Value = value;
     }
 
     private static long ToUtcMillis(DateTime dateTime)

@@ -11,13 +11,15 @@ internal static class ContextExtensions
 
         while (true)
         {
-            switch (current)
+            if (current is FragmentActivity fragmentActivity)
             {
-                case FragmentActivity fragmentActivity:
-                    return fragmentActivity;
-                case ContextWrapper wrapper:
-                    current = wrapper.BaseContext!;
-                    continue;
+                return fragmentActivity;
+            }
+
+            if (current is ContextWrapper wrapper)
+            {
+                current = wrapper.BaseContext!;
+                continue;
             }
 
             break;
