@@ -15,12 +15,9 @@ public abstract class PopUpPickerFormViewHolder<TItem> : PresentedPickerFormView
 
     protected override PickerPresenterBase<TItem>? GetPickerPresenter(PickerInputType inputType)
     {
-        return inputType switch
-        {
-            PickerInputType.PopUp
-                => new DialogFragmentPickerPresenter<TItem>(CreatePickerDialogFragment),
-            _ => base.GetPickerPresenter(inputType)
-        };
+        return inputType == PickerInputType.PopUp
+            ? new DialogFragmentPickerPresenter<TItem>(CreatePickerDialogFragment)
+            : base.GetPickerPresenter(inputType);
     }
 }
 

@@ -110,6 +110,8 @@ public abstract class PresentedPickerFormViewHolderBase<TFormItem>
             case nameof(IPickerFormItemBase.ValidationErrorMessage):
                 UpdateValidationErrorMessage(Data?.ValidationErrorMessage);
                 break;
+            default:
+                break;
         }
     }
 

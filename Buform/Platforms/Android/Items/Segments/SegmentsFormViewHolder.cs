@@ -252,7 +252,9 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
             _owner = owner;
         }
 
-        public void OnButtonChecked(MaterialButtonToggleGroup? _, int checkedId, bool isChecked)
+#pragma warning disable IDE0060
+        public void OnButtonChecked(MaterialButtonToggleGroup? group, int checkedId, bool isChecked)
+#pragma warning restore IDE0060
         {
             _owner.OnButtonChecked(checkedId, isChecked);
         }
