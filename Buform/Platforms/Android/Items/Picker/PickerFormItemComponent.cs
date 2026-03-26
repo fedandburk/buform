@@ -20,5 +20,9 @@ public class PickerFormItemComponent : IFormComponent
         FormPlatform.RegisterItem<ICallbackPickerFormItem, CallbackPickerFormViewHolder>(
             Resource.Layout.FormItemPickerLayout
         );
+
+        FormPlatform.RegisterItem<IAsyncPickerFormItem, AsyncPickerFormViewHolder>(
+            Resource.Layout.FormItemPickerLayout
+        );
     }
 }
