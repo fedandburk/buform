@@ -12,5 +12,9 @@ public class PickerFormItemComponent : IFormComponent
         FormPlatform.RegisterItem<IPickerFormItem, PopUpPickerFormViewHolder>(
             Resource.Layout.FormItemPickerLayout
         );
+
+        FormPlatform.RegisterItem<IMultiValuePickerFormItem, MultiValuePickerFormViewHolder>(
+            Resource.Layout.FormItemPickerLayout
+        );
     }
 }

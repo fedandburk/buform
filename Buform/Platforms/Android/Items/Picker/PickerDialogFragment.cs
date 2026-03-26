@@ -20,6 +20,7 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
     private MaterialTextView? _helperTextView;
     private TextInputLayout? _searchLayout;
     private TextInputEditText? _searchInput;
+    private MaterialButton? _doneButton;
 
     public static PickerDialogFragment Create(IPickerFormItemBase item)
     {
@@ -56,6 +57,7 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
         _helperTextView = view.FindViewById<MaterialTextView>(Resource.Id.HelperText);
         _searchLayout = view.FindViewById<TextInputLayout>(Resource.Id.SearchLayout);
         _searchInput = view.FindViewById<TextInputEditText>(Resource.Id.SearchInput);
+        _doneButton = view.FindViewById<MaterialButton>(Resource.Id.DoneButton);
 
         BindItem();
         SetupRecyclerView();
@@ -112,12 +114,17 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
 
     private void SetupButtons()
     {
-        if (_clearButton == null)
+        if (_clearButton != null)
         {
-            return;
+            _clearButton.Click += OnClearClicked;
         }
 
-        _clearButton.Click += OnClearClicked;
+        if (_doneButton != null)
+        {
+            _doneButton.Click += OnDoneClicked;
+        }
+
+        UpdateDoneButtonVisibility();
     }
 
     private void OnClearClicked(object? sender, EventArgs e)
@@ -131,6 +138,11 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
         DismissAllowingStateLoss();
     }
 
+    private void OnDoneClicked(object? sender, EventArgs e)
+    {
+        DismissAllowingStateLoss();
+    }
+
     private void OnOptionSelected(IPickerOptionFormItem option)
     {
         if (_item == null)
@@ -139,6 +151,13 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
         }
 
         _item.Pick(option);
+
+        if (_item is IMultiValuePickerFormItem)
+        {
+            _adapter?.NotifyDataSetChanged();
+            return;
+        }
+
         DismissAllowingStateLoss();
     }
 
@@ -193,11 +212,27 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
             : ViewStates.Gone;
     }
 
+    private void UpdateDoneButtonVisibility()
+    {
+        if (_doneButton == null)
+        {
+            return;
+        }
+
+        _doneButton.Visibility =
+            _item is IMultiValuePickerFormItem ? ViewStates.Visible : ViewStates.Gone;
+    }
+
     public override void OnDestroyView()
     {
         if (_searchInput != null)
         {
             _searchInput.TextChanged -= OnSearchTextChanged;
+        }
+
+        if (_doneButton != null)
+        {
+            _doneButton.Click -= OnDoneClicked;
         }
 
         if (_clearButton != null)
@@ -209,6 +244,7 @@ public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
         _adapter = null;
 
         _titleView = null;
+        _doneButton = null;
         _clearButton = null;
         _recyclerView = null;
         _helperTextView = null;

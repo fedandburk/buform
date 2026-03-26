@@ -31,5 +31,6 @@ public sealed class PickerOptionViewHolder : RecyclerView.ViewHolder
         _item = item;
         _titleView.Text = item.FormattedValue ?? string.Empty;
         _checkmarkView.Visibility = isSelected ? ViewStates.Visible : ViewStates.Gone;
+        ItemView.Selected = isSelected;
     }
 }
