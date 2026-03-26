@@ -16,5 +16,9 @@ public class PickerFormItemComponent : IFormComponent
         FormPlatform.RegisterItem<IMultiValuePickerFormItem, MultiValuePickerFormViewHolder>(
             Resource.Layout.FormItemPickerLayout
         );
+
+        FormPlatform.RegisterItem<ICallbackPickerFormItem, CallbackPickerFormViewHolder>(
+            Resource.Layout.FormItemPickerLayout
+        );
     }
 }
