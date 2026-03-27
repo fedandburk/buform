@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="48dp"
-    android:paddingStart="@dimen/form_horizontal_padding"
-    android:paddingEnd="@dimen/form_horizontal_padding"
-    android:paddingTop="@dimen/form_vertical_padding"
-    android:paddingBottom="@dimen/form_vertical_padding"
-    android:clickable="true"
-    android:focusable="true">
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/InputLayout"
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:hintEnabled="false">
+        android:layout_marginStart="@dimen/form_horizontal_padding"
+        android:layout_marginEnd="@dimen/form_horizontal_padding"
+        android:layout_marginTop="@dimen/form_vertical_padding"
+        android:layout_marginBottom="@dimen/form_vertical_padding"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="?android:colorBackground"
+        app:strokeColor="?attr/colorControlNormal"
+        app:strokeWidth="1dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/InputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:boxBackgroundMode="none"
+            app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/Input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1" />
+            android:maxLines="1"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>
