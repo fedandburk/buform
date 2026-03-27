@@ -62,10 +62,7 @@ public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
 
         _minusButton.Enabled = !isReadOnly;
         _plusButton.Enabled = !isReadOnly;
-
-        _minusButton.Alpha = isReadOnly ? 0.4f : 1f;
-        _plusButton.Alpha = isReadOnly ? 0.4f : 1f;
-        _valueText.Alpha = isReadOnly ? 0.6f : 1f;
+        
     }
 
     protected virtual void UpdateValue()
