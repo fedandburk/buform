@@ -26,9 +26,26 @@
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/ClearButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Clear" />
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="Clear"
+                android:textAllCaps="false"
+                android:textSize="16sp"
+                app:backgroundTint="@android:color/transparent"
+                app:cornerRadius="12dp"
+                app:elevation="0dp"
+                app:rippleColor="#22000000"
+                app:strokeWidth="0dp" />
+        
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
@@ -71,18 +88,20 @@
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/SearchLayout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="8dp"
-                android:visibility="gone">
+                app:boxBackgroundMode="filled"
+                app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/SearchInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search" />
+                    android:hint="Search"
+                    android:background="@null" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
