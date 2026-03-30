@@ -39,10 +39,10 @@ public class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
         if (metrics == null)
             return;
 
-        var width = (int)(metrics.WidthPixels * 0.95); 
+        var width = (int)(metrics.WidthPixels * 0.95);
         dialog.Window.SetLayout(width, ViewGroup.LayoutParams.WrapContent);
     }
-    
+
     public override Dialog OnCreateDialog(Bundle? savedInstanceState)
     {
         var dialog = base.OnCreateDialog(savedInstanceState);
