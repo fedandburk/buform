@@ -79,8 +79,14 @@ public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
         }
 
         _isUpdatingFromModel = true;
-        _valueText.Text = value;
-        _isUpdatingFromModel = false;
+        try
+        {
+            _valueText.Text = value;
+        }
+        finally
+        {
+            _isUpdatingFromModel = false;
+        }
     }
 
     private void AttachListeners()
