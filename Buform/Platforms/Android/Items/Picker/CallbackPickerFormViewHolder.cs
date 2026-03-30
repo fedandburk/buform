@@ -70,6 +70,8 @@ public abstract class CallbackPickerFormViewHolder<TItem> : PickerFormViewHolder
             case nameof(ICallbackPickerFormItem.ValidationErrorMessage):
                 UpdateValidationErrorMessage(Data?.ValidationErrorMessage);
                 break;
+            default:
+                break;
         }
     }
 

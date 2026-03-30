@@ -139,7 +139,9 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolderBase<FormItemVi
     private void UnbindFallback()
     {
         if (_fallbackTitleView == null)
+        {
             return;
+        }
 
         _fallbackTitleView.Text = null;
         _fallbackTitleView.Enabled = true;

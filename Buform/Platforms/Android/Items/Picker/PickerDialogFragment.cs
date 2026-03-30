@@ -33,11 +33,15 @@ public class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
 
         var dialog = Dialog;
         if (dialog?.Window == null)
+        {
             return;
+        }
 
         var metrics = Resources.DisplayMetrics;
         if (metrics == null)
+        {
             return;
+        }
 
         var width = (int)(metrics.WidthPixels * 0.95);
         dialog.Window.SetLayout(width, ViewGroup.LayoutParams.WrapContent);
