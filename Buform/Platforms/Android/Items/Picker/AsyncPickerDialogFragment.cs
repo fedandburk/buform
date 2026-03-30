@@ -175,9 +175,10 @@ public sealed class AsyncPickerDialogFragment : PickerDialogFragment
         {
             return;
         }
-        catch
+        catch (Exception ex)
         {
             // The item is expected to update its own State to Failed.
+            System.Diagnostics.Debug.WriteLine($"LoadItemsAsync failed: {ex.Message}");
         }
 
         if (!IsAdded)

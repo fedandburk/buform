@@ -204,7 +204,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
             return;
         }
 
-        Data.SetValue(converted?.ToString());
+        Data.SetValue(text);
     }
 
     private void ApplyTheme()

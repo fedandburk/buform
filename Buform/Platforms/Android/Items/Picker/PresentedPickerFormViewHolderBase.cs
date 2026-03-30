@@ -111,6 +111,11 @@ public abstract class PresentedPickerFormViewHolderBase<TFormItem>
                 UpdateValidationErrorMessage(Data?.ValidationErrorMessage);
                 break;
             default:
+                UpdateReadOnlyState();
+                UpdateLabel(Data?.Label);
+                UpdateInputType();
+                UpdateValue(Data?.FormattedValue);
+                UpdateValidationErrorMessage(Data?.ValidationErrorMessage);
                 break;
         }
     }

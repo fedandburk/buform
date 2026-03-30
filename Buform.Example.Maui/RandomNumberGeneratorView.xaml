@@ -12,9 +12,6 @@
         <Grid
             Padding="16, 8"
             ColumnSpacing="4">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

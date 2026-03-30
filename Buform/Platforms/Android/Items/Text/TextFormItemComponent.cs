@@ -10,11 +10,11 @@ public sealed class TextFormItemComponent : IFormComponent
     public void Register()
     {
         FormPlatform.RegisterItem<IMultilineTextInputFormItem, TextMultilineFormViewHolder>(
-            Resource.Layout.FormItemTexMultilineLayout
+            Resource.Layout.FormItemTextMultilineLayout
         );
 
         FormPlatform.RegisterItem<ITextInputFormItem, TextInputFormViewHolder>(
-            Resource.Layout.FormItemTexInputLayout
+            Resource.Layout.FormItemTextInputLayout
         );
 
         FormPlatform.RegisterItem<ITextFormItem, TextFormViewHolder>(
