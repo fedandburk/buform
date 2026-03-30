@@ -207,15 +207,13 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     private static void UnbindHolder(Object holder)
     {
-        switch (holder)
+        if (holder is MauiFormItemViewHolder itemHolder)
         {
-            case MauiFormItemViewHolder itemHolder:
-                itemHolder.Unbind();
-                break;
-
-            case MauiFormHeaderFooterViewHolder headerFooterHolder:
-                headerFooterHolder.Unbind();
-                break;
+            itemHolder.Unbind();
+        }
+        else if (holder is MauiFormHeaderFooterViewHolder headerFooterHolder)
+        {
+            headerFooterHolder.Unbind();
         }
     }
 
