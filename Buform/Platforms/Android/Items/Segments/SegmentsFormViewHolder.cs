@@ -12,6 +12,7 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
     private List<ISegmentsOptionFormItem> _items = [];
     private bool _isUpdatingFromModel;
+    private ButtonCheckedListener? _buttonCheckedListener;
 
     public SegmentsFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -79,7 +80,8 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
             return;
         }
 
-        _toggleGroup.AddOnButtonCheckedListener(new ButtonCheckedListener(this));
+        _buttonCheckedListener = new ButtonCheckedListener(this);
+        _toggleGroup.AddOnButtonCheckedListener(_buttonCheckedListener);
     }
 
     private void OnButtonChecked(int checkedId, bool isChecked)
@@ -234,6 +236,12 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
     {
         if (disposing)
         {
+            if (_toggleGroup != null && _buttonCheckedListener != null)
+            {
+                _toggleGroup.RemoveOnButtonCheckedListener(_buttonCheckedListener);
+                _buttonCheckedListener = null;
+            }
+
             _label = null;
             _toggleGroup = null;
         }

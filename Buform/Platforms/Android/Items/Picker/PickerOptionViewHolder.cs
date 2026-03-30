@@ -14,6 +14,8 @@ public sealed class PickerOptionViewHolder : RecyclerView.ViewHolder
     public PickerOptionViewHolder(View itemView, Action<IPickerOptionFormItem> onClick)
         : base(itemView)
     {
+        ArgumentNullException.ThrowIfNull(onClick);
+
         _titleView = itemView.FindViewById<MaterialTextView>(Resource.Id.Title)!;
         _checkmarkView = itemView.FindViewById<ImageView>(Resource.Id.Checkmark)!;
 
