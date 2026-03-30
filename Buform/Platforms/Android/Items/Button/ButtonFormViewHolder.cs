@@ -104,7 +104,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             return;
         }
 
-        lp.Height = Dp(40);
+        lp.Height = Dp(48);
         button.LayoutParameters = lp;
     }
 

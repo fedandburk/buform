@@ -10,6 +10,8 @@ namespace Buform;
 internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHolder
     where TMauiView : MView
 {
+    private const int MaxLayoutRetries = 3;
+
     public readonly FrameLayout _container;
     private readonly IMauiContext _mauiContext;
 
@@ -19,6 +21,8 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
 
     private AView? _fallbackView;
     private ContentMode _contentMode = ContentMode.None;
+
+    private int _layoutRetryCount;
 
     protected MauiFormViewHolderBase(FrameLayout container, IMauiContext mauiContext)
         : base(container)
@@ -248,10 +252,17 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
         var width = _container.Width - _container.PaddingLeft - _container.PaddingRight;
         if (width <= 0)
         {
+            if (_layoutRetryCount >= MaxLayoutRetries)
+            {
+                return;
+            }
+
+            _layoutRetryCount++;
             _container.Post(RebindLayout);
             return;
         }
 
+        _layoutRetryCount = 0;
         var measured = _mauiView.Measure(width, double.PositiveInfinity);
         var height = (int)Math.Ceiling(measured.Height);
 

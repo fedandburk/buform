@@ -127,15 +127,16 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter
 
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
-
         if (!disposing)
         {
+            base.Dispose(disposing);
             return;
         }
 
         ResetState();
         _form = null;
+
+        base.Dispose(disposing);
     }
 
     private void OnFormChanged(object? sender, NotifyCollectionChangedEventArgs args)
