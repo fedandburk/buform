@@ -9,8 +9,6 @@
         android:layout_marginEnd="@dimen/form_horizontal_padding"
         android:layout_marginTop="@dimen/form_vertical_padding"
         android:layout_marginBottom="@dimen/form_vertical_padding"
-        android:clickable="true"
-        android:focusable="true"
         app:cardCornerRadius="@dimen/corner_radius"
         app:cardBackgroundColor="?android:colorBackground"
         app:strokeColor="?attr/colorControlNormal"

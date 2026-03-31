@@ -6,4 +6,7 @@
     <string name="button">Button</string>
     <string name="footer">Footer</string>
     <string name="header">Header</string>
+    <string name="increase">Increase</string>
+    <string name="decrease">Decrease</string>
+    <string name="stepper">Stepper</string>
 </resources>
