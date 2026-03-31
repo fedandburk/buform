@@ -2,12 +2,11 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/item_layout_height"
+        android:layout_height="@dimen/form_item_height"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingStart="@dimen/item_padding"
-        android:paddingEnd="@dimen/item_padding">
-
+        android:paddingStart="@dimen/item_spacing_medium"
+        android:paddingEnd="@dimen/item_spacing_medium">
     <com.google.android.material.textview.MaterialTextView
             android:id="@+id/Title"
             android:layout_width="0dp"
@@ -15,12 +14,10 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:ellipsize="end" />
-
     <ImageView
             android:id="@+id/Checkmark"
             android:layout_width="@dimen/checkmark_width"
             android:layout_height="@dimen/checkmark_height"
             android:src="@android:drawable/checkbox_on_background"
-            android:visibility="gone" />
-            
+            android:visibility="gone" />            
 </LinearLayout>

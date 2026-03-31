@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="done">Done</string>
+    <string name="clear">Clear</string>
+    <string name="search">Search</string>
+    <string name="button">Button</string>
+    <string name="footer">Footer</string>
+    <string name="header">Header</string>
+</resources>

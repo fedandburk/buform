@@ -13,7 +13,6 @@
         android:paddingBottom="12dp"
         android:background="@android:color/transparent"
         app:boxBackgroundMode="none">
-
     <TextView
             android:id="@+id/ValueText"
             android:layout_width="0dp"
@@ -25,7 +24,6 @@
             android:textColor="@android:color/black"
             android:fontFamily="sans-serif"
             android:gravity="center_vertical" />
-
     <LinearLayout
             android:id="@+id/StepperControl"
             android:layout_width="120dp"
@@ -33,7 +31,6 @@
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@drawable/bg_stepper_capsule">
-
         <ImageButton
                 android:id="@+id/MinusButton"
                 android:layout_width="0dp"
@@ -45,13 +42,11 @@
                 android:scaleType="center"
                 android:src="@drawable/ic_stepper_minus"
                 android:tint="@android:color/black" />
-
         <View
                 android:layout_width="1dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
                 android:background="#D1D1D6" />
-
         <ImageButton
                 android:id="@+id/PlusButton"
                 android:layout_width="0dp"
@@ -63,5 +58,4 @@
                 android:scaleType="center"
                 android:src="@drawable/ic_stepper_plus"/>
     </LinearLayout>
-
 </LinearLayout>

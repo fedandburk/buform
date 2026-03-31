@@ -14,21 +14,18 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground">
-
     <com.google.android.material.textview.MaterialTextView
             android:id="@+id/Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_size_body"
             android:maxLines="1"
             android:ellipsize="end" />
-
     <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/Switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end" />
-
 </LinearLayout>
