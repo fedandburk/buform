@@ -19,7 +19,7 @@
                 android:id="@+id/Label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="@dimen/label_bottom_margin"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textSize="@dimen/text_size_body"
                 android:visibility="gone" />

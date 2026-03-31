@@ -227,9 +227,7 @@ public class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
             return;
         }
 
-        _searchLayout.Visibility = _item.Options.Skip(1).Any()
-            ? ViewStates.Visible
-            : ViewStates.Gone;
+        _searchLayout.Visibility = _item.Options.Count() > 1 ? ViewStates.Visible : ViewStates.Gone;
     }
 
     private void UpdateDoneButtonVisibility()

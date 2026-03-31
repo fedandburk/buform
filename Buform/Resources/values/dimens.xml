@@ -8,6 +8,8 @@
     <dimen name="item_spacing_small">8dp</dimen>
     <dimen name="item_spacing_medium">16dp</dimen>
 
+    <dimen name="label_bottom_margin">6dp</dimen>
+
     <dimen name="form_item_height_compact">48dp</dimen>
     <dimen name="form_item_height">56dp</dimen>
         
