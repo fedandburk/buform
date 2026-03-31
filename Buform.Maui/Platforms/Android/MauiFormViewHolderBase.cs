@@ -31,7 +31,7 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
     protected AView? PlatformView => _platformView;
 
     protected AView? FallbackView => _fallbackView;
-    
+
     protected MauiFormViewHolderBase(FrameLayout container, IMauiContext mauiContext)
         : base(container)
     {
@@ -52,8 +52,6 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
             OnFallbackUnbind(_fallbackView);
         }
     }
-
-    
 
     protected bool TryBindMauiView(object bindingContext, Type? viewType)
     {
