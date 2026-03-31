@@ -18,5 +18,5 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:textAllCaps="false"
-        tools:text="@strings/button"/>
+        tools:text="@string/button"/>
 </FrameLayout>

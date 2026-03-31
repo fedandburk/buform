@@ -155,7 +155,7 @@ public sealed class AsyncPickerDialogFragment : PickerDialogFragment
             return;
         }
 
-        if (_item.State == AsyncPickerLoadingState.Loaded && _item.Options.Any())
+        if (_item.State == AsyncPickerLoadingState.Loaded)
         {
             UpdateState();
             return;
@@ -227,6 +227,7 @@ public sealed class AsyncPickerDialogFragment : PickerDialogFragment
         _item.FilterQuery = e.Text?.ToString();
         RefreshFilteredOptions();
         _adapter?.NotifyDataSetChanged();
+        UpdateState();
     }
 
     private void RefreshFilteredOptions()

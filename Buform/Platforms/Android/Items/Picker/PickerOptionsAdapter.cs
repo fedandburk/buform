@@ -15,6 +15,10 @@ public sealed class PickerOptionsAdapter : RecyclerView.Adapter
         Func<IPickerOptionFormItem, bool> isSelected
     )
     {
+        ArgumentNullException.ThrowIfNull(items);
+        ArgumentNullException.ThrowIfNull(onClick);
+        ArgumentNullException.ThrowIfNull(isSelected);
+
         _items = items;
         _onClick = onClick;
         _isSelected = isSelected;
@@ -28,7 +32,9 @@ public sealed class PickerOptionsAdapter : RecyclerView.Adapter
             .From(parent.Context)
             ?.Inflate(Resource.Layout.PickerOptionItemLayout, parent, false);
 
-        return new PickerOptionViewHolder(view, _onClick);
+        return view == null
+            ? throw new InvalidOperationException("Failed to inflate PickerOptionItemLayout")
+            : new PickerOptionViewHolder(view, _onClick);
     }
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)

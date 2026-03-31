@@ -63,8 +63,10 @@ public abstract class PickerFormViewHolderBase<TItem> : FormViewHolder<TItem>
             return;
         }
 
+        var hasValidationError = !string.IsNullOrWhiteSpace(validationErrorMessage);
+
         LabelView.SetTextColor(
-            validationErrorMessage == null
+            !hasValidationError
                 ? ResolveThemeColor(Android.Resource.Attribute.TextColorPrimary)
                 : Color.Red
         );

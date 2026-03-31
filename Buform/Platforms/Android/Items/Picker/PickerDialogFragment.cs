@@ -7,7 +7,7 @@ using Google.Android.Material.TextView;
 
 namespace Buform;
 
-public class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
+public sealed class PickerDialogFragment : AndroidX.Fragment.App.DialogFragment
 {
     private readonly List<IPickerOptionFormItem> _filteredOptions = [];
 

@@ -10,6 +10,7 @@ public sealed class DialogFragmentPickerPresenter<TItem> : PickerPresenterBase<T
 
     public DialogFragmentPickerPresenter(Func<TItem, PickerDialogFragment> fragmentFactory)
     {
+        ArgumentNullException.ThrowIfNull(fragmentFactory);
         _fragmentFactory = fragmentFactory;
     }
 
