@@ -9,7 +9,7 @@ using Object = Java.Lang.Object;
 namespace Buform;
 
 [Preserve(AllMembers = true)]
-public class DateTimeFormViewHolder : FormViewHolder<DateTimeFormItem>
+public sealed class DateTimeFormViewHolder : FormViewHolder<DateTimeFormItem>
 {
     private MaterialTextView? _labelView;
     private MaterialTextView? _valueView;

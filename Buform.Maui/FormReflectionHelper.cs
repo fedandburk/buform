@@ -14,6 +14,9 @@ internal static class FormReflectionHelper
     public static string? GetFormattedValue(object item) =>
         GetStringProperty(item, FormReflectionKeys.FormattedValue);
 
-    private static string? GetStringProperty(object item, string propertyName) =>
-        item.GetType().GetProperty(propertyName)?.GetValue(item) as string;
+    private static string? GetStringProperty(object item, string propertyName)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        return item.GetType().GetProperty(propertyName)?.GetValue(item) as string;
+    }
 }

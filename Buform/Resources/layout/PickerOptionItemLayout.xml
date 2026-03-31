@@ -19,5 +19,6 @@
             android:layout_width="@dimen/checkmark_width"
             android:layout_height="@dimen/checkmark_height"
             android:src="@android:drawable/checkbox_on_background"
+            android:contentDescription="@string/checkmark_selected"
             android:visibility="gone" />            
 </LinearLayout>

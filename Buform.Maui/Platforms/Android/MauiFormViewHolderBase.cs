@@ -24,6 +24,14 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
 
     private int _layoutRetryCount;
 
+    protected FrameLayout Container => _container;
+
+    protected TMauiView? MauiView => _mauiView;
+
+    protected AView? PlatformView => _platformView;
+
+    protected AView? FallbackView => _fallbackView;
+    
     protected MauiFormViewHolderBase(FrameLayout container, IMauiContext mauiContext)
         : base(container)
     {
@@ -45,13 +53,7 @@ internal abstract class MauiFormViewHolderBase<TMauiView> : RecyclerView.ViewHol
         }
     }
 
-    protected FrameLayout Container => _container;
-
-    protected TMauiView? MauiView => _mauiView;
-
-    protected AView? PlatformView => _platformView;
-
-    protected AView? FallbackView => _fallbackView;
+    
 
     protected bool TryBindMauiView(object bindingContext, Type? viewType)
     {

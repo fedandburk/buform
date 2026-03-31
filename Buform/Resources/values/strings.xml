@@ -9,4 +9,5 @@
     <string name="increase">Increase</string>
     <string name="decrease">Decrease</string>
     <string name="stepper">Stepper</string>
+    <string name="checkmark_selected">checkmark selected</string>
 </resources>
