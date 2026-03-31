@@ -18,7 +18,13 @@ internal static class ContextExtensions
 
             if (current is ContextWrapper wrapper)
             {
-                current = wrapper.BaseContext!;
+                var baseContext = wrapper.BaseContext;
+                if (baseContext is null || ReferenceEquals(baseContext, current))
+                {
+                    break;
+                }
+
+                current = baseContext;
                 continue;
             }
 

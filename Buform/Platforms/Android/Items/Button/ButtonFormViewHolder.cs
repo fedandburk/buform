@@ -130,23 +130,10 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             case nameof(Data.InputType):
                 UpdateInputType();
                 break;
+
+            default:
+                break;
         }
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            var button = _button;
-            if (button != null)
-            {
-                button.Click -= OnButtonClick;
-            }
-
-            _button = null;
-        }
-
-        base.Dispose(disposing);
     }
 
     private int Dp(int value)
@@ -173,5 +160,21 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
     {
         var a = (int)(255 * alpha);
         return Color.Argb(a, color.R, color.G, color.B);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            var button = _button;
+            if (button != null)
+            {
+                button.Click -= OnButtonClick;
+            }
+
+            _button = null;
+        }
+
+        base.Dispose(disposing);
     }
 }
