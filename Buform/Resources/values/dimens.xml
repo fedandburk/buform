@@ -2,4 +2,10 @@
 <resources>
     <dimen name="form_horizontal_padding">16dp</dimen>
     <dimen name="form_vertical_padding">4dp</dimen>
+    
+    <dimen name="item_padding">20dp</dimen>
+    <dimen name="item_layout_height">56dp</dimen>
+    
+    <dimen name="checkmark_width">20dp</dimen>
+    <dimen name="checkmark_height">20dp</dimen>
 </resources>
