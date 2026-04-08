@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="0dp"
-                android:minHeight="0dp"
+                android:minHeight="48dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:paddingStart="@dimen/item_spacing_medium"
