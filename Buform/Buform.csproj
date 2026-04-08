@@ -36,7 +36,10 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net9.0-android'">
-        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.4" />
+        <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.5.0.5" />
+        <PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.8.9.2" />
+        <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.5" />
+        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.4" />
     </ItemGroup>
     
     <ItemGroup>
@@ -54,5 +57,5 @@
         <Compile Include="Platforms\Android\**\*.cs" />
         <AndroidResource Include="Resources\**\*.xml" SubType="Designer" Generator="MSBuild:UpdateAndroidResources" />
     </ItemGroup>
-
+    
 </Project>

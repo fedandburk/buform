@@ -5,11 +5,12 @@
                    xmlns:maui="clr-namespace:Buform;assembly=Buform.Maui"
                    xmlns:buform="clr-namespace:Buform;assembly=Buform.Example"
                    x:Class="Buform.RandomNumberGeneratorView"
+                   MinimumHeightRequest="80"
                    x:TypeArguments="buform:RandomNumberGeneratorItem"
                    x:DataType="buform:RandomNumberGeneratorItem">
     <maui:FormItemView.Content>
         <Grid
-            Padding="16, 4"
+            Padding="16, 8"
             ColumnSpacing="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -19,7 +20,12 @@
                 Grid.Column="0"
                 Text="{Binding FormattedValue}"
                 FontSize="18"
-                VerticalOptions="CenterAndExpand" />
+                VerticalTextAlignment="Center"
+                HorizontalTextAlignment="Start"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center"
+                LineBreakMode="TailTruncation"
+                MaxLines="1" />
             <Button
                 Grid.Column="1"
                 FontSize="18"

@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 namespace Buform;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public partial class MenuViewModel : ObservableObject
+public sealed partial class MenuViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
 
@@ -23,22 +23,22 @@ public partial class MenuViewModel : ObservableObject
                 new ButtonFormItem(ShowControlsCommand)
                 {
                     Label = "Show All Components",
-                    InputType = ButtonInputType.Done
-                }
+                    InputType = ButtonInputType.Done,
+                },
             },
             new TextFormGroup("Examples", "Contains some real-life examples.")
             {
                 new ButtonFormItem(CreateConnectionCommand)
                 {
                     Label = "Setup New Connection",
-                    InputType = ButtonInputType.Done
+                    InputType = ButtonInputType.Done,
                 },
                 new ButtonFormItem(CreateEventCommand)
                 {
                     Label = "Create New Event",
-                    InputType = ButtonInputType.Done
-                }
-            }
+                    InputType = ButtonInputType.Done,
+                },
+            },
         };
     }
 

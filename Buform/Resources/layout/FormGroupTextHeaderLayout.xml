@@ -9,10 +9,9 @@
     android:paddingBottom="@dimen/form_vertical_padding"
     android:focusable="false"
     android:clickable="false">
-
     <TextView
         android:id="@+id/TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="Header" />
+        tools:text="@string/header" />
 </FrameLayout>

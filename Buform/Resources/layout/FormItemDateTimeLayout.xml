@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/form_item_height"
+        android:paddingStart="@dimen/form_horizontal_padding"
+        android:paddingEnd="@dimen/form_horizontal_padding"
+        android:paddingTop="@dimen/form_vertical_padding"
+        android:paddingBottom="@dimen/form_vertical_padding"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/Label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/label_bottom_margin"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textSize="@dimen/text_size_body"
+                android:visibility="gone" />
+        <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/Value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textSize="@dimen/text_size_body"
+                android:maxLines="1"
+                android:ellipsize="end" />
+    </LinearLayout>
+</FrameLayout>

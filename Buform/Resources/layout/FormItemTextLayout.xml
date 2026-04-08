@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/form_horizontal_padding"
+        android:layout_marginEnd="@dimen/form_horizontal_padding"
+        android:layout_marginTop="@dimen/form_vertical_padding"
+        android:layout_marginBottom="@dimen/form_vertical_padding"
+        android:clickable="true"
+        android:focusable="true"
+        app:cardCornerRadius="@dimen/corner_radius"
+        app:cardBackgroundColor="?android:colorBackground"
+        app:strokeColor="?attr/colorControlNormal"
+        app:strokeWidth="1dp">
+    <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/item_spacing_medium"
+            android:paddingVertical="20dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBody1"
+            tools:text="Label" />
+</com.google.android.material.card.MaterialCardView>
