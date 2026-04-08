@@ -28,14 +28,25 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
     private void OnButtonClick(object? sender, EventArgs e)
     {
+        if (Data?.IsReadOnly ?? true)
+        {
+            return;
+        }
+
         Data?.Value.SafeExecute();
     }
 
     protected override void Initialize()
     {
-        _button = ItemView.FindViewById<MaterialButton>(
+        var button = ItemView.FindViewById<MaterialButton>(
             _Microsoft.Android.Resource.Designer.Resource.Id.Button
-        )!;
+        );
+
+        _button =
+            button
+            ?? throw new InvalidOperationException(
+                "MaterialButton with id 'Button' was not found."
+            );
         _button.Click += OnButtonClick;
 
         _button.SetAllCaps(false);
@@ -43,8 +54,6 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         _button.InsetTop = 0;
         _button.InsetBottom = 0;
         _button.CornerRadius = Dp(20);
-        _button.StrokeWidth = 0;
-        _button.Elevation = 0;
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -65,7 +74,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             return;
         }
 
-        _button.Text = Data?.Label;
+        _button.Text = Data?.Label ?? string.Empty;
     }
 
     protected virtual void UpdateInputType()
@@ -82,15 +91,22 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             _Microsoft.Android.Resource.Designer.Resource.Attribute.colorPrimary
         );
 
-        var ripple = CreateColorStateList(ApplyAlpha(colorPrimary, 0.12f));
+        var textColors = CreateTextColorStateList(colorPrimary);
+        var ripple = CreateRippleColorStateList(colorPrimary);
+        var backgroundTint = CreateColorStateList(Color.Transparent);
 
-        ApplyTextStyle(button, colorPrimary, ripple);
+        ApplyTextStyle(button, textColors, ripple, backgroundTint);
     }
 
-    private void ApplyTextStyle(MaterialButton button, Color textColor, ColorStateList ripple)
+    private void ApplyTextStyle(
+        MaterialButton button,
+        ColorStateList textColors,
+        ColorStateList ripple,
+        ColorStateList backgroundTint
+    )
     {
-        button.BackgroundTintList = CreateColorStateList(Color.Transparent);
-        button.SetTextColor(textColor);
+        button.BackgroundTintList = backgroundTint;
+        button.SetTextColor(textColors);
         button.RippleColor = ripple;
         button.StrokeWidth = 0;
         button.StrokeColor = null;
@@ -149,6 +165,38 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
     private static ColorStateList CreateColorStateList(Color color)
     {
         return ColorStateList.ValueOf(color);
+    }
+
+    private static ColorStateList CreateTextColorStateList(Color colorPrimary)
+    {
+        var states = new[]
+        {
+            new[] { -Android.Resource.Attribute.StateEnabled },
+            Array.Empty<int>(),
+        };
+        var colors = new[] { ApplyAlpha(colorPrimary, 0.38f).ToArgb(), colorPrimary.ToArgb() };
+
+        return new ColorStateList(states, colors);
+    }
+
+    private static ColorStateList CreateRippleColorStateList(Color colorPrimary)
+    {
+        var states = new[]
+        {
+            new[] { Android.Resource.Attribute.StatePressed },
+            new[] { Android.Resource.Attribute.StateFocused },
+            new[] { -Android.Resource.Attribute.StateEnabled },
+            Array.Empty<int>(),
+        };
+        var colors = new[]
+        {
+            ApplyAlpha(colorPrimary, 0.16f).ToArgb(),
+            ApplyAlpha(colorPrimary, 0.12f).ToArgb(),
+            Color.Transparent.ToArgb(),
+            ApplyAlpha(colorPrimary, 0.08f).ToArgb(),
+        };
+
+        return new ColorStateList(states, colors);
     }
 
     private static Color GetThemeColor(View view, int attr)
