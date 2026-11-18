@@ -2,7 +2,6 @@
 ![GitHub](https://img.shields.io/github/license/fedandburk/buform.svg)
 ![Nuget](https://img.shields.io/nuget/v/Fedandburk.Buform.svg)
 [![CI](https://github.com/fedandburk/buform/actions/workflows/ci.yml/badge.svg)](https://github.com/fedandburk/buform/actions/workflows/ci.yml)
-[![CD](https://github.com/fedandburk/buform/actions/workflows/cd.yml/badge.svg)](https://github.com/fedandburk/buform/actions/workflows/cd.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/fedandburk/buform/badge)](https://www.codefactor.io/repository/github/fedandburk/buform)
 
 Buform is a library specifically designed for Xamarin developers, offering a solution for creating and managing forms in mobile apps.
