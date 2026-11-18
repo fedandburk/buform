@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buform.MvvmCross", "Buform.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buform.Tests", "Buform.Tests\Buform.Tests.csproj", "{8E0C17AF-FD69-4D7F-A4E1-7B5E4A532598}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buform.FluentValidation.Tests", "Buform.FluentValidation.Tests\Buform.FluentValidation.Tests.csproj", "{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -153,6 +155,18 @@ Global
 		{8E0C17AF-FD69-4D7F-A4E1-7B5E4A532598}.Release|x64.Build.0 = Release|Any CPU
 		{8E0C17AF-FD69-4D7F-A4E1-7B5E4A532598}.Release|x86.ActiveCfg = Release|Any CPU
 		{8E0C17AF-FD69-4D7F-A4E1-7B5E4A532598}.Release|x86.Build.0 = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|x64.Build.0 = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Debug|x86.Build.0 = Debug|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|x64.ActiveCfg = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|x64.Build.0 = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|x86.ActiveCfg = Release|Any CPU
+		{ED0AFE9A-E59E-4F67-BE44-FAA46368F702}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
