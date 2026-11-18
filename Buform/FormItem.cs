@@ -10,7 +10,6 @@ public abstract class FormItem<TValue> : IFormItem
     private PropertyInfo? _propertyInfo;
     private Expression<Func<TValue>>? _property;
     private TValue? _value;
-    private bool _isReadOnly;
     private bool _isVisible;
     private bool _shouldSkipValueChangedCallback;
 
@@ -22,10 +21,10 @@ public abstract class FormItem<TValue> : IFormItem
 
     public virtual bool IsReadOnly
     {
-        get => _isReadOnly;
+        get;
         set
         {
-            _isReadOnly = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

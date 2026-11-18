@@ -4,17 +4,12 @@ namespace Buform;
 
 public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, IPickerFormItemBase
 {
-    private string? _label;
-    private string? _message;
-    private bool _canBeCleared;
-    private PickerInputType _inputType;
-
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -22,10 +17,10 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public virtual string? Message
     {
-        get => _message;
+        get;
         set
         {
-            _message = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -33,10 +28,10 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public virtual bool CanBeCleared
     {
-        get => _canBeCleared;
+        get;
         set
         {
-            _canBeCleared = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -44,10 +39,10 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public virtual PickerInputType InputType
     {
-        get => _inputType;
+        get;
         set
         {
-            _inputType = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

@@ -4,14 +4,12 @@ namespace Buform;
 
 public class SwitchFormItem : ValidatableFormItem<bool>
 {
-    private string? _label;
-
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

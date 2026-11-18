@@ -8,16 +8,14 @@ public class MultilineTextInputFormItem<TValue>
 {
     private readonly Func<string?, TValue?> _converter;
 
-    private string? _placeholder;
-    private TextInputType _inputType;
     private Func<TValue?, string?>? _formatter;
 
     public virtual string? Placeholder
     {
-        get => _placeholder;
+        get;
         set
         {
-            _placeholder = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -25,10 +23,10 @@ public class MultilineTextInputFormItem<TValue>
 
     public virtual TextInputType InputType
     {
-        get => _inputType;
+        get;
         set
         {
-            _inputType = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

@@ -6,8 +6,6 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 {
     private Func<TValue?, string?>? _formatter;
     private IList<IPickerOptionFormItem> _options;
-    private Func<TValue?, string?>? _optionsFilterValueFactory;
-    private Func<CancellationToken, Task<IEnumerable<TValue>>>? _sourceFactory;
 
     public virtual Func<TValue?, string?>? Formatter
     {
@@ -28,14 +26,14 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
     public virtual Func<TValue?, string?>? OptionsFilterValueFactory
     {
-        get => _optionsFilterValueFactory;
+        get;
         set
         {
-            _optionsFilterValueFactory = value;
+            field = value;
 
             foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
             {
-                option.FilterValueFactory = _optionsFilterValueFactory;
+                option.FilterValueFactory = field;
             }
 
             NotifyPropertyChanged();
@@ -58,10 +56,10 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
     public virtual Func<CancellationToken, Task<IEnumerable<TValue>>>? SourceFactory
     {
-        get => _sourceFactory;
+        get;
         set
         {
-            _sourceFactory = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

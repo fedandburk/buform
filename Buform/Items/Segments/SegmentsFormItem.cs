@@ -4,7 +4,6 @@ namespace Buform;
 
 public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFormItem
 {
-    private string? _label;
     private Func<TValue?, string?>? _formatter;
     private IEnumerable<TValue>? _source;
 
@@ -12,10 +11,10 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

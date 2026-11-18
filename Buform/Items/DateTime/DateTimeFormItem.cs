@@ -6,8 +6,6 @@ public class DateTimeFormItem : ValidatableFormItem<DateTime?>
 {
     private DateTime _minValue;
     private DateTime _maxValue;
-    private string? _label;
-    private DateTimeInputType _inputType;
 
     public virtual DateTime MinValue
     {
@@ -33,10 +31,10 @@ public class DateTimeFormItem : ValidatableFormItem<DateTime?>
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -44,10 +42,10 @@ public class DateTimeFormItem : ValidatableFormItem<DateTime?>
 
     public virtual DateTimeInputType InputType
     {
-        get => _inputType;
+        get;
         set
         {
-            _inputType = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

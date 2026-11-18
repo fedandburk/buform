@@ -2,15 +2,12 @@ namespace Buform;
 
 public sealed class TextFormGroup : FormGroup<IFormItem>
 {
-    private string? _headerLabel;
-    private string? _footerLabel;
-
     public string? HeaderLabel
     {
-        get => _headerLabel;
+        get;
         set
         {
-            _headerLabel = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -18,10 +15,10 @@ public sealed class TextFormGroup : FormGroup<IFormItem>
 
     public string? FooterLabel
     {
-        get => _footerLabel;
+        get;
         set
         {
-            _footerLabel = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

@@ -4,14 +4,12 @@ namespace Buform.Tests;
 
 public sealed class Model : INotifyPropertyChanged
 {
-    private string? _name;
-
     public string? Name
     {
-        get => _name;
+        get;
         set
         {
-            _name = value;
+            field = value;
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
         }

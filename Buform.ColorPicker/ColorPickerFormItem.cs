@@ -5,14 +5,12 @@ namespace Buform;
 
 public class ColorPickerFormItem : ValidatableFormItem<Color>
 {
-    private string? _label;
-
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

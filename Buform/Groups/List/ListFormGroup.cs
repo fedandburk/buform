@@ -12,16 +12,14 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
     private readonly Func<TValue, TItem> _itemFactory;
     private string? _headerLabel;
     private string? _footerLabel;
-    private IEnumerable<TValue>? _source;
     private IDisposable? _sourceSubscription;
-    private ICommand? _selectCommand;
 
     public virtual ICommand? SelectCommand
     {
-        get => _selectCommand;
+        get;
         set
         {
-            _selectCommand = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -51,16 +49,16 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
 
     public virtual IEnumerable<TValue>? Source
     {
-        get => _source;
+        get;
         set
         {
             _sourceSubscription?.Dispose();
 
             Items.Clear();
 
-            _source = value;
+            field = value;
 
-            _sourceSubscription = ToChangeSet(_source ?? [])
+            _sourceSubscription = ToChangeSet(field ?? [])
                 .Transform(_itemFactory)
                 .PopulateInto(Items);
 

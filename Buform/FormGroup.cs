@@ -17,9 +17,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
     private readonly ReadOnlyObservableCollection<TFormItem> _visibleItems;
     private readonly CompositeDisposable _subscriptions;
 
-    private ICommand? _removeCommand;
-    private ICommand? _moveCommand;
-    private ICommand? _insertCommand;
     private bool _isDisposed;
 
     public int Count => _visibleItems.Count;
@@ -30,30 +27,30 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     public virtual ICommand? RemoveCommand
     {
-        get => _removeCommand;
+        get;
         set
         {
-            _removeCommand = value;
+            field = value;
             NotifyPropertyChanged();
         }
     }
 
     public virtual ICommand? MoveCommand
     {
-        get => _moveCommand;
+        get;
         set
         {
-            _moveCommand = value;
+            field = value;
             NotifyPropertyChanged();
         }
     }
 
     public virtual ICommand? InsertCommand
     {
-        get => _insertCommand;
+        get;
         set
         {
-            _insertCommand = value;
+            field = value;
             NotifyPropertyChanged();
         }
     }

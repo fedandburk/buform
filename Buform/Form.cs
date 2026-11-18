@@ -14,7 +14,6 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
     private readonly ReadOnlyObservableCollection<IFormItem> _items;
     private readonly CompositeDisposable _subscriptions;
 
-    private bool _isReadOnly;
     private bool _isDisposed;
 
     public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
@@ -27,15 +26,15 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
     public virtual bool IsReadOnly
     {
-        get => _isReadOnly;
+        get;
         set
         {
-            if (_isReadOnly == value)
+            if (field == value)
             {
                 return;
             }
 
-            _isReadOnly = value;
+            field = value;
 
             NotifyPropertyChanged();
 

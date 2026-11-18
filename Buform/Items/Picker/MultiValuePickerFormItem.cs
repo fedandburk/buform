@@ -8,7 +8,6 @@ public class MultiValuePickerFormItem<TValue>
 {
     private Func<TValue?, string?>? _itemFormatter;
     private IList<IPickerOptionFormItem> _options;
-    private Func<TValue?, string?>? _optionsFilterValueFactory;
     private Func<IEnumerable<TValue>?, string?>? _valueFormatter;
     private IEnumerable<TValue>? _source;
 
@@ -44,14 +43,14 @@ public class MultiValuePickerFormItem<TValue>
 
     public virtual Func<TValue?, string?>? OptionsFilterValueFactory
     {
-        get => _optionsFilterValueFactory;
+        get;
         set
         {
-            _optionsFilterValueFactory = value;
+            field = value;
 
             foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
             {
-                option.FilterValueFactory = _optionsFilterValueFactory;
+                option.FilterValueFactory = field;
             }
 
             NotifyPropertyChanged();

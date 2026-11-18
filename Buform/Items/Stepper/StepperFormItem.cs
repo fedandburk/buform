@@ -7,7 +7,6 @@ public class StepperFormItem : ValidatableFormItem<int>
     private int _minValue;
     private int _maxValue;
     private int _stepAmount;
-    private string? _label;
 
     public virtual int MinValue
     {
@@ -44,10 +43,10 @@ public class StepperFormItem : ValidatableFormItem<int>
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

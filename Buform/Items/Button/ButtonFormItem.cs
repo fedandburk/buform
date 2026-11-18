@@ -5,9 +5,6 @@ namespace Buform;
 
 public class ButtonFormItem : FormItem<ICommand>
 {
-    private string? _label;
-    private ButtonInputType _inputType;
-
     public override bool IsReadOnly
     {
         get => base.IsReadOnly || !Value.SafeCanExecute();
@@ -16,10 +13,10 @@ public class ButtonFormItem : FormItem<ICommand>
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -27,10 +24,10 @@ public class ButtonFormItem : FormItem<ICommand>
 
     public virtual ButtonInputType InputType
     {
-        get => _inputType;
+        get;
         set
         {
-            _inputType = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

@@ -5,7 +5,6 @@ namespace Buform;
 public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormItem
 {
     private Func<TValue?, string?>? _formatter;
-    private Func<TValue?, string?>? _optionsFilterValueFactory;
     private IEnumerable<TValue>? _source;
     private IList<IPickerOptionFormItem> _options;
 
@@ -28,14 +27,14 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
 
     public virtual Func<TValue?, string?>? OptionsFilterValueFactory
     {
-        get => _optionsFilterValueFactory;
+        get;
         set
         {
-            _optionsFilterValueFactory = value;
+            field = value;
 
             foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
             {
-                option.FilterValueFactory = _optionsFilterValueFactory;
+                option.FilterValueFactory = field;
             }
 
             NotifyPropertyChanged();

@@ -4,14 +4,12 @@ namespace Buform;
 
 public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatableFormItem
 {
-    private string? _validationErrorMessage;
-
     public virtual string? ValidationErrorMessage
     {
-        get => _validationErrorMessage;
+        get;
         private set
         {
-            _validationErrorMessage = value;
+            field = value;
 
             NotifyPropertyChanged();
         }

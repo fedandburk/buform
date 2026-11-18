@@ -4,16 +4,15 @@ namespace Buform;
 
 public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICallbackPickerFormItem
 {
-    private string? _label;
     private Func<Task<TValue>>? _callback;
     private Func<TValue?, string?>? _formatter;
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
