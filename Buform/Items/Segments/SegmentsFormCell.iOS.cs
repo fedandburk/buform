@@ -11,6 +11,8 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     private List<ISegmentsOptionFormItem> _items = new();
 
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UISegmentedControl? SegmentedControl { get; set; }
 
     protected SegmentsFormCell()
@@ -167,23 +169,12 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         }
     }
 
-    protected virtual void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
         UpdateItems();
         UpdateValue();
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -201,9 +192,6 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue();
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

@@ -4,6 +4,8 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
     where TItem : class, IFormItem
 {
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UILabel? ValueLabel { get; set; }
 
     protected PickerFormCellBase()
@@ -87,16 +89,6 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
         }
 
         ValueLabel.Text = text;
-    }
-
-    protected virtual void UpdateValidationErrorMessage(string? validationErrorMessage)
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = validationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
     }
 
     protected override void Dispose(bool disposing)

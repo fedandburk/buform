@@ -23,7 +23,6 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCellBase<TItem>
         UpdateReadOnlyState();
         UpdateLabel(Item?.Label);
         UpdateValue(Item?.FormattedValue);
-        UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -38,9 +37,6 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCellBase<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue(Item?.FormattedValue);
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
                 break;
         }
     }

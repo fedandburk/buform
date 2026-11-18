@@ -6,6 +6,8 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     where TItem : DateTimeFormItem
 {
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UIDatePicker? DatePicker { get; set; }
 
     protected DateTimeFormCell()
@@ -153,16 +155,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         DatePicker.Date = date;
     }
 
-    protected virtual void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
@@ -171,7 +163,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         UpdateLabel();
         UpdateInputType();
         UpdateValue();
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -195,9 +186,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue();
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

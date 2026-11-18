@@ -4,11 +4,16 @@ public abstract class ValidatableForm : Form
 {
     private bool _isValid;
 
-    public virtual bool IsValid
+    public bool IsValid
     {
         get => _isValid;
-        protected set
+        private set
         {
+            if (_isValid == value)
+            {
+                return;
+            }
+
             _isValid = value;
 
             NotifyPropertyChanged();
@@ -21,43 +26,50 @@ public abstract class ValidatableForm : Form
         _isValid = true;
     }
 
-    protected virtual void SetValidationErrors(
-        bool isForced,
-        params FormValidationError[] validationErrors
-    )
-    {
-        var items = this.SelectMany(item => item).OfType<IValidatableFormItem>().ToArray();
-
-        foreach (var item in items)
-        {
-            var validationError = validationErrors.FirstOrDefault(i =>
-                i.TargetPropertyName == item.PropertyName
-            );
-
-            item.SetValidationError(validationError, isForced);
-        }
-    }
-
-    protected virtual void ResetValidationErrors()
-    {
-        var items = this.SelectMany(item => item).OfType<IValidatableFormItem>().ToArray();
-
-        foreach (var item in items)
-        {
-            item.ResetValidationError();
-        }
-    }
+    protected abstract IReadOnlyList<FormValidationError> GetValidationErrors();
 
     protected override void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
         base.OnItemValueChanged(sender, e);
 
-        PerformValidation();
+        Validate();
     }
 
-    public abstract bool PerformValidation();
+    public bool Validate()
+    {
+        return Validate(false);
+    }
 
-    public abstract bool PerformForcedValidation();
+    public bool ValidateAll()
+    {
+        return Validate(true);
+    }
 
-    public abstract void ResetValidation();
+    public void ResetValidation()
+    {
+        IsValid = GetValidationErrors().Count == 0;
+
+        foreach (var item in AllItems.OfType<IValidatableFormItem>())
+        {
+            item.ResetValidationError();
+        }
+    }
+
+    private bool Validate(bool showsUnchangedValues)
+    {
+        var validationErrors = GetValidationErrors();
+
+        IsValid = validationErrors.Count == 0;
+
+        foreach (var item in AllItems.OfType<IValidatableFormItem>())
+        {
+            var validationError = validationErrors.FirstOrDefault(error =>
+                error.TargetPropertyName == item.PropertyName
+            );
+
+            item.SetValidationError(validationError, showsUnchangedValues);
+        }
+
+        return IsValid;
+    }
 }

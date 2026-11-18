@@ -9,6 +9,8 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     protected virtual IUIColorPickerViewControllerDelegate? Delegate { get; set; }
 
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UIView? ColorView { get; set; }
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
@@ -88,21 +90,10 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
         ColorView.BackgroundColor = Item?.Value.ToColor() ?? UIColor.Clear;
     }
 
-    protected virtual void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateLabel();
         UpdateValue();
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -114,9 +105,6 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue();
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

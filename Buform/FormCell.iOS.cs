@@ -84,6 +84,8 @@ public abstract class FormCell<TItem> : FormCell
 {
     public new TItem? Item { get; private set; }
 
+    protected virtual UILabel? ValidationLabel => null;
+
     protected FormCell()
     {
         /* Required constructor */
@@ -108,7 +110,23 @@ public abstract class FormCell<TItem> : FormCell
             return;
         }
 
+        if (e.PropertyName == nameof(IValidatableFormItem.ValidationErrorMessage))
+        {
+            UpdateValidationLabel();
+        }
+
         OnItemPropertyChanged(e.PropertyName);
+    }
+
+    private void UpdateValidationLabel()
+    {
+        if (ValidationLabel == null || Item is not IValidatableFormItem item)
+        {
+            return;
+        }
+
+        ValidationLabel.TextColor =
+            item.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
     }
 
     protected abstract void OnItemSet();
@@ -139,6 +157,8 @@ public abstract class FormCell<TItem> : FormCell
         Item.PropertyChanged += OnItemPropertyChanged;
 
         OnItemSet();
+
+        UpdateValidationLabel();
     }
 
     protected override void Dispose(bool disposing)

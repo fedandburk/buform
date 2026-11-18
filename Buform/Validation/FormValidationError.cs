@@ -8,6 +8,9 @@ public sealed class FormValidationError
 
     public FormValidationError(string targetPropertyName, string errorMessage)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(targetPropertyName);
+        ArgumentNullException.ThrowIfNull(errorMessage);
+
         TargetPropertyName = targetPropertyName;
         ErrorMessage = errorMessage;
     }

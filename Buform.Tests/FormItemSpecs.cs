@@ -1,4 +1,3 @@
-using System.Reflection;
 using AwesomeAssertions;
 using Xunit;
 
@@ -11,15 +10,16 @@ public static class FormItemSpecs
         protected const string First = "first";
         protected const string Changed = "changed";
 
-        protected Context(object target)
+        protected Context()
         {
-            Model = new Model();
-            Sut = new TextFormItem<string?>(() => Model.Name);
+            Target = new Model { Name = First };
 
-            _ = new Form(target) { new TextFormGroup { Sut } };
+            Sut = new TextFormItem<string?>(() => Target.Name);
+
+            _ = new Form(Target) { new TextFormGroup { Sut } };
         }
 
-        protected Model Model { get; }
+        protected Model Target { get; }
 
         protected TextFormItem<string?> Sut { get; }
     }
@@ -28,63 +28,55 @@ public static class FormItemSpecs
     {
         public sealed class TargetPropertyRead : Context
         {
-            private readonly Model _target;
             private readonly string? _value;
 
             public TargetPropertyRead()
-                : this(new Model { Name = First }) { }
-
-            private TargetPropertyRead(Model target)
-                : base(target)
             {
-                _target = target;
-
                 _value = Sut.Value;
             }
 
             [Fact]
             public void ReturnsTargetProperty()
             {
-                _value.Should().Be(_target.Name);
+                _value.Should().Be(First);
             }
         }
 
         public sealed class ValueWritten : Context
         {
-            private readonly Model _target;
-
             public ValueWritten()
-                : this(new Model()) { }
-
-            private ValueWritten(Model target)
-                : base(target)
             {
-                _target = target;
-
                 Sut.Value = Changed;
             }
 
             [Fact]
             public void WritesTargetProperty()
             {
-                _target.Name.Should().Be(Changed);
+                Target.Name.Should().Be(Changed);
             }
         }
+    }
 
-        public sealed class TargetOfOtherType : Context
+    public static class Initialize
+    {
+        public sealed class TargetOfOtherType
         {
             private readonly Exception? _exception;
 
             public TargetOfOtherType()
-                : base(new object())
             {
-                _exception = Record.Exception(() => Sut.Value);
+                var model = new Model();
+                var item = new TextFormItem<string?>(() => model.Name);
+
+                _exception = Record.Exception(() =>
+                    new Form(new object()) { new TextFormGroup { item } }
+                );
             }
 
             [Fact]
             public void Throws()
             {
-                _exception.Should().BeOfType<TargetException>();
+                _exception.Should().BeOfType<ArgumentException>();
             }
         }
     }

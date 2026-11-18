@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using DynamicData;
 using DynamicData.Binding;
@@ -21,6 +20,8 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
     public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
 
     protected virtual object? Target { get; private set; }
+
+    protected IReadOnlyList<IFormItem> AllItems => _items;
 
     public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
 
@@ -51,27 +52,25 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
         Target = target;
 
-        var items = this.ToObservableChangeSet()
+        var itemsSubscription = this.ToObservableChangeSet()
             .MergeManyChangeSets(group => group.Connect())
-            .OnItemAdded(InitializeItem)
-            .Publish();
+            .Bind(out _items)
+            .Subscribe();
 
-        var itemsSubscription = items.Bind(out _items).Subscribe();
+        var groupsSubscription = this.ToObservableChangeSet()
+            .SubscribeMany(group => group.Connect().SubscribeMany(SubscribeItem).Subscribe())
+            .Subscribe();
 
-        var valueChangedSubscription = items
-            .MergeMany(item =>
-                Observable.FromEventPattern<FormValueChangedEventArgs>(
-                    handler => item.ValueChanged += handler,
-                    handler => item.ValueChanged -= handler
-                )
-            )
-            .Subscribe(pattern => OnItemValueChanged(pattern.Sender, pattern.EventArgs));
+        _subscriptions = new CompositeDisposable(itemsSubscription, groupsSubscription);
+    }
 
-        _subscriptions = new CompositeDisposable(
-            itemsSubscription,
-            valueChangedSubscription,
-            items.Connect()
-        );
+    private IDisposable SubscribeItem(IFormItem item)
+    {
+        item.ValueChanged += OnItemValueChanged;
+
+        InitializeItem(item);
+
+        return Disposable.Create(() => item.ValueChanged -= OnItemValueChanged);
     }
 
     protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)

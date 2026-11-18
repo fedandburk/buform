@@ -76,6 +76,20 @@ public static class FormSpecs
             }
         }
 
+        public sealed class NameItemAdded : Context
+        {
+            public NameItemAdded()
+            {
+                Sut.Add(new TextFormGroup { CreateNameItem() });
+            }
+
+            [Fact]
+            public void RaisesValueChangedForInitialValue()
+            {
+                ValueChanges.Should().Equal(nameof(Model.Name));
+            }
+        }
+
         public sealed class HiddenItemAdded : Context
         {
             private readonly TextFormItem<string?> _hiddenItem;
@@ -198,6 +212,48 @@ public static class FormSpecs
             public void StopsRaisingValueChanged()
             {
                 ValueChanges.Should().BeEmpty();
+            }
+        }
+
+        public sealed class HandlerThrowsOnce : Context
+        {
+            private readonly Exception? _exception;
+
+            public HandlerThrowsOnce()
+            {
+                Sut.Add(new TextFormGroup { CreateNameItem() });
+
+                var shouldThrow = true;
+
+                Sut.ValueChanged += (_, _) =>
+                {
+                    if (!shouldThrow)
+                    {
+                        return;
+                    }
+
+                    shouldThrow = false;
+
+                    throw new InvalidOperationException();
+                };
+
+                _exception = Record.Exception(() => Target.Name = First);
+
+                ValueChanges.Clear();
+
+                Target.Name = Changed;
+            }
+
+            [Fact]
+            public void PropagatesException()
+            {
+                _exception.Should().BeOfType<InvalidOperationException>();
+            }
+
+            [Fact]
+            public void KeepsRaisingValueChanged()
+            {
+                ValueChanges.Should().Equal(nameof(Model.Name));
             }
         }
 

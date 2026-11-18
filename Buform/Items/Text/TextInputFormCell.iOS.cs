@@ -9,6 +9,8 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
     private NSLayoutConstraint? _labelWidthConstraint;
 
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UITextField? TextField { get; set; }
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
@@ -175,16 +177,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         TextField.Text = Item?.FormattedValue;
     }
 
-    protected virtual void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
@@ -193,7 +185,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         UpdateInputType();
         UpdateSecuredState();
         UpdateValue();
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -217,9 +208,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.FormattedValue):
                 UpdateValue();
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

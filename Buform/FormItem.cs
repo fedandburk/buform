@@ -159,6 +159,14 @@ public abstract class FormItem<TValue> : IFormItem
         ArgumentNullException.ThrowIfNull(form);
         ArgumentNullException.ThrowIfNull(target);
 
+        if (_propertyInfo?.DeclaringType?.IsInstanceOfType(target) == false)
+        {
+            throw new ArgumentException(
+                $"Target of type '{target.GetType()}' does not declare property '{PropertyName}'.",
+                nameof(target)
+            );
+        }
+
         Form = form;
 
         if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)

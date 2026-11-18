@@ -6,6 +6,8 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
     where TItem : SwitchFormItem
 {
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UISwitch? Switch { get; set; }
 
     protected SwitchFormCell()
@@ -85,22 +87,11 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         Switch?.SetState(Item?.Value ?? false, isAnimated);
     }
 
-    private void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
         UpdateValue(false);
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -115,9 +106,6 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue(true);
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

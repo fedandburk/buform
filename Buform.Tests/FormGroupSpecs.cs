@@ -115,6 +115,27 @@ public static class FormGroupSpecs
         }
     }
 
+    public static class CollectionChanged
+    {
+        public sealed class HandlerThrowsOnVisibilityChange : Context
+        {
+            private readonly Exception? _exception;
+
+            public HandlerThrowsOnVisibilityChange()
+            {
+                Sut.CollectionChanged += (_, _) => throw new InvalidOperationException();
+
+                _exception = Record.Exception(() => SecondItem.IsVisible = false);
+            }
+
+            [Fact]
+            public void PropagatesException()
+            {
+                _exception.Should().BeOfType<InvalidOperationException>();
+            }
+        }
+    }
+
     public static class Insert
     {
         public sealed class AfterHiddenItem : Context

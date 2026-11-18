@@ -21,9 +21,13 @@ public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatab
         /* Required constructor */
     }
 
-    public virtual void SetValidationError(FormValidationError? validationError, bool isForced)
+    public virtual void SetValidationError(
+        FormValidationError? validationError,
+        bool showsUnchangedValue
+    )
     {
-        ValidationErrorMessage = IsValueChanged || isForced ? validationError?.ErrorMessage : null;
+        ValidationErrorMessage =
+            IsValueChanged || showsUnchangedValue ? validationError?.ErrorMessage : null;
     }
 
     public virtual void ResetValidationError()

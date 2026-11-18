@@ -6,6 +6,8 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
     where TItem : StepperFormItem
 {
     protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
     protected virtual UIStepper? Stepper { get; set; }
 
     protected StepperFormCell()
@@ -120,16 +122,6 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         Stepper.Value = Item?.Value ?? 0;
     }
 
-    protected virtual void UpdateValidationErrorMessage()
-    {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.TextColor = Item?.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
@@ -138,7 +130,6 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         UpdateStepAmount();
         UpdateLabel();
         UpdateValue();
-        UpdateValidationErrorMessage();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -162,9 +153,6 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
                 break;
             case nameof(Item.Value):
                 UpdateValue();
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage();
                 break;
         }
     }

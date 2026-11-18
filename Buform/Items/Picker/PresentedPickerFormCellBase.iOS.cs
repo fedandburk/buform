@@ -58,7 +58,6 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
         UpdateLabel(Item?.Label);
         UpdateInputType();
         UpdateValue(Item?.FormattedValue);
-        UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -76,9 +75,6 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
                 break;
             case nameof(Item.FormattedValue):
                 UpdateValue(Item?.FormattedValue);
-                break;
-            case nameof(Item.ValidationErrorMessage):
-                UpdateValidationErrorMessage(Item?.ValidationErrorMessage);
                 break;
         }
     }
