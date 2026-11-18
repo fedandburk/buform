@@ -15,11 +15,5 @@ public interface IFormGroup
     ICommand? MoveCommand { get; }
     ICommand? InsertCommand { get; }
 
-    IEnumerable<IFormItem> HiddenItems { get; }
-
-    event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-
     IObservable<IChangeSet<IFormItem>> Connect();
-
-    IFormItem? GetItem(string propertyName);
 }

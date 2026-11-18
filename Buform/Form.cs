@@ -11,6 +11,7 @@ namespace Buform;
 
 public class Form : ObservableCollection<IFormGroup>, IDisposable
 {
+    private readonly ReadOnlyObservableCollection<IFormItem> _items;
     private readonly CompositeDisposable _subscriptions;
 
     private bool _isReadOnly;
@@ -38,10 +39,10 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
             NotifyPropertyChanged();
 
-            var items = this.SelectMany(item => item)
-                .Concat(this.SelectMany(item => item.HiddenItems));
-
-            UpdateItems(items);
+            foreach (var item in _items)
+            {
+                item.IsReadOnly = value;
+            }
         }
     }
 
@@ -51,23 +52,27 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
         Target = target;
 
-        var groups = this.ToObservableChangeSet();
-
-        var itemsSubscription = groups
+        var items = this.ToObservableChangeSet()
             .MergeManyChangeSets(group => group.Connect())
             .OnItemAdded(InitializeItem)
-            .Subscribe();
+            .Publish();
 
-        var valueChangedSubscription = groups
-            .MergeMany(group =>
+        var itemsSubscription = items.Bind(out _items).Subscribe();
+
+        var valueChangedSubscription = items
+            .MergeMany(item =>
                 Observable.FromEventPattern<FormValueChangedEventArgs>(
-                    handler => group.ValueChanged += handler,
-                    handler => group.ValueChanged -= handler
+                    handler => item.ValueChanged += handler,
+                    handler => item.ValueChanged -= handler
                 )
             )
             .Subscribe(pattern => OnItemValueChanged(pattern.Sender, pattern.EventArgs));
 
-        _subscriptions = new CompositeDisposable(itemsSubscription, valueChangedSubscription);
+        _subscriptions = new CompositeDisposable(
+            itemsSubscription,
+            valueChangedSubscription,
+            items.Connect()
+        );
     }
 
     protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
@@ -78,14 +83,6 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
     protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
     {
         OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected virtual void UpdateItems(IEnumerable<IFormItem> items)
-    {
-        foreach (var item in items)
-        {
-            item.IsReadOnly = IsReadOnly;
-        }
     }
 
     private void InitializeItem(IFormItem item)
@@ -117,7 +114,7 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
     public virtual IFormItem? GetItem(string propertyName)
     {
-        return this.Select(item => item.GetItem(propertyName)).FirstOrDefault(item => item != null);
+        return _items.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 
     public void Dispose()

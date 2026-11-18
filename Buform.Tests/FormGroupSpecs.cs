@@ -44,8 +44,15 @@ public static class FormGroupSpecs
 
         protected IReadOnlyList<object?> VisibleValues => Sut.Select(item => item.Value).ToList();
 
-        protected IReadOnlyList<object?> HiddenValues =>
-            Sut.HiddenItems.Select(item => item.Value).ToList();
+        protected IReadOnlyList<object?> HiddenValues
+        {
+            get
+            {
+                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
+
+                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
+            }
+        }
     }
 
     public static class IsVisible
@@ -244,32 +251,6 @@ public static class FormGroupSpecs
             public void DisposesAllItems()
             {
                 AllValues.Should().AllSatisfy(value => value.Should().BeNull());
-            }
-        }
-    }
-
-    public static class GetItem
-    {
-        public sealed class HiddenItemWithProperty : Context
-        {
-            private readonly TextFormItem<string?> _hiddenItem;
-            private readonly IFormItem? _result;
-
-            public HiddenItemWithProperty()
-            {
-                var model = new Model();
-
-                _hiddenItem = new TextFormItem<string?>(() => model.Name) { IsVisible = false };
-
-                Sut.Add(_hiddenItem);
-
-                _result = Sut.GetItem(nameof(Model.Name));
-            }
-
-            [Fact]
-            public void ReturnsHiddenItem()
-            {
-                _result.Should().BeSameAs(_hiddenItem);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using AwesomeAssertions;
+using DynamicData;
 using Xunit;
 
 namespace Buform.Tests.Groups.List;
@@ -32,8 +33,15 @@ public static class ListFormGroupSpecs
         protected IReadOnlyList<string?> VisibleValues =>
             Sut.Cast<TextFormItem<string>>().Select(item => item.Value).ToList();
 
-        protected IReadOnlyList<object?> HiddenValues =>
-            Sut.HiddenItems.Select(item => item.Value).ToList();
+        protected IReadOnlyList<object?> HiddenValues
+        {
+            get
+            {
+                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
+
+                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
+            }
+        }
 
         protected TextFormItem<string> VisibleItem(string value)
         {

@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Reactive.Disposables;
-using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using DynamicData;
@@ -16,7 +15,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 {
     private readonly SourceList<TFormItem> _items;
     private readonly ReadOnlyObservableCollection<TFormItem> _visibleItems;
-    private readonly ReadOnlyObservableCollection<TFormItem> _hiddenItems;
     private readonly CompositeDisposable _subscriptions;
 
     private ICommand? _removeCommand;
@@ -27,8 +25,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
     public int Count => _visibleItems.Count;
 
     public TFormItem this[int index] => _visibleItems[index];
-
-    public IEnumerable<IFormItem> HiddenItems => _hiddenItems.Cast<IFormItem>();
 
     public virtual ICommand? RemoveCommand
     {
@@ -62,7 +58,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     protected ISourceList<TFormItem> Items => _items;
 
-    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
     public event NotifyCollectionChangedEventHandler? CollectionChanged;
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -70,36 +65,15 @@ public abstract class FormGroup<TFormItem> : IFormGroup
     {
         _items = new SourceList<TFormItem>();
 
-        var items = _items.Connect().DisposeMany().AutoRefresh(item => item.IsVisible).Publish();
-
-        var visibleItemsSubscription = items
+        var visibleItemsSubscription = _items
+            .Connect()
+            .DisposeMany()
+            .AutoRefresh(item => item.IsVisible)
             .Filter(item => item.IsVisible)
             .Bind(out _visibleItems)
             .Subscribe();
 
-        var hiddenItemsSubscription = items
-            .Filter(item => !item.IsVisible)
-            .Bind(out _hiddenItems)
-            .Subscribe();
-
-        var valueChangedSubscription = items
-            .MergeMany(item =>
-                Observable.FromEventPattern<FormValueChangedEventArgs>(
-                    handler => item.ValueChanged += handler,
-                    handler => item.ValueChanged -= handler
-                )
-            )
-            .Subscribe(pattern => OnItemValueChanged(pattern.Sender, pattern.EventArgs));
-
-        var itemsConnection = items.Connect();
-
-        _subscriptions = new CompositeDisposable(
-            visibleItemsSubscription,
-            hiddenItemsSubscription,
-            valueChangedSubscription,
-            itemsConnection,
-            _items
-        );
+        _subscriptions = new CompositeDisposable(visibleItemsSubscription, _items);
 
         ((INotifyCollectionChanged)_visibleItems).CollectionChanged += OnVisibleItemsChanged;
         ((INotifyPropertyChanged)_visibleItems).PropertyChanged += OnVisibleItemsPropertyChanged;
@@ -113,11 +87,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
     private void OnVisibleItemsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         PropertyChanged?.Invoke(this, e);
-    }
-
-    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
-    {
-        ValueChanged?.Invoke(this, e);
     }
 
     protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -159,11 +128,6 @@ public abstract class FormGroup<TFormItem> : IFormGroup
     public void Clear()
     {
         _items.Clear();
-    }
-
-    public virtual IFormItem? GetItem(string propertyName)
-    {
-        return _items.Items.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 
     public IEnumerator<IFormItem> GetEnumerator()
