@@ -1,8 +1,8 @@
 namespace Buform;
 
-public enum FormViewHolderType
+internal enum FormRowType
 {
-    Item,
     Header,
+    Item,
     Footer,
 }

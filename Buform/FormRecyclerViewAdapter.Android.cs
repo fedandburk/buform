@@ -1,53 +1,32 @@
-// ReSharper disable InvertIf
-
 using System.Collections.Specialized;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
-using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
 internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
 {
     private Form? _form;
-    private IEnumerable<IFormItem>? _items;
-    private IDisposable? _formSubscription;
-    private IDisposable? _itemsSubscription;
+    private FormRowList? _rows;
 
     public Form? Form
     {
         get => _form;
         set
         {
-            if (ReferenceEquals(Form, value))
+            if (ReferenceEquals(_form, value))
             {
                 return;
             }
 
-            _formSubscription?.Dispose();
-            _itemsSubscription?.Dispose();
-
-            if (_items is IDisposable disposable)
-            {
-                disposable.Dispose();
-            }
-
-            _items = null;
+            DisposeRows();
 
             _form = value;
 
-            if (_form == null)
+            if (_form != null)
             {
-                return;
-            }
-
-            _formSubscription = _form.WeakSubscribe(OnFormChanged);
-
-            _items = _form.ObservableFlatten();
-
-            if (_items is INotifyCollectionChanged notifyCollectionChanged)
-            {
-                _itemsSubscription = notifyCollectionChanged.WeakSubscribe(OnItemsChanged);
+                _rows = new FormRowList(_form);
+                _rows.CollectionChanged += OnRowsChanged;
             }
 
             // TODO: Use Looper.MainLooper.
@@ -55,45 +34,24 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
         }
     }
 
-    public override int ItemCount => GetItemsCount();
+    public override int ItemCount => _rows?.Count ?? 0;
 
-    private void OnFormChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
-        if (_form == null || _formSubscription == null)
-        {
-            return;
-        }
-
         // TODO: Use Looper.MainLooper.
-        NotifyDataSetChanged();
-    }
-
-    private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs args)
-    {
-        if (_items == null || _itemsSubscription == null)
-        {
-            return;
-        }
-
-        // TODO: Use Looper.MainLooper.
-        UpdateItems(args);
-    }
-
-    private void UpdateItems(NotifyCollectionChangedEventArgs args)
-    {
         switch (args.Action)
         {
-            case NotifyCollectionChangedAction.Add when args.NewItems != null:
-                NotifyItemRangeInserted(args.NewStartingIndex, args.NewItems.Count);
+            case NotifyCollectionChangedAction.Add:
+                NotifyItemRangeInserted(args.NewStartingIndex, args.NewItems!.Count);
                 break;
-            case NotifyCollectionChangedAction.Remove when args.OldItems != null:
-                NotifyItemRangeRemoved(args.OldStartingIndex, args.OldItems.Count);
+            case NotifyCollectionChangedAction.Remove:
+                NotifyItemRangeRemoved(args.OldStartingIndex, args.OldItems!.Count);
                 break;
-            case NotifyCollectionChangedAction.Replace when args.NewItems != null:
-                NotifyItemRangeChanged(args.NewStartingIndex, args.NewItems.Count);
+            case NotifyCollectionChangedAction.Replace:
+                NotifyItemRangeChanged(args.NewStartingIndex, args.NewItems!.Count);
                 break;
-            case NotifyCollectionChangedAction.Move when args.NewItems != null:
-                for (var i = 0; i < args.NewItems.Count; i++)
+            case NotifyCollectionChangedAction.Move:
+                for (var i = 0; i < args.NewItems!.Count; i++)
                 {
                     NotifyItemMoved(args.OldStartingIndex + i, args.NewStartingIndex + i);
                 }
@@ -103,109 +61,45 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
                 NotifyDataSetChanged();
                 break;
             default:
-                throw new ArgumentOutOfRangeException(
-                    nameof(NotifyCollectionChangedEventArgs),
-                    args,
-                    null
-                );
+                throw new ArgumentOutOfRangeException(nameof(args), args.Action, null);
         }
     }
 
-    private int GetItemsCount()
+    private FormRow GetRow(int position)
     {
-        if (_items == null || _form == null)
-        {
-            return 0;
-        }
-
-        var itemsCount = _items.Count();
-        var sectionsCount = _form.Count * 2; // Each section has a header and a footer.
-
-        return itemsCount + sectionsCount;
-    }
-
-    private bool TryGetData(
-        int position,
-        out IDisposable? data,
-        out FormViewHolderType? viewHolderType
-    )
-    {
-        if (_form == null)
-        {
-            data = null;
-            viewHolderType = null;
-
-            return false;
-        }
-
-        var index = 0;
-
-        foreach (var section in _form)
-        {
-            if (index == position)
-            {
-                data = section;
-                viewHolderType = FormViewHolderType.Header;
-
-                return true;
-            }
-
-            index++; // Count the header.
-
-            foreach (var item in section)
-            {
-                if (index == position)
-                {
-                    data = item;
-                    viewHolderType = FormViewHolderType.Item;
-
-                    return true;
-                }
-
-                index++; // Count the item.
-            }
-
-            if (index == position)
-            {
-                data = section;
-                viewHolderType = FormViewHolderType.Footer;
-
-                return true;
-            }
-
-            index++; // Count the footer.
-        }
-
-        data = null;
-        viewHolderType = null;
-
-        return false;
-    }
-
-    public override int GetItemViewType(int position)
-    {
-        var dataResult = TryGetData(position, out var data, out var viewHolderType);
-
-        if (!dataResult)
+        if (_rows == null || position < 0 || position >= _rows.Count)
         {
             throw new FormViewNotFoundException(position);
         }
 
-        var dataType = data!.GetType();
+        return _rows[position];
+    }
+
+    private void DisposeRows()
+    {
+        if (_rows == null)
+        {
+            return;
+        }
+
+        _rows.CollectionChanged -= OnRowsChanged;
+        _rows.Dispose();
+        _rows = null;
+    }
+
+    public override int GetItemViewType(int position)
+    {
+        var row = GetRow(position);
+        var data = row.Data;
+        var dataType = data.GetType();
 
         int? viewType;
 
-        var result = viewHolderType! switch
+        var result = row.Type switch
         {
-            FormViewHolderType.Item => FormPlatform.TryGetItemViewType(dataType, out viewType),
-            FormViewHolderType.Header => FormPlatform.TryGetGroupHeaderViewType(
-                dataType,
-                out viewType
-            ),
-            FormViewHolderType.Footer => FormPlatform.TryGetGroupFooterViewType(
-                dataType,
-                out viewType
-            ),
+            FormRowType.Item => FormPlatform.TryGetItemViewType(dataType, out viewType),
+            FormRowType.Header => FormPlatform.TryGetGroupHeaderViewType(dataType, out viewType),
+            FormRowType.Footer => FormPlatform.TryGetGroupFooterViewType(dataType, out viewType),
             _ => throw new ArgumentOutOfRangeException(),
         };
 
@@ -239,39 +133,25 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        var dataResult = TryGetData(position, out var data, out _);
-
-        if (!dataResult)
-        {
-            throw new FormViewNotFoundException(position);
-        }
+        var row = GetRow(position);
 
         if (holder is not FormViewHolder viewHolder)
         {
             return;
         }
 
-        viewHolder.Initialize(data!);
+        viewHolder.Initialize(row.Data);
     }
 
     protected override void Dispose(bool disposing)
     {
+        if (disposing)
+        {
+            DisposeRows();
+
+            _form = null;
+        }
+
         base.Dispose(disposing);
-
-        if (!disposing)
-        {
-            return;
-        }
-
-        _formSubscription?.Dispose();
-        _itemsSubscription?.Dispose();
-
-        if (_items is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
-
-        _form = null;
-        _items = null;
     }
 }

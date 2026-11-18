@@ -26,6 +26,8 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     public TFormItem this[int index] => _visibleItems[index];
 
+    IFormItem IReadOnlyList<IFormItem>.this[int index] => this[index];
+
     public virtual ICommand? RemoveCommand
     {
         get => _removeCommand;

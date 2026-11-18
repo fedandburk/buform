@@ -6,7 +6,7 @@ using DynamicData;
 namespace Buform;
 
 public interface IFormGroup
-    : IEnumerable<IFormItem>,
+    : IReadOnlyList<IFormItem>,
         INotifyCollectionChanged,
         INotifyPropertyChanged,
         IDisposable

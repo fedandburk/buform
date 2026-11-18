@@ -26,11 +26,11 @@ internal sealed class FormRegistry
         }
     }
 
-    private readonly IDictionary<(Type, FormViewHolderType), Holder> _holders;
+    private readonly IDictionary<(Type, FormRowType), Holder> _holders;
 
     public FormRegistry()
     {
-        _holders = new Dictionary<(Type, FormViewHolderType), Holder>();
+        _holders = new Dictionary<(Type, FormRowType), Holder>();
     }
 
     public void RegisterItem<
@@ -40,10 +40,7 @@ internal sealed class FormRegistry
         where TData : class, INotifyPropertyChanged, IDisposable
         where TViewHolder : FormViewHolder
     {
-        _holders[(typeof(TData), FormViewHolderType.Item)] = new Holder(
-            typeof(TViewHolder),
-            resourceId
-        );
+        _holders[(typeof(TData), FormRowType.Item)] = new Holder(typeof(TViewHolder), resourceId);
     }
 
     public void RegisterGroupHeader<
@@ -53,7 +50,7 @@ internal sealed class FormRegistry
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
-        _holders[(typeof(TGroup), FormViewHolderType.Header)] = new Holder(
+        _holders[(typeof(TGroup), FormRowType.Header)] = new Holder(
             typeof(TViewHolder),
             resourceId
         );
@@ -66,13 +63,13 @@ internal sealed class FormRegistry
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
-        _holders[(typeof(TGroup), FormViewHolderType.Footer)] = new Holder(
+        _holders[(typeof(TGroup), FormRowType.Footer)] = new Holder(
             typeof(TViewHolder),
             resourceId
         );
     }
 
-    private bool TryGetHolder(Type dataType, FormViewHolderType viewHolderType, out Holder? holder)
+    private bool TryGetHolder(Type dataType, FormRowType viewHolderType, out Holder? holder)
     {
         if (_holders.TryGetValue((dataType, viewHolderType), out holder))
         {
@@ -92,7 +89,7 @@ internal sealed class FormRegistry
         return false;
     }
 
-    private bool TryGetViewType(Type dataType, FormViewHolderType viewHolderType, out int? viewType)
+    private bool TryGetViewType(Type dataType, FormRowType viewHolderType, out int? viewType)
     {
         ArgumentNullException.ThrowIfNull(dataType);
 
@@ -121,17 +118,17 @@ internal sealed class FormRegistry
 
     public bool TryGetItemViewType(Type dataType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormViewHolderType.Item, out viewType);
+        return TryGetViewType(dataType, FormRowType.Item, out viewType);
     }
 
     public bool TryGetGroupHeaderViewType(Type dataType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormViewHolderType.Header, out viewType);
+        return TryGetViewType(dataType, FormRowType.Header, out viewType);
     }
 
     public bool TryGetGroupFooterViewType(Type dataType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormViewHolderType.Footer, out viewType);
+        return TryGetViewType(dataType, FormRowType.Footer, out viewType);
     }
 
     public bool TryGetViewHolderAndResourceId(
