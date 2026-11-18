@@ -1,14 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net10.0-ios;net10.0-android</TargetFrameworks>
+    <TargetFrameworks>net10.0-android;net10.0-ios;net10.0</TargetFrameworks>
     <SingleProject>true</SingleProject>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Buform</RootNamespace>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-ios'"
-      >15.0</SupportedOSPlatformVersion>
-    <SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net10.0-android'"
-      >26</SupportedOSPlatformVersion>
     <PackageId>Fedandburk.Buform</PackageId>
     <PackageVersion>0.7.10</PackageVersion>
     <Title>Buform</Title>
@@ -28,35 +24,43 @@
     <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <MonoAndroidResourcePrefix>Platforms\Android\Resources</MonoAndroidResourcePrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <ValidateXcodeVersion>false</ValidateXcodeVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.8" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
-    <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.9" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-    <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.6" />
-  </ItemGroup>
-
   <ItemGroup>
-    <Compile Remove="Platforms\**\*.cs" />
-    <Compile Remove="Resources\*.cs" />
-    <None Include="Platforms\**\*.cs" />
-    <None Include="Resources\*.cs" />
+    <Compile Remove="**\*.Android.cs;**\*.iOS.cs" />
+    <None
+      Include="**\*.Android.cs;**\*.iOS.cs"
+      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)"
+    />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
-    <Compile Include="Platforms\Ios\**\*.cs" />
+  <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+    <PackageReference Include="Xamarin.AndroidX.RecyclerView" Version="1.4.0.6" />
+    <None Remove="**\*.Android.cs" />
+    <Compile
+      Include="**\*.Android.cs"
+      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)"
+    />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-android'">
-    <Compile Include="Platforms\Android\**\*.cs" />
-    <AndroidResource
-      Include="Resources\**\*.xml"
-      SubType="Designer"
-      Generator="MSBuild:UpdateAndroidResources"
+  <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <PackageReference Include="Fedandburk.iOS.Extensions" Version="1.0.9" />
+    <None Remove="**\*.iOS.cs" />
+    <Compile
+      Include="**\*.iOS.cs"
+      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)"
     />
   </ItemGroup>
 </Project>

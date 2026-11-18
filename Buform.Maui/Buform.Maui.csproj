@@ -6,7 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>Buform</RootNamespace>
-    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
     <PackageId>Fedandburk.Buform.Maui</PackageId>
     <PackageVersion>0.7.10</PackageVersion>
     <Title>Buform.Maui</Title>
@@ -26,6 +25,11 @@
     <RepositoryUrl>https://github.com/fedandburk/buform</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <ValidateXcodeVersion>false</ValidateXcodeVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Buform\Buform.csproj" />
   </ItemGroup>
@@ -35,13 +39,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Platforms\**\*.cs" />
-    <Compile Remove="Resources\*.cs" />
-    <None Include="Platforms\**\*.cs" />
-    <None Include="Resources\*.cs" />
+    <Compile Remove="**\*.Android.cs;**\*.iOS.cs" />
+    <None
+      Include="**\*.Android.cs;**\*.iOS.cs"
+      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)"
+    />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-ios'">
-    <Compile Include="Platforms\Ios\**\*.cs" />
+  <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+    <None Remove="**\*.iOS.cs" />
+    <Compile
+      Include="**\*.iOS.cs"
+      Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)"
+    />
   </ItemGroup>
 </Project>
