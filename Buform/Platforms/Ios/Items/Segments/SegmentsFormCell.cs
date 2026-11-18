@@ -33,12 +33,12 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         SegmentedControl = new UISegmentedControl
         {
-            TranslatesAutoresizingMaskIntoConstraints = false
+            TranslatesAutoresizingMaskIntoConstraints = false,
         };
 
         SegmentedControl.ValueChanged += OnValueChanged;
@@ -69,7 +69,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
                 _segmentedControlLeadingConstraint,
                 SegmentedControl.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

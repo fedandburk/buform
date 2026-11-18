@@ -200,11 +200,15 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
         var result = viewHolderType! switch
         {
             FormViewHolderType.Item => FormPlatform.TryGetItemViewType(dataType, out viewType),
-            FormViewHolderType.Header
-                => FormPlatform.TryGetGroupHeaderViewType(dataType, out viewType),
-            FormViewHolderType.Footer
-                => FormPlatform.TryGetGroupFooterViewType(dataType, out viewType),
-            _ => throw new ArgumentOutOfRangeException()
+            FormViewHolderType.Header => FormPlatform.TryGetGroupHeaderViewType(
+                dataType,
+                out viewType
+            ),
+            FormViewHolderType.Footer => FormPlatform.TryGetGroupFooterViewType(
+                dataType,
+                out viewType
+            ),
+            _ => throw new ArgumentOutOfRangeException(),
         };
 
         if (!result)

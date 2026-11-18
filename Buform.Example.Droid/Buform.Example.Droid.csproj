@@ -1,25 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Buform</RootNamespace>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <ApplicationId>com.fedandburk.buform</ApplicationId>
+    <ApplicationTitle>Buform</ApplicationTitle>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net9.0-android</TargetFramework>
-        <OutputType>Exe</OutputType>
-        <IsPackable>false</IsPackable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Buform</RootNamespace>
-        <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
-        <ApplicationId>com.fedandburk.buform</ApplicationId>
-        <ApplicationTitle>Buform</ApplicationTitle>
-    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
-    </ItemGroup>
-    
-    <ItemGroup>
-        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.4" />
-        <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.5.0.4" />
-        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.4" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.12.0.4" />
+    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.5.0.4" />
+    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.5.0.4" />
+  </ItemGroup>
 </Project>

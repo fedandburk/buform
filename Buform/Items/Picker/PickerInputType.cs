@@ -4,5 +4,5 @@ public enum PickerInputType
 {
     Default = 0,
     Dialog = 1,
-    PopUp = 2
+    PopUp = 2,
 }

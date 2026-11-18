@@ -41,9 +41,8 @@ public class PickerViewController<TItem> : UITableViewController
 
     protected virtual void SetLeftBarButtonDoneItem()
     {
-        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Done,
-            (_, _) => DismissViewController(true, null)
+        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Done, (_, _) =>
+            DismissViewController(true, null)
         );
     }
 
@@ -88,7 +87,7 @@ public class PickerViewController<TItem> : UITableViewController
 
         NavigationItem.SearchController = new UISearchController()
         {
-            HidesNavigationBarDuringPresentation = false
+            HidesNavigationBarDuringPresentation = false,
         };
 
         NavigationItem.SearchController.SearchBar.TextChanged += OnSearchTextChanged;

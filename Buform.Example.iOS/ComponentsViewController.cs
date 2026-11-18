@@ -23,9 +23,8 @@ public sealed class ComponentsViewController : UITableViewController
 
         Title = "Components";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
         _toggleReadOnlyButtonItem = new UIBarButtonItem(

@@ -1,25 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Buform</RootNamespace>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <IsPackable>false</IsPackable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Buform</RootNamespace>
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Humanizer.Core" Version="3.0.8" />
+    <PackageReference Include="NLipsum" Version="1.1.0" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-      <PackageReference Include="FluentValidation" Version="12.1.1" />
-      <PackageReference Include="Humanizer.Core" Version="3.0.8" />
-      <PackageReference Include="NLipsum" Version="1.1.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Buform.ColorPicker\Buform.ColorPicker.csproj" />
-      <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
-      <ProjectReference Include="..\Buform\Buform.csproj" />
-      <ProjectReference Include="..\Buform.FluentValidation\Buform.FluentValidation.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\Buform.ColorPicker\Buform.ColorPicker.csproj" />
+    <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
+    <ProjectReference Include="..\Buform\Buform.csproj" />
+    <ProjectReference Include="..\Buform.FluentValidation\Buform.FluentValidation.csproj" />
+  </ItemGroup>
 </Project>

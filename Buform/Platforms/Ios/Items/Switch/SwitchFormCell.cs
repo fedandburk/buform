@@ -28,7 +28,7 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         Switch = new UISwitch();
@@ -46,7 +46,7 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
                 Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
                 Label.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

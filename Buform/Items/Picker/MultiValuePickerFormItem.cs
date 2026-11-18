@@ -98,8 +98,7 @@ public class MultiValuePickerFormItem<TValue>
         {
             _source = value;
 
-            _options =
-                _source?.Select(CreateOption).ToList()
+            _options = _source?.Select(CreateOption).ToList()
                 ?? Array.Empty<IPickerOptionFormItem>().ToList();
 
             UpdateOptions();
@@ -119,7 +118,7 @@ public class MultiValuePickerFormItem<TValue>
         return new PickerOptionFormItem<TValue>(value)
         {
             Formatter = ItemFormatter,
-            FilterValueFactory = OptionsFilterValueFactory
+            FilterValueFactory = OptionsFilterValueFactory,
         };
     }
 

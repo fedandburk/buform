@@ -23,7 +23,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 
-        Slider = new UISlider { TranslatesAutoresizingMaskIntoConstraints = false, };
+        Slider = new UISlider { TranslatesAutoresizingMaskIntoConstraints = false };
 
         Slider.ValueChanged += OnValueChanged;
 
@@ -39,7 +39,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
                 ),
                 Slider.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

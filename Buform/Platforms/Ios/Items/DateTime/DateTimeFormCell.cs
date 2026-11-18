@@ -28,7 +28,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         DatePicker = new UIDatePicker { TranslatesAutoresizingMaskIntoConstraints = false };
@@ -50,7 +50,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
                 DatePicker.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
                 DatePicker.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

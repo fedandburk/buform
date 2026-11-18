@@ -33,7 +33,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         TextField = new UITextField
@@ -41,7 +41,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
             TextAlignment = UITextAlignment.Right,
-            ClearButtonMode = UITextFieldViewMode.WhileEditing
+            ClearButtonMode = UITextFieldViewMode.WhileEditing,
         };
 
         TextField.EditingChanged += OnEditingChanged;
@@ -69,7 +69,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
                 _textFieldLeadingConstraint,
                 TextField.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }
@@ -148,12 +148,11 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
             TextInputType.Url => UIKeyboardType.Url,
             TextInputType.EmailAddress => UIKeyboardType.EmailAddress,
             null => UIKeyboardType.Default,
-            _
-                => throw new ArgumentOutOfRangeException(
-                    nameof(Item.InputType),
-                    Item?.InputType,
-                    null
-                )
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(Item.InputType),
+                Item?.InputType,
+                null
+            ),
         };
     }
 

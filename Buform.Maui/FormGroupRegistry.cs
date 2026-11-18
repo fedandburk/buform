@@ -8,7 +8,7 @@ internal sealed class FormGroupRegistry
     private enum HolderType
     {
         Header,
-        Footer
+        Footer,
     }
 
     private readonly IDictionary<(Type, HolderType), Type> _groups;

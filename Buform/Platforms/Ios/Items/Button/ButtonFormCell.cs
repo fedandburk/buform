@@ -34,7 +34,7 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         ContentView.AddSubviews(Label);
@@ -47,7 +47,7 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
                 Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
                 Label.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }
@@ -91,12 +91,11 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
             ButtonInputType.Done => UIButton.Appearance.TintColor,
             ButtonInputType.Destructive => UIColor.SystemRed,
             null => UIColor.SystemBlue,
-            _
-                => throw new ArgumentOutOfRangeException(
-                    nameof(Item.InputType),
-                    Item?.InputType,
-                    null
-                )
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(Item.InputType),
+                Item?.InputType,
+                null
+            ),
         };
     }
 

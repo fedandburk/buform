@@ -63,7 +63,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<T
         return inputType switch
         {
             PickerInputType.PopUp => new PopUpPickerPresenter<TItem>(CreateAlertController),
-            _ => base.GetPickerPresenter(inputType)
+            _ => base.GetPickerPresenter(inputType),
         };
     }
 }

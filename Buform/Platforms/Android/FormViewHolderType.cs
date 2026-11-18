@@ -4,5 +4,5 @@ public enum FormViewHolderType
 {
     Item,
     Header,
-    Footer
+    Footer,
 }

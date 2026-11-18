@@ -8,5 +8,5 @@ public enum TextInputType
     Decimal = 3,
     Phone = 4,
     Url = 5,
-    EmailAddress = 6
+    EmailAddress = 6,
 }

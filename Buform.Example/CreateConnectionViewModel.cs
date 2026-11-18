@@ -22,7 +22,7 @@ public partial class CreateConnectionViewModel : ObservableObject
     {
         Ftp,
         FtpSsl,
-        WebDav
+        WebDav,
     }
 
     private const string AnonymousUsername = "anonymous";
@@ -65,7 +65,7 @@ public partial class CreateConnectionViewModel : ObservableObject
                 new TextInputFormItem(() => Server)
                 {
                     Placeholder = "Server",
-                    InputType = TextInputType.Url
+                    InputType = TextInputType.Url,
                 },
                 new TextInputFormItem<int?>(
                     () => Port,
@@ -74,7 +74,7 @@ public partial class CreateConnectionViewModel : ObservableObject
                 {
                     Label = "Port",
                     Placeholder = "21",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new SegmentsFormItem<ConnectionType>(() => Type)
                 {
@@ -83,9 +83,9 @@ public partial class CreateConnectionViewModel : ObservableObject
                     {
                         ConnectionType.Ftp,
                         ConnectionType.FtpSsl,
-                        ConnectionType.WebDav
-                    }
-                }
+                        ConnectionType.WebDav,
+                    },
+                },
             },
             new TextFormGroup(
                 "Authorization",
@@ -100,20 +100,20 @@ public partial class CreateConnectionViewModel : ObservableObject
                         form[() => Username]!.IsReadOnly = value;
                         Username = value ? AnonymousUsername : null;
                         Password = null;
-                    }
+                    },
                 },
                 new TextInputFormItem(() => Username)
                 {
                     Label = "Username",
                     Placeholder = "Username",
-                    InputType = TextInputType.EmailAddress
+                    InputType = TextInputType.EmailAddress,
                 },
                 new TextInputFormItem(() => Password)
                 {
                     Label = "Password",
                     Placeholder = "Password",
-                    IsSecured = true
-                }
+                    IsSecured = true,
+                },
             },
             new TextFormGroup
             {
@@ -121,25 +121,25 @@ public partial class CreateConnectionViewModel : ObservableObject
                 {
                     Label = "SSH Private Key",
                     InputType = PickerInputType.PopUp,
-                    Source = new[] { "Key 1", "Key 2", "Key 3" }
-                }
+                    Source = new[] { "Key 1", "Key 2", "Key 3" },
+                },
             },
             new TextFormGroup
             {
                 new ButtonFormItem(ConnectCommand)
                 {
                     Label = "Connect",
-                    InputType = ButtonInputType.Done
-                }
+                    InputType = ButtonInputType.Done,
+                },
             },
             new TextFormGroup
             {
                 new ButtonFormItem(ResetCommand)
                 {
                     Label = "Reset",
-                    InputType = ButtonInputType.Destructive
-                }
-            }
+                    InputType = ButtonInputType.Destructive,
+                },
+            },
         };
 
         (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
@@ -157,7 +157,7 @@ public partial class CreateConnectionViewModel : ObservableObject
             ConnectionType.Ftp => "FTP",
             ConnectionType.FtpSsl => "FTP-SSL",
             ConnectionType.WebDav => "WebDAW",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
         };
     }
 

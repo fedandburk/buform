@@ -10,7 +10,11 @@ internal static class ExpressionExtensions
         {
             MemberExpression item => item.Member.Name,
             UnaryExpression { Operand: MemberExpression item } => item.Member.Name,
-            _ => throw new ArgumentOutOfRangeException(expression?.GetType().ToString(), null, null)
+            _ => throw new ArgumentOutOfRangeException(
+                expression?.GetType().ToString(),
+                null,
+                null
+            ),
         };
     }
 }

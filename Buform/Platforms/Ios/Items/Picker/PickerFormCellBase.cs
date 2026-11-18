@@ -25,7 +25,7 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         ValueLabel = new UILabel
@@ -33,7 +33,7 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
             TextColor = UIColor.SecondaryLabel,
-            TextAlignment = UITextAlignment.Right
+            TextAlignment = UITextAlignment.Right,
         };
 
         ContentView.AddSubviews(Label, ValueLabel);
@@ -51,7 +51,7 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
                 ValueLabel.LeadingAnchor.ConstraintEqualTo(Label.TrailingAnchor, 10),
                 ValueLabel.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

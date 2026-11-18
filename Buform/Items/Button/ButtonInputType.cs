@@ -4,5 +4,5 @@ public enum ButtonInputType
 {
     Default = 0,
     Done = 1,
-    Destructive = 2
+    Destructive = 2,
 }

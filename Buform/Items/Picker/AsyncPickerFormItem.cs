@@ -82,7 +82,7 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
         return new PickerOptionFormItem<TValue>(value)
         {
             Formatter = Formatter,
-            FilterValueFactory = OptionsFilterValueFactory
+            FilterValueFactory = OptionsFilterValueFactory,
         };
     }
 

@@ -33,7 +33,7 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
         return new UIColorPickerViewController
         {
             Delegate = Delegate,
-            SelectedColor = item.Value.ToColor()
+            SelectedColor = item.Value.ToColor(),
         };
     }
 
@@ -45,7 +45,7 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         ColorView = new UIView { Frame = new CGRect(0, 0, 22, 22), ClipsToBounds = true };
@@ -64,7 +64,7 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
                 Label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
                 Label.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }

@@ -42,7 +42,7 @@ public sealed class FormTextView : UITextView
             TextColor = UIColor.PlaceholderText,
             Font = UIFont.PreferredBody,
             TextAlignment = TextAlignment,
-            Lines = 0
+            Lines = 0,
         };
 
         AddSubview(_placeholderLabel);

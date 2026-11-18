@@ -31,7 +31,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             ActivityIndicatorViewStyle = UIActivityIndicatorViewStyle.Medium,
-            HidesWhenStopped = true
+            HidesWhenStopped = true,
         };
 
         View!.AddSubview(activityIndicator);
@@ -40,7 +40,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
             new[]
             {
                 activityIndicator.CenterXAnchor.ConstraintEqualTo(View.CenterXAnchor),
-                activityIndicator.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor)
+                activityIndicator.CenterYAnchor.ConstraintEqualTo(View.CenterYAnchor),
             }
         );
 

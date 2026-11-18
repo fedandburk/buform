@@ -41,7 +41,7 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
                 ),
                 TextView.TrailingAnchor.ConstraintEqualTo(
                     ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
+                ),
             }
         );
     }
@@ -93,12 +93,11 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
             TextInputType.Url => UIKeyboardType.Url,
             TextInputType.EmailAddress => UIKeyboardType.EmailAddress,
             null => UIKeyboardType.Default,
-            _
-                => throw new ArgumentOutOfRangeException(
-                    nameof(Item.InputType),
-                    Item?.InputType,
-                    null
-                )
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(Item.InputType),
+                Item?.InputType,
+                null
+            ),
         };
     }
 

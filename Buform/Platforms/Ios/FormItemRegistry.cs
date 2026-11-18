@@ -8,7 +8,7 @@ internal sealed class FormItemRegistry
     private enum RegistrationType
     {
         Class,
-        Nib
+        Nib,
     }
 
     private sealed class Holder

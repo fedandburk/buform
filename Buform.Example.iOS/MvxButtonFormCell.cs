@@ -28,23 +28,17 @@ public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             Font = UIFont.PreferredBody,
-            TextColor = UIColor.Label
+            TextColor = UIColor.Label,
         };
 
         ContentView.AddSubviews(_label);
 
-        ContentView.AddConstraints(
-            [
-                _label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
-                _label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
-                _label.LeadingAnchor.ConstraintEqualTo(
-                    ContentView.LayoutMarginsGuide.LeadingAnchor
-                ),
-                _label.TrailingAnchor.ConstraintEqualTo(
-                    ContentView.LayoutMarginsGuide.TrailingAnchor
-                )
-            ]
-        );
+        ContentView.AddConstraints([
+            _label.TopAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TopAnchor),
+            _label.BottomAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.BottomAnchor),
+            _label.LeadingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.LeadingAnchor),
+            _label.TrailingAnchor.ConstraintEqualTo(ContentView.LayoutMarginsGuide.TrailingAnchor),
+        ]);
     }
 
     protected override void InitializeBindings()

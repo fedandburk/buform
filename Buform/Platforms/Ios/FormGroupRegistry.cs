@@ -8,13 +8,13 @@ internal sealed class FormGroupRegistry
     private enum RegistrationType
     {
         Class,
-        Nib
+        Nib,
     }
 
     private enum HolderType
     {
         Header,
-        Footer
+        Footer,
     }
 
     private sealed class Holder

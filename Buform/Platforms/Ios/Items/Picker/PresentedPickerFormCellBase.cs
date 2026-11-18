@@ -49,7 +49,7 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
         {
             PickerInputType.Default => new DefaultPickerPresenter<TFormItem>(CreateViewController),
             PickerInputType.Dialog => new DialogPickerPresenter<TFormItem>(CreateViewController),
-            _ => default
+            _ => default,
         };
     }
 

@@ -50,8 +50,7 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
         {
             _source = value;
 
-            _options =
-                _source?.Select(CreateOption).ToList()
+            _options = _source?.Select(CreateOption).ToList()
                 ?? Array.Empty<IPickerOptionFormItem>().ToList();
 
             UpdateOptions();
@@ -105,7 +104,7 @@ public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormIte
         return new PickerOptionFormItem<TValue>(value)
         {
             Formatter = Formatter,
-            FilterValueFactory = OptionsFilterValueFactory
+            FilterValueFactory = OptionsFilterValueFactory,
         };
     }
 

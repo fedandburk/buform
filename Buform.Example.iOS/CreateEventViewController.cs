@@ -33,15 +33,12 @@ public sealed class CreateEventViewController : UITableViewController
 
         Title = "New Event";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
-        _createButtonItem = new UIBarButtonItem(
-            "Add",
-            UIBarButtonItemStyle.Done,
-            (_, _) => _viewModel.CreateCommand.SafeExecute()
+        _createButtonItem = new UIBarButtonItem("Add", UIBarButtonItemStyle.Done, (_, _) =>
+            _viewModel.CreateCommand.SafeExecute()
         );
 
         _createButtonItem.Enabled = _viewModel.CreateCommand.SafeCanExecute();

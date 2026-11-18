@@ -20,9 +20,8 @@ public sealed class CreateConnectionViewController : UITableViewController
 
         Title = "New Connection";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;

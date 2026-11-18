@@ -15,7 +15,7 @@ public partial class ComponentsViewModel : ObservableObject
     {
         First,
         Second,
-        Third
+        Third,
     }
 
     [ObservableProperty]
@@ -78,7 +78,7 @@ public partial class ComponentsViewModel : ObservableObject
                 Source = List,
                 RemoveCommand = RemoveListItemCommand,
                 MoveCommand = MoveListItemCommand,
-                SelectCommand = SelectListItemCommand
+                SelectCommand = SelectListItemCommand,
             },
             new TextFormGroup("Pickers")
             {
@@ -91,7 +91,7 @@ public partial class ComponentsViewModel : ObservableObject
                     ItemFormatter = item => item.ToWords(),
                     OptionsFilterValueFactory = option => option.ToWords(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
-                    Source = Enumerable.Range(1, 10).ToArray()
+                    Source = Enumerable.Range(1, 10).ToArray(),
                 },
                 new MultiValuePickerFormItem<int>(() => MultiValuePicker)
                 {
@@ -102,13 +102,13 @@ public partial class ComponentsViewModel : ObservableObject
                     ItemFormatter = item => item.ToRoman(),
                     OptionsFilterValueFactory = option => option.ToRoman(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
-                    Source = Enumerable.Range(1, 10).ToArray()
+                    Source = Enumerable.Range(1, 10).ToArray(),
                 },
                 new CallbackPickerFormItem(() => CallbackPicker)
                 {
                     Label = "Callback Picker",
                     Formatter = item => item ?? "None",
-                    Callback = () => Task.FromResult(new LipsumGenerator().GenerateWords(1)[0])!
+                    Callback = () => Task.FromResult(new LipsumGenerator().GenerateWords(1)[0])!,
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
@@ -118,7 +118,7 @@ public partial class ComponentsViewModel : ObservableObject
                     InputType = PickerInputType.Default,
                     Formatter = item => item?.ToWords() ?? "None",
                     OptionsFilterValueFactory = option => option?.ToWords() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
@@ -128,7 +128,7 @@ public partial class ComponentsViewModel : ObservableObject
                     InputType = PickerInputType.Dialog,
                     Formatter = item => item?.ToMetric() ?? "None",
                     OptionsFilterValueFactory = option => option?.ToMetric() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
@@ -137,7 +137,7 @@ public partial class ComponentsViewModel : ObservableObject
                     CanBeCleared = true,
                     InputType = PickerInputType.PopUp,
                     Formatter = item => item?.ToRoman() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new AsyncPickerFormItem<int?>(() => AsyncPicker)
                 {
@@ -152,7 +152,7 @@ public partial class ComponentsViewModel : ObservableObject
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
                             .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
-                    }
+                    },
                 },
                 new AsyncPickerFormItem<int?>(() => AsyncPicker)
                 {
@@ -167,78 +167,78 @@ public partial class ComponentsViewModel : ObservableObject
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
                             .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
-                    }
+                    },
                 },
-                new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
+                new ColorPickerFormItem(() => Color) { Label = "Color Picker" },
             },
             new TextFormGroup("Buttons")
             {
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Default Button",
-                    InputType = ButtonInputType.Default
+                    InputType = ButtonInputType.Default,
                 },
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Destructive Button",
-                    InputType = ButtonInputType.Destructive
+                    InputType = ButtonInputType.Destructive,
                 },
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Done Button",
-                    InputType = ButtonInputType.Done
-                }
+                    InputType = ButtonInputType.Done,
+                },
             },
             new TextFormGroup("Segments")
             {
                 new SegmentsFormItem<Enum>(() => Segments)
                 {
                     Label = "Segments",
-                    Source = System.Enum.GetValues(typeof(Enum)).OfType<Enum>()
-                }
+                    Source = System.Enum.GetValues(typeof(Enum)).OfType<Enum>(),
+                },
             },
             new TextFormGroup("Texts")
             {
                 new TextInputFormItem(() => Text)
                 {
                     Placeholder = "Default text",
-                    InputType = TextInputType.Default
+                    InputType = TextInputType.Default,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Number & Punctuation Text",
-                    InputType = TextInputType.NumberAndPunctuation
+                    InputType = TextInputType.NumberAndPunctuation,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Number Text",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Decimal Text",
-                    InputType = TextInputType.Decimal
+                    InputType = TextInputType.Decimal,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Phone Text",
-                    InputType = TextInputType.Phone
+                    InputType = TextInputType.Phone,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Url Text",
-                    InputType = TextInputType.Url
+                    InputType = TextInputType.Url,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Email Address Text",
-                    InputType = TextInputType.EmailAddress
+                    InputType = TextInputType.EmailAddress,
                 },
                 new TextInputFormItem(() => Text) { Label = "Password Text", IsSecured = true },
                 new MultilineTextInputFormItem(() => MultilineText)
                 {
-                    Placeholder = "Multiline text"
-                }
+                    Placeholder = "Multiline text",
+                },
             },
             new TextFormGroup("Sliders")
             {
@@ -248,9 +248,9 @@ public partial class ComponentsViewModel : ObservableObject
                 )
                 {
                     Label = "Slider value",
-                    InputType = TextInputType.Decimal
+                    InputType = TextInputType.Decimal,
                 },
-                new SliderFormItem(() => Slider) { MinValue = 0, MaxValue = 10 }
+                new SliderFormItem(() => Slider) { MinValue = 0, MaxValue = 10 },
             },
             new TextFormGroup("Switches")
             {
@@ -258,9 +258,13 @@ public partial class ComponentsViewModel : ObservableObject
                 {
                     Label = "Switch",
                     ValueChangedCallback = (form, value) =>
-                        form.GetItem(() => HiddenText)!.IsVisible = value
+                        form.GetItem(() => HiddenText)!.IsVisible = value,
                 },
-                new TextInputFormItem(() => HiddenText) { Label = "Hidden text", IsVisible = false }
+                new TextInputFormItem(() => HiddenText)
+                {
+                    Label = "Hidden text",
+                    IsVisible = false,
+                },
             },
             new TextFormGroup("Steppers")
             {
@@ -270,42 +274,42 @@ public partial class ComponentsViewModel : ObservableObject
                 )
                 {
                     Label = "Stepper value",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new StepperFormItem(() => Stepper)
                 {
                     Label = "Stepper",
                     StepAmount = 5,
                     MinValue = -10,
-                    MaxValue = 10
-                }
+                    MaxValue = 10,
+                },
             },
             new TextFormGroup("Date & Time")
             {
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Date and time",
-                    InputType = DateTimeInputType.DateTime
+                    InputType = DateTimeInputType.DateTime,
                 },
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Date",
-                    InputType = DateTimeInputType.Date
+                    InputType = DateTimeInputType.Date,
                 },
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Time",
-                    InputType = DateTimeInputType.Time
-                }
+                    InputType = DateTimeInputType.Time,
+                },
             },
             new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
             {
-                new RandomNumberGeneratorItem(() => RandomNumber)
+                new RandomNumberGeneratorItem(() => RandomNumber),
             },
             new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
             {
                 // new MvxButtonFormItem(WriteLineCommand) { Label = "MvvmCross Button" }
-            }
+            },
         };
     }
 
