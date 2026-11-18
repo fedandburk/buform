@@ -1,10 +1,11 @@
+// ReSharper disable UnusedType.Global
+
 using Android.Runtime;
 
 namespace Buform;
 
 [Preserve(AllMembers = true)]
 [FormComponent]
-// ReSharper disable once UnusedType.Global
 public sealed class TextFormGroupComponent : IFormComponent
 {
     public void Register()

@@ -1,3 +1,5 @@
+// ReSharper disable InvertIf
+
 using System.Collections.Specialized;
 using Android.Runtime;
 using Android.Views;
@@ -154,7 +156,6 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
 
             foreach (var item in section)
             {
-                // ReSharper disable once InvertIf
                 if (index == position)
                 {
                     data = item;
@@ -166,7 +167,6 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
                 index++; // Count the item.
             }
 
-            // ReSharper disable once InvertIf
             if (index == position)
             {
                 data = section;

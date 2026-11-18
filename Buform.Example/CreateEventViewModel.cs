@@ -1,5 +1,8 @@
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
+
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
@@ -7,7 +10,6 @@ using Humanizer;
 
 namespace Buform;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateEventViewModel : ObservableObject
 {
     public enum RepeatType
@@ -31,8 +33,6 @@ public partial class CreateEventViewModel : ObservableObject
         TwoHours,
     }
 
-    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
-    [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
     public class Model
     {
         public string? Title { get; set; }

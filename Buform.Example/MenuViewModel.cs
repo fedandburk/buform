@@ -1,9 +1,10 @@
+// ReSharper disable ClassNeverInstantiated.Global
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
 namespace Buform;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class MenuViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;

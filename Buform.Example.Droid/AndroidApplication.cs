@@ -1,3 +1,5 @@
+// ReSharper disable UnusedType.Global
+
 using Android;
 using Android.Runtime;
 
@@ -6,7 +8,6 @@ using Android.Runtime;
 namespace Buform;
 
 [Application(Theme = "@style/Theme.Material3.DayNight")]
-// ReSharper disable once UnusedType.Global
 public sealed class AndroidApplication : Application
 {
     public AndroidApplication(IntPtr javaReference, JniHandleOwnership transfer)

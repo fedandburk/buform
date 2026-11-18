@@ -1,6 +1,7 @@
+// ReSharper disable ClassWithVirtualMembersNeverInherited.Global
+
 namespace Buform;
 
-// ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
 public class SegmentsOptionFormItem<TValue> : FormItem<TValue>, ISegmentsOptionFormItem
 {
     private Func<TValue?, string?>? _formatter;

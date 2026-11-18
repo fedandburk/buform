@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.Platform;
@@ -14,13 +16,11 @@ internal sealed class MauiFormCell : UITableViewCell
     private UIView? _view;
     private CGSize _estimatedSize;
 
-    // ReSharper disable once UnusedMember.Global
     public MauiFormCell()
     {
         /* Required constructor */
     }
 
-    // ReSharper disable once UnusedMember.Global
     public MauiFormCell(NativeHandle handle)
         : base(handle)
     {

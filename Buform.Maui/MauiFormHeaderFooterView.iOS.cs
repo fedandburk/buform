@@ -1,3 +1,5 @@
+// ReSharper disable UnusedMember.Global
+
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.Platform;
@@ -14,13 +16,11 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
     private UIView? _view;
     private CGSize _estimatedSize;
 
-    // ReSharper disable once UnusedMember.Global
     public MauiFormHeaderFooterView()
     {
         /* Required constructor */
     }
 
-    // ReSharper disable once UnusedMember.Global
     public MauiFormHeaderFooterView(NativeHandle handle)
         : base(handle)
     {

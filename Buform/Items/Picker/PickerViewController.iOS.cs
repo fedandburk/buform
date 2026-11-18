@@ -1,5 +1,7 @@
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+// ReSharper disable NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using Fedandburk.iOS.Extensions;
 
 namespace Buform;
@@ -19,7 +21,6 @@ public class PickerViewController<TItem> : UITableViewController
         {
             base.PreferredContentSize = value;
 
-            // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
             if (NavigationController?.PopoverPresentationController == null)
             {
                 return;
@@ -74,7 +75,6 @@ public class PickerViewController<TItem> : UITableViewController
 
         Title = Item?.Label;
 
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         if (NavigationController?.PopoverPresentationController != null)
         {
             SetLeftBarButtonDoneItem();
@@ -125,7 +125,6 @@ public class PickerViewController<TItem> : UITableViewController
         return 1;
     }
 
-    [SuppressMessage("ReSharper", "NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract")]
     public override UITableViewCell GetCell(UITableView tableView, NSIndexPath indexPath)
     {
         return TableView.DequeueReusableCell(nameof(UITableViewCell))
@@ -178,7 +177,6 @@ public class PickerViewController<TItem> : UITableViewController
     {
         base.ViewDidLayoutSubviews();
 
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         if (NavigationController?.PopoverPresentationController != null)
         {
             PreferredContentSize =

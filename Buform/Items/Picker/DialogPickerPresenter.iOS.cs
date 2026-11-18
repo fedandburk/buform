@@ -1,3 +1,5 @@
+// ReSharper disable InvertIf
+
 namespace Buform;
 
 public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem>
@@ -25,7 +27,6 @@ public class DialogPickerPresenter<TItem> : PickerPresenterBase<TItem>
 
         navigationController.ModalPresentationStyle = UIModalPresentationStyle.Popover;
 
-        // ReSharper disable once InvertIf
         if (navigationController.PopoverPresentationController != null)
         {
             navigationController.PopoverPresentationController.SourceView = sourceView;

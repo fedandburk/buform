@@ -1,3 +1,5 @@
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+
 namespace Buform;
 
 public class DefaultPickerPresenter<TItem> : PickerPresenterBase<TItem>
@@ -21,7 +23,6 @@ public class DefaultPickerPresenter<TItem> : PickerPresenterBase<TItem>
 
         var pickerViewController = ViewControllerFactory(item);
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (viewController.NavigationController == null)
         {
             var navigationController = new UINavigationController(pickerViewController);

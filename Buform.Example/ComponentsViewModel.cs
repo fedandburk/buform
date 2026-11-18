@@ -1,3 +1,5 @@
+// ReSharper disable ClassNeverInstantiated.Global
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
@@ -8,7 +10,6 @@ using NLipsum.Core;
 
 namespace Buform;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class ComponentsViewModel : ObservableObject
 {
     public enum Enum

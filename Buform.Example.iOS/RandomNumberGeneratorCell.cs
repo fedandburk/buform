@@ -1,3 +1,6 @@
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
+
 using Fedandburk.Common.Extensions;
 using ObjCRuntime;
 
@@ -5,18 +8,15 @@ namespace Buform;
 
 [Preserve(AllMembers = true)]
 [Register(nameof(RandomNumberGeneratorCell))]
-// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGeneratorItem>
 {
     private UIButton? _button;
 
-    // ReSharper disable once UnusedMember.Global
     public RandomNumberGeneratorCell()
     {
         /* Required constructor */
     }
 
-    // ReSharper disable once UnusedMember.Global
     public RandomNumberGeneratorCell(NativeHandle handle)
         : base(handle)
     {

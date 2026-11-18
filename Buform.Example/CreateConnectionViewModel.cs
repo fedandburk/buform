@@ -1,3 +1,6 @@
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -5,7 +8,6 @@ using FluentValidation;
 
 namespace Buform;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateConnectionViewModel : ObservableObject
 {
     public class Validator : AbstractValidator<CreateConnectionViewModel>
@@ -170,7 +172,6 @@ public partial class CreateConnectionViewModel : ObservableObject
     [RelayCommand]
     private void Reset()
     {
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         Form?.ResetValidation();
 
         Server = null;
