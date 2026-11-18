@@ -1,6 +1,6 @@
 using Android.Runtime;
 using Android.Views;
-using Fedandburk.Common.Extensions;
+using Buform.Extensions;
 
 namespace Buform;
 

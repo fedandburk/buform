@@ -1,4 +1,3 @@
-using Fedandburk.Common.Extensions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -51,7 +50,7 @@ public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
     {
         base.OnSelected();
 
-        Item?.Value.SafeExecute();
+        Item?.Value?.Execute(null);
     }
 
     protected override void Dispose(bool disposing)

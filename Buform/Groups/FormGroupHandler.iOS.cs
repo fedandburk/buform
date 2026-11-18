@@ -1,4 +1,4 @@
-using Fedandburk.Common.Extensions;
+using Buform.Extensions;
 
 namespace Buform;
 

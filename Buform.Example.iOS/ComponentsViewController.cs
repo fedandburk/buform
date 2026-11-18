@@ -1,5 +1,3 @@
-using Fedandburk.Common.Extensions;
-
 namespace Buform;
 
 public sealed class ComponentsViewController : UITableViewController
@@ -29,7 +27,7 @@ public sealed class ComponentsViewController : UITableViewController
         _toggleReadOnlyButtonItem = new UIBarButtonItem(
             "Read-only",
             UIBarButtonItemStyle.Plain,
-            (_, _) => _viewModel.ToggleReadOnlyModeCommand.SafeExecute()
+            (_, _) => _viewModel.ToggleReadOnlyModeCommand.Execute(null)
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;

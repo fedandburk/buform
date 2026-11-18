@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Buform.Extensions;
-using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
@@ -102,7 +101,7 @@ internal sealed class FormRegistry
             return false;
         }
 
-        var index = _holders.Values.IndexOf(holder);
+        var index = _holders.Values.ToList().IndexOf(holder!);
 
         if (index < 0)
         {

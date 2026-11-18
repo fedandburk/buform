@@ -1,5 +1,3 @@
-using Fedandburk.Common.Extensions;
-
 namespace Buform;
 
 public sealed class CreateEventViewController : UITableViewController
@@ -22,7 +20,7 @@ public sealed class CreateEventViewController : UITableViewController
         var createButtonItem = _createButtonItem;
         if (createButtonItem != null)
         {
-            createButtonItem.Enabled = _viewModel.CreateCommand.SafeCanExecute();
+            createButtonItem.Enabled = _viewModel.CreateCommand.CanExecute(null);
         }
     }
 
@@ -37,10 +35,10 @@ public sealed class CreateEventViewController : UITableViewController
         );
 
         _createButtonItem = new UIBarButtonItem("Add", UIBarButtonItemStyle.Done, (_, _) =>
-            _viewModel.CreateCommand.SafeExecute()
+            _viewModel.CreateCommand.Execute(null)
         );
 
-        _createButtonItem.Enabled = _viewModel.CreateCommand.SafeCanExecute();
+        _createButtonItem.Enabled = _viewModel.CreateCommand.CanExecute(null);
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;
         NavigationItem.RightBarButtonItem = _createButtonItem;

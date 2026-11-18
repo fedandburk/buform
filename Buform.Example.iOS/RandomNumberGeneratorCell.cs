@@ -1,7 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedMember.Global
 
-using Fedandburk.Common.Extensions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -24,7 +23,7 @@ public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGenerat
 
     private void OnTouchUpInside(object? _, EventArgs __)
     {
-        Item?.GenerateCommand.SafeExecute();
+        Item?.GenerateCommand.Execute(null);
     }
 
     protected override void Initialize()
