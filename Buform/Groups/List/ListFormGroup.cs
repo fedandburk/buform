@@ -1,15 +1,19 @@
-using System.Collections.Specialized;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace Buform;
 
 public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
+    where TValue : notnull
     where TItem : FormItem<TValue>
 {
-    private Func<TValue, TItem>? _itemFactory;
+    private readonly Func<TValue, TItem> _itemFactory;
     private string? _headerLabel;
     private string? _footerLabel;
     private IEnumerable<TValue>? _source;
+    private IDisposable? _sourceSubscription;
     private ICommand? _selectCommand;
 
     public virtual ICommand? SelectCommand
@@ -50,19 +54,15 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
         get => _source;
         set
         {
-            if (_source is INotifyCollectionChanged oldNotifyCollectionChanged)
-            {
-                oldNotifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
-            }
+            _sourceSubscription?.Dispose();
 
-            _source = value ?? Array.Empty<TValue>();
+            Items.Clear();
 
-            if (_source is INotifyCollectionChanged newNotifyCollectionChanged)
-            {
-                newNotifyCollectionChanged.CollectionChanged += OnCollectionChanged;
-            }
+            _source = value;
 
-            Reset();
+            _sourceSubscription = ToChangeSet(_source ?? [])
+                .Transform(_itemFactory)
+                .PopulateInto(Items);
 
             NotifyPropertyChanged();
         }
@@ -81,81 +81,22 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
         _footerLabel = footerLabel;
     }
 
-    protected virtual void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private static IObservable<IChangeSet<TValue>> ToChangeSet(IEnumerable<TValue> source)
     {
-        switch (e.Action)
+        return source switch
         {
-            case NotifyCollectionChangedAction.Remove:
-            {
-                for (var i = 0; i < e.OldItems!.Count; i++)
-                {
-                    RemoveItem(e.OldStartingIndex);
-                }
-
-                break;
-            }
-            case NotifyCollectionChangedAction.Add:
-            {
-                var items = e.NewItems!.Cast<TValue>()
-                    .Select((item, index) => (_itemFactory!(item), e.NewStartingIndex + index))
-                    .ToList();
-
-                foreach (var (item, index) in items)
-                {
-                    InsertItem(index, item);
-                }
-
-                break;
-            }
-            case NotifyCollectionChangedAction.Reset:
-            {
-                Reset();
-
-                break;
-            }
-            case NotifyCollectionChangedAction.Move:
-            {
-                MoveItem(e.OldStartingIndex, e.NewStartingIndex);
-
-                break;
-            }
-        }
-    }
-
-    protected virtual void Reset()
-    {
-        if (_itemFactory == null)
-        {
-            return;
-        }
-
-        ClearItems();
-
-        if (Source == null)
-        {
-            return;
-        }
-
-        foreach (var value in Source)
-        {
-            var item = _itemFactory(value);
-
-            AddItem(item);
-        }
+            ObservableCollection<TValue> collection => collection.ToObservableChangeSet(),
+            ReadOnlyObservableCollection<TValue> collection => collection.ToObservableChangeSet(),
+            _ => source.AsObservableChangeSet(),
+        };
     }
 
     protected override void Dispose(bool isDisposing)
     {
         if (isDisposing)
         {
-            if (_source is INotifyCollectionChanged notifyCollectionChanged)
-            {
-                notifyCollectionChanged.CollectionChanged -= OnCollectionChanged;
-            }
+            _sourceSubscription?.Dispose();
         }
-
-        _itemFactory = null;
-        _source = null;
 
         base.Dispose(isDisposing);
     }

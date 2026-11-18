@@ -36,6 +36,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DynamicData" Version="9.5.0" />
     <PackageReference Include="Fedandburk.Common.Extensions" Version="1.0.8" />
     <InternalsVisibleTo Include="Buform.Maui" />
   </ItemGroup>

@@ -1,18 +1,34 @@
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Reactive.Disposables;
+using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace Buform;
 
-public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGroup
+public abstract class FormGroup<TFormItem> : IFormGroup
     where TFormItem : IFormItem
 {
-    private readonly Dictionary<TFormItem, int> _hiddenItems = new();
-    private readonly List<TFormItem> _originalItems = [];
+    private readonly SourceList<TFormItem> _items;
+    private readonly ReadOnlyObservableCollection<TFormItem> _visibleItems;
+    private readonly ReadOnlyObservableCollection<TFormItem> _hiddenItems;
+    private readonly CompositeDisposable _subscriptions;
 
     private ICommand? _removeCommand;
     private ICommand? _moveCommand;
     private ICommand? _insertCommand;
+    private bool _isDisposed;
 
-    public IEnumerable<IFormItem> HiddenItems => _hiddenItems.Keys.Cast<IFormItem>();
+    public int Count => _visibleItems.Count;
+
+    public TFormItem this[int index] => _visibleItems[index];
+
+    public IEnumerable<IFormItem> HiddenItems => _hiddenItems.Cast<IFormItem>();
 
     public virtual ICommand? RemoveCommand
     {
@@ -44,173 +60,144 @@ public abstract class FormGroup<TFormItem> : FormCollection<TFormItem>, IFormGro
         }
     }
 
-    protected override void InsertItem(int index, TFormItem item)
+    protected ISourceList<TFormItem> Items => _items;
+
+    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected FormGroup()
     {
-        var insertInOriginalIndex = GetOriginalInsertIndex(index);
-        _originalItems.Insert(insertInOriginalIndex, item);
+        _items = new SourceList<TFormItem>();
 
-        Subscribe(item);
+        var items = _items.Connect().DisposeMany().AutoRefresh(item => item.IsVisible).Publish();
 
-        if (item.IsVisible)
-        {
-            base.InsertItem(index, item);
-        }
-        else
-        {
-            _hiddenItems[item] = index;
-        }
+        var visibleItemsSubscription = items
+            .Filter(item => item.IsVisible)
+            .Bind(out _visibleItems)
+            .Subscribe();
+
+        var hiddenItemsSubscription = items
+            .Filter(item => !item.IsVisible)
+            .Bind(out _hiddenItems)
+            .Subscribe();
+
+        var valueChangedSubscription = items
+            .MergeMany(item =>
+                Observable.FromEventPattern<FormValueChangedEventArgs>(
+                    handler => item.ValueChanged += handler,
+                    handler => item.ValueChanged -= handler
+                )
+            )
+            .Subscribe(pattern => OnItemValueChanged(pattern.Sender, pattern.EventArgs));
+
+        var itemsConnection = items.Connect();
+
+        _subscriptions = new CompositeDisposable(
+            visibleItemsSubscription,
+            hiddenItemsSubscription,
+            valueChangedSubscription,
+            itemsConnection,
+            _items
+        );
+
+        ((INotifyCollectionChanged)_visibleItems).CollectionChanged += OnVisibleItemsChanged;
+        ((INotifyPropertyChanged)_visibleItems).PropertyChanged += OnVisibleItemsPropertyChanged;
     }
 
-    protected override void SetItem(int index, TFormItem item)
+    private void OnVisibleItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        var oldItem = this[index];
-        Unsubscribe(oldItem);
-
-        base.SetItem(index, item);
-        _originalItems[IndexOfOriginal(oldItem)] = item;
-
-        Subscribe(item);
+        CollectionChanged?.Invoke(this, e);
     }
 
-    protected override void RemoveItem(int index)
+    private void OnVisibleItemsPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        var item = this[index];
-        Unsubscribe(item);
-
-        _originalItems.Remove(item);
-
-        if (item.IsVisible)
-        {
-            base.RemoveItem(index);
-        }
-        else
-        {
-            _hiddenItems.Remove(item);
-        }
-    }
-
-    protected override void ClearItems()
-    {
-        foreach (var item in _originalItems)
-        {
-            Unsubscribe(item);
-        }
-
-        _originalItems.Clear();
-        _hiddenItems.Clear();
-
-        base.ClearItems();
-    }
-
-    IEnumerator<IFormItem> IEnumerable<IFormItem>.GetEnumerator()
-    {
-        return (IEnumerator<IFormItem>)base.GetEnumerator();
+        PropertyChanged?.Invoke(this, e);
     }
 
     protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
     {
-        NotifyValueChanged(e);
+        ValueChanged?.Invoke(this, e);
     }
 
-    protected virtual void OnItemVisibilityChanged(object? sender, EventArgs e)
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
     {
-        if (sender is not TFormItem item)
-        {
-            return;
-        }
-
-        if (item.IsVisible)
-        {
-            if (!_hiddenItems.Remove(item))
-            {
-                return;
-            }
-
-            var originalIndex = IndexOfOriginal(item);
-            var insertIndex = GetVisibleInsertIndex(originalIndex);
-
-            base.InsertItem(insertIndex, item);
-        }
-        else
-        {
-            var index = IndexOf(item);
-
-            if (index < 0)
-            {
-                return;
-            }
-
-            base.RemoveItem(index);
-            _hiddenItems[item] = index;
-        }
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected void AddItem(TFormItem item)
+    public IObservable<IChangeSet<IFormItem>> Connect()
     {
-        InsertItem(Count, item);
+        return _items.Connect().Transform(item => (IFormItem)item);
+    }
+
+    public void Add(TFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        _items.Add(item);
+    }
+
+    public void Insert(int index, TFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        _items.Insert(index, item);
+    }
+
+    public bool Remove(TFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        return _items.Remove(item);
+    }
+
+    public void Move(int originalIndex, int destinationIndex)
+    {
+        _items.Move(originalIndex, destinationIndex);
+    }
+
+    public void Clear()
+    {
+        _items.Clear();
     }
 
     public virtual IFormItem? GetItem(string propertyName)
     {
-        return this.FirstOrDefault<TFormItem>(i => i.PropertyName == propertyName)
-            ?? HiddenItems.FirstOrDefault(i => i.PropertyName == propertyName);
+        return _items.Items.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 
-    private void Subscribe(TFormItem item)
+    public IEnumerator<IFormItem> GetEnumerator()
     {
-        item.ValueChanged += OnItemValueChanged;
-        item.VisibilityChanged += OnItemVisibilityChanged;
+        return _visibleItems.Cast<IFormItem>().GetEnumerator();
     }
 
-    private void Unsubscribe(TFormItem item)
+    IEnumerator IEnumerable.GetEnumerator()
     {
-        item.ValueChanged -= OnItemValueChanged;
-        item.VisibilityChanged -= OnItemVisibilityChanged;
+        return GetEnumerator();
     }
 
-    private int IndexOfOriginal(TFormItem item) => _originalItems.IndexOf(item);
-
-    private int GetOriginalInsertIndex(int visibleIndex)
+    public void Dispose()
     {
-        if (visibleIndex == Count)
-        {
-            return _originalItems.Count;
-        }
-
-        var nextVisibleItem = this[visibleIndex];
-        return IndexOfOriginal(nextVisibleItem);
+        Dispose(true);
     }
 
-    private int GetVisibleInsertIndex(int originalIndex)
+    protected virtual void Dispose(bool isDisposing)
     {
-        var count = 0;
-
-        for (var i = 0; i < originalIndex; i++)
-        {
-            var item = _originalItems[i];
-
-            if (item.IsVisible)
-            {
-                count++;
-            }
-        }
-
-        return count;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        base.Dispose(disposing);
-
-        if (!disposing)
+        if (_isDisposed)
         {
             return;
         }
 
-        foreach (var item in _originalItems)
+        _isDisposed = true;
+
+        if (!isDisposing)
         {
-            Unsubscribe(item);
-            item.Dispose();
+            return;
         }
+
+        ((INotifyCollectionChanged)_visibleItems).CollectionChanged -= OnVisibleItemsChanged;
+        ((INotifyPropertyChanged)_visibleItems).PropertyChanged -= OnVisibleItemsPropertyChanged;
+
+        _subscriptions.Dispose();
     }
 }

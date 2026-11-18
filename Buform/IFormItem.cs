@@ -12,7 +12,6 @@ public interface IFormItem : INotifyPropertyChanged, IDisposable
     object? Value { get; set; }
 
     event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-    event EventHandler? VisibilityChanged;
 
     void Initialize(Form form, object target);
 }

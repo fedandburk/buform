@@ -44,7 +44,6 @@ public abstract class FormItem<TValue> : IFormItem
             _isVisible = value;
 
             NotifyPropertyChanged();
-            OnIsVisibleChanged();
         }
     }
 
@@ -65,7 +64,6 @@ public abstract class FormItem<TValue> : IFormItem
     public virtual Action<Form, TValue?>? ValueChangedCallback { get; set; }
 
     public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-    public event EventHandler? VisibilityChanged;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -155,11 +153,6 @@ public abstract class FormItem<TValue> : IFormItem
         }
 
         ValueChangedCallback?.Invoke(Form, Value);
-    }
-
-    protected virtual void OnIsVisibleChanged()
-    {
-        VisibilityChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Initialize(Form form, object target)
