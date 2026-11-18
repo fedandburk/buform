@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class TextInputFormCell<TItem> : FormCell<TItem>
     where TItem : class, ITextInputFormItem
 {
@@ -253,7 +252,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(TextInputFormCell))]
 public sealed class TextInputFormCell : TextInputFormCell<ITextInputFormItem>
 {

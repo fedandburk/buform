@@ -3,7 +3,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     where TItem : ColorPickerFormItem
 {
@@ -163,7 +162,6 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(ColorPickerFormCell))]
 public sealed class ColorPickerFormCell : ColorPickerFormCell<ColorPickerFormItem>
 {

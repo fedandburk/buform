@@ -3,7 +3,6 @@ using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class FormCell : UITableViewCell
 {
     private bool _isInitialized;

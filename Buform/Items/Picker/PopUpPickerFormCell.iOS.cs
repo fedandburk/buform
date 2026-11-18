@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<TItem>
     where TItem : class, IPickerFormItem
 {
@@ -39,7 +38,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<T
         if (item.CanBeCleared)
         {
             var clearAlertAction = UIAlertAction.Create(
-                PickerFormItemComponent.Texts.Clear,
+                PickerFormTexts.Clear,
                 UIAlertActionStyle.Destructive,
                 _ => item.Pick(default)
             );
@@ -48,7 +47,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<T
         }
 
         var cancelAlertAction = UIAlertAction.Create(
-            PickerFormItemComponent.Texts.Cancel,
+            PickerFormTexts.Cancel,
             UIAlertActionStyle.Cancel,
             null
         );
@@ -68,7 +67,6 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<T
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(PopUpPickerFormCell))]
 public sealed class PopUpPickerFormCell : PopUpPickerFormCell<IPickerFormItem>
 {

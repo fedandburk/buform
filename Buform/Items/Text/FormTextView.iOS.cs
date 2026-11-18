@@ -1,6 +1,5 @@
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(FormTextView))]
 public sealed class FormTextView : UITextView
 {

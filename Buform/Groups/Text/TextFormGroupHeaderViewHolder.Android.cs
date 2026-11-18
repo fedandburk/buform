@@ -3,7 +3,6 @@ using Android.Views;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class TextFormGroupHeaderViewHolder : FormViewHolder<TextFormGroup>
 {
     private TextView? _textView;

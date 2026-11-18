@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public class TextFormCell<TItem> : FormCell<TItem>
     where TItem : class, ITextFormItem
 {
@@ -77,7 +76,6 @@ public class TextFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(TextFormCell))]
 public sealed class TextFormCell : TextFormCell<ITextFormItem>
 {

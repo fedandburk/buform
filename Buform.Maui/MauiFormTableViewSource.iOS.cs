@@ -3,7 +3,6 @@ using UIKit;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class MauiFormTableViewSource : FormTableViewSource
 {
     public MauiFormTableViewSource(UITableView tableView)

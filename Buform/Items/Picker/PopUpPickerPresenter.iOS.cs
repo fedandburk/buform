@@ -1,6 +1,5 @@
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public class PopUpPickerPresenter<TItem> : PickerPresenterBase<TItem>
     where TItem : class, IPickerFormItemBase
 {

@@ -3,7 +3,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(MvxButtonFormCell))]
 public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
 {

@@ -2,7 +2,6 @@ using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate
 {
     private ColorPickerFormItem? _item;

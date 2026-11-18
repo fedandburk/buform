@@ -3,7 +3,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class ButtonFormCell<TItem> : FormCell<TItem>
     where TItem : ButtonFormItem
 {
@@ -141,7 +140,6 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(ButtonFormCell))]
 public sealed class ButtonFormCell : ButtonFormCell<ButtonFormItem>
 {

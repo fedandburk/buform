@@ -1,6 +1,5 @@
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class MenuViewController : UITableViewController, INavigationService
 {
     private readonly MenuViewModel _viewModel;

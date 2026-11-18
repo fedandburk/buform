@@ -1,6 +1,5 @@
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class AsyncPickerViewController<TItem> : PickerViewController<TItem>
     where TItem : class, IAsyncPickerFormItem
 {
@@ -80,7 +79,6 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
     }
 }
 
-[Preserve(AllMembers = true)]
 public sealed class AsyncPickerViewController : AsyncPickerViewController<IAsyncPickerFormItem>
 {
     public AsyncPickerViewController(UITableViewStyle style, IAsyncPickerFormItem item)

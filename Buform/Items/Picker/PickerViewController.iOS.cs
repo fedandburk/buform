@@ -6,7 +6,6 @@ using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public class PickerViewController<TItem> : UITableViewController
     where TItem : class, IPickerFormItemBase
 {
@@ -50,7 +49,7 @@ public class PickerViewController<TItem> : UITableViewController
     protected virtual void SetRightBarButtonClearItem()
     {
         NavigationItem.RightBarButtonItem = new UIBarButtonItem(
-            PickerFormItemComponent.Texts.Clear,
+            PickerFormTexts.Clear,
             UIBarButtonItemStyle.Plain,
             (_, _) =>
             {

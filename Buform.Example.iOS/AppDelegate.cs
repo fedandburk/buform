@@ -1,6 +1,5 @@
 ﻿namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(AppDelegate))]
 public sealed class AppDelegate : UIApplicationDelegate
 {
@@ -21,6 +20,8 @@ public sealed class AppDelegate : UIApplicationDelegate
         UISlider.Appearance.TintColor = color;
         UITextField.Appearance.TintColor = color;
         UITextView.Appearance.TintColor = color;
+
+        ColorPickerFormPlatform.Register();
 
         FormPlatform.RegisterGroupHeaderNib<LogoFormGroup, LogoFormHeader>();
 

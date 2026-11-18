@@ -4,7 +4,6 @@ using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 {
     private Button? _button;

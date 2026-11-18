@@ -1,8 +1,7 @@
-using Android.Runtime;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public static class FormPlatform
 {
     private static readonly FormRegistry Registry;
@@ -11,24 +10,40 @@ public static class FormPlatform
     {
         Registry = new FormRegistry();
 
-        FormComponentRegistry.Register();
+        RegisterGroupHeader<TextFormGroup, TextFormGroupHeaderViewHolder>(
+            Resource.Layout.FormGroupTextHeaderLayout
+        );
+        RegisterGroupFooter<TextFormGroup, TextFormGroupFooterViewHolder>(
+            Resource.Layout.FormGroupTextFooterLayout
+        );
+
+        RegisterItem<ButtonFormItem, ButtonFormViewHolder>(Resource.Layout.FormItemButtonLayout);
     }
 
-    public static void RegisterItem<TItem, TViewHolder>(int resourceId)
+    public static void RegisterItem<
+        TItem,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TItem : class, IFormItem
         where TViewHolder : FormViewHolder
     {
         Registry.RegisterItem<TItem, TViewHolder>(resourceId);
     }
 
-    public static void RegisterGroupHeader<TGroup, TViewHolder>(int resourceId)
+    public static void RegisterGroupHeader<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
         Registry.RegisterGroupHeader<TGroup, TViewHolder>(resourceId);
     }
 
-    public static void RegisterGroupFooter<TGroup, TViewHolder>(int resourceId)
+    public static void RegisterGroupFooter<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
@@ -52,7 +67,8 @@ public static class FormPlatform
 
     public static bool TryGetViewHolderAndResourceId(
         int viewType,
-        out Type? viewHolderType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+            out Type? viewHolderType,
         out int? resourceId
     )
     {

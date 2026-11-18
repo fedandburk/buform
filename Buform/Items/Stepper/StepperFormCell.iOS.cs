@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class StepperFormCell<TItem> : FormCell<TItem>
     where TItem : StepperFormItem
 {
@@ -191,7 +190,6 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(StepperFormCell))]
 public sealed class StepperFormCell : StepperFormCell<StepperFormItem>
 {

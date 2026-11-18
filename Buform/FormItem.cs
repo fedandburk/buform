@@ -75,7 +75,10 @@ public abstract class FormItem<TValue> : IFormItem
 
         _property = property;
 
-        PropertyName = _property.GetMemberName();
+        var member = _property.GetMember();
+
+        PropertyName = member.Name;
+        _propertyInfo = member as PropertyInfo;
 
         _isVisible = true;
     }
@@ -177,8 +180,6 @@ public abstract class FormItem<TValue> : IFormItem
         {
             newNotifyPropertyChanged.PropertyChanged += OnTargetPropertyChanged;
         }
-
-        _propertyInfo = Target?.GetType().GetProperty(PropertyName ?? string.Empty);
 
         _shouldSkipValueChangedCallback = true;
 

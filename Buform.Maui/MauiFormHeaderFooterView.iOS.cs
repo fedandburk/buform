@@ -1,5 +1,6 @@
 // ReSharper disable UnusedMember.Global
 
+using System.Diagnostics.CodeAnalysis;
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.Platform;
@@ -8,7 +9,6 @@ using UIKit;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(MauiFormHeaderFooterView))]
 internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
 {
@@ -27,7 +27,11 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
         /* Required constructor */
     }
 
-    public void Initialize(Type viewType, object bindingContext)
+    public void Initialize(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            Type viewType,
+        object bindingContext
+    )
     {
         _formHeaderFooterView = (Activator.CreateInstance(viewType) as FormHeaderFooterView)!;
         _formHeaderFooterView.BindingContext = bindingContext;

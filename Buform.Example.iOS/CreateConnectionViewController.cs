@@ -1,6 +1,5 @@
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class CreateConnectionViewController : UITableViewController
 {
     private readonly CreateConnectionViewModel _viewModel;

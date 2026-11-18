@@ -2,7 +2,6 @@ using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class CreateEventViewController : UITableViewController
 {
     private readonly CreateEventViewModel _viewModel;

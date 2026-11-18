@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
 {
     public TextFormGroupHeader()

@@ -1,8 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using Buform.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class FormGroupRegistry
 {
     private enum RegistrationType
@@ -33,12 +33,12 @@ internal sealed class FormGroupRegistry
 
     private readonly IDictionary<(Type, HolderType), Holder> _holders;
 
-    private readonly Dictionary<Type, Type> _handlers;
+    private readonly Dictionary<Type, Func<IFormGroupHandler>> _handlers;
 
     public FormGroupRegistry()
     {
         _holders = new Dictionary<(Type, HolderType), Holder>();
-        _handlers = new Dictionary<Type, Type>();
+        _handlers = new Dictionary<Type, Func<IFormGroupHandler>>();
     }
 
     private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
@@ -61,27 +61,31 @@ internal sealed class FormGroupRegistry
         return false;
     }
 
-    public void RegisterGroupHandler<TGroup, THandler>()
+    public void RegisterGroupHandler<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            THandler
+    >()
         where TGroup : class, IFormGroup
         where THandler : FormGroupHandler<TGroup>
     {
-        _handlers[typeof(TGroup)] = typeof(THandler);
+        _handlers[typeof(TGroup)] = Activator.CreateInstance<THandler>;
     }
 
     public IFormGroupHandler GetGroupHandler(IFormGroup group)
     {
-        if (_handlers.TryGetValue(group.GetType(), out var type))
+        if (_handlers.TryGetValue(group.GetType(), out var factory))
         {
-            return (IFormGroupHandler)Activator.CreateInstance(type)!;
+            return factory();
         }
 
         var interfaceTypes = group.GetType().GetInterfacesTopDown();
 
         foreach (var interfaceType in interfaceTypes)
         {
-            if (_handlers.TryGetValue(interfaceType, out var handlerType))
+            if (_handlers.TryGetValue(interfaceType, out var interfaceFactory))
             {
-                return (IFormGroupHandler)Activator.CreateInstance(handlerType)!;
+                return interfaceFactory();
             }
         }
 

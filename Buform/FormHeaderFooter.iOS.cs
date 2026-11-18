@@ -2,7 +2,6 @@ using System.ComponentModel;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class FormHeaderFooter : UITableViewHeaderFooterView
 {
     protected FormHeaderFooter()
@@ -38,7 +37,6 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
     public abstract void Initialize(IFormGroup group);
 }
 
-[Preserve(AllMembers = true)]
 public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
     where TGroup : class, IFormGroup
 {

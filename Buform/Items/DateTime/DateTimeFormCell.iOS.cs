@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     where TItem : DateTimeFormItem
 {
@@ -224,7 +223,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(DateTimeFormCell))]
 public sealed class DateTimeFormCell : DateTimeFormCell<DateTimeFormItem>
 {

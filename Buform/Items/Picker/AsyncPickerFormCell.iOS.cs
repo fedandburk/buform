@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class AsyncPickerFormCell<TItem> : PresentedPickerFormCellBase<TItem>
     where TItem : class, IAsyncPickerFormItem
 {
@@ -25,7 +24,6 @@ public abstract class AsyncPickerFormCell<TItem> : PresentedPickerFormCellBase<T
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(AsyncPickerFormCell))]
 public sealed class AsyncPickerFormCell : AsyncPickerFormCell<IAsyncPickerFormItem>
 {

@@ -5,7 +5,6 @@ using AndroidX.RecyclerView.Widget;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class FormViewHolder : RecyclerView.ViewHolder
 {
     private bool _isInitialized;
@@ -46,7 +45,6 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
     }
 }
 
-[Preserve(AllMembers = true)]
 public abstract class FormViewHolder<TData> : FormViewHolder
     where TData : class, INotifyPropertyChanged, IDisposable
 {

@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class SliderFormCell<TItem> : FormCell<TItem>
     where TItem : SliderFormItem
 {
@@ -139,7 +138,6 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(SliderFormCell))]
 public sealed class SliderFormCell : SliderFormCell<SliderFormItem>
 {

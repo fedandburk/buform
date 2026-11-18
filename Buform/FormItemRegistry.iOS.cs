@@ -2,7 +2,6 @@ using Buform.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class FormItemRegistry
 {
     private enum RegistrationType

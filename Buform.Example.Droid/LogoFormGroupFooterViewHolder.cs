@@ -3,7 +3,6 @@ using Android.Views;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class LogoFormGroupFooterViewHolder : FormViewHolder<LogoFormGroup>
 {
     public LogoFormGroupFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)

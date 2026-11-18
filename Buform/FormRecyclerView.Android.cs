@@ -5,7 +5,6 @@ using AndroidX.RecyclerView.Widget;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register("Buform.FormRecyclerView")]
 public sealed class FormRecyclerView : RecyclerView
 {

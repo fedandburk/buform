@@ -1,5 +1,6 @@
 // ReSharper disable UnusedMember.Global
 
+using System.Diagnostics.CodeAnalysis;
 using CoreGraphics;
 using Foundation;
 using Microsoft.Maui.Platform;
@@ -8,7 +9,6 @@ using UIKit;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(MauiFormCell))]
 internal sealed class MauiFormCell : UITableViewCell
 {
@@ -27,7 +27,11 @@ internal sealed class MauiFormCell : UITableViewCell
         /* Required constructor */
     }
 
-    public void Initialize(Type viewType, object bindingContext)
+    public void Initialize(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            Type viewType,
+        object bindingContext
+    )
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 

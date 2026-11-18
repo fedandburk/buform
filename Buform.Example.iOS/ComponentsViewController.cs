@@ -2,7 +2,6 @@ using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class ComponentsViewController : UITableViewController
 {
     private readonly ComponentsViewModel _viewModel;

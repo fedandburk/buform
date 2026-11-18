@@ -1,8 +1,5 @@
-using Microsoft.Maui.Controls.Internals;
-
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public sealed class FormView : View
 {
     public static readonly BindableProperty FormProperty = BindableProperty.Create(

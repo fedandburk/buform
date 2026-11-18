@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class CallbackPickerFormCell<TItem> : PickerFormCellBase<TItem>
     where TItem : class, ICallbackPickerFormItem
 {
@@ -54,7 +53,6 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCellBase<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(CallbackPickerFormCell))]
 public sealed class CallbackPickerFormCell : CallbackPickerFormCell<ICallbackPickerFormItem>
 {

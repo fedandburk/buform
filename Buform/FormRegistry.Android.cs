@@ -1,19 +1,23 @@
 using System.ComponentModel;
-using Android.Runtime;
+using System.Diagnostics.CodeAnalysis;
 using Buform.Extensions;
 using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class FormRegistry
 {
     private sealed class Holder
     {
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
         public Type ViewHolderType { get; }
         public int ResourceId { get; }
 
-        public Holder(Type viewHolderType, int resourceId)
+        public Holder(
+            [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+                Type viewHolderType,
+            int resourceId
+        )
         {
             ArgumentNullException.ThrowIfNull(viewHolderType);
 
@@ -29,7 +33,10 @@ internal sealed class FormRegistry
         _holders = new Dictionary<(Type, FormViewHolderType), Holder>();
     }
 
-    public void RegisterItem<TData, TViewHolder>(int resourceId)
+    public void RegisterItem<
+        TData,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TData : class, INotifyPropertyChanged, IDisposable
         where TViewHolder : FormViewHolder
     {
@@ -39,7 +46,10 @@ internal sealed class FormRegistry
         );
     }
 
-    public void RegisterGroupHeader<TGroup, TViewHolder>(int resourceId)
+    public void RegisterGroupHeader<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
@@ -49,7 +59,10 @@ internal sealed class FormRegistry
         );
     }
 
-    public void RegisterGroupFooter<TGroup, TViewHolder>(int resourceId)
+    public void RegisterGroupFooter<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
+    >(int resourceId)
         where TGroup : class, IFormGroup
         where TViewHolder : FormViewHolder
     {
@@ -123,7 +136,8 @@ internal sealed class FormRegistry
 
     public bool TryGetViewHolderAndResourceId(
         int viewType,
-        out Type? viewHolderType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
+            out Type? viewHolderType,
         out int? resourceId
     )
     {

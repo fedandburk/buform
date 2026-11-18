@@ -6,7 +6,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(RandomNumberGeneratorCell))]
 public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGeneratorItem>
 {

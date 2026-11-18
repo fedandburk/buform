@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class SwitchFormCell<TItem> : FormCell<TItem>
     where TItem : SwitchFormItem
 {
@@ -144,7 +143,6 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(SwitchFormCell))]
 public sealed class SwitchFormCell : SwitchFormCell<SwitchFormItem>
 {

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Buform;
 
 public static class FormPlatform
@@ -10,7 +12,26 @@ public static class FormPlatform
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();
 
-        FormComponentRegistry.Register();
+        RegisterGroupHeaderClass<IListFormGroup, ListFormGroupHeader>();
+        RegisterGroupFooterClass<IListFormGroup, ListFormGroupFooter>();
+        RegisterGroupHandler<IListFormGroup, ListFormGroupHandler>();
+
+        RegisterGroupHeaderClass<TextFormGroup, TextFormGroupHeader>();
+        RegisterGroupFooterClass<TextFormGroup, TextFormGroupFooter>();
+
+        RegisterItemClass<ButtonFormItem, ButtonFormCell>();
+        RegisterItemClass<DateTimeFormItem, DateTimeFormCell>();
+        RegisterItemClass<IAsyncPickerFormItem, AsyncPickerFormCell>();
+        RegisterItemClass<ICallbackPickerFormItem, CallbackPickerFormCell>();
+        RegisterItemClass<IMultiValuePickerFormItem, MultiValuePickerFormCell>();
+        RegisterItemClass<IPickerFormItem, PopUpPickerFormCell>();
+        RegisterItemClass<ISegmentsFormItem, SegmentsFormCell>();
+        RegisterItemClass<SliderFormItem, SliderFormCell>();
+        RegisterItemClass<StepperFormItem, StepperFormCell>();
+        RegisterItemClass<SwitchFormItem, SwitchFormCell>();
+        RegisterItemClass<IMultilineTextInputFormItem, MultilineTextInputFormCell>();
+        RegisterItemClass<ITextInputFormItem, TextInputFormCell>();
+        RegisterItemClass<ITextFormItem, TextFormCell>();
     }
 
     public static void RegisterGroupHeaderClass<TGroup, TGroupView>()
@@ -61,7 +82,11 @@ public static class FormPlatform
         ItemRegistry.Register(tableView);
     }
 
-    public static void RegisterGroupHandler<TGroup, THandler>()
+    public static void RegisterGroupHandler<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            THandler
+    >()
         where TGroup : class, IFormGroup
         where THandler : FormGroupHandler<TGroup>
     {

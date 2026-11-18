@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
     where TItem : class, IMultilineTextInputFormItem
 {
@@ -156,7 +155,6 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(MultilineTextInputFormCell))]
 public sealed class MultilineTextInputFormCell
     : MultilineTextInputFormCell<IMultilineTextInputFormItem>

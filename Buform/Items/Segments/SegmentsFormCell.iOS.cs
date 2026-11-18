@@ -2,7 +2,6 @@ using ObjCRuntime;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     where TItem : class, ISegmentsFormItem
 {
@@ -230,7 +229,6 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     }
 }
 
-[Preserve(AllMembers = true)]
 [Register(nameof(SegmentsFormCell))]
 public sealed class SegmentsFormCell : SegmentsFormCell<ISegmentsFormItem>
 {

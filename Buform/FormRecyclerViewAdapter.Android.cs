@@ -1,14 +1,12 @@
 // ReSharper disable InvertIf
 
 using System.Collections.Specialized;
-using Android.Runtime;
 using Android.Views;
 using AndroidX.RecyclerView.Widget;
 using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
 {
     private Form? _form;

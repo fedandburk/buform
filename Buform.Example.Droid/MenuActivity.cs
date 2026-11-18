@@ -1,8 +1,5 @@
-using Android.Runtime;
-
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 [Activity(NoHistory = true, MainLauncher = true)]
 public class MenuActivity : Activity, INavigationService
 {

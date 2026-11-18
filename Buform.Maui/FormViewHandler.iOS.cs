@@ -1,11 +1,9 @@
 using CoreGraphics;
-using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Handlers;
 using UIKit;
 
 namespace Buform;
 
-[Preserve(AllMembers = true)]
 internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
 {
     private static readonly PropertyMapper<FormView, FormViewHandler> PropertyMapper = new(
