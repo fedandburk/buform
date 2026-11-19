@@ -62,7 +62,7 @@ public partial class CreateConnectionViewModel : ObservableObject
 
         Form = new FluentValidationForm<CreateConnectionViewModel>(this, new Validator())
         {
-            new TextFormGroup("Server")
+            new LabeledFormGroup("Server")
             {
                 new TextInputFormItem(() => Server)
                 {
@@ -89,7 +89,7 @@ public partial class CreateConnectionViewModel : ObservableObject
                     },
                 },
             },
-            new TextFormGroup(
+            new LabeledFormGroup(
                 "Authorization",
                 "Anonymous FTP logins are usually the username 'anonymous' with the user's email address as the password."
             )
@@ -114,32 +114,28 @@ public partial class CreateConnectionViewModel : ObservableObject
                 {
                     Label = "Password",
                     Placeholder = "Password",
-                    IsSecured = true,
+                    IsSecure = true,
                 },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new PickerFormItem(() => SshPrivateKey)
                 {
                     Label = "SSH Private Key",
-                    InputType = PickerInputType.PopUp,
+                    Presentation = PickerPresentation.PopUp,
                     Source = new[] { "Key 1", "Key 2", "Key 3" },
                 },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
-                new ButtonFormItem(ConnectCommand)
-                {
-                    Label = "Connect",
-                    InputType = ButtonInputType.Done,
-                },
+                new ButtonFormItem(ConnectCommand) { Label = "Connect", Style = ButtonStyle.Done },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new ButtonFormItem(ResetCommand)
                 {
                     Label = "Reset",
-                    InputType = ButtonInputType.Destructive,
+                    Style = ButtonStyle.Destructive,
                 },
             },
         };

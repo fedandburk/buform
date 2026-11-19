@@ -66,7 +66,7 @@ public partial class CreateEventViewModel : ObservableObject
 
         Form = new FluentValidationForm<Model>(model, new Validator())
         {
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new TextInputFormItem(() => model.Title) { Placeholder = "Title" },
                 new TextInputFormItem(() => model.Location)
@@ -74,7 +74,7 @@ public partial class CreateEventViewModel : ObservableObject
                     Placeholder = "Location or Video Call",
                 },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new SwitchFormItem(() => model.IsAllDay)
                 {
@@ -112,11 +112,11 @@ public partial class CreateEventViewModel : ObservableObject
                     Formatter = item => item.Humanize(LetterCasing.Title),
                 },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new ButtonFormItem(AddAttachmentCommand) { Label = "Add attachment..." },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new TextInputFormItem(() => model.Url)
                 {

@@ -4,7 +4,7 @@ using Google.Android.Material.Button;
 
 namespace Buform.Example.Droid;
 
-public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder
+public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder<RandomNumberGeneratorItem>
 {
     private MaterialButton? _generateButton;
 
@@ -22,12 +22,12 @@ public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder
 
     private void OnGenerateButtonClick(object? sender, EventArgs e)
     {
-        if (Data is not RandomNumberGeneratorItem item)
+        if (Item == null)
         {
-            return;
+            throw new InvalidOperationException("The random number row has no item.");
         }
 
-        item.GenerateCommand.Execute(null);
+        Item.GenerateCommand.Execute(null);
     }
 
     protected override void Initialize()
@@ -43,7 +43,7 @@ public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder
     {
         base.UpdateReadOnlyState();
 
-        _generateButton?.Enabled = !(Data?.IsReadOnly ?? true);
+        _generateButton?.Enabled = !(Item?.IsReadOnly ?? true);
     }
 
     protected override void Dispose(bool disposing)

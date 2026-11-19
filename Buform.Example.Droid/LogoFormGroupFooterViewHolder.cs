@@ -3,7 +3,7 @@ using Android.Views;
 
 namespace Buform.Example.Droid;
 
-public sealed class LogoFormGroupFooterViewHolder : FormViewHolder<LogoFormGroup>
+public sealed class LogoFormGroupFooterViewHolder : FormHeaderFooterViewHolder<LogoFormGroup>
 {
     public LogoFormGroupFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -18,16 +18,6 @@ public sealed class LogoFormGroupFooterViewHolder : FormViewHolder<LogoFormGroup
     }
 
     protected override void Initialize()
-    {
-        /* Nothing to do */
-    }
-
-    protected override void OnDataSet()
-    {
-        /* Nothing to do */
-    }
-
-    protected override void OnDataPropertyChanged(string? propertyName)
     {
         /* Nothing to do */
     }

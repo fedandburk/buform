@@ -19,25 +19,25 @@ public sealed partial class MenuViewModel : ObservableObject
         Form = new Form(this)
         {
             new LogoFormGroup(),
-            new TextFormGroup("Gallery")
+            new LabeledFormGroup("Gallery")
             {
                 new ButtonFormItem(ShowControlsCommand)
                 {
                     Label = "Show All Components",
-                    InputType = ButtonInputType.Done,
+                    Style = ButtonStyle.Done,
                 },
             },
-            new TextFormGroup("Examples", "Contains some real-life examples.")
+            new LabeledFormGroup("Examples", "Contains some real-life examples.")
             {
                 new ButtonFormItem(CreateConnectionCommand)
                 {
                     Label = "Setup New Connection",
-                    InputType = ButtonInputType.Done,
+                    Style = ButtonStyle.Done,
                 },
                 new ButtonFormItem(CreateEventCommand)
                 {
                     Label = "Create New Event",
-                    InputType = ButtonInputType.Done,
+                    Style = ButtonStyle.Done,
                 },
             },
         };
