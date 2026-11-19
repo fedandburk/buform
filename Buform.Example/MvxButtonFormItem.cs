@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Buform;
+namespace Buform.Example;
 
 public sealed class MvxButtonFormItem : ButtonFormItem
 {

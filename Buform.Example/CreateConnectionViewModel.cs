@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
 
-namespace Buform;
+namespace Buform.Example;
 
 public partial class CreateConnectionViewModel : ObservableObject
 {
@@ -181,19 +181,5 @@ public partial class CreateConnectionViewModel : ObservableObject
         Username = null;
         Password = null;
         SshPrivateKey = null;
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == null)
-        {
-            return;
-        }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changed: {value}");
     }
 }

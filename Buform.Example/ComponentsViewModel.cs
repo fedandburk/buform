@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Humanizer;
 using NLipsum.Core;
 
-namespace Buform;
+namespace Buform.Example;
 
 public partial class ComponentsViewModel : ObservableObject
 {
@@ -339,36 +339,8 @@ public partial class ComponentsViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void MoveListItem((int oldIndex, int newIndex) move)
+    private void MoveListItem(FormItemMove move)
     {
-        List.Move(move.oldIndex, move.newIndex);
-    }
-
-    protected override void OnPropertyChanging(PropertyChangingEventArgs e)
-    {
-        base.OnPropertyChanging(e);
-
-        if (e.PropertyName == null)
-        {
-            return;
-        }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changing: {value}");
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == null)
-        {
-            return;
-        }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changed: {value}");
+        List.Move(move.OldIndex, move.NewIndex);
     }
 }

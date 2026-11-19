@@ -3,9 +3,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Buform;
+namespace Buform.Example;
 
-public partial class MenuViewModel : ObservableObject
+public sealed partial class MenuViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
 

@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
 using Humanizer;
 
-namespace Buform;
+namespace Buform.Example;
 
 public partial class CreateEventViewModel : ObservableObject
 {
