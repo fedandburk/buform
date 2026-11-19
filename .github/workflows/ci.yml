@@ -41,8 +41,13 @@ jobs:
           dotnet tool restore
           dotnet csharpier check .
 
+      - name: Build
+        run: dotnet build Buform.sln
+
       - name: Test
-        run: dotnet test --solution Buform.sln
+        run: |
+          dotnet test --project Buform.Tests --no-build
+          dotnet test --project Buform.FluentValidation.Tests --no-build
 
   publish:
     name: Publish
