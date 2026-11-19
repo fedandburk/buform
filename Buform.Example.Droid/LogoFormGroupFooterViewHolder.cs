@@ -1,7 +1,7 @@
 using Android.Runtime;
 using Android.Views;
 
-namespace Buform;
+namespace Buform.Example.Droid;
 
 public sealed class LogoFormGroupFooterViewHolder : FormViewHolder<LogoFormGroup>
 {

@@ -1,7 +1,7 @@
-namespace Buform;
+namespace Buform.Example.Droid;
 
-[Activity(NoHistory = true, MainLauncher = true)]
-public class MenuActivity : Activity, INavigationService
+[Activity(MainLauncher = true)]
+public sealed class MenuActivity : AndroidX.AppCompat.App.AppCompatActivity, INavigationService
 {
     private readonly MenuViewModel _viewModel;
 
@@ -12,6 +12,8 @@ public class MenuActivity : Activity, INavigationService
 
     protected override void OnCreate(Bundle? savedInstanceState)
     {
+        AndroidX.Activity.EdgeToEdge.Enable(this);
+
         base.OnCreate(savedInstanceState);
 
         SetContentView(Resource.Layout.ActivityMenu);
@@ -23,16 +25,22 @@ public class MenuActivity : Activity, INavigationService
 
     public Task OpenComponentsAsync()
     {
-        throw new NotImplementedException();
+        StartActivity(typeof(ComponentsActivity));
+
+        return Task.CompletedTask;
     }
 
     public Task OpenCreateConnectionAsync()
     {
-        throw new NotImplementedException();
+        StartActivity(typeof(CreateConnectionActivity));
+
+        return Task.CompletedTask;
     }
 
     public Task OpenCreateEventAsync()
     {
-        throw new NotImplementedException();
+        StartActivity(typeof(CreateEventActivity));
+
+        return Task.CompletedTask;
     }
 }
