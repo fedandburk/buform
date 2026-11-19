@@ -8,13 +8,15 @@
   android:paddingEnd="@dimen/form_horizontal_padding"
   android:paddingTop="@dimen/form_vertical_padding"
   android:paddingBottom="@dimen/form_vertical_padding"
-  android:focusable="false"
-  android:clickable="false"
 >
-  <TextView
+  <com.google.android.material.textview.MaterialTextView
     android:id="@+id/TextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/form_horizontal_padding"
+    android:layout_marginEnd="@dimen/form_horizontal_padding"
+    android:textAppearance="?attr/textAppearanceBodySmall"
+    android:textColor="?android:attr/textColorSecondary"
     tools:text="Footer"
   />
 </FrameLayout>

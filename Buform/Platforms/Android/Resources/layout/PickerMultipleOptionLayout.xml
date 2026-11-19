@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.checkbox.MaterialCheckBox
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/Option"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:minHeight="?attr/listPreferredItemHeightSmall"
+  android:paddingStart="@dimen/form_item_spacing"
+  android:paddingEnd="?attr/dialogPreferredPadding"
+  android:layout_marginStart="?attr/dialogPreferredPadding"
+  android:textAppearance="?attr/textAppearanceBodyLarge"
+  android:textColor="?android:attr/textColorPrimary"
+  tools:text="Option"
+/>

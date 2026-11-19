@@ -44,6 +44,8 @@ public sealed class FormRecyclerView : RecyclerView
     {
         SetLayoutManager(CreateLayoutManager());
         SetAdapter(CreateAdapter());
+
+        FormRowAppearance.ApplyFormStyle(this);
     }
 
     private LayoutManager CreateLayoutManager()

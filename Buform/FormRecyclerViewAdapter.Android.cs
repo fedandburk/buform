@@ -4,7 +4,7 @@ using AndroidX.RecyclerView.Widget;
 
 namespace Buform;
 
-internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
+internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSource
 {
     private Form? _form;
     private FormRowList? _rows;
@@ -39,33 +39,10 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
     private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
         // TODO: Use Looper.MainLooper.
-        switch (args.Action)
-        {
-            case NotifyCollectionChangedAction.Add:
-                NotifyItemRangeInserted(args.NewStartingIndex, args.NewItems!.Count);
-                break;
-            case NotifyCollectionChangedAction.Remove:
-                NotifyItemRangeRemoved(args.OldStartingIndex, args.OldItems!.Count);
-                break;
-            case NotifyCollectionChangedAction.Replace:
-                NotifyItemRangeChanged(args.NewStartingIndex, args.NewItems!.Count);
-                break;
-            case NotifyCollectionChangedAction.Move:
-                for (var i = 0; i < args.NewItems!.Count; i++)
-                {
-                    NotifyItemMoved(args.OldStartingIndex + i, args.NewStartingIndex + i);
-                }
-
-                break;
-            case NotifyCollectionChangedAction.Reset:
-                NotifyDataSetChanged();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(args), args.Action, null);
-        }
+        FormRowAppearance.NotifyRowsChanged(this, args);
     }
 
-    private FormRow GetRow(int position)
+    public FormRow GetRow(int position)
     {
         if (_rows == null || position < 0 || position >= _rows.Count)
         {
@@ -124,11 +101,9 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
             throw new FormViewNotFoundException(viewType);
         }
 
-        var view = LayoutInflater.From(parent.Context)!.Inflate(resourceId!.Value, parent, false);
+        var view = LayoutInflater.From(parent.Context)!.Inflate(resourceId!.Value, parent, false)!;
 
-        var viewHolder = Activator.CreateInstance(viewHolderType!, view) as FormViewHolder;
-
-        return viewHolder!;
+        return FormPlatform.CreateViewHolder(viewHolderType!, view);
     }
 
     public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
@@ -141,6 +116,26 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter
         }
 
         viewHolder.Initialize(row.Data);
+
+        ListRowClickListener.Attach(viewHolder.ItemView, row);
+
+        FormRowAppearance.Apply(viewHolder.ItemView, row);
+    }
+
+    public override void OnBindViewHolder(
+        RecyclerView.ViewHolder holder,
+        int position,
+        IList<Java.Lang.Object> payloads
+    )
+    {
+        if (!FormRowAppearance.IsAppearanceUpdate(payloads))
+        {
+            OnBindViewHolder(holder, position);
+
+            return;
+        }
+
+        FormRowAppearance.Apply(holder.ItemView, GetRow(position));
     }
 
     protected override void Dispose(bool disposing)

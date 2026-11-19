@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.listitem.ListItemLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/form_horizontal_padding"
+  android:paddingEnd="@dimen/form_horizontal_padding"
+>
+  <com.google.android.material.listitem.ListItemCardView
+    style="?attr/listItemCardViewSegmentedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/form_item_height"
+    android:duplicateParentState="true"
+  >
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:layout_gravity="center_vertical"
+    >
+      <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/form_item_spacing"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="?android:attr/textColorPrimary"
+        android:visibility="gone"
+        tools:text="Label"
+        tools:visibility="visible"
+      />
+      <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/ToggleGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+      />
+      <include layout="@layout/FormItemErrorLayout" />
+    </LinearLayout>
+  </com.google.android.material.listitem.ListItemCardView>
+</com.google.android.material.listitem.ListItemLayout>

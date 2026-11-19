@@ -1,12 +1,13 @@
+using Android.Graphics;
 using Android.Runtime;
 using Android.Views;
-using Buform.Extensions;
+using AndroidX.AppCompat.Content.Res;
 
 namespace Buform;
 
 public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 {
-    private Button? _button;
+    protected virtual TextView? LabelView { get; set; }
 
     public ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -20,47 +21,67 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         /* Required constructor */
     }
 
-    private void OnButtonClick(object? sender, EventArgs e)
+    private void OnItemViewClick(object? sender, EventArgs e)
     {
-        Data?.Value.SafeExecute();
+        if (Data == null || Data.IsReadOnly)
+        {
+            return;
+        }
+
+        Data.Value.SafeExecute();
     }
 
     protected override void Initialize()
     {
-        _button = ItemView.FindViewById<Button>(Resource.Id.Button)!;
-        _button.Click += OnButtonClick;
+        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
+
+        ItemView.Click += OnItemViewClick;
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (_button == null)
-        {
-            return;
-        }
+        var isEnabled = !(Data?.IsReadOnly ?? true);
 
-        var isReadOnly = Data?.IsReadOnly ?? true;
+        ItemView.Enabled = isEnabled;
 
-        _button.Enabled = !isReadOnly;
+        LabelView?.Enabled = isEnabled;
     }
 
     protected virtual void UpdateLabel()
     {
-        if (_button == null)
-        {
-            return;
-        }
-
-        _button.Text = Data?.Label;
+        LabelView?.Text = Data?.Label;
     }
 
     protected virtual void UpdateInputType()
     {
-        if (_button == null)
+        if (LabelView == null || Data == null)
         {
             return;
         }
 
-        // TODO: Update button appearance.
+        var context = LabelView.Context
+            ?? throw new InvalidOperationException("The label has no context.");
+
+        var colorResourceId = Data.InputType switch
+        {
+            ButtonInputType.Default => Resource.Color.form_button_text,
+            ButtonInputType.Done => Resource.Color.form_button_text,
+            ButtonInputType.Destructive => Resource.Color.form_button_destructive_text,
+            _ => throw new ArgumentOutOfRangeException(
+                nameof(ButtonFormItem.InputType),
+                Data.InputType,
+                null
+            ),
+        };
+
+        var textColors = AppCompatResources.GetColorStateList(context, colorResourceId);
+
+        LabelView.SetTextColor(textColors);
+
+        var typefaceStyle =
+            Data.InputType == ButtonInputType.Done ? TypefaceStyle.Bold : TypefaceStyle.Normal;
+
+        LabelView.SetTypeface(Typeface.Create(LabelView.Typeface, typefaceStyle), typefaceStyle);
     }
 
     protected override void OnDataSet()
@@ -74,14 +95,17 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
     {
         switch (propertyName)
         {
-            case nameof(Data.IsReadOnly):
+            case nameof(ButtonFormItem.IsReadOnly):
                 UpdateReadOnlyState();
                 break;
-            case nameof(Data.Label):
+            case nameof(ButtonFormItem.Label):
                 UpdateLabel();
                 break;
-            case nameof(Data.InputType):
+            case nameof(ButtonFormItem.InputType):
                 UpdateInputType();
+                break;
+            case null:
+                OnDataSet();
                 break;
         }
     }
@@ -90,13 +114,9 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
     {
         if (disposing)
         {
-            var button = _button;
-            if (button != null)
-            {
-                button.Click -= OnButtonClick;
-            }
+            ItemView.Click -= OnItemViewClick;
 
-            _button = null;
+            LabelView = null;
         }
 
         base.Dispose(disposing);

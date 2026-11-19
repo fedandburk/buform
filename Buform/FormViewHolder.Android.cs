@@ -50,6 +50,8 @@ public abstract class FormViewHolder<TData> : FormViewHolder
 {
     public new TData? Data { get; private set; }
 
+    protected virtual TextView? ValidationErrorView => null;
+
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -69,7 +71,25 @@ public abstract class FormViewHolder<TData> : FormViewHolder
             return;
         }
 
+        if (e.PropertyName == nameof(IValidatableFormItem.ValidationErrorMessage))
+        {
+            UpdateValidationErrorView();
+        }
+
         OnDataPropertyChanged(e.PropertyName);
+    }
+
+    private void UpdateValidationErrorView()
+    {
+        if (ValidationErrorView == null || Data is not IValidatableFormItem item)
+        {
+            return;
+        }
+
+        var message = item.ValidationErrorMessage;
+
+        ValidationErrorView.Text = message;
+        ValidationErrorView.Visibility = message == null ? ViewStates.Gone : ViewStates.Visible;
     }
 
     protected abstract void OnDataSet();
@@ -98,6 +118,8 @@ public abstract class FormViewHolder<TData> : FormViewHolder
         }
 
         Data.PropertyChanged += OnDataPropertyChanged;
+
+        UpdateValidationErrorView();
 
         OnDataSet();
     }
