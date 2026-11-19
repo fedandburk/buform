@@ -42,20 +42,15 @@ internal sealed class FormGroupRegistry
 
     private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
     {
-        if (_holders.TryGetValue((groupType, holderType), out holder))
+        foreach (var registrationType in groupType.GetRegistrationTypes())
         {
-            return true;
-        }
-
-        var interfaceTypes = groupType.GetInterfacesTopDown();
-
-        foreach (var interfaceType in interfaceTypes)
-        {
-            if (_holders.TryGetValue((interfaceType, holderType), out holder))
+            if (_holders.TryGetValue((registrationType, holderType), out holder))
             {
                 return true;
             }
         }
+
+        holder = null;
 
         return false;
     }
@@ -73,18 +68,11 @@ internal sealed class FormGroupRegistry
 
     public IFormGroupHandler GetGroupHandler(IFormGroup group)
     {
-        if (_handlers.TryGetValue(group.GetType(), out var factory))
+        foreach (var registrationType in group.GetType().GetRegistrationTypes())
         {
-            return factory();
-        }
-
-        var interfaceTypes = group.GetType().GetInterfacesTopDown();
-
-        foreach (var interfaceType in interfaceTypes)
-        {
-            if (_handlers.TryGetValue(interfaceType, out var interfaceFactory))
+            if (_handlers.TryGetValue(registrationType, out var factory))
             {
-                return interfaceFactory();
+                return factory();
             }
         }
 

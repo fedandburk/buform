@@ -29,18 +29,15 @@ internal sealed class MauiFormItemRegistry
 
     private bool TryGetHolder(Type itemType, out Holder? holder)
     {
-        if (_holders.TryGetValue(itemType, out holder))
+        foreach (var registrationType in itemType.GetRegistrationTypes())
         {
-            return true;
-        }
-
-        foreach (var interfaceType in itemType.GetInterfacesTopDown())
-        {
-            if (_holders.TryGetValue(interfaceType, out holder))
+            if (_holders.TryGetValue(registrationType, out holder))
             {
                 return true;
             }
         }
+
+        holder = null;
 
         return false;
     }

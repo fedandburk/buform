@@ -31,20 +31,15 @@ internal sealed class FormItemRegistry
 
     private bool TryGetHolder(Type itemType, out Holder? holder)
     {
-        if (_holders.TryGetValue(itemType, out holder))
+        foreach (var registrationType in itemType.GetRegistrationTypes())
         {
-            return true;
-        }
-
-        var interfaceTypes = itemType.GetInterfacesTopDown();
-
-        foreach (var interfaceType in interfaceTypes)
-        {
-            if (_holders.TryGetValue(interfaceType, out holder))
+            if (_holders.TryGetValue(registrationType, out holder))
             {
                 return true;
             }
         }
+
+        holder = null;
 
         return false;
     }

@@ -40,18 +40,9 @@ internal sealed class MauiFormGroupRegistry
             out Type? viewType
     )
     {
-        if (_groups.TryGetValue((groupType, holderType), out var holder))
+        foreach (var registrationType in groupType.GetRegistrationTypes())
         {
-            viewType = holder.ViewType;
-
-            return true;
-        }
-
-        var interfaceTypes = groupType.GetInterfacesTopDown();
-
-        foreach (var interfaceType in interfaceTypes)
-        {
-            if (_groups.TryGetValue((interfaceType, holderType), out holder))
+            if (_groups.TryGetValue((registrationType, holderType), out var holder))
             {
                 viewType = holder.ViewType;
 
