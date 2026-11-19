@@ -57,7 +57,7 @@ public static class FluentValidationFormSpecs
                         ])
                     );
 
-                Sut.Add(new TextFormGroup { Item });
+                Sut.Add(new LabeledFormGroup { Item });
             }
 
             [Fact]

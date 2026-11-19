@@ -64,7 +64,7 @@ public abstract class ValidatableForm : Form
         foreach (var item in AllItems.OfType<IValidatableFormItem>())
         {
             var validationError = validationErrors.FirstOrDefault(error =>
-                error.TargetPropertyName == item.PropertyName
+                error.PropertyName == item.PropertyName
             );
 
             item.SetValidationError(validationError, showsUnchangedValues);

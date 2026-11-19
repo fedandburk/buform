@@ -4,7 +4,7 @@ namespace Buform;
 
 public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatableFormItem
 {
-    public virtual string? ValidationErrorMessage
+    public string? ValidationErrorMessage
     {
         get;
         private set

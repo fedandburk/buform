@@ -14,7 +14,7 @@ public static class FormItemMoveSpecs
 
         protected Context()
         {
-            Group = new TextFormGroup
+            Group = new LabeledFormGroup
             {
                 new TextFormItem<string>(First),
                 new TextFormItem<string>(Hidden) { IsVisible = false },
@@ -23,7 +23,7 @@ public static class FormItemMoveSpecs
             };
         }
 
-        protected TextFormGroup Group { get; }
+        protected LabeledFormGroup Group { get; }
     }
 
     public static class Create

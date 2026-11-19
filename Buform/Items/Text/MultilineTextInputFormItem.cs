@@ -64,9 +64,9 @@ public class MultilineTextInputFormItem<TValue>
         NotifyPropertyChanged(nameof(FormattedValue));
     }
 
-    public virtual void SetValue(string? value)
+    public virtual void SetText(string? text)
     {
-        Value = _converter.Invoke(value);
+        Value = _converter.Invoke(text);
     }
 
     protected override void Dispose(bool isDisposing)

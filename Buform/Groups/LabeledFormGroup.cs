@@ -1,8 +1,8 @@
 namespace Buform;
 
-public sealed class TextFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
+public class LabeledFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
 {
-    public string? HeaderLabel
+    public virtual string? HeaderLabel
     {
         get;
         set
@@ -13,7 +13,7 @@ public sealed class TextFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
         }
     }
 
-    public string? FooterLabel
+    public virtual string? FooterLabel
     {
         get;
         set
@@ -24,7 +24,7 @@ public sealed class TextFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
         }
     }
 
-    public TextFormGroup(string? headerLabel = null, string? footerLabel = null)
+    public LabeledFormGroup(string? headerLabel = null, string? footerLabel = null)
     {
         HeaderLabel = headerLabel;
         FooterLabel = footerLabel;

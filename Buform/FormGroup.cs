@@ -114,6 +114,8 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     public void Insert(int index, TFormItem item)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(index);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, _items.Count);
         ArgumentNullException.ThrowIfNull(item);
 
         _items.Insert(index, item);
@@ -128,6 +130,11 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     public void Move(int originalIndex, int destinationIndex)
     {
+        ArgumentOutOfRangeException.ThrowIfNegative(originalIndex);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(originalIndex, _items.Count);
+        ArgumentOutOfRangeException.ThrowIfNegative(destinationIndex);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(destinationIndex, _items.Count);
+
         _items.Move(originalIndex, destinationIndex);
     }
 

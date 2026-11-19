@@ -19,8 +19,8 @@ public static class FormRowListSpecs
             SecondItem = new TextFormItem<string>(Second);
             ThirdItem = new TextFormItem<string>(Third);
 
-            FirstGroup = new TextFormGroup { FirstItem, SecondItem };
-            SecondGroup = new TextFormGroup { ThirdItem };
+            FirstGroup = new LabeledFormGroup { FirstItem, SecondItem };
+            SecondGroup = new LabeledFormGroup { ThirdItem };
 
             Form = new Form(new Model()) { FirstGroup, SecondGroup };
 
@@ -35,8 +35,8 @@ public static class FormRowListSpecs
         protected TextFormItem<string> SecondItem { get; }
         protected TextFormItem<string> ThirdItem { get; }
 
-        protected TextFormGroup FirstGroup { get; }
-        protected TextFormGroup SecondGroup { get; }
+        protected LabeledFormGroup FirstGroup { get; }
+        protected LabeledFormGroup SecondGroup { get; }
 
         protected Form Form { get; }
 
@@ -162,7 +162,7 @@ public static class FormRowListSpecs
         {
             public GroupAdded()
             {
-                Form.Add(new TextFormGroup { new TextFormItem<string>(Added) });
+                Form.Add(new LabeledFormGroup { new TextFormItem<string>(Added) });
             }
 
             [Fact]
@@ -214,7 +214,7 @@ public static class FormRowListSpecs
                 Sut.Dispose();
 
                 SecondGroup.Add(new TextFormItem<string>(Added));
-                Form.Add(new TextFormGroup());
+                Form.Add(new LabeledFormGroup());
             }
 
             [Fact]

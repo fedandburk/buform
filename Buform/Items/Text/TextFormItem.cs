@@ -20,8 +20,8 @@ public class TextFormItem<TValue> : FormItem<TValue>, ITextFormItem
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public TextFormItem(Expression<Func<TValue>> property)
-        : base(property)
+    public TextFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
     {
         /* Required constructor */
     }

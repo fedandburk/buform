@@ -41,7 +41,7 @@ public class TextInputFormItem<TValue> : ValidatableFormItem<TValue>, ITextInput
         }
     }
 
-    public virtual bool IsSecured
+    public virtual bool IsSecure
     {
         get;
         set
@@ -84,9 +84,9 @@ public class TextInputFormItem<TValue> : ValidatableFormItem<TValue>, ITextInput
         NotifyPropertyChanged(nameof(FormattedValue));
     }
 
-    public virtual void SetValue(string? value)
+    public virtual void SetText(string? text)
     {
-        Value = _converter.Invoke(value);
+        Value = _converter.Invoke(text);
     }
 
     protected override void Dispose(bool isDisposing)

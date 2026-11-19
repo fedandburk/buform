@@ -80,7 +80,7 @@ public static class FormSpecs
         {
             public NameItemAdded()
             {
-                Sut.Add(new TextFormGroup { CreateNameItem() });
+                Sut.Add(new LabeledFormGroup { CreateNameItem() });
             }
 
             [Fact]
@@ -98,7 +98,7 @@ public static class FormSpecs
             {
                 _hiddenItem = CreateHiddenNameItem();
 
-                Sut.Add(new TextFormGroup { _hiddenItem });
+                Sut.Add(new LabeledFormGroup { _hiddenItem });
             }
 
             [Fact]
@@ -121,7 +121,7 @@ public static class FormSpecs
                 _visibleItem = CreateNameItem();
                 _hiddenItem = CreateHiddenNameItem();
 
-                Sut.Add(new TextFormGroup { _visibleItem, _hiddenItem });
+                Sut.Add(new LabeledFormGroup { _visibleItem, _hiddenItem });
 
                 Sut.IsReadOnly = true;
             }
@@ -152,7 +152,7 @@ public static class FormSpecs
             {
                 _hiddenItem = CreateHiddenNameItem();
 
-                Sut.Add(new TextFormGroup { _hiddenItem });
+                Sut.Add(new LabeledFormGroup { _hiddenItem });
 
                 _resultByExpression = Sut.GetItem(() => Target.Name);
                 _resultByName = Sut[nameof(Model.Name)];
@@ -178,7 +178,7 @@ public static class FormSpecs
         {
             public TargetPropertyChanges()
             {
-                Sut.Add(new TextFormGroup { CreateNameItem() });
+                Sut.Add(new LabeledFormGroup { CreateNameItem() });
 
                 ValueChanges.Clear();
 
@@ -197,7 +197,7 @@ public static class FormSpecs
             public ItemRemovedFromGroup()
             {
                 var item = CreateNameItem();
-                var group = new TextFormGroup { item };
+                var group = new LabeledFormGroup { item };
 
                 Sut.Add(group);
 
@@ -221,7 +221,7 @@ public static class FormSpecs
 
             public HandlerThrowsOnce()
             {
-                Sut.Add(new TextFormGroup { CreateNameItem() });
+                Sut.Add(new LabeledFormGroup { CreateNameItem() });
 
                 var shouldThrow = true;
 
@@ -261,7 +261,7 @@ public static class FormSpecs
         {
             public GroupRemoved()
             {
-                var group = new TextFormGroup { CreateNameItem() };
+                var group = new LabeledFormGroup { CreateNameItem() };
 
                 Sut.Add(group);
                 Sut.Remove(group);
@@ -282,9 +282,9 @@ public static class FormSpecs
         {
             public GroupReplaced()
             {
-                Sut.Add(new TextFormGroup { CreateNameItem() });
+                Sut.Add(new LabeledFormGroup { CreateNameItem() });
 
-                Sut[0] = new TextFormGroup();
+                Sut[0] = new LabeledFormGroup();
 
                 ValueChanges.Clear();
 
@@ -310,7 +310,7 @@ public static class FormSpecs
                 _item = Substitute.For<IFormItem>();
                 _item.IsVisible.Returns(true);
 
-                Sut.Add(new TextFormGroup { _item });
+                Sut.Add(new LabeledFormGroup { _item });
 
                 Sut.Dispose();
             }

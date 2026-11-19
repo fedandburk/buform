@@ -40,7 +40,7 @@ public static class ValidatableFormSpecs
             Sut = new ErrorsForm(new Model());
             Sut.Errors.AddRange(
                 new[] { VisibleError, HiddenError }.Where(error =>
-                    invalidProperties.Contains(error.TargetPropertyName)
+                    invalidProperties.Contains(error.PropertyName)
                 )
             );
 
@@ -49,7 +49,7 @@ public static class ValidatableFormSpecs
             ((INotifyPropertyChanged)Sut).PropertyChanged += (_, args) =>
                 PropertyChanges.Add(args.PropertyName);
 
-            Sut.Add(new TextFormGroup { VisibleItem, HiddenItem });
+            Sut.Add(new LabeledFormGroup { VisibleItem, HiddenItem });
         }
 
         protected FormValidationError VisibleError { get; }

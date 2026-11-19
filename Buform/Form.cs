@@ -19,7 +19,7 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
     public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
 
-    protected virtual object? Target { get; private set; }
+    protected object? Target { get; private set; }
 
     protected IReadOnlyList<IFormItem> AllItems => _items;
 
@@ -96,11 +96,15 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
     public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property)
         where TItem : class, IFormItem
     {
+        ArgumentNullException.ThrowIfNull(property);
+
         return GetItem<TItem>(property.GetMemberName());
     }
 
     public virtual IFormItem? GetItem(Expression<Func<object?>> property)
     {
+        ArgumentNullException.ThrowIfNull(property);
+
         return GetItem(property.GetMemberName());
     }
 
@@ -112,6 +116,8 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
     public virtual IFormItem? GetItem(string propertyName)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+
         return _items.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 

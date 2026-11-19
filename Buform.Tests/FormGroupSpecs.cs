@@ -20,7 +20,7 @@ public static class FormGroupSpecs
             SecondItem = new TextFormItem<string>(Second);
             ThirdItem = new TextFormItem<string>(Third);
 
-            Sut = new TextFormGroup { FirstItem, SecondItem, ThirdItem };
+            Sut = new LabeledFormGroup { FirstItem, SecondItem, ThirdItem };
 
             Changes = [];
             PropertyChanges = [];
@@ -33,7 +33,7 @@ public static class FormGroupSpecs
         protected TextFormItem<string> SecondItem { get; }
         protected TextFormItem<string> ThirdItem { get; }
 
-        protected TextFormGroup Sut { get; }
+        protected LabeledFormGroup Sut { get; }
 
         protected List<NotifyCollectionChangedEventArgs> Changes { get; }
 

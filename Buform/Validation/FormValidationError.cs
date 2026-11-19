@@ -2,16 +2,16 @@ namespace Buform;
 
 public sealed class FormValidationError
 {
-    public string TargetPropertyName { get; }
+    public string PropertyName { get; }
 
     public string ErrorMessage { get; }
 
-    public FormValidationError(string targetPropertyName, string errorMessage)
+    public FormValidationError(string propertyName, string errorMessage)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(targetPropertyName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
         ArgumentNullException.ThrowIfNull(errorMessage);
 
-        TargetPropertyName = targetPropertyName;
+        PropertyName = propertyName;
         ErrorMessage = errorMessage;
     }
 }

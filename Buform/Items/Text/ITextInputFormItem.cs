@@ -8,9 +8,9 @@ public interface ITextInputFormItem : IValidatableFormItem
 
     TextInputType InputType { get; }
 
-    bool IsSecured { get; }
+    bool IsSecure { get; }
 
     string? FormattedValue { get; }
 
-    void SetValue(string? value);
+    void SetText(string? text);
 }
