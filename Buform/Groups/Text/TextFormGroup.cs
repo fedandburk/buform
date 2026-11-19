@@ -1,6 +1,6 @@
 namespace Buform;
 
-public sealed class TextFormGroup : FormGroup<IFormItem>
+public sealed class TextFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
 {
     public string? HeaderLabel
     {
