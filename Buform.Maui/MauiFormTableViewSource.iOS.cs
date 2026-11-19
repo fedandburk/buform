@@ -8,88 +8,63 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
     public MauiFormTableViewSource(UITableView tableView)
         : base(tableView)
     {
-        TableView.RegisterClassForCellReuse(typeof(MauiFormCell), nameof(MauiFormCell));
-
-        TableView.RegisterClassForHeaderFooterViewReuse(
+        tableView.RegisterClassForCellReuse(typeof(MauiFormCell), nameof(MauiFormCell));
+        tableView.RegisterClassForHeaderFooterViewReuse(
             typeof(MauiFormHeaderFooterView),
             nameof(MauiFormHeaderFooterView)
         );
     }
 
-    protected override UITableViewCell GetCell(NSIndexPath indexPath, object item)
+    protected override UITableViewCell GetCell(
+        UITableView tableView,
+        NSIndexPath indexPath,
+        IFormItem item
+    )
     {
-        var sectionType = item.GetType();
-
-        if (!MauiFormPlatform.TryGetCellViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetCellViewType(item.GetType(), out var viewType))
         {
-            return base.GetCell(indexPath, item);
+            return base.GetCell(tableView, indexPath, item);
         }
 
-        if (viewType == null)
-        {
-            return base.GetCell(indexPath, item);
-        }
+        var cell = (MauiFormCell)tableView.DequeueReusableCell(nameof(MauiFormCell), indexPath);
 
-        var cell = TableView.DequeueReusableCell(nameof(MauiFormCell), indexPath);
-
-        if (cell is MauiFormCell mauiCell)
-        {
-            mauiCell.Initialize(viewType, item);
-        }
+        cell.Initialize(viewType!, item);
 
         return cell;
     }
 
-    protected override UITableViewHeaderFooterView? GetViewForFooter(
-        nint section,
-        object sectionItem
+    protected override UITableViewHeaderFooterView? GetHeaderView(
+        UITableView tableView,
+        IFormGroup group
     )
     {
-        var sectionType = sectionItem.GetType();
-
-        if (!MauiFormPlatform.TryGetFooterViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetHeaderViewType(group.GetType(), out var viewType))
         {
-            return base.GetViewForFooter(section, sectionItem);
+            return base.GetHeaderView(tableView, group);
         }
 
-        if (viewType == null)
-        {
-            return base.GetViewForFooter(section, sectionItem);
-        }
+        var view = (MauiFormHeaderFooterView)
+            tableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView))!;
 
-        var view = TableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView));
-
-        if (view is MauiFormHeaderFooterView mauiHeaderFooterView)
-        {
-            mauiHeaderFooterView.Initialize(viewType, sectionItem);
-        }
+        view.Initialize(viewType!, group);
 
         return view;
     }
 
-    protected override UITableViewHeaderFooterView? GetViewForHeader(
-        nint section,
-        object sectionItem
+    protected override UITableViewHeaderFooterView? GetFooterView(
+        UITableView tableView,
+        IFormGroup group
     )
     {
-        var sectionType = sectionItem.GetType();
-
-        if (!MauiFormPlatform.TryGetHeaderViewType(sectionType, out var viewType))
+        if (!MauiFormPlatform.TryGetFooterViewType(group.GetType(), out var viewType))
         {
-            return base.GetViewForHeader(section, sectionItem);
+            return base.GetFooterView(tableView, group);
         }
 
-        if (viewType == null)
-        {
-            return base.GetViewForHeader(section, sectionItem);
-        }
+        var view = (MauiFormHeaderFooterView)
+            tableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView))!;
 
-        var view = TableView.DequeueReusableHeaderFooterView(nameof(MauiFormHeaderFooterView));
-
-        if (view is MauiFormHeaderFooterView mauiHeaderFooterView)
-        {
-            mauiHeaderFooterView.Initialize(viewType, sectionItem);
-        }
+        view.Initialize(viewType!, group);
 
         return view;
     }

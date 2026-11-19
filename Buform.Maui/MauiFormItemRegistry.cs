@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Buform.Extensions;
 
 namespace Buform;
 
@@ -8,32 +7,24 @@ internal sealed class MauiFormItemRegistry
     private sealed class Holder
     {
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-        public Type CellType { get; }
-
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-        public Type? ExpandedCellType { get; }
+        public Type ViewType { get; }
 
         public Holder(
             [DynamicallyAccessedMembers(
                 DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
             )]
-                Type cellType,
-            [DynamicallyAccessedMembers(
-                DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
-            )]
-                Type? expandedCellType
+                Type viewType
         )
         {
-            CellType = cellType ?? throw new ArgumentNullException(nameof(cellType));
-            ExpandedCellType = expandedCellType;
+            ViewType = viewType;
         }
     }
 
-    private readonly IDictionary<Type, Holder> _holders;
+    private readonly Dictionary<Type, Holder> _holders;
 
     public MauiFormItemRegistry()
     {
-        _holders = new Dictionary<Type, Holder>();
+        _holders = [];
     }
 
     private bool TryGetHolder(Type itemType, out Holder? holder)
@@ -43,9 +34,7 @@ internal sealed class MauiFormItemRegistry
             return true;
         }
 
-        var interfaceTypes = itemType.GetInterfacesTopDown();
-
-        foreach (var interfaceType in interfaceTypes)
+        foreach (var interfaceType in itemType.GetInterfacesTopDown())
         {
             if (_holders.TryGetValue(interfaceType, out holder))
             {
@@ -64,21 +53,7 @@ internal sealed class MauiFormItemRegistry
         where TItem : class, IFormItem
         where TItemView : FormItemView<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null);
-    }
-
-    public void RegisterItem<
-        TItem,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-            TItemView,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-            TExpandedItemView
-    >()
-        where TItem : class, IFormItem
-        where TItemView : FormItemView<TItem>
-        where TExpandedItemView : FormItemView<TItem>
-    {
-        _holders[typeof(TItem)] = new Holder(typeof(TItemView), typeof(TExpandedItemView));
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView));
     }
 
     public bool TryGetCellViewType(
@@ -89,35 +64,11 @@ internal sealed class MauiFormItemRegistry
     {
         ArgumentNullException.ThrowIfNull(itemType);
 
-        var result = TryGetHolder(itemType, out var holder);
-
-        if (result)
+        if (TryGetHolder(itemType, out var holder))
         {
-            viewType = holder!.CellType;
+            viewType = holder!.ViewType;
 
             return true;
-        }
-
-        viewType = null;
-
-        return false;
-    }
-
-    public bool TryGetExpandedCellViewType(
-        Type itemType,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-            out Type? viewType
-    )
-    {
-        ArgumentNullException.ThrowIfNull(itemType);
-
-        var result = TryGetHolder(itemType, out var holder);
-
-        if (result)
-        {
-            viewType = holder!.ExpandedCellType;
-
-            return viewType != null;
         }
 
         viewType = null;

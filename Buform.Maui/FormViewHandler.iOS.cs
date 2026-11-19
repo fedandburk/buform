@@ -19,11 +19,13 @@ internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
         /* Required constructor */
     }
 
+    private MauiFormTableViewSource? _source;
+
     private static void MapForm(FormViewHandler handler, FormView view)
     {
-        if (handler.PlatformView.Source is MauiFormTableViewSource source)
+        if (handler._source != null)
         {
-            source.Form = view.Form;
+            handler._source.Form = view.Form;
         }
     }
 
@@ -31,19 +33,26 @@ internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
     {
         base.ConnectHandler(platformView);
 
-        if (PlatformView.Source is MauiFormTableViewSource source)
+        if (_source != null)
         {
-            source.Form = VirtualView.Form;
+            _source.Form = VirtualView.Form;
         }
+    }
+
+    protected override void DisconnectHandler(UITableView platformView)
+    {
+        _source?.Dispose();
+        _source = null;
+
+        base.DisconnectHandler(platformView);
     }
 
     protected override UITableView CreatePlatformView()
     {
         var tableView = new UITableView(CGRect.Empty, UITableViewStyle.InsetGrouped);
 
-        var source = new MauiFormTableViewSource(tableView);
+        _source = new MauiFormTableViewSource(tableView);
 
-        tableView.Source = source;
         tableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.Interactive;
 
         return tableView;
