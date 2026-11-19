@@ -4,6 +4,8 @@ namespace Buform;
 
 public class ButtonFormItem : FormItem<ICommand>
 {
+    private ICommand? _command;
+
     public override bool IsReadOnly
     {
         get => base.IsReadOnly || !Value.SafeCanExecute();
@@ -21,7 +23,7 @@ public class ButtonFormItem : FormItem<ICommand>
         }
     }
 
-    public virtual ButtonInputType InputType
+    public virtual ButtonStyle Style
     {
         get;
         set
@@ -35,12 +37,29 @@ public class ButtonFormItem : FormItem<ICommand>
     public ButtonFormItem(ICommand value)
         : base(value)
     {
-        if (Value == null)
+        ArgumentNullException.ThrowIfNull(value);
+
+        SubscribeToCommand(value);
+    }
+
+    private void SubscribeToCommand(ICommand? command)
+    {
+        if (ReferenceEquals(_command, command))
         {
             return;
         }
 
-        Value.CanExecuteChanged += OnCanExecuteChanged;
+        if (_command != null)
+        {
+            _command.CanExecuteChanged -= OnCanExecuteChanged;
+        }
+
+        _command = command;
+
+        if (_command != null)
+        {
+            _command.CanExecuteChanged += OnCanExecuteChanged;
+        }
     }
 
     protected virtual void OnCanExecuteChanged(object? sender, EventArgs e)
@@ -48,14 +67,20 @@ public class ButtonFormItem : FormItem<ICommand>
         NotifyPropertyChanged(nameof(IsReadOnly));
     }
 
+    protected override void OnValueChanged()
+    {
+        SubscribeToCommand(Value);
+
+        base.OnValueChanged();
+
+        NotifyPropertyChanged(nameof(IsReadOnly));
+    }
+
     protected override void Dispose(bool isDisposing)
     {
         if (isDisposing)
         {
-            if (Value != null)
-            {
-                Value.CanExecuteChanged -= OnCanExecuteChanged;
-            }
+            SubscribeToCommand(null);
         }
 
         base.Dispose(isDisposing);

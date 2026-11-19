@@ -16,7 +16,7 @@ public static class FormItemSpecs
 
             Sut = new TextFormItem<string?>(() => Target.Name);
 
-            _ = new Form(Target) { new TextFormGroup { Sut } };
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
         }
 
         protected Model Target { get; }
@@ -57,6 +57,45 @@ public static class FormItemSpecs
         }
     }
 
+    public static class ValueOfValueConstructedItem
+    {
+        public sealed class ValueWritten
+        {
+            private const string Initial = "initial";
+            private const string Changed = "changed";
+
+            private readonly TextFormItem<string?> _sut;
+            private readonly List<string?> _propertyChanges;
+
+            public ValueWritten()
+            {
+                var target = new Model();
+
+                _sut = new TextFormItem<string?>(Initial);
+
+                _ = new Form(target) { new LabeledFormGroup { _sut } };
+
+                _propertyChanges = [];
+
+                _sut.PropertyChanged += (_, args) => _propertyChanges.Add(args.PropertyName);
+
+                _sut.Value = Changed;
+            }
+
+            [Fact]
+            public void ReturnsWrittenValue()
+            {
+                _sut.Value.Should().Be(Changed);
+            }
+
+            [Fact]
+            public void RaisesValueChange()
+            {
+                _propertyChanges.Should().Contain(nameof(TextFormItem<string?>.Value));
+            }
+        }
+    }
+
     public static class Initialize
     {
         public sealed class TargetOfOtherType
@@ -69,7 +108,7 @@ public static class FormItemSpecs
                 var item = new TextFormItem<string?>(() => model.Name);
 
                 _exception = Record.Exception(() =>
-                    new Form(new object()) { new TextFormGroup { item } }
+                    new Form(new object()) { new LabeledFormGroup { item } }
                 );
             }
 

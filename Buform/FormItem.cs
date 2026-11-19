@@ -66,11 +66,11 @@ public abstract class FormItem<TValue> : IFormItem
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected FormItem(Expression<Func<TValue>> property)
+    protected FormItem(Expression<Func<TValue>> targetProperty)
     {
-        ArgumentNullException.ThrowIfNull(property);
+        ArgumentNullException.ThrowIfNull(targetProperty);
 
-        _property = property;
+        _property = targetProperty;
 
         var member = _property.GetMember();
 
@@ -82,8 +82,6 @@ public abstract class FormItem<TValue> : IFormItem
 
     protected FormItem(TValue value)
     {
-        ArgumentNullException.ThrowIfNull(value);
-
         _value = value;
 
         _isVisible = true;
@@ -101,19 +99,28 @@ public abstract class FormItem<TValue> : IFormItem
 
     private void SetValue(TValue? value)
     {
-        if (Target == null)
-        {
-            return;
-        }
-
         if (!Equals(value, Value))
         {
             IsValueChanged = true;
         }
 
+        if (_propertyInfo == null)
+        {
+            _value = value;
+
+            OnValueChanged();
+
+            return;
+        }
+
+        if (Target == null)
+        {
+            return;
+        }
+
         _shouldSkipValueChangedCallback = true;
 
-        _propertyInfo?.SetValue(Target, value);
+        _propertyInfo.SetValue(Target, value);
 
         _shouldSkipValueChangedCallback = false;
 

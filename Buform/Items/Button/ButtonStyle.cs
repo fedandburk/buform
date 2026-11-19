@@ -1,6 +1,6 @@
 namespace Buform;
 
-public enum ButtonInputType
+public enum ButtonStyle
 {
     Default = 0,
     Done = 1,
