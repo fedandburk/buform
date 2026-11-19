@@ -1,13 +1,15 @@
 namespace Buform.Example.iOS;
 
 [Register(nameof(SceneDelegate))]
-public sealed class SceneDelegate : UIWindowSceneDelegate
+public sealed class SceneDelegate : UIResponder, IUIWindowSceneDelegate
 {
     private const string TintColorName = "Main";
 
-    public override UIWindow? Window { get; set; }
+    [Export("window")]
+    public UIWindow? Window { get; set; }
 
-    public override void WillConnect(
+    [Export("scene:willConnectToSession:options:")]
+    public void WillConnect(
         UIScene scene,
         UISceneSession session,
         UISceneConnectionOptions connectionOptions
