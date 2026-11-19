@@ -16,4 +16,6 @@ public interface IFormGroup
     ICommand? InsertCommand { get; }
 
     IObservable<IChangeSet<IFormItem>> Connect();
+
+    int GetSourceIndex(IFormItem item);
 }

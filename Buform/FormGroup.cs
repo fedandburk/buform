@@ -98,6 +98,13 @@ public abstract class FormGroup<TFormItem> : IFormGroup
         return _items.Connect().Transform(item => (IFormItem)item);
     }
 
+    public int GetSourceIndex(IFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        return _items.Items.Cast<IFormItem>().ToList().IndexOf(item);
+    }
+
     public void Add(TFormItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
