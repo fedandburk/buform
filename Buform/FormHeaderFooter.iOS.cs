@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using ObjCRuntime;
 
 namespace Buform;
 
@@ -9,7 +10,7 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
         /* Required constructor */
     }
 
-    protected FormHeaderFooter(IntPtr handle)
+    protected FormHeaderFooter(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -40,14 +41,14 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
 public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
     where TGroup : class, IFormGroup
 {
-    protected TGroup? Group { get; private set; }
+    public TGroup? Group { get; private set; }
 
     protected FormHeaderFooter()
     {
         /* Required constructor */
     }
 
-    protected FormHeaderFooter(IntPtr handle)
+    protected FormHeaderFooter(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -75,9 +76,19 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
 
     public sealed override void Initialize(IFormGroup group)
     {
+        ArgumentNullException.ThrowIfNull(group);
+
         if (ReferenceEquals(Group, group))
         {
             return;
+        }
+
+        if (group is not TGroup typedGroup)
+        {
+            throw new ArgumentException(
+                $"The group must be of type '{typeof(TGroup).FullName}'.",
+                nameof(group)
+            );
         }
 
         if (Group != null)
@@ -85,12 +96,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
             Group.PropertyChanged -= OnGroupPropertyChanged;
         }
 
-        Group = group as TGroup;
-
-        if (Group == null)
-        {
-            return;
-        }
+        Group = typedGroup;
 
         Group.PropertyChanged += OnGroupPropertyChanged;
 

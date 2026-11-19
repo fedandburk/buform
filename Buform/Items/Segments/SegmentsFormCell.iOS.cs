@@ -8,7 +8,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     private NSLayoutConstraint? _segmentedControlLeadingConstraint;
     private NSLayoutConstraint? _labelWidthConstraint;
 
-    private List<ISegmentsOptionFormItem> _items = new();
+    private IReadOnlyList<IFormOption> _options;
 
     protected virtual UILabel? Label { get; set; }
 
@@ -17,13 +17,13 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
 
     protected SegmentsFormCell()
     {
-        /* Required constructor */
+        _options = [];
     }
 
     protected SegmentsFormCell(NativeHandle handle)
         : base(handle)
     {
-        /* Required constructor */
+        _options = [];
     }
 
     protected override void Initialize()
@@ -75,7 +75,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         );
     }
 
-    protected virtual void OnValueChanged(object? sender, EventArgs e)
+    private void OnValueChanged(object? sender, EventArgs e)
     {
         if (SegmentedControl == null)
         {
@@ -87,7 +87,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        if (_items.Count == 0)
+        if (_options.Count == 0)
         {
             Item.Value = null;
         }
@@ -97,7 +97,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         }
         else
         {
-            Item.Value = _items.ElementAtOrDefault((int)SegmentedControl.SelectedSegment)?.Value;
+            Item.Value = _options.ElementAtOrDefault((int)SegmentedControl.SelectedSegment)?.Value;
         }
     }
 
@@ -131,20 +131,20 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         _labelWidthConstraint.Active = !hasLabel;
     }
 
-    protected virtual void UpdateItems()
+    protected virtual void UpdateOptions()
     {
         if (SegmentedControl == null)
         {
             return;
         }
 
-        _items = Item?.Items.ToList() ?? new List<ISegmentsOptionFormItem>();
+        _options = Item?.Options ?? [];
 
         SegmentedControl.RemoveAllSegments();
 
-        for (var index = 0; index < _items.Count; index++)
+        for (var index = 0; index < _options.Count; index++)
         {
-            var value = _items[index];
+            var value = _options[index];
 
             SegmentedControl.InsertSegment(value.FormattedValue ?? string.Empty, index, false);
         }
@@ -157,13 +157,13 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        if (_items.Count == 0 || Item?.Value == null)
+        if (_options.Count == 0 || Item?.Value == null)
         {
             SegmentedControl.SelectedSegment = nint.MinValue;
         }
         else
         {
-            var index = _items.FindIndex(item => Equals(item.Value, Item.Value));
+            var index = _options.ToList().FindIndex(option => Equals(option.Value, Item.Value));
 
             SegmentedControl.SelectedSegment = index;
         }
@@ -173,7 +173,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     {
         UpdateReadOnlyState();
         UpdateLabel();
-        UpdateItems();
+        UpdateOptions();
         UpdateValue();
     }
 
@@ -187,8 +187,8 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
             case nameof(Item.Label):
                 UpdateLabel();
                 break;
-            case nameof(Item.Items):
-                UpdateItems();
+            case nameof(Item.Options):
+                UpdateOptions();
                 break;
             case nameof(Item.Value):
                 UpdateValue();

@@ -82,10 +82,10 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        Item?.SetValue(TextField.Text);
+        Item?.SetText(TextField.Text);
     }
 
-    private void UpdateReadOnlyState()
+    protected virtual void UpdateReadOnlyState()
     {
         if (TextField == null)
         {
@@ -95,7 +95,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         TextField.Enabled = !Item?.IsReadOnly ?? true;
     }
 
-    private void UpdateLabel()
+    protected virtual void UpdateLabel()
     {
         if (Label == null)
         {
@@ -157,14 +157,14 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         };
     }
 
-    protected virtual void UpdateSecuredState()
+    protected virtual void UpdateSecureState()
     {
         if (TextField == null)
         {
             return;
         }
 
-        TextField.SecureTextEntry = Item?.IsSecured ?? false;
+        TextField.SecureTextEntry = Item?.IsSecure ?? false;
     }
 
     protected virtual void UpdateValue()
@@ -183,7 +183,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         UpdateLabel();
         UpdatePlaceholder();
         UpdateInputType();
-        UpdateSecuredState();
+        UpdateSecureState();
         UpdateValue();
     }
 
@@ -203,8 +203,8 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
             case nameof(Item.InputType):
                 UpdateInputType();
                 break;
-            case nameof(Item.IsSecured):
-                UpdateSecuredState();
+            case nameof(Item.IsSecure):
+                UpdateSecureState();
                 break;
             case nameof(Item.FormattedValue):
                 UpdateValue();

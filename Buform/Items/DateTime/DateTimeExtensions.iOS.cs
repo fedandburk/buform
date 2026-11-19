@@ -1,6 +1,6 @@
 namespace Buform;
 
-public static class DateTimeExtensions
+internal static class DateTimeExtensions
 {
     private static readonly DateTime BaseDateTime = new(2001, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 

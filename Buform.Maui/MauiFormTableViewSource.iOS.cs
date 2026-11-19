@@ -33,11 +33,14 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
         return cell;
     }
 
-    protected override UITableViewHeaderFooterView? GetHeaderView(
+    protected override UITableViewHeaderFooterView GetHeaderView(
         UITableView tableView,
         IFormGroup group
     )
     {
+        ArgumentNullException.ThrowIfNull(tableView);
+        ArgumentNullException.ThrowIfNull(group);
+
         if (!MauiFormPlatform.TryGetHeaderViewType(group.GetType(), out var viewType))
         {
             return base.GetHeaderView(tableView, group);
@@ -51,11 +54,14 @@ internal sealed class MauiFormTableViewSource : FormTableViewSource
         return view;
     }
 
-    protected override UITableViewHeaderFooterView? GetFooterView(
+    protected override UITableViewHeaderFooterView GetFooterView(
         UITableView tableView,
         IFormGroup group
     )
     {
+        ArgumentNullException.ThrowIfNull(tableView);
+        ArgumentNullException.ThrowIfNull(group);
+
         if (!MauiFormPlatform.TryGetFooterViewType(group.GetType(), out var viewType))
         {
             return base.GetFooterView(tableView, group);

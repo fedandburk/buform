@@ -61,7 +61,7 @@ public class PickerViewController<TItem> : UITableViewController
         );
     }
 
-    protected virtual async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
 
@@ -79,7 +79,7 @@ public class PickerViewController<TItem> : UITableViewController
             SetLeftBarButtonCloseItem();
         }
 
-        if (Item?.CanBeCleared ?? false)
+        if (Item?.IsClearable ?? false)
         {
             SetRightBarButtonClearItem();
         }
@@ -116,7 +116,7 @@ public class PickerViewController<TItem> : UITableViewController
 
     public override nint RowsInSection(UITableView tableView, nint section)
     {
-        return Item?.Options.Count() ?? 0;
+        return Item?.Options.Count ?? 0;
     }
 
     public override nint NumberOfSections(UITableView tableView)
@@ -136,7 +136,7 @@ public class PickerViewController<TItem> : UITableViewController
         NSIndexPath indexPath
     )
     {
-        var item = Item?.Options.ElementAt(indexPath.Row);
+        var item = Item?.Options[indexPath.Row];
 
         if (item == null)
         {
@@ -160,7 +160,7 @@ public class PickerViewController<TItem> : UITableViewController
 
     public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
     {
-        var item = Item?.Options.ElementAt(indexPath.Row);
+        var item = Item?.Options[indexPath.Row];
 
         if (item == null)
         {

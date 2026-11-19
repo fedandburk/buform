@@ -1,3 +1,5 @@
+using ObjCRuntime;
+
 namespace Buform;
 
 public abstract class PickerFormCell<TItem> : FormCell<TItem>
@@ -5,24 +7,29 @@ public abstract class PickerFormCell<TItem> : FormCell<TItem>
 {
     protected virtual UILabel? Label { get; set; }
 
-    protected override UILabel? ValidationLabel => Label;
     protected virtual UILabel? ValueLabel { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
     protected PickerFormCell()
     {
         /* Required constructor */
     }
 
-    protected PickerFormCell(IntPtr handle)
+    protected PickerFormCell(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
     }
 
+    protected abstract string? GetLabel(TItem item);
+
+    protected abstract string? GetValue(TItem item);
+
     protected override void Initialize()
     {
-        Accessory = UITableViewCellAccessory.DisclosureIndicator;
-
         Label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
@@ -60,35 +67,52 @@ public abstract class PickerFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (Label == null)
-        {
-            return;
-        }
+        var isReadOnly = Item?.IsReadOnly ?? true;
 
-        SelectionStyle =
-            Item?.IsReadOnly ?? true
-                ? UITableViewCellSelectionStyle.None
-                : UITableViewCellSelectionStyle.Default;
+        Label?.Enabled = !isReadOnly;
+        ValueLabel?.Enabled = !isReadOnly;
+
+        Accessory = isReadOnly
+            ? UITableViewCellAccessory.None
+            : UITableViewCellAccessory.DisclosureIndicator;
+
+        SelectionStyle = isReadOnly
+            ? UITableViewCellSelectionStyle.None
+            : UITableViewCellSelectionStyle.Default;
     }
 
-    protected virtual void UpdateLabel(string? text)
+    protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = text;
+        Label?.Text = Item == null ? null : GetLabel(Item);
     }
 
-    protected virtual void UpdateValue(string? text)
+    protected virtual void UpdateValue()
     {
-        if (ValueLabel == null)
-        {
-            return;
-        }
+        ValueLabel?.Text = Item == null ? null : GetValue(Item);
+    }
 
-        ValueLabel.Text = text;
+    protected override void OnItemSet()
+    {
+        UpdateReadOnlyState();
+        UpdateLabel();
+        UpdateValue();
+    }
+
+    protected override void OnItemPropertyChanged(string? propertyName)
+    {
+        switch (propertyName)
+        {
+            case nameof(IFormItem.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
+            case null:
+                OnItemSet();
+                break;
+            default:
+                UpdateLabel();
+                UpdateValue();
+                break;
+        }
     }
 
     protected override void Dispose(bool disposing)

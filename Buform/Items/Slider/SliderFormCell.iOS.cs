@@ -43,7 +43,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
         );
     }
 
-    protected virtual void OnValueChanged(object? sender, EventArgs e)
+    private void OnValueChanged(object? sender, EventArgs e)
     {
         if (Slider == null)
         {
@@ -68,7 +68,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
         Slider.Enabled = !Item?.IsReadOnly ?? true;
     }
 
-    protected virtual void UpdateMinValue()
+    protected virtual void UpdateRange()
     {
         if (Slider == null)
         {
@@ -76,15 +76,6 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
         }
 
         Slider.MinValue = Item?.MinValue ?? float.MinValue;
-    }
-
-    protected virtual void UpdateMaxValue()
-    {
-        if (Slider == null)
-        {
-            return;
-        }
-
         Slider.MaxValue = Item?.MaxValue ?? float.MaxValue;
     }
 
@@ -96,8 +87,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
-        UpdateMinValue();
-        UpdateMaxValue();
+        UpdateRange();
         UpdateValue(false);
     }
 
@@ -109,10 +99,8 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
                 UpdateReadOnlyState();
                 break;
             case nameof(Item.MinValue):
-                UpdateMinValue();
-                break;
             case nameof(Item.MaxValue):
-                UpdateMaxValue();
+                UpdateRange();
                 break;
             case nameof(Item.Value):
                 UpdateValue(true);

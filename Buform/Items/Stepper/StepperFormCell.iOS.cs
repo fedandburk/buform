@@ -52,7 +52,7 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         );
     }
 
-    protected virtual void OnValueChanged(object? sender, EventArgs e)
+    private void OnValueChanged(object? sender, EventArgs e)
     {
         if (Item == null)
         {
@@ -72,7 +72,7 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         Stepper.Enabled = !Item?.IsReadOnly ?? true;
     }
 
-    protected virtual void UpdateMinValue()
+    protected virtual void UpdateRange()
     {
         if (Stepper == null)
         {
@@ -80,26 +80,17 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         }
 
         Stepper.MinimumValue = Item?.MinValue ?? float.MinValue;
-    }
-
-    protected virtual void UpdateMaxValue()
-    {
-        if (Stepper == null)
-        {
-            return;
-        }
-
         Stepper.MaximumValue = Item?.MaxValue ?? float.MaxValue;
     }
 
-    protected virtual void UpdateStepAmount()
+    protected virtual void UpdateStep()
     {
         if (Stepper == null)
         {
             return;
         }
 
-        Stepper.StepValue = Item?.StepAmount ?? 1;
+        Stepper.StepValue = Item?.Step ?? 1;
     }
 
     protected virtual void UpdateLabel()
@@ -125,9 +116,8 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
-        UpdateMinValue();
-        UpdateMaxValue();
-        UpdateStepAmount();
+        UpdateRange();
+        UpdateStep();
         UpdateLabel();
         UpdateValue();
     }
@@ -140,13 +130,11 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
                 UpdateReadOnlyState();
                 break;
             case nameof(Item.MinValue):
-                UpdateMinValue();
-                break;
             case nameof(Item.MaxValue):
-                UpdateMaxValue();
+                UpdateRange();
                 break;
-            case nameof(Item.StepAmount):
-                UpdateStepAmount();
+            case nameof(Item.Step):
+                UpdateStep();
                 break;
             case nameof(Item.Label):
                 UpdateLabel();

@@ -45,14 +45,14 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
         );
     }
 
-    protected virtual void OnChanged(object? sender, EventArgs e)
+    private void OnChanged(object? sender, EventArgs e)
     {
         if (TextView == null)
         {
             return;
         }
 
-        Item?.SetValue(TextView.Text);
+        Item?.SetText(TextView.Text);
     }
 
     protected virtual void UpdateReadOnlyState()

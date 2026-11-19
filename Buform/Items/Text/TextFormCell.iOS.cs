@@ -2,17 +2,17 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public class TextFormCell<TItem> : FormCell<TItem>
+public abstract class TextFormCell<TItem> : FormCell<TItem>
     where TItem : class, ITextFormItem
 {
     protected virtual UILabel? Label { get; set; }
 
-    public TextFormCell()
+    protected TextFormCell()
     {
         /* Required constructor */
     }
 
-    public TextFormCell(NativeHandle handle)
+    protected TextFormCell(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -39,6 +39,11 @@ public class TextFormCell<TItem> : FormCell<TItem>
         ]);
     }
 
+    protected virtual void UpdateReadOnlyState()
+    {
+        Label?.Enabled = !Item?.IsReadOnly ?? false;
+    }
+
     protected virtual void UpdateValue()
     {
         if (Label == null)
@@ -51,6 +56,7 @@ public class TextFormCell<TItem> : FormCell<TItem>
 
     protected override void OnItemSet()
     {
+        UpdateReadOnlyState();
         UpdateValue();
     }
 
@@ -58,8 +64,14 @@ public class TextFormCell<TItem> : FormCell<TItem>
     {
         switch (propertyName)
         {
+            case nameof(Item.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
             case nameof(Item.FormattedValue):
                 UpdateValue();
+                break;
+            case null:
+                OnItemSet();
                 break;
         }
     }

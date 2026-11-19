@@ -13,7 +13,7 @@ public static class MauiFormPlatform
         ItemRegistry = new MauiFormItemRegistry();
     }
 
-    public static void Initialize(MauiAppBuilder builder)
+    internal static void Initialize(MauiAppBuilder builder)
     {
         builder.ConfigureMauiHandlers(handlers =>
         {
@@ -54,7 +54,7 @@ public static class MauiFormPlatform
         ItemRegistry.RegisterItem<TItem, TItemView>();
     }
 
-    public static bool TryGetHeaderViewType(
+    internal static bool TryGetHeaderViewType(
         Type groupType,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
             out Type? viewType
@@ -63,7 +63,7 @@ public static class MauiFormPlatform
         return GroupRegistry.TryGetHeaderViewType(groupType, out viewType);
     }
 
-    public static bool TryGetFooterViewType(
+    internal static bool TryGetFooterViewType(
         Type groupType,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
             out Type? viewType
@@ -72,7 +72,7 @@ public static class MauiFormPlatform
         return GroupRegistry.TryGetFooterViewType(groupType, out viewType);
     }
 
-    public static bool TryGetCellViewType(
+    internal static bool TryGetCellViewType(
         Type itemType,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
             out Type? viewType

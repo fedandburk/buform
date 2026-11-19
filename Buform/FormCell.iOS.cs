@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using ObjCRuntime;
 
 namespace Buform;
 
@@ -15,14 +16,8 @@ public abstract class FormCell : UITableViewCell
         /* Required constructor */
     }
 
-    protected FormCell(IntPtr handle)
+    protected FormCell(NativeHandle handle)
         : base(handle)
-    {
-        /* Required constructor */
-    }
-
-    protected FormCell(UITableViewCellStyle style, string reuseIdentifier)
-        : base(style, reuseIdentifier)
     {
         /* Required constructor */
     }
@@ -55,6 +50,8 @@ public abstract class FormCell : UITableViewCell
 
     public virtual void Initialize(IFormItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         if (ReferenceEquals(Item, item))
         {
             return;
@@ -90,14 +87,8 @@ public abstract class FormCell<TItem> : FormCell
         /* Required constructor */
     }
 
-    protected FormCell(IntPtr handle)
+    protected FormCell(NativeHandle handle)
         : base(handle)
-    {
-        /* Required constructor */
-    }
-
-    protected FormCell(UITableViewCellStyle style, string reuseIdentifier)
-        : base(style, reuseIdentifier)
     {
         /* Required constructor */
     }
@@ -128,9 +119,15 @@ public abstract class FormCell<TItem> : FormCell
             item.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
     }
 
-    protected abstract void OnItemSet();
+    protected virtual void OnItemSet()
+    {
+        /* Nothing to do */
+    }
 
-    protected abstract void OnItemPropertyChanged(string? propertyName);
+    protected virtual void OnItemPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
 
     public override void Initialize(IFormItem item)
     {
@@ -141,17 +138,20 @@ public abstract class FormCell<TItem> : FormCell
             return;
         }
 
+        if (item is not TItem typedItem)
+        {
+            throw new ArgumentException(
+                $"The item must be of type '{typeof(TItem).FullName}'.",
+                nameof(item)
+            );
+        }
+
         if (Item != null)
         {
             Item.PropertyChanged -= OnItemPropertyChanged;
         }
 
-        Item = item as TItem;
-
-        if (Item == null)
-        {
-            return;
-        }
+        Item = typedItem;
 
         Item.PropertyChanged += OnItemPropertyChanged;
 

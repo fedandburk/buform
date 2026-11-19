@@ -62,7 +62,7 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         Item.Value = Switch?.On ?? false;
     }
 
-    private void UpdateReadOnlyState()
+    protected virtual void UpdateReadOnlyState()
     {
         if (Switch == null)
         {
@@ -72,7 +72,7 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         Switch.Enabled = !Item?.IsReadOnly ?? true;
     }
 
-    private void UpdateLabel()
+    protected virtual void UpdateLabel()
     {
         if (Label == null)
         {
@@ -82,7 +82,7 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         Label.Text = Item?.Label;
     }
 
-    private void UpdateValue(bool isAnimated)
+    protected virtual void UpdateValue(bool isAnimated)
     {
         Switch?.SetState(Item?.Value ?? false, isAnimated);
     }

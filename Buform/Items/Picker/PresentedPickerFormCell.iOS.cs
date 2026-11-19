@@ -2,12 +2,10 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public abstract class PresentedPickerFormCell<TFormItem> : PickerFormCell<TFormItem>
-    where TFormItem : class, IOptionsPickerFormItem
+public abstract class PresentedPickerFormCell<TItem> : PickerFormCell<TItem>
+    where TItem : class, IOptionsPickerFormItem
 {
-    protected virtual PickerPresenter<TFormItem>? PickerPresenter { get; set; }
-
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
+    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
 
     protected PresentedPickerFormCell()
     {
@@ -20,75 +18,66 @@ public abstract class PresentedPickerFormCell<TFormItem> : PickerFormCell<TFormI
         /* Required constructor */
     }
 
-    protected virtual UIViewController CreateViewController(TFormItem item)
+    protected override string? GetLabel(TItem item)
     {
-        return new PickerViewController<TFormItem>(UITableViewStyle.InsetGrouped, item);
+        ArgumentNullException.ThrowIfNull(item);
+
+        return item.Label;
     }
 
-    protected virtual void UpdateInputType()
+    protected override string? GetValue(TItem item)
     {
-        if (Item == null)
-        {
-            return;
-        }
+        ArgumentNullException.ThrowIfNull(item);
 
-        PickerPresenter?.Dispose();
-
-        PickerPresenter = GetPickerPresenter(Item.InputType);
-
-        if (PickerPresenter is null)
-        {
-            throw new ArgumentOutOfRangeException(nameof(Item.InputType), Item.InputType, null);
-        }
+        return item.FormattedValue;
     }
 
-    protected virtual PickerPresenter<TFormItem>? GetPickerPresenter(PickerInputType inputType)
+    protected virtual UIViewController CreateViewController(TItem item)
     {
-        return inputType switch
+        ArgumentNullException.ThrowIfNull(item);
+
+        return new PickerViewController<TItem>(UITableViewStyle.InsetGrouped, item);
+    }
+
+    protected virtual PickerPresenter<TItem>? CreatePickerPresenter(PickerPresentation presentation)
+    {
+        return presentation switch
         {
-            PickerInputType.Default => new DefaultPickerPresenter<TFormItem>(CreateViewController),
-            PickerInputType.Dialog => new DialogPickerPresenter<TFormItem>(CreateViewController),
-            _ => default,
+            PickerPresentation.Default => new PushPickerPresenter<TItem>(CreateViewController),
+            PickerPresentation.Dialog => new DialogPickerPresenter<TItem>(CreateViewController),
+            PickerPresentation.PopUp => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(presentation), presentation, null),
         };
+    }
+
+    protected virtual void UpdatePresentation()
+    {
+        PickerPresenter?.Dispose();
+        PickerPresenter = Item == null ? null : CreatePickerPresenter(Item.Presentation);
     }
 
     protected override void OnItemSet()
     {
-        UpdateReadOnlyState();
-        UpdateLabel(Item?.Label);
-        UpdateInputType();
-        UpdateValue(Item?.FormattedValue);
+        UpdatePresentation();
+
+        base.OnItemSet();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
     {
-        switch (propertyName)
+        if (propertyName is nameof(IOptionsPickerFormItem.Presentation) or null)
         {
-            case nameof(Item.IsReadOnly):
-                UpdateReadOnlyState();
-                break;
-            case nameof(Item.Label):
-                UpdateLabel(Item?.Label);
-                break;
-            case nameof(Item.InputType):
-                UpdateInputType();
-                break;
-            case nameof(Item.FormattedValue):
-                UpdateValue(Item?.FormattedValue);
-                break;
+            UpdatePresentation();
         }
+
+        base.OnItemPropertyChanged(propertyName);
     }
 
     public override async void OnSelected()
     {
         base.OnSelected();
 
-        if (Item == null)
-        {
-            return;
-        }
-
-        if (PickerPresenter == null)
+        if (Item == null || PickerPresenter == null)
         {
             return;
         }

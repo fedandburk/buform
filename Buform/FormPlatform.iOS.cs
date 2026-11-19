@@ -12,12 +12,9 @@ public static class FormPlatform
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();
 
-        RegisterGroupHeader<IListFormGroup, ListFormGroupHeader>();
-        RegisterGroupFooter<IListFormGroup, ListFormGroupFooter>();
+        RegisterGroupHeader<ILabeledFormGroup, LabeledFormGroupHeader>();
+        RegisterGroupFooter<ILabeledFormGroup, LabeledFormGroupFooter>();
         RegisterGroupHandler<IListFormGroup, ListFormGroupHandler>();
-
-        RegisterGroupHeader<TextFormGroup, TextFormGroupHeader>();
-        RegisterGroupFooter<TextFormGroup, TextFormGroupFooter>();
 
         RegisterItem<ButtonFormItem, ButtonFormCell>();
         RegisterItem<DateTimeFormItem, DateTimeFormCell>();
@@ -76,7 +73,7 @@ public static class FormPlatform
         ItemRegistry.RegisterItemNib<TItem, TItemView>();
     }
 
-    public static void Register(UITableView tableView)
+    internal static void Register(UITableView tableView)
     {
         GroupRegistry.Register(tableView);
         ItemRegistry.Register(tableView);
@@ -93,22 +90,22 @@ public static class FormPlatform
         GroupRegistry.RegisterGroupHandler<TGroup, THandler>();
     }
 
-    public static bool TryGetHeaderReuseIdentifier(Type groupType, out string? reuseIdentifier)
+    internal static bool TryGetHeaderReuseIdentifier(Type groupType, out string? reuseIdentifier)
     {
         return GroupRegistry.TryGetHeaderReuseIdentifier(groupType, out reuseIdentifier);
     }
 
-    public static bool TryGetFooterReuseIdentifier(Type groupType, out string? reuseIdentifier)
+    internal static bool TryGetFooterReuseIdentifier(Type groupType, out string? reuseIdentifier)
     {
         return GroupRegistry.TryGetFooterReuseIdentifier(groupType, out reuseIdentifier);
     }
 
-    public static bool TryGetReuseIdentifier(Type itemType, out string? reuseIdentifier)
+    internal static bool TryGetReuseIdentifier(Type itemType, out string? reuseIdentifier)
     {
         return ItemRegistry.TryGetReuseIdentifier(itemType, out reuseIdentifier);
     }
 
-    public static IFormGroupHandler GetGroupHandler(IFormGroup group)
+    internal static IFormGroupHandler GetGroupHandler(IFormGroup group)
     {
         return GroupRegistry.GetGroupHandler(group);
     }

@@ -2,27 +2,25 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public sealed class ListFormGroupFooter : FormHeaderFooter<IListFormGroup>
+public class LabeledFormGroupFooter : FormHeaderFooter<ILabeledFormGroup>
 {
-    public ListFormGroupFooter()
+    public LabeledFormGroupFooter()
     {
         /* Required constructor */
     }
 
-    public ListFormGroupFooter(NativeHandle handle)
+    public LabeledFormGroupFooter(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
     }
 
-    private void UpdateLabel()
+    protected virtual void UpdateLabel()
     {
         var configuration = DefaultContentConfiguration;
         configuration.Text = Group?.FooterLabel;
 
         ContentConfiguration = configuration;
-
-        GetTableView()?.PerformBatchUpdates(null, null);
     }
 
     protected override void OnGroupSet()
@@ -34,7 +32,8 @@ public sealed class ListFormGroupFooter : FormHeaderFooter<IListFormGroup>
     {
         switch (propertyName)
         {
-            case nameof(Group.FooterLabel):
+            case nameof(ILabeledFormGroup.FooterLabel):
+            case null:
                 UpdateLabel();
                 break;
         }

@@ -9,18 +9,12 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
 
     protected virtual UILabel? Label { get; set; }
 
-    public ButtonFormCell(NSString reuseIdentifier)
-        : base(UITableViewCellStyle.Default, reuseIdentifier)
+    protected ButtonFormCell()
     {
         /* Required constructor */
     }
 
-    public ButtonFormCell()
-    {
-        /* Required constructor */
-    }
-
-    public ButtonFormCell(NativeHandle handle)
+    protected ButtonFormCell(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -76,40 +70,39 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
         Label.Text = Item?.Label;
     }
 
-    protected virtual void UpdateInputType()
+    protected virtual void UpdateStyle()
     {
         if (Label == null)
         {
             return;
         }
 
-        var inputType = Item?.InputType;
+        var style = Item?.Style;
 
-        Label.TextColor = inputType switch
+        Label.TextColor = style switch
         {
-            ButtonInputType.Default => TintColor,
-            ButtonInputType.Done => TintColor,
-            ButtonInputType.Destructive => UIColor.SystemRed,
+            ButtonStyle.Default => TintColor,
+            ButtonStyle.Done => TintColor,
+            ButtonStyle.Destructive => UIColor.SystemRed,
             null => TintColor,
-            _ => throw new ArgumentOutOfRangeException(nameof(inputType), inputType, null),
+            _ => throw new ArgumentOutOfRangeException(nameof(style), style, null),
         };
 
-        Label.Font =
-            inputType == ButtonInputType.Done ? FormFonts.GetBoldBody() : FormFonts.GetBody();
+        Label.Font = style == ButtonStyle.Done ? FormFonts.GetBoldBody() : FormFonts.GetBody();
     }
 
     public override void TintColorDidChange()
     {
         base.TintColorDidChange();
 
-        UpdateInputType();
+        UpdateStyle();
     }
 
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
-        UpdateInputType();
+        UpdateStyle();
     }
 
     protected override void OnItemPropertyChanged(string? propertyName)
@@ -122,8 +115,8 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
             case nameof(Item.Label):
                 UpdateLabel();
                 break;
-            case nameof(Item.InputType):
-                UpdateInputType();
+            case nameof(Item.Style):
+                UpdateStyle();
                 break;
         }
     }
@@ -150,12 +143,6 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
 [Register(nameof(ButtonFormCell))]
 public sealed class ButtonFormCell : ButtonFormCell<ButtonFormItem>
 {
-    public ButtonFormCell(NSString reuseIdentifier)
-        : base(reuseIdentifier)
-    {
-        /* Required constructor */
-    }
-
     public ButtonFormCell()
     {
         /* Required constructor */

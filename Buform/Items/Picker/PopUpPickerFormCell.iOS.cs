@@ -16,7 +16,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
 
     protected virtual UIButton? MenuButton { get; set; }
 
-    protected virtual bool IsPopUp => Item?.InputType == PickerInputType.PopUp;
+    protected virtual bool IsPopUp => Item?.Presentation == PickerPresentation.PopUp;
 
     public override bool IsSelectable => !IsPopUp && base.IsSelectable;
 
@@ -99,7 +99,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
             optionActions
         );
 
-        if (!item.CanBeCleared)
+        if (!item.IsClearable)
         {
             return [options];
         }
@@ -118,7 +118,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
         return [options, clear];
     }
 
-    protected virtual UIAction CreateOptionAction(TItem item, IPickerOptionFormItem option)
+    protected virtual UIAction CreateOptionAction(TItem item, IFormOption option)
     {
         ArgumentNullException.ThrowIfNull(item);
         ArgumentNullException.ThrowIfNull(option);
@@ -132,17 +132,9 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
         return action;
     }
 
-    protected override void UpdateInputType()
+    protected override void UpdatePresentation()
     {
-        if (!IsPopUp)
-        {
-            base.UpdateInputType();
-        }
-        else
-        {
-            PickerPresenter?.Dispose();
-            PickerPresenter = null;
-        }
+        base.UpdatePresentation();
 
         UpdatePopUpState();
     }
@@ -150,10 +142,12 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
     protected virtual void UpdatePopUpState()
     {
         var isPopUp = IsPopUp;
+        var isReadOnly = Item?.IsReadOnly ?? true;
 
-        Accessory = isPopUp
-            ? UITableViewCellAccessory.None
-            : UITableViewCellAccessory.DisclosureIndicator;
+        Accessory =
+            isPopUp || isReadOnly
+                ? UITableViewCellAccessory.None
+                : UITableViewCellAccessory.DisclosureIndicator;
 
         if (ValueLabel != null)
         {
@@ -170,29 +164,21 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
     {
         base.UpdateReadOnlyState();
 
-        if (MenuButton == null)
-        {
-            return;
-        }
+        MenuButton?.Enabled = !Item?.IsReadOnly ?? false;
 
-        MenuButton.Enabled = !Item?.IsReadOnly ?? false;
+        UpdatePopUpState();
     }
 
-    protected override void UpdateLabel(string? text)
+    protected override void UpdateLabel()
     {
-        base.UpdateLabel(text);
+        base.UpdateLabel();
 
-        if (MenuButton == null)
-        {
-            return;
-        }
-
-        MenuButton.AccessibilityLabel = text;
+        MenuButton?.AccessibilityLabel = Label?.Text;
     }
 
-    protected override void UpdateValue(string? text)
+    protected override void UpdateValue()
     {
-        base.UpdateValue(text);
+        base.UpdateValue();
 
         if (MenuButton?.Configuration == null)
         {
@@ -200,7 +186,7 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
         }
 
         var configuration = MenuButton.Configuration;
-        configuration.Title = text;
+        configuration.Title = ValueLabel?.Text;
 
         MenuButton.Configuration = configuration;
     }

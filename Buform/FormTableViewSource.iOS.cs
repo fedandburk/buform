@@ -160,9 +160,13 @@ public class FormTableViewSource : UITableViewDelegate
         IFormItem item
     )
     {
+        ArgumentNullException.ThrowIfNull(tableView);
+        ArgumentNullException.ThrowIfNull(indexPath);
+        ArgumentNullException.ThrowIfNull(item);
+
         if (!FormPlatform.TryGetReuseIdentifier(item.GetType(), out var reuseIdentifier))
         {
-            throw new FormViewNotFoundException(item);
+            throw new FormViewNotFoundException(item.GetType());
         }
 
         var cell = tableView.DequeueReusableCell(reuseIdentifier!, indexPath);
@@ -175,34 +179,54 @@ public class FormTableViewSource : UITableViewDelegate
         return cell;
     }
 
-    protected virtual UITableViewHeaderFooterView? GetHeaderView(
+    protected virtual UITableViewHeaderFooterView GetHeaderView(
         UITableView tableView,
         IFormGroup group
     )
     {
+        ArgumentNullException.ThrowIfNull(tableView);
+        ArgumentNullException.ThrowIfNull(group);
+
         if (!FormPlatform.TryGetHeaderReuseIdentifier(group.GetType(), out var reuseIdentifier))
         {
-            return null;
+            throw new FormViewNotFoundException(group.GetType());
         }
 
         var view = tableView.DequeueReusableHeaderFooterView(reuseIdentifier!);
+
+        if (view == null)
+        {
+            throw new InvalidOperationException(
+                $"The table view has no header or footer view for '{reuseIdentifier}'."
+            );
+        }
 
         (view as FormHeaderFooter)?.Initialize(group);
 
         return view;
     }
 
-    protected virtual UITableViewHeaderFooterView? GetFooterView(
+    protected virtual UITableViewHeaderFooterView GetFooterView(
         UITableView tableView,
         IFormGroup group
     )
     {
+        ArgumentNullException.ThrowIfNull(tableView);
+        ArgumentNullException.ThrowIfNull(group);
+
         if (!FormPlatform.TryGetFooterReuseIdentifier(group.GetType(), out var reuseIdentifier))
         {
-            return null;
+            throw new FormViewNotFoundException(group.GetType());
         }
 
         var view = tableView.DequeueReusableHeaderFooterView(reuseIdentifier!);
+
+        if (view == null)
+        {
+            throw new InvalidOperationException(
+                $"The table view has no header or footer view for '{reuseIdentifier}'."
+            );
+        }
 
         (view as FormHeaderFooter)?.Initialize(group);
 
@@ -211,12 +235,12 @@ public class FormTableViewSource : UITableViewDelegate
 
     public override UIView GetViewForHeader(UITableView tableView, nint section)
     {
-        return GetHeaderView(tableView, GetGroup(section))!;
+        return GetHeaderView(tableView, GetGroup(section));
     }
 
     public override UIView GetViewForFooter(UITableView tableView, nint section)
     {
-        return GetFooterView(tableView, GetGroup(section))!;
+        return GetFooterView(tableView, GetGroup(section));
     }
 
     public override NSIndexPath? WillSelectRow(UITableView tableView, NSIndexPath indexPath)

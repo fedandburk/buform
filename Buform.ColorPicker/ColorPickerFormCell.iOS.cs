@@ -96,8 +96,14 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
         ColorView.BackgroundColor = Item?.Value.ToColor() ?? UIColor.Clear;
     }
 
+    protected virtual void UpdateReadOnlyState()
+    {
+        Label?.Enabled = !Item?.IsReadOnly ?? false;
+    }
+
     protected override void OnItemSet()
     {
+        UpdateReadOnlyState();
         UpdateLabel();
         UpdateValue();
     }
@@ -106,11 +112,17 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     {
         switch (propertyName)
         {
+            case nameof(Item.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
             case nameof(Item.Label):
                 UpdateLabel();
                 break;
             case nameof(Item.Value):
                 UpdateValue();
+                break;
+            case null:
+                OnItemSet();
                 break;
         }
     }

@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class AsyncPickerFormCell<TItem> : PresentedPickerFormCell<TItem>
     where TItem : class, IAsyncPickerFormItem
 {
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected AsyncPickerFormCell()
     {
         /* Required constructor */
@@ -20,6 +18,8 @@ public abstract class AsyncPickerFormCell<TItem> : PresentedPickerFormCell<TItem
 
     protected override UIViewController CreateViewController(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return new AsyncPickerViewController(UITableViewStyle.InsetGrouped, item);
     }
 }

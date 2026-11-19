@@ -2,23 +2,23 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public sealed class TextFormGroupFooter : FormHeaderFooter<TextFormGroup>
+public class LabeledFormGroupHeader : FormHeaderFooter<ILabeledFormGroup>
 {
-    public TextFormGroupFooter()
+    public LabeledFormGroupHeader()
     {
         /* Required constructor */
     }
 
-    public TextFormGroupFooter(NativeHandle handle)
+    public LabeledFormGroupHeader(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
     }
 
-    private void UpdateLabel()
+    protected virtual void UpdateLabel()
     {
         var configuration = DefaultContentConfiguration;
-        configuration.Text = Group?.FooterLabel;
+        configuration.Text = Group?.HeaderLabel;
 
         ContentConfiguration = configuration;
     }
@@ -32,7 +32,8 @@ public sealed class TextFormGroupFooter : FormHeaderFooter<TextFormGroup>
     {
         switch (propertyName)
         {
-            case nameof(Group.FooterLabel):
+            case nameof(ILabeledFormGroup.HeaderLabel):
+            case null:
                 UpdateLabel();
                 break;
         }

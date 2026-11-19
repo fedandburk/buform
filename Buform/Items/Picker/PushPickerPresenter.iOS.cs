@@ -1,24 +1,27 @@
-// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-
 namespace Buform;
 
-public class DefaultPickerPresenter<TItem> : PickerPresenter<TItem>
+public class PushPickerPresenter<TItem> : PickerPresenter<TItem>
     where TItem : class, IOptionsPickerFormItem
 {
     protected Func<TItem, UIViewController> ViewControllerFactory { get; }
 
-    public DefaultPickerPresenter(Func<TItem, UIViewController> viewControllerFactory)
+    public PushPickerPresenter(Func<TItem, UIViewController> viewControllerFactory)
     {
+        ArgumentNullException.ThrowIfNull(viewControllerFactory);
+
         ViewControllerFactory = viewControllerFactory;
     }
 
     public override Task PickAsync(UIView sourceView, TItem item)
     {
+        ArgumentNullException.ThrowIfNull(sourceView);
+        ArgumentNullException.ThrowIfNull(item);
+
         var viewController = sourceView.FindViewController();
 
         if (viewController == null)
         {
-            return Task.CompletedTask;
+            throw new InvalidOperationException("The picker row has no view controller.");
         }
 
         var pickerViewController = ViewControllerFactory(item);

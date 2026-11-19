@@ -56,7 +56,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         );
     }
 
-    protected virtual void OnValueChanged(object? sender, EventArgs e)
+    private void OnValueChanged(object? sender, EventArgs e)
     {
         if (Item == null)
         {
@@ -76,7 +76,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         DatePicker.Enabled = !Item?.IsReadOnly ?? false;
     }
 
-    protected virtual void UpdateMinValue()
+    protected virtual void UpdateRange()
     {
         if (DatePicker == null)
         {
@@ -84,15 +84,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         }
 
         DatePicker.MinimumDate = Item?.MinValue.ToDate() ?? NSDate.DistantPast;
-    }
-
-    protected virtual void UpdateMaxValue()
-    {
-        if (DatePicker == null)
-        {
-            return;
-        }
-
         DatePicker.MaximumDate = Item?.MaxValue.ToDate() ?? NSDate.DistantFuture;
     }
 
@@ -158,8 +149,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
-        UpdateMinValue();
-        UpdateMaxValue();
+        UpdateRange();
         UpdateLabel();
         UpdateInputType();
         UpdateValue();
@@ -173,10 +163,8 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
                 UpdateReadOnlyState();
                 break;
             case nameof(Item.MinValue):
-                UpdateMinValue();
-                break;
             case nameof(Item.MaxValue):
-                UpdateMaxValue();
+                UpdateRange();
                 break;
             case nameof(Item.Label):
                 UpdateLabel();

@@ -3,7 +3,7 @@ namespace Buform;
 public abstract class AsyncPickerViewController<TItem> : PickerViewController<TItem>
     where TItem : class, IAsyncPickerFormItem
 {
-    protected CancellationTokenSource? CancellationTokenSource { get; private set; }
+    private CancellationTokenSource? _cancellationTokenSource;
 
     protected AsyncPickerViewController(UITableViewStyle style, TItem item)
         : base(style, item)
@@ -11,7 +11,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         /* Required constructor */
     }
 
-    protected virtual async Task LoadItemsIfNeeded()
+    protected virtual async Task LoadOptionsIfNeededAsync()
     {
         if (Item == null)
         {
@@ -23,9 +23,9 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
             return;
         }
 
-        CancellationTokenSource?.Cancel();
-        CancellationTokenSource?.Dispose();
-        CancellationTokenSource = new CancellationTokenSource();
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = new CancellationTokenSource();
 
         var activityIndicator = new UIActivityIndicatorView
         {
@@ -48,7 +48,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
 
         try
         {
-            await Item.LoadItemsAsync(CancellationTokenSource.Token).ConfigureAwait(true);
+            await Item.LoadOptionsAsync(_cancellationTokenSource.Token).ConfigureAwait(true);
         }
         catch (OperationCanceledException)
         {
@@ -68,7 +68,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
     {
         base.ViewDidLoad();
 
-        await LoadItemsIfNeeded().ConfigureAwait(true);
+        await LoadOptionsIfNeededAsync().ConfigureAwait(true);
     }
 
     public override string TitleForFooter(UITableView tableView, nint section)
@@ -82,9 +82,9 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
     {
         if (disposing)
         {
-            CancellationTokenSource?.Cancel();
-            CancellationTokenSource?.Dispose();
-            CancellationTokenSource = null;
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
+            _cancellationTokenSource = null;
         }
 
         base.Dispose(disposing);

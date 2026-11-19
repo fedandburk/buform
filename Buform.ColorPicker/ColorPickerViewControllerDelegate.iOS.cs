@@ -1,11 +1,13 @@
 namespace Buform;
 
-public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate
+internal sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate
 {
     private ColorPickerFormItem? _item;
 
     public ColorPickerViewControllerDelegate(ColorPickerFormItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         _item = item;
     }
 

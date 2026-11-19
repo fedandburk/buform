@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class CallbackPickerFormCell<TItem> : PickerFormCell<TItem>
     where TItem : class, ICallbackPickerFormItem
 {
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected CallbackPickerFormCell()
     {
         /* Required constructor */
@@ -18,34 +16,30 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCell<TItem>
         /* Required constructor */
     }
 
-    protected override void OnItemSet()
+    protected override string? GetLabel(TItem item)
     {
-        UpdateReadOnlyState();
-        UpdateLabel(Item?.Label);
-        UpdateValue(Item?.FormattedValue);
+        ArgumentNullException.ThrowIfNull(item);
+
+        return item.Label;
     }
 
-    protected override void OnItemPropertyChanged(string? propertyName)
+    protected override string? GetValue(TItem item)
     {
-        switch (propertyName)
-        {
-            case nameof(Item.IsReadOnly):
-                UpdateReadOnlyState();
-                break;
-            case nameof(Item.Label):
-                UpdateLabel(Item?.Label);
-                break;
-            case nameof(Item.Value):
-                UpdateValue(Item?.FormattedValue);
-                break;
-        }
+        ArgumentNullException.ThrowIfNull(item);
+
+        return item.FormattedValue;
     }
 
-    public override void OnSelected()
+    public override async void OnSelected()
     {
         base.OnSelected();
 
-        Item?.ExecuteCallback();
+        if (Item == null)
+        {
+            return;
+        }
+
+        await Item.ExecuteCallbackAsync().ConfigureAwait(true);
     }
 }
 
