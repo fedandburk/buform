@@ -31,7 +31,7 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
 
                 if (rowIndex < group.Count)
                 {
-                    return FormRow.ForItem(group, group[rowIndex]);
+                    return FormRow.ForItem(group, group[rowIndex], rowIndex);
                 }
 
                 rowIndex -= group.Count;
@@ -73,14 +73,18 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
         return
         [
             FormRow.Header(group),
-            .. group.Select(item => FormRow.ForItem(group, item)),
+            .. group.Select((item, index) => FormRow.ForItem(group, item, index)),
             FormRow.Footer(group),
         ];
     }
 
-    private static List<FormRow> CreateRows(IFormGroup group, IList? items)
+    private static List<FormRow> CreateRows(IFormGroup group, IList? items, int startIndex)
     {
-        return items?.Cast<IFormItem>().Select(item => FormRow.ForItem(group, item)).ToList() ?? [];
+        return items
+            ?.Cast<IFormItem>()
+            .Select((item, index) => FormRow.ForItem(group, item, startIndex + index))
+            .ToList()
+            ?? [];
     }
 
     private void Synchronize()
@@ -162,23 +166,23 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
         {
             NotifyCollectionChangedAction.Add => new NotifyCollectionChangedEventArgs(
                 e.Action,
-                CreateRows(group, e.NewItems),
+                CreateRows(group, e.NewItems, e.NewStartingIndex),
                 e.NewStartingIndex + offset
             ),
             NotifyCollectionChangedAction.Remove => new NotifyCollectionChangedEventArgs(
                 e.Action,
-                CreateRows(group, e.OldItems),
+                CreateRows(group, e.OldItems, e.OldStartingIndex),
                 e.OldStartingIndex + offset
             ),
             NotifyCollectionChangedAction.Replace => new NotifyCollectionChangedEventArgs(
                 e.Action,
-                CreateRows(group, e.NewItems),
-                CreateRows(group, e.OldItems),
+                CreateRows(group, e.NewItems, e.NewStartingIndex),
+                CreateRows(group, e.OldItems, e.NewStartingIndex),
                 e.NewStartingIndex + offset
             ),
             NotifyCollectionChangedAction.Move => new NotifyCollectionChangedEventArgs(
                 e.Action,
-                CreateRows(group, e.NewItems),
+                CreateRows(group, e.NewItems, e.NewStartingIndex),
                 e.NewStartingIndex + offset,
                 e.OldStartingIndex + offset
             ),

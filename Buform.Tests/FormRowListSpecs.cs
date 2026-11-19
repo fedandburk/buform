@@ -80,6 +80,32 @@ public static class FormRowListSpecs
                         (FormRowType.Footer, SecondGroup)
                     );
             }
+
+            [Fact]
+            public void GivesEachItemRowItsPositionInItsGroup()
+            {
+                Sut.Where(row => row.Type == FormRowType.Item)
+                    .Select(row => (row.ItemIndex, row.GroupItemCount))
+                    .Should()
+                    .Equal((0, 2), (1, 2), (0, 1));
+            }
+        }
+
+        public sealed class ItemHiddenInFirstGroup : Context
+        {
+            public ItemHiddenInFirstGroup()
+            {
+                FirstItem.IsVisible = false;
+            }
+
+            [Fact]
+            public void CountsOnlyVisibleItemsOfTheGroup()
+            {
+                Sut.Where(row => row.Type == FormRowType.Item)
+                    .Select(row => (row.ItemIndex, row.GroupItemCount))
+                    .Should()
+                    .Equal((0, 1), (0, 1));
+            }
         }
     }
 
