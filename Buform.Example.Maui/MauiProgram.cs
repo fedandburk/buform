@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 
-namespace Buform;
+namespace Buform.Example.Maui;
 
 public static class MauiProgram
 {

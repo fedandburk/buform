@@ -1,11 +1,18 @@
-﻿namespace Buform;
+namespace Buform.Example.Maui;
 
-public partial class App : Application
+public sealed partial class App : Application
 {
+    private readonly AppShell _shell;
+
     public App(INavigationService navigationService)
     {
-        InitializeComponent();
+        _shell = (AppShell)navigationService;
 
-        MainPage = navigationService as AppShell;
+        InitializeComponent();
+    }
+
+    protected override Window CreateWindow(IActivationState? activationState)
+    {
+        return new Window(_shell);
     }
 }

@@ -1,4 +1,4 @@
-namespace Buform;
+namespace Buform.Example.Maui;
 
 public partial class CreateEventPage : ContentPage
 {
