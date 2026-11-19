@@ -3,7 +3,7 @@
 
 using ObjCRuntime;
 
-namespace Buform;
+namespace Buform.Example.iOS;
 
 [Register(nameof(RandomNumberGeneratorCell))]
 public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGeneratorItem>

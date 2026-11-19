@@ -1,6 +1,6 @@
 ﻿using ObjCRuntime;
 
-namespace Buform;
+namespace Buform.Example.iOS;
 
 [Register(nameof(LogoFormHeader))]
 public sealed class LogoFormHeader : FormHeaderFooter<LogoFormGroup>

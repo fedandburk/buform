@@ -1,4 +1,4 @@
-namespace Buform;
+namespace Buform.Example.iOS;
 
 public sealed class ComponentsViewController : UITableViewController
 {
@@ -6,7 +6,7 @@ public sealed class ComponentsViewController : UITableViewController
 
     private UIBarButtonItem? _cancelButtonItem;
     private UIBarButtonItem? _toggleReadOnlyButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public ComponentsViewController()
         : base(UITableViewStyle.InsetGrouped)
@@ -27,7 +27,7 @@ public sealed class ComponentsViewController : UITableViewController
         _toggleReadOnlyButtonItem = new UIBarButtonItem(
             "Read-only",
             UIBarButtonItemStyle.Plain,
-            (_, _) => _viewModel.ToggleReadOnlyModeCommand.Execute(null)
+            (_, _) => ToggleReadOnlyMode()
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;
@@ -36,6 +36,18 @@ public sealed class ComponentsViewController : UITableViewController
         TableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.Interactive;
 
         _source = new FormTableViewSource(TableView) { Form = _viewModel.Form };
+    }
+
+    private void ToggleReadOnlyMode()
+    {
+        _viewModel.ToggleReadOnlyModeCommand.Execute(null);
+
+        if (_toggleReadOnlyButtonItem == null)
+        {
+            return;
+        }
+
+        _toggleReadOnlyButtonItem.Selected = _viewModel.Form.IsReadOnly;
     }
 
     protected override void Dispose(bool disposing)

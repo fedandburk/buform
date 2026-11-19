@@ -1,4 +1,4 @@
-namespace Buform;
+namespace Buform.Example.iOS;
 
 public sealed class CreateEventViewController : UITableViewController
 {
@@ -6,7 +6,7 @@ public sealed class CreateEventViewController : UITableViewController
 
     private UIBarButtonItem? _cancelButtonItem;
     private UIBarButtonItem? _createButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public CreateEventViewController()
         : base(UITableViewStyle.InsetGrouped)

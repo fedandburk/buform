@@ -1,11 +1,11 @@
-namespace Buform;
+namespace Buform.Example.iOS;
 
 public sealed class CreateConnectionViewController : UITableViewController
 {
     private readonly CreateConnectionViewModel _viewModel;
 
     private UIBarButtonItem? _cancelButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public CreateConnectionViewController()
         : base(UITableViewStyle.InsetGrouped)

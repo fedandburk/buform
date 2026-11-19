@@ -1,6 +1,6 @@
 using ObjCRuntime;
 
-namespace Buform;
+namespace Buform.Example.iOS;
 
 [Register(nameof(MvxButtonFormCell))]
 public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
@@ -25,7 +25,7 @@ public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
         _label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = UIFont.PreferredBody!,
             TextColor = UIColor.Label,
         };
 
@@ -42,7 +42,7 @@ public sealed class MvxButtonFormCell : MvxFormCell<MvxButtonFormItem>
     protected override void InitializeBindings()
     {
         var set = CreateBindingSet();
-        set.Bind(_label).For(v => v.Text).To(vm => vm.Label);
+        set.Bind(_label!).For(v => v.Text).To(vm => vm!.Label);
         set.Apply();
     }
 
