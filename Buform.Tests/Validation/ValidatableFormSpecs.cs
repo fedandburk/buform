@@ -3,7 +3,7 @@ using AwesomeAssertions;
 using NSubstitute;
 using Xunit;
 
-namespace Buform.Tests.Validation;
+namespace Buform.Tests;
 
 public static class ValidatableFormSpecs
 {

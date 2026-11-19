@@ -3,7 +3,7 @@ using AwesomeAssertions;
 using DynamicData;
 using Xunit;
 
-namespace Buform.Tests.Groups.List;
+namespace Buform.Tests;
 
 public static class ListFormGroupSpecs
 {

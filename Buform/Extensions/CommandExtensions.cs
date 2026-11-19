@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace Buform.Extensions;
+namespace Buform;
 
 internal static class CommandExtensions
 {

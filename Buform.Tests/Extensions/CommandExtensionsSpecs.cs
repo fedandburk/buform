@@ -1,10 +1,9 @@
 using System.Windows.Input;
 using AwesomeAssertions;
-using Buform.Extensions;
 using NSubstitute;
 using Xunit;
 
-namespace Buform.Tests.Extensions;
+namespace Buform.Tests;
 
 public static class CommandExtensionsSpecs
 {

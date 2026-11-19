@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Buform.Extensions;
+namespace Buform;
 
 internal static class TypeExtensions
 {
