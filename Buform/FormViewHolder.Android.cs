@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Android.Runtime;
 using Android.Views;
+using AndroidX.Fragment.App;
 using AndroidX.RecyclerView.Widget;
 
 namespace Buform;
@@ -8,8 +9,7 @@ namespace Buform;
 public abstract class FormViewHolder : RecyclerView.ViewHolder
 {
     private bool _isInitialized;
-
-    public IDisposable? Data { get; private set; }
+    private IDisposable? _data;
 
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -23,16 +23,23 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
         /* Required constructor */
     }
 
+    protected FragmentActivity GetFragmentActivity()
+    {
+        return ItemView.GetFragmentActivity();
+    }
+
     protected abstract void Initialize();
 
     public virtual void Initialize(IDisposable data)
     {
-        if (ReferenceEquals(Data, data))
+        ArgumentNullException.ThrowIfNull(data);
+
+        if (ReferenceEquals(_data, data))
         {
             return;
         }
 
-        Data = data;
+        _data = data;
 
         if (_isInitialized)
         {
@@ -43,14 +50,24 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
 
         Initialize();
     }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _data = null;
+        }
+
+        base.Dispose(disposing);
+    }
 }
 
-public abstract class FormViewHolder<TData> : FormViewHolder
-    where TData : class, INotifyPropertyChanged, IDisposable
+public abstract class FormViewHolder<TItem> : FormViewHolder
+    where TItem : class, IFormItem
 {
-    public new TData? Data { get; private set; }
+    public TItem? Item { get; private set; }
 
-    protected virtual TextView? ValidationErrorView => null;
+    protected virtual TextView? ValidationErrorView { get; set; }
 
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -64,24 +81,19 @@ public abstract class FormViewHolder<TData> : FormViewHolder
         /* Required constructor */
     }
 
-    private void OnDataPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (Data == null)
-        {
-            return;
-        }
-
-        if (e.PropertyName == nameof(IValidatableFormItem.ValidationErrorMessage))
+        if (e.PropertyName is nameof(IValidatableFormItem.ValidationErrorMessage) or null)
         {
             UpdateValidationErrorView();
         }
 
-        OnDataPropertyChanged(e.PropertyName);
+        OnItemPropertyChanged(e.PropertyName);
     }
 
     private void UpdateValidationErrorView()
     {
-        if (ValidationErrorView == null || Data is not IValidatableFormItem item)
+        if (ValidationErrorView == null || Item is not IValidatableFormItem item)
         {
             return;
         }
@@ -92,49 +104,53 @@ public abstract class FormViewHolder<TData> : FormViewHolder
         ValidationErrorView.Visibility = message == null ? ViewStates.Gone : ViewStates.Visible;
     }
 
-    protected abstract void OnDataSet();
+    protected virtual void OnItemSet()
+    {
+        /* Nothing to do */
+    }
 
-    protected abstract void OnDataPropertyChanged(string? propertyName);
+    protected virtual void OnItemPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
 
     public override void Initialize(IDisposable data)
     {
-        base.Initialize(data);
+        ArgumentNullException.ThrowIfNull(data);
 
-        if (ReferenceEquals(Data, data))
+        if (data is not TItem item)
+        {
+            throw new ArgumentException(
+                $"The data must be of type '{typeof(TItem).FullName}', but it is of type '{data.GetType().FullName}'.",
+                nameof(data)
+            );
+        }
+
+        base.Initialize(item);
+
+        if (ReferenceEquals(Item, item))
         {
             return;
         }
 
-        if (Data != null)
-        {
-            Data.PropertyChanged -= OnDataPropertyChanged;
-        }
+        Item?.PropertyChanged -= OnItemPropertyChanged;
 
-        Data = data as TData;
-
-        if (Data == null)
-        {
-            return;
-        }
-
-        Data.PropertyChanged += OnDataPropertyChanged;
+        Item = item;
+        Item.PropertyChanged += OnItemPropertyChanged;
 
         UpdateValidationErrorView();
 
-        OnDataSet();
+        OnItemSet();
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
-            var data = Data;
-            if (data != null)
-            {
-                data.PropertyChanged -= OnDataPropertyChanged;
-            }
+            Item?.PropertyChanged -= OnItemPropertyChanged;
+            Item = null;
 
-            Data = null;
+            ValidationErrorView = null;
         }
 
         base.Dispose(disposing);

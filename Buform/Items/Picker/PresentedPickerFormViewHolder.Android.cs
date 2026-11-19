@@ -3,10 +3,10 @@ using Android.Views;
 
 namespace Buform;
 
-public abstract class PresentedPickerFormViewHolder<TFormItem> : PickerFormViewHolder<TFormItem>
-    where TFormItem : class, IOptionsPickerFormItem
+public abstract class PresentedPickerFormViewHolder<TItem> : PickerFormViewHolder<TItem>
+    where TItem : class, IOptionsPickerFormItem
 {
-    protected virtual PickerPresenter<TFormItem>? PickerPresenter { get; set; }
+    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
 
     protected PresentedPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -20,79 +20,78 @@ public abstract class PresentedPickerFormViewHolder<TFormItem> : PickerFormViewH
         /* Required constructor */
     }
 
-    protected override string? GetLabel(TFormItem item)
+    protected override string? GetLabel(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.Label;
     }
 
-    protected override string? GetValue(TFormItem item)
+    protected override string? GetValue(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.FormattedValue;
     }
 
-    protected override void OnClick()
+    protected override Task OnClickAsync()
     {
-        if (Data == null || PickerPresenter == null)
+        if (Item == null)
         {
-            return;
+            throw new InvalidOperationException("The picker row has no item.");
         }
 
-        PickerPresenter.Pick(ItemView, Data);
+        if (PickerPresenter == null)
+        {
+            throw new InvalidOperationException("The picker row has no picker presenter.");
+        }
+
+        return PickerPresenter.PickAsync(ItemView, Item);
     }
 
-    protected virtual PickerDialogFragment CreatePickerDialogFragment(TFormItem item)
+    protected virtual PickerDialogFragment CreatePickerDialogFragment(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return new PickerDialogFragment(item);
     }
 
-    protected virtual PickerPresenter<TFormItem>? GetPickerPresenter(PickerInputType inputType)
+    protected virtual PickerPresenter<TItem> CreatePickerPresenter(PickerPresentation presentation)
     {
-        return inputType switch
+        return presentation switch
         {
-            PickerInputType.Default => new DialogFragmentPickerPresenter<TFormItem>(
+            PickerPresentation.Default => new DialogPickerPresenter<TItem>(
                 CreatePickerDialogFragment
             ),
-            PickerInputType.Dialog => new DialogFragmentPickerPresenter<TFormItem>(
+            PickerPresentation.Dialog => new DialogPickerPresenter<TItem>(
                 CreatePickerDialogFragment
             ),
-            _ => null,
+            _ => throw new ArgumentOutOfRangeException(nameof(presentation), presentation, null),
         };
     }
 
-    protected virtual void UpdateInputType()
+    protected virtual void UpdatePresentation()
     {
-        if (Data == null)
-        {
-            return;
-        }
-
-        var inputType = Data.InputType;
-
         PickerPresenter?.Dispose();
-        PickerPresenter = GetPickerPresenter(inputType)
-            ?? throw new ArgumentOutOfRangeException(
-                nameof(IOptionsPickerFormItem.InputType),
-                inputType,
-                null
-            );
+        PickerPresenter = Item == null ? null : CreatePickerPresenter(Item.Presentation);
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
-        base.OnDataSet();
+        base.OnItemSet();
 
-        UpdateInputType();
+        UpdatePresentation();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
-        base.OnDataPropertyChanged(propertyName);
+        base.OnItemPropertyChanged(propertyName);
 
         switch (propertyName)
         {
-            case nameof(IOptionsPickerFormItem.InputType):
+            case nameof(IOptionsPickerFormItem.Presentation):
             case null:
-                UpdateInputType();
+                UpdatePresentation();
                 break;
         }
     }

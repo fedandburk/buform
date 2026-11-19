@@ -4,6 +4,7 @@ using Android.Widget;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.Dialog;
 using DrawingColor = System.Drawing.Color;
+using FragmentManager = AndroidX.Fragment.App.FragmentManager;
 
 namespace Buform;
 
@@ -50,12 +51,10 @@ internal sealed class ColorPickerDialogFragment : AppCompatDialogFragment
         _item = item;
     }
 
-    public static void Show(View anchorView, ColorPickerFormItem item)
+    public static void Show(FragmentManager fragmentManager, ColorPickerFormItem item)
     {
-        ArgumentNullException.ThrowIfNull(anchorView);
+        ArgumentNullException.ThrowIfNull(fragmentManager);
         ArgumentNullException.ThrowIfNull(item);
-
-        var fragmentManager = anchorView.GetFragmentActivity().SupportFragmentManager;
 
         if (fragmentManager.FindFragmentByTag(nameof(ColorPickerDialogFragment)) != null)
         {

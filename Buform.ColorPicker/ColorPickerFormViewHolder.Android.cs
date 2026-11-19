@@ -3,40 +3,49 @@ using Android.Views;
 
 namespace Buform;
 
-public class ColorPickerFormViewHolder : PickerFormViewHolder<ColorPickerFormItem>
+public abstract class ColorPickerFormViewHolder<TItem> : PickerFormViewHolder<TItem>
+    where TItem : ColorPickerFormItem
 {
     protected virtual View? SwatchView { get; set; }
 
-    public ColorPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected ColorPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public ColorPickerFormViewHolder(View itemView)
+    protected ColorPickerFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
     }
 
-    protected override string? GetLabel(ColorPickerFormItem item)
+    protected override string? GetLabel(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.Label;
     }
 
-    protected override string? GetValue(ColorPickerFormItem item)
+    protected override string? GetValue(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return null;
     }
 
-    protected override void OnClick()
+    protected override Task OnClickAsync()
     {
-        if (Data == null)
+        if (Item == null)
         {
-            return;
+            throw new InvalidOperationException("The colour picker row has no item.");
         }
 
-        ColorPickerDialogFragment.Show(ItemView, Data);
+        var fragmentManager = GetFragmentActivity().SupportFragmentManager;
+
+        ColorPickerDialogFragment.Show(fragmentManager, Item);
+
+        return Task.CompletedTask;
     }
 
     protected override void Initialize()
@@ -50,7 +59,7 @@ public class ColorPickerFormViewHolder : PickerFormViewHolder<ColorPickerFormIte
     {
         base.UpdateValue();
 
-        if (SwatchView == null || Data == null)
+        if (SwatchView == null || Item == null)
         {
             return;
         }
@@ -58,7 +67,7 @@ public class ColorPickerFormViewHolder : PickerFormViewHolder<ColorPickerFormIte
         var context = ItemView.Context
             ?? throw new InvalidOperationException("The view has no context.");
 
-        SwatchView.Background = ColorSwatch.Create(context, Data.Value.ToArgb(), false);
+        SwatchView.Background = ColorSwatch.Create(context, Item.Value.ToArgb(), false);
     }
 
     protected override void Dispose(bool disposing)
@@ -69,5 +78,20 @@ public class ColorPickerFormViewHolder : PickerFormViewHolder<ColorPickerFormIte
         }
 
         base.Dispose(disposing);
+    }
+}
+
+public sealed class ColorPickerFormViewHolder : ColorPickerFormViewHolder<ColorPickerFormItem>
+{
+    public ColorPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public ColorPickerFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

@@ -27,6 +27,10 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolder<FormHe
                 {
                     BindNativeView(viewType!.Value, group);
                 }
+                else
+                {
+                    throw new FormViewNotFoundException(groupType);
+                }
 
                 break;
             case FormRowType.Footer:
@@ -37,6 +41,10 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolder<FormHe
                 else if (FormPlatform.TryGetGroupFooterViewType(groupType, out var viewType))
                 {
                     BindNativeView(viewType!.Value, group);
+                }
+                else
+                {
+                    throw new FormViewNotFoundException(groupType);
                 }
 
                 break;

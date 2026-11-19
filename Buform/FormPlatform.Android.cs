@@ -13,18 +13,13 @@ public static class FormPlatform
     {
         Registry = new FormRegistry();
 
-        RegisterGroupHeader<TextFormGroup, LabeledFormGroupHeaderViewHolder>(
-            Resource.Layout.FormGroupTextHeaderLayout
+        RegisterGroupHeader<ILabeledFormGroup, LabeledFormGroupHeaderViewHolder>(
+            Resource.Layout.FormGroupLabeledHeaderLayout
         );
-        RegisterGroupFooter<TextFormGroup, LabeledFormGroupFooterViewHolder>(
-            Resource.Layout.FormGroupTextFooterLayout
+        RegisterGroupFooter<ILabeledFormGroup, LabeledFormGroupFooterViewHolder>(
+            Resource.Layout.FormGroupLabeledFooterLayout
         );
-        RegisterGroupHeader<IListFormGroup, LabeledFormGroupHeaderViewHolder>(
-            Resource.Layout.FormGroupTextHeaderLayout
-        );
-        RegisterGroupFooter<IListFormGroup, LabeledFormGroupFooterViewHolder>(
-            Resource.Layout.FormGroupTextFooterLayout
-        );
+        RegisterGroupHandler<IListFormGroup, ListFormGroupHandler>();
 
         RegisterItem<ButtonFormItem, ButtonFormViewHolder>(Resource.Layout.FormItemButtonLayout);
         RegisterItem<DateTimeFormItem, DateTimeFormViewHolder>(
@@ -48,8 +43,8 @@ public static class FormPlatform
         RegisterItem<SliderFormItem, SliderFormViewHolder>(Resource.Layout.FormItemSliderLayout);
         RegisterItem<StepperFormItem, StepperFormViewHolder>(Resource.Layout.FormItemStepperLayout);
         RegisterItem<SwitchFormItem, SwitchFormViewHolder>(Resource.Layout.FormItemSwitchLayout);
-        RegisterItem<IMultilineTextInputFormItem, TextMultilineFormViewHolder>(
-            Resource.Layout.FormItemTextMultilineLayout
+        RegisterItem<IMultilineTextInputFormItem, MultilineTextInputFormViewHolder>(
+            Resource.Layout.FormItemMultilineTextInputLayout
         );
         RegisterItem<ITextInputFormItem, TextInputFormViewHolder>(
             Resource.Layout.FormItemTextInputLayout
@@ -62,7 +57,7 @@ public static class FormPlatform
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
         where TItem : class, IFormItem
-        where TViewHolder : FormViewHolder
+        where TViewHolder : FormViewHolder<TItem>
     {
         Registry.RegisterItem<TItem, TViewHolder>(resourceId);
     }
@@ -72,7 +67,7 @@ public static class FormPlatform
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
         where TGroup : class, IFormGroup
-        where TViewHolder : FormViewHolder
+        where TViewHolder : FormHeaderFooterViewHolder<TGroup>
     {
         Registry.RegisterGroupHeader<TGroup, TViewHolder>(resourceId);
     }
@@ -82,27 +77,43 @@ public static class FormPlatform
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
         where TGroup : class, IFormGroup
-        where TViewHolder : FormViewHolder
+        where TViewHolder : FormHeaderFooterViewHolder<TGroup>
     {
         Registry.RegisterGroupFooter<TGroup, TViewHolder>(resourceId);
     }
 
-    public static bool TryGetItemViewType(Type itemType, out int? viewType)
+    public static void RegisterGroupHandler<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            THandler
+    >()
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandler<TGroup>
+    {
+        Registry.RegisterGroupHandler<TGroup, THandler>();
+    }
+
+    internal static IFormGroupHandler GetGroupHandler(IFormGroup group)
+    {
+        return Registry.GetGroupHandler(group);
+    }
+
+    internal static bool TryGetItemViewType(Type itemType, out int? viewType)
     {
         return Registry.TryGetItemViewType(itemType, out viewType);
     }
 
-    public static bool TryGetGroupHeaderViewType(Type itemType, out int? viewType)
+    internal static bool TryGetGroupHeaderViewType(Type groupType, out int? viewType)
     {
-        return Registry.TryGetGroupHeaderViewType(itemType, out viewType);
+        return Registry.TryGetGroupHeaderViewType(groupType, out viewType);
     }
 
-    public static bool TryGetGroupFooterViewType(Type itemType, out int? viewType)
+    internal static bool TryGetGroupFooterViewType(Type groupType, out int? viewType)
     {
-        return Registry.TryGetGroupFooterViewType(itemType, out viewType);
+        return Registry.TryGetGroupFooterViewType(groupType, out viewType);
     }
 
-    public static bool TryGetViewHolderAndResourceId(
+    internal static bool TryGetViewHolderAndResourceId(
         int viewType,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)]
             out Type? viewHolderType,

@@ -1,23 +1,23 @@
 using Android.Runtime;
 using Android.Views;
 using Google.Android.Material.Slider;
-using Object = Java.Lang.Object;
 
 namespace Buform;
 
-public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
+public abstract class SliderFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : SliderFormItem
 {
-    private ChangeListener? _changeListener;
+    private SliderChangeListener? _changeListener;
 
     protected virtual Slider? SliderView { get; set; }
 
-    public SliderFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected SliderFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public SliderFormViewHolder(View itemView)
+    protected SliderFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
@@ -25,64 +25,64 @@ public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
 
     private void OnValueChange(float value, bool isFromUser)
     {
-        if (!isFromUser || Data == null)
+        if (!isFromUser || Item == null)
         {
             return;
         }
 
-        Data.Value = value;
+        Item.Value = value;
     }
 
     protected override void Initialize()
     {
         SliderView = ItemView.FindViewById<Slider>(Resource.Id.Slider);
 
-        _changeListener = new ChangeListener(this);
+        _changeListener = new SliderChangeListener(OnValueChange);
 
         SliderView?.AddOnChangeListener(_changeListener);
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        SliderView?.Enabled = !(Data?.IsReadOnly ?? true);
+        SliderView?.Enabled = !(Item?.IsReadOnly ?? true);
     }
 
     protected virtual void UpdateRange()
     {
-        if (SliderView == null || Data == null)
+        if (SliderView == null || Item == null)
         {
             return;
         }
 
-        if (Data.MinValue >= Data.MaxValue)
+        if (Item.MinValue >= Item.MaxValue)
         {
             throw new InvalidOperationException(
                 $"{nameof(SliderFormItem)}.{nameof(SliderFormItem.MinValue)} must be less than {nameof(SliderFormItem.MaxValue)}."
             );
         }
 
-        SliderView.ValueFrom = Data.MinValue;
-        SliderView.ValueTo = Data.MaxValue;
+        SliderView.ValueFrom = Item.MinValue;
+        SliderView.ValueTo = Item.MaxValue;
     }
 
     protected virtual void UpdateValue()
     {
-        if (SliderView == null || Data == null)
+        if (SliderView == null || Item == null)
         {
             return;
         }
 
-        SliderView.Value = Math.Clamp(Data.Value, Data.MinValue, Data.MaxValue);
+        SliderView.Value = Math.Clamp(Item.Value, Item.MinValue, Item.MaxValue);
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateRange();
         UpdateValue();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -122,19 +122,19 @@ public class SliderFormViewHolder : FormViewHolder<SliderFormItem>
 
         base.Dispose(disposing);
     }
+}
 
-    private sealed class ChangeListener : Object, Slider.IOnChangeListener
+public sealed class SliderFormViewHolder : SliderFormViewHolder<SliderFormItem>
+{
+    public SliderFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
-        private readonly SliderFormViewHolder _owner;
+        /* Required constructor */
+    }
 
-        public ChangeListener(SliderFormViewHolder owner)
-        {
-            _owner = owner;
-        }
-
-        public void OnValueChange(Slider slider, float value, bool fromUser)
-        {
-            _owner.OnValueChange(value, fromUser);
-        }
+    public SliderFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

@@ -18,15 +18,15 @@ public abstract class PopUpPickerFormViewHolder<TItem> : PresentedPickerFormView
         /* Required constructor */
     }
 
-    protected override PickerPresenter<TItem>? GetPickerPresenter(PickerInputType inputType)
+    protected override PickerPresenter<TItem> CreatePickerPresenter(PickerPresentation presentation)
     {
-        return inputType == PickerInputType.PopUp
+        return presentation == PickerPresentation.PopUp
             ? new PopUpPickerPresenter<TItem>()
-            : base.GetPickerPresenter(inputType);
+            : base.CreatePickerPresenter(presentation);
     }
 }
 
-public class PopUpPickerFormViewHolder : PopUpPickerFormViewHolder<IPickerFormItem>
+public sealed class PopUpPickerFormViewHolder : PopUpPickerFormViewHolder<IPickerFormItem>
 {
     public PopUpPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)

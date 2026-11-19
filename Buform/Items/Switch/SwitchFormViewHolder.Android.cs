@@ -3,7 +3,8 @@ using Android.Views;
 
 namespace Buform;
 
-public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
+public abstract class SwitchFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : SwitchFormItem
 {
     private bool _isUpdatingValue;
 
@@ -11,17 +12,13 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
     protected virtual CompoundButton? SwitchView { get; set; }
 
-    protected virtual TextView? ErrorView { get; set; }
-
-    protected override TextView? ValidationErrorView => ErrorView;
-
-    public SwitchFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected SwitchFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public SwitchFormViewHolder(View itemView)
+    protected SwitchFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
@@ -34,19 +31,19 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
     private void OnCheckedChange(object? sender, CompoundButton.CheckedChangeEventArgs e)
     {
-        if (_isUpdatingValue || Data == null)
+        if (_isUpdatingValue || Item == null)
         {
             return;
         }
 
-        Data.Value = e.IsChecked;
+        Item.Value = e.IsChecked;
     }
 
     protected override void Initialize()
     {
         LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
         SwitchView = ItemView.FindViewById<CompoundButton>(Resource.Id.Switch);
-        ErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
+        ValidationErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
 
         ItemView.Click += OnItemViewClick;
 
@@ -55,7 +52,7 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        var isEnabled = !(Data?.IsReadOnly ?? true);
+        var isEnabled = !(Item?.IsReadOnly ?? true);
 
         ItemView.Enabled = isEnabled;
 
@@ -65,12 +62,12 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
     protected virtual void UpdateLabel()
     {
-        LabelView?.Text = Data?.Label;
+        LabelView?.Text = Item?.Label;
     }
 
     protected virtual void UpdateValue()
     {
-        if (SwitchView == null || Data == null)
+        if (SwitchView == null || Item == null)
         {
             return;
         }
@@ -79,7 +76,7 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
         try
         {
-            SwitchView.Checked = Data.Value;
+            SwitchView.Checked = Item.Value;
         }
         finally
         {
@@ -87,14 +84,14 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
         }
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
         UpdateValue();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -125,9 +122,23 @@ public class SwitchFormViewHolder : FormViewHolder<SwitchFormItem>
 
             LabelView = null;
             SwitchView = null;
-            ErrorView = null;
         }
 
         base.Dispose(disposing);
+    }
+}
+
+public sealed class SwitchFormViewHolder : SwitchFormViewHolder<SwitchFormItem>
+{
+    public SwitchFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public SwitchFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

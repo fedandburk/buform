@@ -4,31 +4,36 @@ using Android.Views;
 
 namespace Buform;
 
-public class DateTimeFormViewHolder : PickerFormViewHolder<DateTimeFormItem>
+public abstract class DateTimeFormViewHolder<TItem> : PickerFormViewHolder<TItem>
+    where TItem : DateTimeFormItem
 {
     private const string DateFormat = "d";
     private const string TimeFormat = "t";
     private const string DateTimeFormat = "g";
 
-    public DateTimeFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected DateTimeFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public DateTimeFormViewHolder(View itemView)
+    protected DateTimeFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
     }
 
-    protected override string? GetLabel(DateTimeFormItem item)
+    protected override string? GetLabel(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.Label;
     }
 
-    protected override string? GetValue(DateTimeFormItem item)
+    protected override string? GetValue(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         if (item.Value is not { } value)
         {
             return null;
@@ -49,13 +54,32 @@ public class DateTimeFormViewHolder : PickerFormViewHolder<DateTimeFormItem>
         return value.ToString(format, CultureInfo.CurrentCulture);
     }
 
-    protected override void OnClick()
+    protected override Task OnClickAsync()
     {
-        if (Data == null)
+        if (Item == null)
         {
-            return;
+            throw new InvalidOperationException("The date and time row has no item.");
         }
 
-        DateTimePickerFragment.Show(ItemView, Data);
+        var fragmentManager = GetFragmentActivity().SupportFragmentManager;
+
+        DateTimePickerFragment.Show(fragmentManager, Item);
+
+        return Task.CompletedTask;
+    }
+}
+
+public sealed class DateTimeFormViewHolder : DateTimeFormViewHolder<DateTimeFormItem>
+{
+    public DateTimeFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public DateTimeFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

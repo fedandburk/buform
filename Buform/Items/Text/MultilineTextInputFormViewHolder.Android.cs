@@ -5,21 +5,22 @@ using Google.Android.Material.TextField;
 
 namespace Buform;
 
-public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFormItem>
+public abstract class MultilineTextInputFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : class, IMultilineTextInputFormItem
 {
     private bool _isUpdatingValue;
 
-    protected virtual TextInputLayout? InputLayout { get; set; }
+    protected virtual TextInputLayout? InputLayoutView { get; set; }
 
     protected virtual EditText? InputView { get; set; }
 
-    public TextMultilineFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected MultilineTextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public TextMultilineFormViewHolder(View itemView)
+    protected MultilineTextInputFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
@@ -27,41 +28,41 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_isUpdatingValue || Data == null)
+        if (_isUpdatingValue || Item == null)
         {
             return;
         }
 
-        Data.SetValue(e.Text?.ToString());
+        Item.SetText(e.Text?.ToString());
     }
 
     protected override void Initialize()
     {
-        InputLayout = ItemView.FindViewById<TextInputLayout>(Resource.Id.InputLayout);
+        InputLayoutView = ItemView.FindViewById<TextInputLayout>(Resource.Id.InputLayout);
         InputView = ItemView.FindViewById<EditText>(Resource.Id.Input);
 
-        InputLayout?.HintEnabled = false;
+        InputLayoutView?.HintEnabled = false;
         InputView?.TextChanged += OnTextChanged;
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        InputLayout?.Enabled = !(Data?.IsReadOnly ?? true);
+        InputLayoutView?.Enabled = !(Item?.IsReadOnly ?? true);
     }
 
     protected virtual void UpdatePlaceholder()
     {
-        InputView?.Hint = Data?.Placeholder;
+        InputView?.Hint = Item?.Placeholder;
     }
 
     protected virtual void UpdateInputType()
     {
-        if (InputView == null || Data == null)
+        if (InputView == null || Item == null)
         {
             return;
         }
 
-        var inputTypes = Data.InputType.ToInputTypes() | InputTypes.TextFlagMultiLine;
+        var inputTypes = Item.InputType.ToInputTypes() | InputTypes.TextFlagMultiLine;
 
         if (InputView.InputType == inputTypes)
         {
@@ -85,12 +86,12 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
     protected virtual void UpdateValue()
     {
-        if (InputView == null || Data == null)
+        if (InputView == null || Item == null)
         {
             return;
         }
 
-        var text = Data.FormattedValue ?? Data.Value?.ToString();
+        var text = Item.FormattedValue ?? Item.Value?.ToString();
 
         if (string.Equals(InputView.Text, text ?? string.Empty, StringComparison.Ordinal))
         {
@@ -112,18 +113,18 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
 
     protected virtual void UpdateValidationErrorMessage()
     {
-        if (InputLayout == null)
+        if (InputLayoutView == null)
         {
             return;
         }
 
-        var message = Data?.ValidationErrorMessage;
+        var message = Item?.ValidationErrorMessage;
 
-        InputLayout.ErrorEnabled = message != null;
-        InputLayout.Error = message;
+        InputLayoutView.ErrorEnabled = message != null;
+        InputLayoutView.Error = message;
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdatePlaceholder();
@@ -132,7 +133,7 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
         UpdateValidationErrorMessage();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -153,7 +154,7 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
                 UpdateValidationErrorMessage();
                 break;
             case null:
-                OnDataSet();
+                OnItemSet();
                 break;
         }
     }
@@ -164,10 +165,26 @@ public class TextMultilineFormViewHolder : FormViewHolder<IMultilineTextInputFor
         {
             InputView?.TextChanged -= OnTextChanged;
 
-            InputLayout = null;
+            InputLayoutView = null;
             InputView = null;
         }
 
         base.Dispose(disposing);
+    }
+}
+
+public sealed class MultilineTextInputFormViewHolder
+    : MultilineTextInputFormViewHolder<IMultilineTextInputFormItem>
+{
+    public MultilineTextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public MultilineTextInputFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

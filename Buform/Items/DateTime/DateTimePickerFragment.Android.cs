@@ -6,6 +6,7 @@ using Java.Lang;
 using Java.Util;
 using DateFormat = Android.Text.Format.DateFormat;
 using Fragment = AndroidX.Fragment.App.Fragment;
+using FragmentManager = AndroidX.Fragment.App.FragmentManager;
 using Object = Java.Lang.Object;
 
 namespace Buform;
@@ -40,12 +41,10 @@ internal sealed class DateTimePickerFragment : Fragment
         _item = item;
     }
 
-    public static void Show(View anchorView, DateTimeFormItem item)
+    public static void Show(FragmentManager fragmentManager, DateTimeFormItem item)
     {
-        ArgumentNullException.ThrowIfNull(anchorView);
+        ArgumentNullException.ThrowIfNull(fragmentManager);
         ArgumentNullException.ThrowIfNull(item);
-
-        var fragmentManager = anchorView.GetFragmentActivity().SupportFragmentManager;
 
         if (fragmentManager.FindFragmentByTag(nameof(DateTimePickerFragment)) != null)
         {

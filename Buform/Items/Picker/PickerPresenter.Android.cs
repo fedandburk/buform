@@ -5,7 +5,7 @@ namespace Buform;
 public abstract class PickerPresenter<TItem> : IDisposable
     where TItem : class, IOptionsPickerFormItem
 {
-    public abstract void Pick(View anchorView, TItem item);
+    public abstract Task PickAsync(View sourceView, TItem item);
 
     protected virtual void Dispose(bool disposing)
     {

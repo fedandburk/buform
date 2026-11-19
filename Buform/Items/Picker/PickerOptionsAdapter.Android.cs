@@ -6,13 +6,13 @@ namespace Buform;
 internal sealed class PickerOptionsAdapter : RecyclerView.Adapter
 {
     private readonly int _layoutId;
-    private readonly Action<IPickerOptionFormItem> _onClick;
+    private readonly Action<IFormOption> _onClick;
 
     private IReadOnlyList<PickerOptionState> _options;
 
     public override int ItemCount => _options.Count;
 
-    public PickerOptionsAdapter(int layoutId, Action<IPickerOptionFormItem> onClick)
+    public PickerOptionsAdapter(int layoutId, Action<IFormOption> onClick)
     {
         ArgumentNullException.ThrowIfNull(onClick);
 

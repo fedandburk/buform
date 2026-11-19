@@ -3,10 +3,75 @@ using Android.Views;
 
 namespace Buform;
 
-public class TextFormViewHolder : FormViewHolder<ITextFormItem>
+public abstract class TextFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : class, ITextFormItem
 {
-    protected virtual TextView? TextView { get; set; }
+    protected virtual TextView? LabelView { get; set; }
 
+    protected TextFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    protected TextFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
+    }
+
+    protected override void Initialize()
+    {
+        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Text);
+    }
+
+    protected virtual void UpdateReadOnlyState()
+    {
+        LabelView?.Enabled = !(Item?.IsReadOnly ?? true);
+    }
+
+    protected virtual void UpdateValue()
+    {
+        LabelView?.Text = Item?.FormattedValue ?? Item?.Value?.ToString();
+    }
+
+    protected override void OnItemSet()
+    {
+        UpdateReadOnlyState();
+        UpdateValue();
+    }
+
+    protected override void OnItemPropertyChanged(string? propertyName)
+    {
+        switch (propertyName)
+        {
+            case nameof(ITextFormItem.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
+            case nameof(ITextFormItem.Value):
+            case nameof(ITextFormItem.FormattedValue):
+                UpdateValue();
+                break;
+            case null:
+                UpdateReadOnlyState();
+                UpdateValue();
+                break;
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            LabelView = null;
+        }
+
+        base.Dispose(disposing);
+    }
+}
+
+public sealed class TextFormViewHolder : TextFormViewHolder<ITextFormItem>
+{
     public TextFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -17,53 +82,5 @@ public class TextFormViewHolder : FormViewHolder<ITextFormItem>
         : base(itemView)
     {
         /* Required constructor */
-    }
-
-    protected override void Initialize()
-    {
-        TextView = ItemView.FindViewById<TextView>(Resource.Id.Text);
-    }
-
-    protected virtual void UpdateReadOnlyState()
-    {
-        TextView?.Enabled = !(Data?.IsReadOnly ?? true);
-    }
-
-    protected virtual void UpdateText()
-    {
-        TextView?.Text = Data?.FormattedValue ?? Data?.Value?.ToString();
-    }
-
-    protected override void OnDataSet()
-    {
-        UpdateReadOnlyState();
-        UpdateText();
-    }
-
-    protected override void OnDataPropertyChanged(string? propertyName)
-    {
-        switch (propertyName)
-        {
-            case nameof(ITextFormItem.IsReadOnly):
-                UpdateReadOnlyState();
-                break;
-            case nameof(ITextFormItem.Value):
-            case nameof(ITextFormItem.FormattedValue):
-                UpdateText();
-                break;
-            case null:
-                OnDataSet();
-                break;
-        }
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            TextView = null;
-        }
-
-        base.Dispose(disposing);
     }
 }

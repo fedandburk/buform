@@ -5,17 +5,18 @@ using AndroidX.AppCompat.Content.Res;
 
 namespace Buform;
 
-public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
+public abstract class ButtonFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : ButtonFormItem
 {
     protected virtual TextView? LabelView { get; set; }
 
-    public ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public ButtonFormViewHolder(View itemView)
+    protected ButtonFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
@@ -23,12 +24,12 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
     private void OnItemViewClick(object? sender, EventArgs e)
     {
-        if (Data == null || Data.IsReadOnly)
+        if (Item == null || Item.IsReadOnly)
         {
             return;
         }
 
-        Data.Value.SafeExecute();
+        Item.Value.SafeExecute();
     }
 
     protected override void Initialize()
@@ -40,7 +41,7 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        var isEnabled = !(Data?.IsReadOnly ?? true);
+        var isEnabled = !(Item?.IsReadOnly ?? true);
 
         ItemView.Enabled = isEnabled;
 
@@ -49,12 +50,12 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
 
     protected virtual void UpdateLabel()
     {
-        LabelView?.Text = Data?.Label;
+        LabelView?.Text = Item?.Label;
     }
 
-    protected virtual void UpdateInputType()
+    protected virtual void UpdateStyle()
     {
-        if (LabelView == null || Data == null)
+        if (LabelView == null || Item == null)
         {
             return;
         }
@@ -62,14 +63,14 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         var context = LabelView.Context
             ?? throw new InvalidOperationException("The label has no context.");
 
-        var colorResourceId = Data.InputType switch
+        var colorResourceId = Item.Style switch
         {
-            ButtonInputType.Default => Resource.Color.form_button_text,
-            ButtonInputType.Done => Resource.Color.form_button_text,
-            ButtonInputType.Destructive => Resource.Color.form_button_destructive_text,
+            ButtonStyle.Default => Resource.Color.form_button_text,
+            ButtonStyle.Done => Resource.Color.form_button_text,
+            ButtonStyle.Destructive => Resource.Color.form_button_destructive_text,
             _ => throw new ArgumentOutOfRangeException(
-                nameof(ButtonFormItem.InputType),
-                Data.InputType,
+                nameof(ButtonFormItem.Style),
+                Item.Style,
                 null
             ),
         };
@@ -79,19 +80,19 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         LabelView.SetTextColor(textColors);
 
         var typefaceStyle =
-            Data.InputType == ButtonInputType.Done ? TypefaceStyle.Bold : TypefaceStyle.Normal;
+            Item.Style == ButtonStyle.Done ? TypefaceStyle.Bold : TypefaceStyle.Normal;
 
         LabelView.SetTypeface(Typeface.Create(LabelView.Typeface, typefaceStyle), typefaceStyle);
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
-        UpdateInputType();
+        UpdateStyle();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -101,11 +102,13 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
             case nameof(ButtonFormItem.Label):
                 UpdateLabel();
                 break;
-            case nameof(ButtonFormItem.InputType):
-                UpdateInputType();
+            case nameof(ButtonFormItem.Style):
+                UpdateStyle();
                 break;
             case null:
-                OnDataSet();
+                UpdateReadOnlyState();
+                UpdateLabel();
+                UpdateStyle();
                 break;
         }
     }
@@ -120,5 +123,20 @@ public class ButtonFormViewHolder : FormViewHolder<ButtonFormItem>
         }
 
         base.Dispose(disposing);
+    }
+}
+
+public sealed class ButtonFormViewHolder : ButtonFormViewHolder<ButtonFormItem>
+{
+    public ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public ButtonFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

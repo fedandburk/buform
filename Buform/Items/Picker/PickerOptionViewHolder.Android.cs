@@ -6,11 +6,11 @@ namespace Buform;
 internal sealed class PickerOptionViewHolder : RecyclerView.ViewHolder
 {
     private readonly CompoundButton _optionView;
-    private readonly Action<IPickerOptionFormItem> _onClick;
+    private readonly Action<IFormOption> _onClick;
 
-    private IPickerOptionFormItem? _option;
+    private IFormOption? _option;
 
-    public PickerOptionViewHolder(View itemView, Action<IPickerOptionFormItem> onClick)
+    public PickerOptionViewHolder(View itemView, Action<IFormOption> onClick)
         : base(itemView)
     {
         ArgumentNullException.ThrowIfNull(onClick);

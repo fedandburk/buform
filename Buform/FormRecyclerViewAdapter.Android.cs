@@ -6,6 +6,8 @@ namespace Buform;
 
 internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSource
 {
+    private readonly FormGroupHandlerList _groupHandlers;
+
     private Form? _form;
     private FormRowList? _rows;
 
@@ -21,6 +23,8 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
 
             DisposeRows();
 
+            _groupHandlers.Clear();
+
             _form = value;
 
             if (_form != null)
@@ -35,6 +39,11 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
     }
 
     public override int ItemCount => _rows?.Count ?? 0;
+
+    public FormRecyclerViewAdapter()
+    {
+        _groupHandlers = new FormGroupHandlerList();
+    }
 
     private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
@@ -67,8 +76,7 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
     public override int GetItemViewType(int position)
     {
         var row = GetRow(position);
-        var data = row.Data;
-        var dataType = data.GetType();
+        var dataType = row.Data.GetType();
 
         int? viewType;
 
@@ -77,12 +85,12 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
             FormRowType.Item => FormPlatform.TryGetItemViewType(dataType, out viewType),
             FormRowType.Header => FormPlatform.TryGetGroupHeaderViewType(dataType, out viewType),
             FormRowType.Footer => FormPlatform.TryGetGroupFooterViewType(dataType, out viewType),
-            _ => throw new ArgumentOutOfRangeException(),
+            _ => throw new ArgumentOutOfRangeException(nameof(position), row.Type, null),
         };
 
         if (!result)
         {
-            throw new FormViewNotFoundException(data);
+            throw new FormViewNotFoundException(dataType);
         }
 
         return viewType!.Value;
@@ -112,12 +120,20 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
 
         if (holder is not FormViewHolder viewHolder)
         {
-            return;
+            throw new ArgumentException(
+                $"The view holder must be of type '{typeof(FormViewHolder).FullName}'.",
+                nameof(holder)
+            );
         }
 
         viewHolder.Initialize(row.Data);
 
-        ListRowClickListener.Attach(viewHolder.ItemView, row);
+        if (row.Item != null)
+        {
+            var groupHandler = _groupHandlers.Get(row.Group);
+
+            FormItemClickListener.Attach(viewHolder.ItemView, groupHandler, row.Item);
+        }
 
         FormRowAppearance.Apply(viewHolder.ItemView, row);
     }
@@ -143,6 +159,8 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
         if (disposing)
         {
             DisposeRows();
+
+            _groupHandlers.Clear();
 
             _form = null;
         }

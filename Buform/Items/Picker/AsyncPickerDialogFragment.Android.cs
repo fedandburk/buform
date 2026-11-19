@@ -29,7 +29,7 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
     {
         base.OnStart();
 
-        LoadItems();
+        LoadOptions();
     }
 
     public override void OnStop()
@@ -39,7 +39,7 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
         base.OnStop();
     }
 
-    private async void LoadItems()
+    private async void LoadOptions()
     {
         if (_item is not { State: AsyncPickerLoadingState.None })
         {
@@ -54,7 +54,7 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
 
         try
         {
-            await _item.LoadItemsAsync(cancellationToken);
+            await _item.LoadOptionsAsync(cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {

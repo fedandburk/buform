@@ -2,34 +2,30 @@ using Android.Runtime;
 using Android.Text;
 using Android.Views;
 using Google.Android.Material.Button;
-using Object = Java.Lang.Object;
 
 namespace Buform;
 
-public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
+public abstract class SegmentsFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : class, ISegmentsFormItem
 {
     private const float ButtonWeight = 1;
 
-    private readonly List<ISegmentsOptionFormItem> _options;
+    private readonly List<IFormOption> _options;
 
-    private ButtonCheckedListener? _buttonCheckedListener;
+    private SegmentsButtonCheckedListener? _buttonCheckedListener;
     private bool _isUpdatingValue;
 
     protected virtual TextView? LabelView { get; set; }
 
-    protected virtual MaterialButtonToggleGroup? ToggleGroup { get; set; }
+    protected virtual MaterialButtonToggleGroup? ToggleGroupView { get; set; }
 
-    protected virtual TextView? ErrorView { get; set; }
-
-    protected override TextView? ValidationErrorView => ErrorView;
-
-    public SegmentsFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected SegmentsFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         _options = [];
     }
 
-    public SegmentsFormViewHolder(View itemView)
+    protected SegmentsFormViewHolder(View itemView)
         : base(itemView)
     {
         _options = [];
@@ -37,31 +33,31 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
     private void OnButtonChecked(int checkedId, bool isChecked)
     {
-        if (_isUpdatingValue || !isChecked || ToggleGroup == null || Data == null)
+        if (_isUpdatingValue || !isChecked || ToggleGroupView == null || Item == null)
         {
             return;
         }
 
-        var button = ToggleGroup.FindViewById(checkedId)
+        var button = ToggleGroupView.FindViewById(checkedId)
             ?? throw new InvalidOperationException("The checked segment is not found.");
 
-        var index = ToggleGroup.IndexOfChild(button);
+        var index = ToggleGroupView.IndexOfChild(button);
 
-        Data.Value = _options[index].Value;
+        Item.Value = _options[index].Value;
     }
 
     protected override void Initialize()
     {
         LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
-        ToggleGroup = ItemView.FindViewById<MaterialButtonToggleGroup>(Resource.Id.ToggleGroup);
-        ErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
+        ToggleGroupView = ItemView.FindViewById<MaterialButtonToggleGroup>(Resource.Id.ToggleGroup);
+        ValidationErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
 
-        _buttonCheckedListener = new ButtonCheckedListener(this);
+        _buttonCheckedListener = new SegmentsButtonCheckedListener(OnButtonChecked);
 
-        ToggleGroup?.AddOnButtonCheckedListener(_buttonCheckedListener);
+        ToggleGroupView?.AddOnButtonCheckedListener(_buttonCheckedListener);
     }
 
-    protected virtual MaterialButton CreateButton(ISegmentsOptionFormItem option)
+    protected virtual MaterialButton CreateButton(IFormOption option)
     {
         ArgumentNullException.ThrowIfNull(option);
 
@@ -83,41 +79,41 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (ToggleGroup == null)
+        if (ToggleGroupView == null)
         {
             return;
         }
 
-        var isEnabled = !(Data?.IsReadOnly ?? true);
+        var isEnabled = !(Item?.IsReadOnly ?? true);
 
         LabelView?.Enabled = isEnabled;
-        ToggleGroup.Enabled = isEnabled;
+        ToggleGroupView.Enabled = isEnabled;
 
-        for (var index = 0; index < ToggleGroup.ChildCount; index++)
+        for (var index = 0; index < ToggleGroupView.ChildCount; index++)
         {
-            ToggleGroup.GetChildAt(index)?.Enabled = isEnabled;
+            ToggleGroupView.GetChildAt(index)?.Enabled = isEnabled;
         }
     }
 
     protected virtual void UpdateLabel()
     {
-        var label = Data?.Label;
+        var label = Item?.Label;
 
         LabelView?.Text = label;
         LabelView?.Visibility = string.IsNullOrEmpty(label) ? ViewStates.Gone : ViewStates.Visible;
     }
 
-    protected virtual void UpdateItems()
+    protected virtual void UpdateOptions()
     {
-        if (ToggleGroup == null)
+        if (ToggleGroupView == null)
         {
             return;
         }
 
         _options.Clear();
-        _options.AddRange(Data?.Items ?? []);
+        _options.AddRange(Item?.Options ?? []);
 
-        ToggleGroup.RemoveAllViews();
+        ToggleGroupView.RemoveAllViews();
 
         foreach (var option in _options)
         {
@@ -125,7 +121,7 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
             button.SetSingleLine(true);
 
-            ToggleGroup.AddView(button);
+            ToggleGroupView.AddView(button);
         }
 
         UpdateReadOnlyState();
@@ -133,13 +129,13 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
 
     protected virtual void UpdateValue()
     {
-        if (ToggleGroup == null || Data == null)
+        if (ToggleGroupView == null || Item == null)
         {
             return;
         }
 
-        var index = _options.FindIndex(option => Equals(option.Value, Data.Value));
-        var button = index < 0 ? null : ToggleGroup.GetChildAt(index);
+        var index = _options.FindIndex(option => Equals(option.Value, Item.Value));
+        var button = index < 0 ? null : ToggleGroupView.GetChildAt(index);
 
         _isUpdatingValue = true;
 
@@ -147,11 +143,11 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
         {
             if (button == null)
             {
-                ToggleGroup.ClearChecked();
+                ToggleGroupView.ClearChecked();
             }
             else
             {
-                ToggleGroup.Check(button.Id);
+                ToggleGroupView.Check(button.Id);
             }
         }
         finally
@@ -160,14 +156,15 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
         }
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateLabel();
-        UpdateItems();
+        UpdateOptions();
+        UpdateReadOnlyState();
         UpdateValue();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -177,8 +174,8 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
             case nameof(ISegmentsFormItem.Label):
                 UpdateLabel();
                 break;
-            case nameof(ISegmentsFormItem.Items):
-                UpdateItems();
+            case nameof(ISegmentsFormItem.Options):
+                UpdateOptions();
                 UpdateValue();
                 break;
             case nameof(ISegmentsFormItem.Value):
@@ -186,7 +183,8 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
                 break;
             case null:
                 UpdateLabel();
-                UpdateItems();
+                UpdateOptions();
+                UpdateReadOnlyState();
                 UpdateValue();
                 break;
         }
@@ -198,34 +196,31 @@ public class SegmentsFormViewHolder : FormViewHolder<ISegmentsFormItem>
         {
             if (_buttonCheckedListener != null)
             {
-                ToggleGroup?.RemoveOnButtonCheckedListener(_buttonCheckedListener);
+                ToggleGroupView?.RemoveOnButtonCheckedListener(_buttonCheckedListener);
             }
 
             _buttonCheckedListener?.Dispose();
             _buttonCheckedListener = null;
 
             LabelView = null;
-            ToggleGroup = null;
-            ErrorView = null;
+            ToggleGroupView = null;
         }
 
         base.Dispose(disposing);
     }
+}
 
-    private sealed class ButtonCheckedListener
-        : Object,
-            MaterialButtonToggleGroup.IOnButtonCheckedListener
+public sealed class SegmentsFormViewHolder : SegmentsFormViewHolder<ISegmentsFormItem>
+{
+    public SegmentsFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
     {
-        private readonly SegmentsFormViewHolder _owner;
+        /* Required constructor */
+    }
 
-        public ButtonCheckedListener(SegmentsFormViewHolder owner)
-        {
-            _owner = owner;
-        }
-
-        public void OnButtonChecked(MaterialButtonToggleGroup? group, int checkedId, bool isChecked)
-        {
-            _owner.OnButtonChecked(checkedId, isChecked);
-        }
+    public SegmentsFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

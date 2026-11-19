@@ -10,18 +10,18 @@ public class PopUpPickerPresenter<TItem> : PickerPresenter<TItem>
 
     private PopupMenu? _menu;
 
-    public override void Pick(View anchorView, TItem item)
+    public override Task PickAsync(View sourceView, TItem item)
     {
-        ArgumentNullException.ThrowIfNull(anchorView);
+        ArgumentNullException.ThrowIfNull(sourceView);
         ArgumentNullException.ThrowIfNull(item);
 
-        var context = anchorView.Context
-            ?? throw new InvalidOperationException("The anchor view has no context.");
+        var context = sourceView.Context
+            ?? throw new InvalidOperationException("The source view has no context.");
 
         var options = item.Options.ToList();
 
         _menu?.Dismiss();
-        _menu = new PopupMenu(context, anchorView, (int)GravityFlags.End);
+        _menu = new PopupMenu(context, sourceView, (int)GravityFlags.End);
 
         for (var index = 0; index < options.Count; index++)
         {
@@ -44,6 +44,8 @@ public class PopUpPickerPresenter<TItem> : PickerPresenter<TItem>
         };
 
         _menu.Show();
+
+        return Task.CompletedTask;
     }
 
     protected override void Dispose(bool disposing)

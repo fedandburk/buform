@@ -20,11 +20,13 @@ public abstract class AsyncPickerFormViewHolder<TItem> : PresentedPickerFormView
 
     protected override PickerDialogFragment CreatePickerDialogFragment(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return new AsyncPickerDialogFragment(item);
     }
 }
 
-public class AsyncPickerFormViewHolder : AsyncPickerFormViewHolder<IAsyncPickerFormItem>
+public sealed class AsyncPickerFormViewHolder : AsyncPickerFormViewHolder<IAsyncPickerFormItem>
 {
     public AsyncPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)

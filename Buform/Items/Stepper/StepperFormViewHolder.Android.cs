@@ -4,20 +4,163 @@ using Android.Views;
 
 namespace Buform;
 
-public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
+public abstract class StepperFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : StepperFormItem
 {
+    private const int DecreaseDirection = -1;
+    private const int IncreaseDirection = 1;
+
     protected virtual TextView? LabelView { get; set; }
 
     protected virtual TextView? ValueView { get; set; }
 
-    protected virtual View? DecreaseButton { get; set; }
+    protected virtual View? DecreaseButtonView { get; set; }
 
-    protected virtual View? IncreaseButton { get; set; }
+    protected virtual View? IncreaseButtonView { get; set; }
 
-    protected virtual TextView? ErrorView { get; set; }
+    protected StepperFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
 
-    protected override TextView? ValidationErrorView => ErrorView;
+    protected StepperFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
+    }
 
+    private void OnDecreaseClick(object? sender, EventArgs e)
+    {
+        ChangeValue(DecreaseDirection);
+    }
+
+    private void OnIncreaseClick(object? sender, EventArgs e)
+    {
+        ChangeValue(IncreaseDirection);
+    }
+
+    private void ChangeValue(int direction)
+    {
+        if (Item == null || Item.IsReadOnly)
+        {
+            return;
+        }
+
+        var value = (long)Item.Value + (long)direction * Item.Step;
+        var clampedValue = Math.Clamp(value, Item.MinValue, Item.MaxValue);
+
+        Item.Value = (int)clampedValue;
+    }
+
+    private void UpdateButtonState()
+    {
+        if (Item == null)
+        {
+            return;
+        }
+
+        var isEnabled = !Item.IsReadOnly;
+
+        DecreaseButtonView?.Enabled = isEnabled && Item.Value > Item.MinValue;
+        IncreaseButtonView?.Enabled = isEnabled && Item.Value < Item.MaxValue;
+    }
+
+    protected override void Initialize()
+    {
+        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
+        ValueView = ItemView.FindViewById<TextView>(Resource.Id.Value);
+        DecreaseButtonView = ItemView.FindViewById(Resource.Id.DecreaseButton);
+        IncreaseButtonView = ItemView.FindViewById(Resource.Id.IncreaseButton);
+        ValidationErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
+
+        DecreaseButtonView?.ContentDescription = FormTexts.Decrease;
+        IncreaseButtonView?.ContentDescription = FormTexts.Increase;
+
+        DecreaseButtonView?.Click += OnDecreaseClick;
+        IncreaseButtonView?.Click += OnIncreaseClick;
+    }
+
+    protected virtual void UpdateReadOnlyState()
+    {
+        var isEnabled = !(Item?.IsReadOnly ?? true);
+
+        LabelView?.Enabled = isEnabled;
+        ValueView?.Enabled = isEnabled;
+
+        UpdateButtonState();
+    }
+
+    protected virtual void UpdateLabel()
+    {
+        LabelView?.Text = Item?.Label;
+    }
+
+    protected virtual void UpdateRange()
+    {
+        UpdateButtonState();
+    }
+
+    protected virtual void UpdateValue()
+    {
+        ValueView?.Text = Item?.Value.ToString(CultureInfo.CurrentCulture);
+
+        UpdateButtonState();
+    }
+
+    protected override void OnItemSet()
+    {
+        UpdateReadOnlyState();
+        UpdateLabel();
+        UpdateRange();
+        UpdateValue();
+    }
+
+    protected override void OnItemPropertyChanged(string? propertyName)
+    {
+        switch (propertyName)
+        {
+            case nameof(StepperFormItem.IsReadOnly):
+                UpdateReadOnlyState();
+                break;
+            case nameof(StepperFormItem.Label):
+                UpdateLabel();
+                break;
+            case nameof(StepperFormItem.MinValue):
+            case nameof(StepperFormItem.MaxValue):
+                UpdateRange();
+                break;
+            case nameof(StepperFormItem.Value):
+                UpdateValue();
+                break;
+            case null:
+                UpdateReadOnlyState();
+                UpdateLabel();
+                UpdateRange();
+                UpdateValue();
+                break;
+        }
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DecreaseButtonView?.Click -= OnDecreaseClick;
+            IncreaseButtonView?.Click -= OnIncreaseClick;
+
+            LabelView = null;
+            ValueView = null;
+            DecreaseButtonView = null;
+            IncreaseButtonView = null;
+        }
+
+        base.Dispose(disposing);
+    }
+}
+
+public sealed class StepperFormViewHolder : StepperFormViewHolder<StepperFormItem>
+{
     public StepperFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -28,109 +171,5 @@ public class StepperFormViewHolder : FormViewHolder<StepperFormItem>
         : base(itemView)
     {
         /* Required constructor */
-    }
-
-    private void OnDecreaseClick(object? sender, EventArgs e)
-    {
-        Step(-1);
-    }
-
-    private void OnIncreaseClick(object? sender, EventArgs e)
-    {
-        Step(1);
-    }
-
-    private void Step(int direction)
-    {
-        if (Data == null || Data.IsReadOnly)
-        {
-            return;
-        }
-
-        var value = (long)Data.Value + (long)direction * Data.StepAmount;
-        var clampedValue = Math.Clamp(value, Data.MinValue, Data.MaxValue);
-
-        Data.Value = (int)clampedValue;
-    }
-
-    protected override void Initialize()
-    {
-        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
-        ValueView = ItemView.FindViewById<TextView>(Resource.Id.Value);
-        DecreaseButton = ItemView.FindViewById(Resource.Id.DecreaseButton);
-        IncreaseButton = ItemView.FindViewById(Resource.Id.IncreaseButton);
-        ErrorView = ItemView.FindViewById<TextView>(Resource.Id.Error);
-
-        DecreaseButton?.ContentDescription = FormTexts.Decrease;
-        IncreaseButton?.ContentDescription = FormTexts.Increase;
-
-        DecreaseButton?.Click += OnDecreaseClick;
-        IncreaseButton?.Click += OnIncreaseClick;
-    }
-
-    protected virtual void UpdateLabel()
-    {
-        LabelView?.Text = Data?.Label;
-    }
-
-    protected virtual void UpdateValue()
-    {
-        if (Data == null)
-        {
-            return;
-        }
-
-        var isEnabled = !Data.IsReadOnly;
-
-        ValueView?.Text = Data.Value.ToString(CultureInfo.CurrentCulture);
-
-        LabelView?.Enabled = isEnabled;
-        ValueView?.Enabled = isEnabled;
-
-        DecreaseButton?.Enabled = isEnabled && Data.Value > Data.MinValue;
-        IncreaseButton?.Enabled = isEnabled && Data.Value < Data.MaxValue;
-    }
-
-    protected override void OnDataSet()
-    {
-        UpdateLabel();
-        UpdateValue();
-    }
-
-    protected override void OnDataPropertyChanged(string? propertyName)
-    {
-        switch (propertyName)
-        {
-            case nameof(StepperFormItem.Label):
-                UpdateLabel();
-                break;
-            case nameof(StepperFormItem.IsReadOnly):
-            case nameof(StepperFormItem.Value):
-            case nameof(StepperFormItem.MinValue):
-            case nameof(StepperFormItem.MaxValue):
-                UpdateValue();
-                break;
-            case null:
-                UpdateLabel();
-                UpdateValue();
-                break;
-        }
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            DecreaseButton?.Click -= OnDecreaseClick;
-            IncreaseButton?.Click -= OnIncreaseClick;
-
-            LabelView = null;
-            ValueView = null;
-            DecreaseButton = null;
-            IncreaseButton = null;
-            ErrorView = null;
-        }
-
-        base.Dispose(disposing);
     }
 }

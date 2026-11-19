@@ -20,21 +20,31 @@ public abstract class CallbackPickerFormViewHolder<TItem> : PickerFormViewHolder
 
     protected override string? GetLabel(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.Label;
     }
 
     protected override string? GetValue(TItem item)
     {
+        ArgumentNullException.ThrowIfNull(item);
+
         return item.FormattedValue;
     }
 
-    protected override void OnClick()
+    protected override Task OnClickAsync()
     {
-        Data?.ExecuteCallback();
+        if (Item == null)
+        {
+            throw new InvalidOperationException("The picker row has no item.");
+        }
+
+        return Item.ExecuteCallbackAsync();
     }
 }
 
-public class CallbackPickerFormViewHolder : CallbackPickerFormViewHolder<ICallbackPickerFormItem>
+public sealed class CallbackPickerFormViewHolder
+    : CallbackPickerFormViewHolder<ICallbackPickerFormItem>
 {
     public CallbackPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)

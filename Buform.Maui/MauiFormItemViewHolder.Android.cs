@@ -34,9 +34,11 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolder<FormItemView>
 
     private void BindNativeView(IFormItem item)
     {
-        if (!FormPlatform.TryGetItemViewType(item.GetType(), out var viewType))
+        var itemType = item.GetType();
+
+        if (!FormPlatform.TryGetItemViewType(itemType, out var viewType))
         {
-            throw new FormViewNotFoundException(item);
+            throw new FormViewNotFoundException(itemType);
         }
 
         BindNativeView(viewType!.Value, item);

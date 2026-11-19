@@ -5,21 +5,22 @@ using Google.Android.Material.TextField;
 
 namespace Buform;
 
-public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
+public abstract class TextInputFormViewHolder<TItem> : FormViewHolder<TItem>
+    where TItem : class, ITextInputFormItem
 {
     private bool _isUpdatingValue;
 
-    protected virtual TextInputLayout? InputLayout { get; set; }
+    protected virtual TextInputLayout? InputLayoutView { get; set; }
 
     protected virtual EditText? InputView { get; set; }
 
-    public TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+    protected TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
         /* Required constructor */
     }
 
-    public TextInputFormViewHolder(View itemView)
+    protected TextInputFormViewHolder(View itemView)
         : base(itemView)
     {
         /* Required constructor */
@@ -27,71 +28,12 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_isUpdatingValue || Data == null)
+        if (_isUpdatingValue || Item == null)
         {
             return;
         }
 
-        Data.SetValue(e.Text?.ToString());
-    }
-
-    protected override void Initialize()
-    {
-        InputLayout = ItemView.FindViewById<TextInputLayout>(Resource.Id.InputLayout);
-        InputView = ItemView.FindViewById<EditText>(Resource.Id.Input);
-
-        InputView?.TextChanged += OnTextChanged;
-    }
-
-    protected virtual void UpdateReadOnlyState()
-    {
-        InputLayout?.Enabled = !(Data?.IsReadOnly ?? true);
-    }
-
-    protected virtual void UpdateLabel()
-    {
-        if (InputLayout == null || InputView == null)
-        {
-            return;
-        }
-
-        var label = Data?.Label;
-        var placeholder = Data?.Placeholder;
-
-        if (string.IsNullOrEmpty(label))
-        {
-            InputLayout.HintEnabled = false;
-            InputLayout.PlaceholderText = null;
-            InputView.Hint = placeholder;
-
-            return;
-        }
-
-        InputView.Hint = null;
-        InputLayout.HintEnabled = true;
-        InputLayout.Hint = label;
-        InputLayout.PlaceholderText = placeholder;
-    }
-
-    protected virtual void UpdateInputType()
-    {
-        if (InputLayout == null || InputView == null || Data == null)
-        {
-            return;
-        }
-
-        var inputTypes = Data.InputType.ToInputTypes();
-
-        if (Data.IsSecured)
-        {
-            inputTypes = InputTypes.ClassText | InputTypes.TextVariationPassword;
-        }
-
-        SetInputType(InputView, inputTypes);
-
-        InputLayout.EndIconMode = Data.IsSecured
-            ? TextInputLayout.EndIconPasswordToggle
-            : TextInputLayout.EndIconNone;
+        Item.SetText(e.Text?.ToString());
     }
 
     private void SetInputType(EditText inputView, InputTypes inputTypes)
@@ -116,14 +58,87 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         UpdateValue();
     }
 
-    protected virtual void UpdateValue()
+    protected override void Initialize()
     {
-        if (InputView == null || Data == null)
+        InputLayoutView = ItemView.FindViewById<TextInputLayout>(Resource.Id.InputLayout);
+        InputView = ItemView.FindViewById<EditText>(Resource.Id.Input);
+
+        InputView?.TextChanged += OnTextChanged;
+    }
+
+    protected virtual void UpdateReadOnlyState()
+    {
+        InputLayoutView?.Enabled = !(Item?.IsReadOnly ?? true);
+    }
+
+    protected virtual void UpdateLabel()
+    {
+        if (InputLayoutView == null)
         {
             return;
         }
 
-        var text = Data.FormattedValue ?? Data.Value?.ToString();
+        var label = Item?.Label;
+
+        InputLayoutView.HintEnabled = !string.IsNullOrEmpty(label);
+        InputLayoutView.Hint = label;
+    }
+
+    protected virtual void UpdatePlaceholder()
+    {
+        if (InputLayoutView == null || InputView == null)
+        {
+            return;
+        }
+
+        var placeholder = Item?.Placeholder;
+
+        if (string.IsNullOrEmpty(Item?.Label))
+        {
+            InputLayoutView.PlaceholderText = null;
+            InputView.Hint = placeholder;
+
+            return;
+        }
+
+        InputView.Hint = null;
+        InputLayoutView.PlaceholderText = placeholder;
+    }
+
+    protected virtual void UpdateInputType()
+    {
+        if (InputView == null || Item == null)
+        {
+            return;
+        }
+
+        var inputTypes = Item.IsSecure
+            ? InputTypes.ClassText | InputTypes.TextVariationPassword
+            : Item.InputType.ToInputTypes();
+
+        SetInputType(InputView, inputTypes);
+    }
+
+    protected virtual void UpdateSecureState()
+    {
+        if (InputLayoutView == null || Item == null)
+        {
+            return;
+        }
+
+        InputLayoutView.EndIconMode = Item.IsSecure
+            ? TextInputLayout.EndIconPasswordToggle
+            : TextInputLayout.EndIconNone;
+    }
+
+    protected virtual void UpdateValue()
+    {
+        if (InputView == null || Item == null)
+        {
+            return;
+        }
+
+        var text = Item.FormattedValue ?? Item.Value?.ToString();
 
         if (string.Equals(InputView.Text, text ?? string.Empty, StringComparison.Ordinal))
         {
@@ -145,27 +160,29 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
 
     protected virtual void UpdateValidationErrorMessage()
     {
-        if (InputLayout == null)
+        if (InputLayoutView == null)
         {
             return;
         }
 
-        var message = Data?.ValidationErrorMessage;
+        var message = Item?.ValidationErrorMessage;
 
-        InputLayout.ErrorEnabled = message != null;
-        InputLayout.Error = message;
+        InputLayoutView.ErrorEnabled = message != null;
+        InputLayoutView.Error = message;
     }
 
-    protected override void OnDataSet()
+    protected override void OnItemSet()
     {
         UpdateReadOnlyState();
         UpdateLabel();
+        UpdatePlaceholder();
         UpdateInputType();
+        UpdateSecureState();
         UpdateValue();
         UpdateValidationErrorMessage();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnItemPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -173,12 +190,18 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
                 UpdateReadOnlyState();
                 break;
             case nameof(ITextInputFormItem.Label):
-            case nameof(ITextInputFormItem.Placeholder):
                 UpdateLabel();
+                UpdatePlaceholder();
+                break;
+            case nameof(ITextInputFormItem.Placeholder):
+                UpdatePlaceholder();
                 break;
             case nameof(ITextInputFormItem.InputType):
-            case nameof(ITextInputFormItem.IsSecured):
                 UpdateInputType();
+                break;
+            case nameof(ITextInputFormItem.IsSecure):
+                UpdateInputType();
+                UpdateSecureState();
                 break;
             case nameof(ITextInputFormItem.Value):
             case nameof(ITextInputFormItem.FormattedValue):
@@ -188,7 +211,7 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
                 UpdateValidationErrorMessage();
                 break;
             case null:
-                OnDataSet();
+                OnItemSet();
                 break;
         }
     }
@@ -199,10 +222,25 @@ public class TextInputFormViewHolder : FormViewHolder<ITextInputFormItem>
         {
             InputView?.TextChanged -= OnTextChanged;
 
-            InputLayout = null;
+            InputLayoutView = null;
             InputView = null;
         }
 
         base.Dispose(disposing);
+    }
+}
+
+public sealed class TextInputFormViewHolder : TextInputFormViewHolder<ITextInputFormItem>
+{
+    public TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    public TextInputFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
     }
 }

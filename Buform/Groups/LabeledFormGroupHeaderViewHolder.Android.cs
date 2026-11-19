@@ -3,9 +3,9 @@ using Android.Views;
 
 namespace Buform;
 
-public class LabeledFormGroupHeaderViewHolder : FormViewHolder<ILabeledFormGroup>
+public class LabeledFormGroupHeaderViewHolder : FormHeaderFooterViewHolder<ILabeledFormGroup>
 {
-    protected virtual TextView? TextView { get; set; }
+    protected virtual TextView? LabelView { get; set; }
 
     public LabeledFormGroupHeaderViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -21,30 +21,30 @@ public class LabeledFormGroupHeaderViewHolder : FormViewHolder<ILabeledFormGroup
 
     protected override void Initialize()
     {
-        TextView = ItemView.FindViewById<TextView>(Resource.Id.TextView);
+        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
     }
 
     protected virtual void UpdateLabel()
     {
-        var label = Data?.HeaderLabel;
+        var label = Group?.HeaderLabel;
 
         var isVisible = !string.IsNullOrEmpty(label);
 
-        if (TextView == null)
+        if (LabelView == null)
         {
             return;
         }
 
-        TextView.Text = label;
-        TextView.Visibility = isVisible ? ViewStates.Visible : ViewStates.Gone;
+        LabelView.Text = label;
+        LabelView.Visibility = isVisible ? ViewStates.Visible : ViewStates.Gone;
     }
 
-    protected override void OnDataSet()
+    protected override void OnGroupSet()
     {
         UpdateLabel();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnGroupPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -59,7 +59,7 @@ public class LabeledFormGroupHeaderViewHolder : FormViewHolder<ILabeledFormGroup
     {
         if (disposing)
         {
-            TextView = null;
+            LabelView = null;
         }
 
         base.Dispose(disposing);

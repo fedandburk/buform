@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Buform;
@@ -25,20 +24,22 @@ internal sealed class FormRegistry
     }
 
     private readonly IDictionary<(Type, FormRowType), Holder> _holders;
+    private readonly IDictionary<Type, Func<IFormGroupHandler>> _handlers;
 
     public FormRegistry()
     {
         _holders = new Dictionary<(Type, FormRowType), Holder>();
+        _handlers = new Dictionary<Type, Func<IFormGroupHandler>>();
     }
 
     public void RegisterItem<
-        TData,
+        TItem,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
-        where TData : class, INotifyPropertyChanged, IDisposable
-        where TViewHolder : FormViewHolder
+        where TItem : class, IFormItem
+        where TViewHolder : FormViewHolder<TItem>
     {
-        _holders[(typeof(TData), FormRowType.Item)] = new Holder(typeof(TViewHolder), resourceId);
+        _holders[(typeof(TItem), FormRowType.Item)] = new Holder(typeof(TViewHolder), resourceId);
     }
 
     public void RegisterGroupHeader<
@@ -46,7 +47,7 @@ internal sealed class FormRegistry
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
         where TGroup : class, IFormGroup
-        where TViewHolder : FormViewHolder
+        where TViewHolder : FormHeaderFooterViewHolder<TGroup>
     {
         _holders[(typeof(TGroup), FormRowType.Header)] = new Holder(
             typeof(TViewHolder),
@@ -59,7 +60,7 @@ internal sealed class FormRegistry
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TViewHolder
     >(int resourceId)
         where TGroup : class, IFormGroup
-        where TViewHolder : FormViewHolder
+        where TViewHolder : FormHeaderFooterViewHolder<TGroup>
     {
         _holders[(typeof(TGroup), FormRowType.Footer)] = new Holder(
             typeof(TViewHolder),
@@ -67,22 +68,43 @@ internal sealed class FormRegistry
         );
     }
 
-    private bool TryGetHolder(Type dataType, FormRowType viewHolderType, out Holder? holder)
+    public void RegisterGroupHandler<
+        TGroup,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            THandler
+    >()
+        where TGroup : class, IFormGroup
+        where THandler : FormGroupHandler<TGroup>
     {
-        if (_holders.TryGetValue((dataType, viewHolderType), out holder))
+        _handlers[typeof(TGroup)] = Activator.CreateInstance<THandler>;
+    }
+
+    public IFormGroupHandler GetGroupHandler(IFormGroup group)
+    {
+        ArgumentNullException.ThrowIfNull(group);
+
+        foreach (var lookupType in group.GetType().GetRegistrationTypes())
         {
-            return true;
+            if (_handlers.TryGetValue(lookupType, out var createHandler))
+            {
+                return createHandler();
+            }
         }
 
-        var interfaceTypes = dataType.GetInterfacesTopDown();
+        return new FormGroupHandler<IFormGroup>();
+    }
 
-        foreach (var interfaceType in interfaceTypes)
+    private bool TryGetHolder(Type dataType, FormRowType viewHolderType, out Holder? holder)
+    {
+        foreach (var lookupType in dataType.GetRegistrationTypes())
         {
-            if (_holders.TryGetValue((interfaceType, viewHolderType), out holder))
+            if (_holders.TryGetValue((lookupType, viewHolderType), out holder))
             {
                 return true;
             }
         }
+
+        holder = null;
 
         return false;
     }
@@ -114,19 +136,19 @@ internal sealed class FormRegistry
         return true;
     }
 
-    public bool TryGetItemViewType(Type dataType, out int? viewType)
+    public bool TryGetItemViewType(Type itemType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormRowType.Item, out viewType);
+        return TryGetViewType(itemType, FormRowType.Item, out viewType);
     }
 
-    public bool TryGetGroupHeaderViewType(Type dataType, out int? viewType)
+    public bool TryGetGroupHeaderViewType(Type groupType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormRowType.Header, out viewType);
+        return TryGetViewType(groupType, FormRowType.Header, out viewType);
     }
 
-    public bool TryGetGroupFooterViewType(Type dataType, out int? viewType)
+    public bool TryGetGroupFooterViewType(Type groupType, out int? viewType)
     {
-        return TryGetViewType(dataType, FormRowType.Footer, out viewType);
+        return TryGetViewType(groupType, FormRowType.Footer, out viewType);
     }
 
     public bool TryGetViewHolderAndResourceId(

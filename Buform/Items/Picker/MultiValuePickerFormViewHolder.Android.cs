@@ -3,8 +3,24 @@ using Android.Views;
 
 namespace Buform;
 
-public class MultiValuePickerFormViewHolder
-    : PresentedPickerFormViewHolder<IMultiValuePickerFormItem>
+public abstract class MultiValuePickerFormViewHolder<TItem> : PresentedPickerFormViewHolder<TItem>
+    where TItem : class, IMultiValuePickerFormItem
+{
+    protected MultiValuePickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    protected MultiValuePickerFormViewHolder(View itemView)
+        : base(itemView)
+    {
+        /* Required constructor */
+    }
+}
+
+public sealed class MultiValuePickerFormViewHolder
+    : MultiValuePickerFormViewHolder<IMultiValuePickerFormItem>
 {
     public MultiValuePickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)

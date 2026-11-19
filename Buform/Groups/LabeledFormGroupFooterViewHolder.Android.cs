@@ -3,9 +3,9 @@ using Android.Views;
 
 namespace Buform;
 
-public class LabeledFormGroupFooterViewHolder : FormViewHolder<ILabeledFormGroup>
+public class LabeledFormGroupFooterViewHolder : FormHeaderFooterViewHolder<ILabeledFormGroup>
 {
-    protected virtual TextView? TextView { get; set; }
+    protected virtual TextView? LabelView { get; set; }
 
     public LabeledFormGroupFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
@@ -21,16 +21,16 @@ public class LabeledFormGroupFooterViewHolder : FormViewHolder<ILabeledFormGroup
 
     protected override void Initialize()
     {
-        TextView = ItemView.FindViewById<TextView>(Resource.Id.TextView);
+        LabelView = ItemView.FindViewById<TextView>(Resource.Id.Label);
     }
 
     protected virtual void UpdateLabel()
     {
-        var label = Data?.FooterLabel;
+        var label = Group?.FooterLabel;
 
         var isVisible = !string.IsNullOrEmpty(label);
 
-        TextView?.Text = label;
+        LabelView?.Text = label;
 
         var layoutParameters = ItemView.LayoutParameters
             ?? throw new InvalidOperationException("The view has no layout parameters.");
@@ -41,12 +41,12 @@ public class LabeledFormGroupFooterViewHolder : FormViewHolder<ILabeledFormGroup
         ItemView.Visibility = isVisible ? ViewStates.Visible : ViewStates.Gone;
     }
 
-    protected override void OnDataSet()
+    protected override void OnGroupSet()
     {
         UpdateLabel();
     }
 
-    protected override void OnDataPropertyChanged(string? propertyName)
+    protected override void OnGroupPropertyChanged(string? propertyName)
     {
         switch (propertyName)
         {
@@ -61,7 +61,7 @@ public class LabeledFormGroupFooterViewHolder : FormViewHolder<ILabeledFormGroup
     {
         if (disposing)
         {
-            TextView = null;
+            LabelView = null;
         }
 
         base.Dispose(disposing);

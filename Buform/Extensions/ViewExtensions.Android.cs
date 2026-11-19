@@ -4,7 +4,7 @@ using AndroidX.Fragment.App;
 
 namespace Buform;
 
-public static class ViewExtensions
+internal static class ViewExtensions
 {
     public static FragmentActivity GetFragmentActivity(this View view)
     {

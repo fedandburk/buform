@@ -61,7 +61,7 @@ public class PickerDialogFragment : AppCompatDialogFragment
         Item?.FilterQuery = e.Text?.ToString();
     }
 
-    private void OnOptionClick(IPickerOptionFormItem option)
+    private void OnOptionClick(IFormOption option)
     {
         if (Item == null)
         {
@@ -119,7 +119,7 @@ public class PickerDialogFragment : AppCompatDialogFragment
             builder.SetNegativeButton(FormTexts.Cancel, (_, _) => { });
         }
 
-        if (Item.CanBeCleared)
+        if (Item.IsClearable)
         {
             builder.SetNeutralButton(FormTexts.Clear, OnClearClick);
         }
