@@ -17,7 +17,6 @@ public sealed class AppDelegate : UIApplicationDelegate
         FormPlatform.RegisterGroupHeaderNib<LogoFormGroup, LogoFormHeader>();
 
         FormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorCell>();
-        FormPlatform.RegisterItem<MvxButtonFormItem, MvxButtonFormCell>();
 
         return true;
     }

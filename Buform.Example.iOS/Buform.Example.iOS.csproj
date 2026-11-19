@@ -15,10 +15,5 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
-    <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MvvmCross" Version="11.0.0" />
   </ItemGroup>
 </Project>
