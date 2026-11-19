@@ -33,6 +33,7 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
             }
 
             NotifyPropertyChanged();
+            NotifyPropertyChanged(nameof(Items));
         }
     }
 
@@ -43,19 +44,21 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
         {
             _source = value;
 
-            Items = _source?.Select(CreateItem) ?? Array.Empty<SegmentsOptionFormItem<TValue>>();
+            DisposeItems();
+
+            Items = _source?.Select(CreateItem).ToList() ?? [];
 
             NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(Items));
         }
     }
 
-    public virtual IEnumerable<SegmentsOptionFormItem<TValue>> Items { get; private set; }
+    public virtual IReadOnlyList<SegmentsOptionFormItem<TValue>> Items { get; private set; }
 
     public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
         : base(targetProperty)
     {
-        Items = Array.Empty<SegmentsOptionFormItem<TValue>>();
+        Items = [];
     }
 
     protected virtual SegmentsOptionFormItem<TValue> CreateItem(TValue value)
@@ -63,10 +66,20 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
         return new SegmentsOptionFormItem<TValue>(value) { Formatter = Formatter };
     }
 
+    private void DisposeItems()
+    {
+        foreach (var item in Items)
+        {
+            item.Dispose();
+        }
+    }
+
     protected override void Dispose(bool isDisposing)
     {
         if (isDisposing)
         {
+            DisposeItems();
+
             _formatter = null;
             _source = null;
         }

@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPickerFormItem
+public class AsyncPickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IAsyncPickerFormItem
 {
     private Func<TValue?, string?>? _formatter;
     private IList<IPickerOptionFormItem> _options;
@@ -104,17 +104,21 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
             State = AsyncPickerLoadingState.Loading;
             NotifyPropertyChanged(nameof(State));
 
-            var source =
-                SourceFactory == null
-                    ? null
-                    : await SourceFactory(cancellationToken).ConfigureAwait(false);
+            var source = await SourceFactory(cancellationToken);
 
-            _options = InitOptions(source!);
+            _options = InitOptions(source);
 
             UpdateOptions();
 
             State = AsyncPickerLoadingState.Loaded;
             NotifyPropertyChanged(nameof(State));
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            State = AsyncPickerLoadingState.None;
+            NotifyPropertyChanged(nameof(State));
+
+            throw;
         }
         catch
         {
