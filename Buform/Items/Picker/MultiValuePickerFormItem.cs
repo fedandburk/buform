@@ -6,24 +6,16 @@ public class MultiValuePickerFormItem<TValue>
     : OptionsPickerFormItem<IEnumerable<TValue>?>,
         IMultiValuePickerFormItem
 {
-    private Func<TValue?, string?>? _itemFormatter;
-    private IList<IPickerOptionFormItem> _options;
-    private Func<IEnumerable<TValue>?, string?>? _valueFormatter;
-    private IEnumerable<TValue>? _source;
-
     public override string? FormattedValue => ValueFormatter?.Invoke(Value) ?? Value?.ToString();
 
-    public virtual Func<TValue?, string?>? ItemFormatter
+    public virtual Func<TValue, string?>? OptionFormatter
     {
-        get => _itemFormatter;
+        get;
         set
         {
-            _itemFormatter = value;
+            field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.Formatter = ItemFormatter;
-            }
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
         }
@@ -31,76 +23,39 @@ public class MultiValuePickerFormItem<TValue>
 
     public virtual Func<IEnumerable<TValue>?, string?>? ValueFormatter
     {
-        get => _valueFormatter;
+        get;
         set
         {
-            _valueFormatter = value;
+            field = value;
 
             NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
 
-    public virtual Func<TValue?, string?>? OptionsFilterValueFactory
+    public virtual Func<TValue, string?>? OptionFilterValueFactory
     {
         get;
         set
         {
             field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.FilterValueFactory = field;
-            }
-
-            NotifyPropertyChanged();
-            UpdateOptions();
-        }
-    }
-
-    public override string? FilterQuery
-    {
-        get => base.FilterQuery;
-        set
-        {
-            base.FilterQuery = value;
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
 
             UpdateOptions();
         }
-    }
-
-    private void UpdateOptions()
-    {
-        if (!string.IsNullOrEmpty(FilterQuery))
-        {
-            Options = _options
-                .Where(option =>
-                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
-                    ?? false
-                )
-                .ToList();
-        }
-        else
-        {
-            Options = _options;
-        }
-
-        NotifyPropertyChanged(nameof(Options));
     }
 
     public virtual IEnumerable<TValue>? Source
     {
-        get => _source;
+        get;
         set
         {
-            _source = value;
+            field = value;
 
-            _options = _source?.Select(CreateOption).ToList()
-                ?? Array.Empty<IPickerOptionFormItem>().ToList();
-
-            UpdateOptions();
+            SetOptions(field?.Select(CreateOption) ?? []);
 
             NotifyPropertyChanged();
         }
@@ -109,52 +64,51 @@ public class MultiValuePickerFormItem<TValue>
     public MultiValuePickerFormItem(Expression<Func<IEnumerable<TValue>?>> targetProperty)
         : base(targetProperty)
     {
-        _options = Array.Empty<IPickerOptionFormItem>();
+        /* Required constructor */
     }
 
-    protected virtual IPickerOptionFormItem CreateOption(TValue value)
+    protected virtual IFormOption CreateOption(TValue value)
     {
-        return new PickerOptionFormItem<TValue>(value)
+        return new FormOption<TValue>(value)
         {
-            Formatter = ItemFormatter,
-            FilterValueFactory = OptionsFilterValueFactory,
+            Formatter = OptionFormatter,
+            FilterValueFactory = OptionFilterValueFactory,
         };
     }
 
-    public override void Pick(IPickerOptionFormItem? option)
+    private void UpdateOptionFormatters()
     {
-        var value = option?.Value is TValue itemValue ? itemValue : default;
+        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
+        {
+            option.Formatter = OptionFormatter;
+            option.FilterValueFactory = OptionFilterValueFactory;
+        }
 
-        if (Value == default)
-        {
-            if (value != null)
-            {
-                Value = new[] { value };
-            }
-        }
-        else if (value != null)
-        {
-            Value = Value.Contains(value)
-                ? Value.Where(i => !Equals(i, value)).ToArray()
-                : Value.Concat(new[] { value! }).ToArray();
-        }
+        NotifyPropertyChanged(nameof(Options));
     }
 
-    public override bool IsPicked(IPickerOptionFormItem option)
+    public override void Pick(IFormOption? option)
     {
-        return Value != default && Value.Contains(option.Value is TValue value ? value : default);
-    }
-
-    protected override void Dispose(bool isDisposing)
-    {
-        if (isDisposing)
+        if (option?.Value is not TValue value)
         {
-            _itemFormatter = null;
-            _valueFormatter = null;
-            _source = null;
+            return;
         }
 
-        base.Dispose(isDisposing);
+        var values = Value?.ToList() ?? [];
+
+        if (!values.Remove(value))
+        {
+            values.Add(value);
+        }
+
+        Value = values;
+    }
+
+    public override bool IsPicked(IFormOption option)
+    {
+        ArgumentNullException.ThrowIfNull(option);
+
+        return option.Value is TValue value && (Value?.Contains(value) ?? false);
     }
 }
 

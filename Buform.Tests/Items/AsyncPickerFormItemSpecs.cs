@@ -16,7 +16,7 @@ public static class AsyncPickerFormItemSpecs
 
             Sut = new AsyncPickerFormItem<string?>(() => Target.Name);
 
-            _ = new Form(Target) { new TextFormGroup { Sut } };
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
         }
 
         protected Model Target { get; }
@@ -24,7 +24,7 @@ public static class AsyncPickerFormItemSpecs
         protected AsyncPickerFormItem<string?> Sut { get; }
     }
 
-    public static class LoadItemsAsync
+    public static class LoadOptionsAsync
     {
         public sealed class SourceLoaded : Context, IAsyncLifetime
         {
@@ -32,7 +32,7 @@ public static class AsyncPickerFormItemSpecs
             {
                 Sut.SourceFactory = _ => Task.FromResult<IEnumerable<string?>>([First, Second]);
 
-                await Sut.LoadItemsAsync(CancellationToken.None);
+                await Sut.LoadOptionsAsync(CancellationToken.None);
             }
 
             public ValueTask DisposeAsync()
@@ -55,12 +55,18 @@ public static class AsyncPickerFormItemSpecs
 
         public sealed class SourceFailed : Context, IAsyncLifetime
         {
+            private readonly InvalidOperationException _exception;
+
+            public SourceFailed()
+            {
+                _exception = new InvalidOperationException();
+            }
+
             public async ValueTask InitializeAsync()
             {
-                Sut.SourceFactory = _ =>
-                    Task.FromException<IEnumerable<string?>>(new InvalidOperationException());
+                Sut.SourceFactory = _ => Task.FromException<IEnumerable<string?>>(_exception);
 
-                await Sut.LoadItemsAsync(CancellationToken.None);
+                await Sut.LoadOptionsAsync(CancellationToken.None);
             }
 
             public ValueTask DisposeAsync()
@@ -72,6 +78,12 @@ public static class AsyncPickerFormItemSpecs
             public void SetsFailedState()
             {
                 Sut.State.Should().Be(AsyncPickerLoadingState.Failed);
+            }
+
+            [Fact]
+            public void KeepsLoadException()
+            {
+                Sut.LoadException.Should().BeSameAs(_exception);
             }
         }
 
@@ -94,7 +106,7 @@ public static class AsyncPickerFormItemSpecs
 
                 try
                 {
-                    await Sut.LoadItemsAsync(cancellationTokenSource.Token);
+                    await Sut.LoadOptionsAsync(cancellationTokenSource.Token);
                 }
                 catch (Exception exception)
                 {
@@ -137,14 +149,14 @@ public static class AsyncPickerFormItemSpecs
 
                 try
                 {
-                    await Sut.LoadItemsAsync(cancellationTokenSource.Token);
+                    await Sut.LoadOptionsAsync(cancellationTokenSource.Token);
                 }
                 catch (OperationCanceledException)
                 {
                     /* Expected cancellation */
                 }
 
-                await Sut.LoadItemsAsync(CancellationToken.None);
+                await Sut.LoadOptionsAsync(CancellationToken.None);
             }
 
             public ValueTask DisposeAsync()

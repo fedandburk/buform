@@ -49,7 +49,7 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
         /* Required constructor */
     }
 
-    public virtual async void ExecuteCallback()
+    public virtual async Task ExecuteCallbackAsync()
     {
         if (_callback == null)
         {

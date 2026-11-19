@@ -6,17 +6,17 @@ public interface IOptionsPickerFormItem : IValidatableFormItem
 
     string? Message { get; }
 
-    PickerInputType InputType { get; }
+    PickerPresentation Presentation { get; }
 
-    bool CanBeCleared { get; }
+    bool IsClearable { get; }
 
-    public string? FormattedValue { get; }
+    string? FormattedValue { get; }
 
-    public string? FilterQuery { get; set; }
+    string? FilterQuery { get; set; }
 
-    IEnumerable<IPickerOptionFormItem> Options { get; }
+    IReadOnlyList<IFormOption> Options { get; }
 
-    void Pick(IPickerOptionFormItem? item);
+    void Pick(IFormOption? option);
 
-    bool IsPicked(IPickerOptionFormItem item);
+    bool IsPicked(IFormOption option);
 }

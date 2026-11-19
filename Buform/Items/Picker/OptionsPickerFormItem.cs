@@ -6,6 +6,9 @@ public abstract class OptionsPickerFormItem<TValue>
     : ValidatableFormItem<TValue>,
         IOptionsPickerFormItem
 {
+    private IReadOnlyList<IFormOption> _allOptions;
+    private IReadOnlyList<IFormOption> _options;
+
     public virtual string? Label
     {
         get;
@@ -28,7 +31,7 @@ public abstract class OptionsPickerFormItem<TValue>
         }
     }
 
-    public virtual bool CanBeCleared
+    public virtual bool IsClearable
     {
         get;
         set
@@ -39,7 +42,7 @@ public abstract class OptionsPickerFormItem<TValue>
         }
     }
 
-    public virtual PickerInputType InputType
+    public virtual PickerPresentation Presentation
     {
         get;
         set
@@ -52,14 +55,53 @@ public abstract class OptionsPickerFormItem<TValue>
 
     public abstract string? FormattedValue { get; }
 
-    public virtual string? FilterQuery { get; set; }
+    public virtual string? FilterQuery
+    {
+        get;
+        set
+        {
+            field = value;
 
-    public IEnumerable<IPickerOptionFormItem> Options { get; protected set; }
+            NotifyPropertyChanged();
+
+            UpdateOptions();
+        }
+    }
+
+    public virtual IReadOnlyList<IFormOption> Options => _options;
+
+    protected IReadOnlyList<IFormOption> AllOptions => _allOptions;
 
     protected OptionsPickerFormItem(Expression<Func<TValue>> targetProperty)
         : base(targetProperty)
     {
-        Options = Array.Empty<IPickerOptionFormItem>();
+        _allOptions = [];
+        _options = [];
+    }
+
+    protected void SetOptions(IEnumerable<IFormOption> options)
+    {
+        ArgumentNullException.ThrowIfNull(options);
+
+        _allOptions = options.ToList();
+
+        UpdateOptions();
+    }
+
+    protected virtual void UpdateOptions()
+    {
+        var filterQuery = FilterQuery;
+
+        _options = string.IsNullOrEmpty(filterQuery)
+            ? _allOptions
+            : _allOptions
+                .Where(option =>
+                    option.FilterValue?.Contains(filterQuery, StringComparison.OrdinalIgnoreCase)
+                    ?? false
+                )
+                .ToList();
+
+        NotifyPropertyChanged(nameof(Options));
     }
 
     protected override void OnValueChanged()
@@ -69,7 +111,7 @@ public abstract class OptionsPickerFormItem<TValue>
         NotifyPropertyChanged(nameof(FormattedValue));
     }
 
-    public abstract void Pick(IPickerOptionFormItem? option);
+    public abstract void Pick(IFormOption? option);
 
-    public abstract bool IsPicked(IPickerOptionFormItem option);
+    public abstract bool IsPicked(IFormOption option);
 }

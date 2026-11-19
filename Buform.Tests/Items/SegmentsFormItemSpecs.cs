@@ -17,7 +17,7 @@ public static class SegmentsFormItemSpecs
 
             Sut = new SegmentsFormItem(() => Target.Name) { Source = [First, Second] };
 
-            _ = new Form(Target) { new TextFormGroup { Sut } };
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
         }
 
         protected Model Target { get; }
@@ -25,17 +25,17 @@ public static class SegmentsFormItemSpecs
         protected SegmentsFormItem Sut { get; }
     }
 
-    public static class Items
+    public static class Options
     {
-        public sealed class ItemsReadTwice : Context
+        public sealed class OptionsReadTwice : Context
         {
-            private readonly IReadOnlyList<SegmentsOptionFormItem<string?>> _first;
-            private readonly IReadOnlyList<SegmentsOptionFormItem<string?>> _second;
+            private readonly IReadOnlyList<IFormOption> _first;
+            private readonly IReadOnlyList<IFormOption> _second;
 
-            public ItemsReadTwice()
+            public OptionsReadTwice()
             {
-                _first = Sut.Items.ToList();
-                _second = Sut.Items.ToList();
+                _first = Sut.Options.ToList();
+                _second = Sut.Options.ToList();
             }
 
             [Fact]
@@ -64,15 +64,15 @@ public static class SegmentsFormItemSpecs
             [Fact]
             public void FormatsOptions()
             {
-                Sut.Items.Select(item => item.FormattedValue)
+                Sut.Options.Select(item => item.FormattedValue)
                     .Should()
                     .Equal(Prefix + First, Prefix + Second);
             }
 
             [Fact]
-            public void RaisesItemsChange()
+            public void RaisesOptionsChange()
             {
-                _propertyChanges.Should().Contain(nameof(SegmentsFormItem.Items));
+                _propertyChanges.Should().Contain(nameof(SegmentsFormItem.Options));
             }
         }
     }
