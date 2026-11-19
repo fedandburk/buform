@@ -1,6 +1,6 @@
 namespace Buform;
 
-public interface IAsyncPickerFormItem : IPickerFormItemBase
+public interface IAsyncPickerFormItem : IOptionsPickerFormItem
 {
     AsyncPickerLoadingState State { get; }
 

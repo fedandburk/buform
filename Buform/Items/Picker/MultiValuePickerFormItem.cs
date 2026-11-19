@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 namespace Buform;
 
 public class MultiValuePickerFormItem<TValue>
-    : PickerFormItemBase<IEnumerable<TValue>?>,
+    : OptionsPickerFormItem<IEnumerable<TValue>?>,
         IMultiValuePickerFormItem
 {
     private Func<TValue?, string?>? _itemFormatter;

@@ -1,6 +1,6 @@
 namespace Buform;
 
-public interface IPickerFormItemBase : IValidatableFormItem
+public interface IOptionsPickerFormItem : IValidatableFormItem
 {
     string? Label { get; }
 

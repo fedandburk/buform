@@ -2,7 +2,9 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, IPickerFormItemBase
+public abstract class OptionsPickerFormItem<TValue>
+    : ValidatableFormItem<TValue>,
+        IOptionsPickerFormItem
 {
     public virtual string? Label
     {
@@ -54,7 +56,7 @@ public abstract class PickerFormItemBase<TValue> : ValidatableFormItem<TValue>, 
 
     public IEnumerable<IPickerOptionFormItem> Options { get; protected set; }
 
-    protected PickerFormItemBase(Expression<Func<TValue>> targetProperty)
+    protected OptionsPickerFormItem(Expression<Func<TValue>> targetProperty)
         : base(targetProperty)
     {
         Options = Array.Empty<IPickerOptionFormItem>();

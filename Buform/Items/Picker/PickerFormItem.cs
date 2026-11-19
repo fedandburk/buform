@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormItem
+public class PickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IPickerFormItem
 {
     private Func<TValue?, string?>? _formatter;
     private IEnumerable<TValue>? _source;
