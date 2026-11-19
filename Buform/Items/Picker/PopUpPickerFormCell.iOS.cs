@@ -1,10 +1,25 @@
+using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace Buform;
 
-public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<TItem>
+public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem>
     where TItem : class, IPickerFormItem
 {
+    private const int PopUpIndicatorMinimumVersion = 16;
+
+    [SupportedOSPlatformGuard("ios16.0")]
+    [SupportedOSPlatformGuard("maccatalyst16.0")]
+    private static bool IsPopUpIndicatorSupported =>
+        OperatingSystem.IsIOSVersionAtLeast(PopUpIndicatorMinimumVersion)
+        || OperatingSystem.IsMacCatalystVersionAtLeast(PopUpIndicatorMinimumVersion);
+
+    protected virtual UIButton? MenuButton { get; set; }
+
+    protected virtual bool IsPopUp => Item?.InputType == PickerInputType.PopUp;
+
+    public override bool IsSelectable => !IsPopUp && base.IsSelectable;
+
     protected PopUpPickerFormCell()
     {
         /* Required constructor */
@@ -16,54 +31,189 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCellBase<T
         /* Required constructor */
     }
 
-    protected virtual UIAlertController CreateAlertController(IPickerFormItem item)
+    protected override void Initialize()
     {
-        var alertController = UIAlertController.Create(
-            item.Label,
-            item.Message,
-            UIAlertControllerStyle.ActionSheet
-        );
+        base.Initialize();
 
-        foreach (var listItem in item.Options)
+        var configuration = UIButtonConfiguration.PlainButtonConfiguration;
+
+        if (IsPopUpIndicatorSupported)
         {
-            var alertAction = UIAlertAction.Create(
-                listItem.FormattedValue ?? string.Empty,
-                UIAlertActionStyle.Default,
-                _ => item.Pick(listItem)
-            );
-
-            alertController.AddAction(alertAction);
+            configuration.Indicator = UIButtonConfigurationIndicator.Popup;
         }
 
-        if (item.CanBeCleared)
+        configuration.BaseForegroundColor = UIColor.SecondaryLabel;
+        configuration.ContentInsets = NSDirectionalEdgeInsets.Zero;
+
+        MenuButton = new UIButton
         {
-            var clearAlertAction = UIAlertAction.Create(
-                PickerFormTexts.Clear,
-                UIAlertActionStyle.Destructive,
-                _ => item.Pick(default)
-            );
+            TranslatesAutoresizingMaskIntoConstraints = false,
+            Configuration = configuration,
+            ShowsMenuAsPrimaryAction = true,
+            HorizontalAlignment = UIControlContentHorizontalAlignment.Trailing,
+            Hidden = true,
+        };
 
-            alertController.AddAction(clearAlertAction);
-        }
+        MenuButton.Menu = UIMenu.Create([
+            UIDeferredMenuElement.CreateUncached(completion => completion(CreateMenuElements())),
+        ]);
 
-        var cancelAlertAction = UIAlertAction.Create(
-            PickerFormTexts.Cancel,
-            UIAlertActionStyle.Cancel,
-            null
+        ContentView.AddSubview(MenuButton);
+
+        ContentView.AddConstraints(
+            new[]
+            {
+                MenuButton.TopAnchor.ConstraintEqualTo(ContentView.TopAnchor),
+                MenuButton.BottomAnchor.ConstraintEqualTo(ContentView.BottomAnchor),
+                MenuButton.LeadingAnchor.ConstraintEqualTo(ContentView.LeadingAnchor),
+                MenuButton.TrailingAnchor.ConstraintEqualTo(
+                    ContentView.LayoutMarginsGuide.TrailingAnchor
+                ),
+            }
         );
-
-        alertController.AddAction(cancelAlertAction);
-
-        return alertController;
     }
 
-    protected override PickerPresenterBase<TItem>? GetPickerPresenter(PickerInputType inputType)
+    private UIMenuElement[] CreateMenuElements()
     {
-        return inputType switch
+        if (Item == null)
         {
-            PickerInputType.PopUp => new PopUpPickerPresenter<TItem>(CreateAlertController),
-            _ => base.GetPickerPresenter(inputType),
-        };
+            return [];
+        }
+
+        return CreateMenuElements(Item);
+    }
+
+    protected virtual UIMenuElement[] CreateMenuElements(TItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        var optionActions = item
+            .Options.Select(option => (UIMenuElement)CreateOptionAction(item, option))
+            .ToArray();
+
+        var options = UIMenu.Create(
+            item.Message ?? string.Empty,
+            null,
+            UIMenuIdentifier.None,
+            UIMenuOptions.DisplayInline,
+            optionActions
+        );
+
+        if (!item.CanBeCleared)
+        {
+            return [options];
+        }
+
+        var clearAction = UIAction.Create(FormTexts.Clear, null, null, _ => item.Pick(default));
+        clearAction.Attributes = UIMenuElementAttributes.Destructive;
+
+        var clear = UIMenu.Create(
+            string.Empty,
+            null,
+            UIMenuIdentifier.None,
+            UIMenuOptions.DisplayInline,
+            [clearAction]
+        );
+
+        return [options, clear];
+    }
+
+    protected virtual UIAction CreateOptionAction(TItem item, IPickerOptionFormItem option)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+        ArgumentNullException.ThrowIfNull(option);
+
+        var action = UIAction.Create(option.FormattedValue ?? string.Empty, null, null, _ =>
+            item.Pick(option)
+        );
+
+        action.State = item.IsPicked(option) ? UIMenuElementState.On : UIMenuElementState.Off;
+
+        return action;
+    }
+
+    protected override void UpdateInputType()
+    {
+        if (!IsPopUp)
+        {
+            base.UpdateInputType();
+        }
+        else
+        {
+            PickerPresenter?.Dispose();
+            PickerPresenter = null;
+        }
+
+        UpdatePopUpState();
+    }
+
+    protected virtual void UpdatePopUpState()
+    {
+        var isPopUp = IsPopUp;
+
+        Accessory = isPopUp
+            ? UITableViewCellAccessory.None
+            : UITableViewCellAccessory.DisclosureIndicator;
+
+        if (ValueLabel != null)
+        {
+            ValueLabel.Hidden = isPopUp;
+        }
+
+        if (MenuButton != null)
+        {
+            MenuButton.Hidden = !isPopUp;
+        }
+    }
+
+    protected override void UpdateReadOnlyState()
+    {
+        base.UpdateReadOnlyState();
+
+        if (MenuButton == null)
+        {
+            return;
+        }
+
+        MenuButton.Enabled = !Item?.IsReadOnly ?? false;
+    }
+
+    protected override void UpdateLabel(string? text)
+    {
+        base.UpdateLabel(text);
+
+        if (MenuButton == null)
+        {
+            return;
+        }
+
+        MenuButton.AccessibilityLabel = text;
+    }
+
+    protected override void UpdateValue(string? text)
+    {
+        base.UpdateValue(text);
+
+        if (MenuButton?.Configuration == null)
+        {
+            return;
+        }
+
+        var configuration = MenuButton.Configuration;
+        configuration.Title = text;
+
+        MenuButton.Configuration = configuration;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            MenuButton?.Dispose();
+            MenuButton = null;
+        }
+
+        base.Dispose(disposing);
     }
 }
 

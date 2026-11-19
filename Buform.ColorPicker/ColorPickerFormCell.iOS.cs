@@ -1,4 +1,3 @@
-using Fedandburk.iOS.Extensions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -42,10 +41,17 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     {
         SelectionStyle = UITableViewCellSelectionStyle.None;
 
+        var bodyFont = UIFont.PreferredBody;
+
+        if (bodyFont == null)
+        {
+            throw new InvalidOperationException("The system has no body font.");
+        }
+
         Label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = bodyFont,
             TextColor = UIColor.Label,
         };
 

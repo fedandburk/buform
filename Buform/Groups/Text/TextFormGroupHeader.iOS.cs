@@ -17,7 +17,10 @@ public sealed class TextFormGroupHeader : FormHeaderFooter<TextFormGroup>
 
     private void UpdateLabel()
     {
-        TextLabel.Text = Group?.HeaderLabel;
+        var configuration = DefaultContentConfiguration;
+        configuration.Text = Group?.HeaderLabel;
+
+        ContentConfiguration = configuration;
     }
 
     protected override void OnGroupSet()

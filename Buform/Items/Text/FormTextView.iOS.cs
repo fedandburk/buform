@@ -28,7 +28,7 @@ public sealed class FormTextView : UITextView
     {
         TextContainerInset = UIEdgeInsets.Zero;
         DataDetectorTypes = UIDataDetectorType.All;
-        Font = UIFont.PreferredBody;
+        Font = FormFonts.GetBody();
         TextColor = UIColor.Label;
 
         TextContainer.LineFragmentPadding = 0;
@@ -39,7 +39,7 @@ public sealed class FormTextView : UITextView
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
             TextColor = UIColor.PlaceholderText,
-            Font = UIFont.PreferredBody,
+            Font = FormFonts.GetBody(),
             TextAlignment = TextAlignment,
             Lines = 0,
         };

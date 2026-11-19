@@ -3,8 +3,7 @@ using ObjCRuntime;
 namespace Buform;
 
 [Register(nameof(MultiValuePickerFormCell))]
-public sealed class MultiValuePickerFormCell
-    : PresentedPickerFormCellBase<IMultiValuePickerFormItem>
+public sealed class MultiValuePickerFormCell : PresentedPickerFormCell<IMultiValuePickerFormItem>
 {
     public MultiValuePickerFormCell()
     {

@@ -2,19 +2,19 @@ using ObjCRuntime;
 
 namespace Buform;
 
-public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBase<TFormItem>
-    where TFormItem : class, IPickerFormItemBase
+public abstract class PresentedPickerFormCell<TFormItem> : PickerFormCell<TFormItem>
+    where TFormItem : class, IOptionsPickerFormItem
 {
-    protected virtual PickerPresenterBase<TFormItem>? PickerPresenter { get; set; }
+    protected virtual PickerPresenter<TFormItem>? PickerPresenter { get; set; }
 
     public override bool IsSelectable => !Item?.IsReadOnly ?? false;
 
-    protected PresentedPickerFormCellBase()
+    protected PresentedPickerFormCell()
     {
         /* Required constructor */
     }
 
-    protected PresentedPickerFormCellBase(NativeHandle handle)
+    protected PresentedPickerFormCell(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
@@ -42,7 +42,7 @@ public abstract class PresentedPickerFormCellBase<TFormItem> : PickerFormCellBas
         }
     }
 
-    protected virtual PickerPresenterBase<TFormItem>? GetPickerPresenter(PickerInputType inputType)
+    protected virtual PickerPresenter<TFormItem>? GetPickerPresenter(PickerInputType inputType)
     {
         return inputType switch
         {

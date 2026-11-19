@@ -12,40 +12,40 @@ public static class FormPlatform
         GroupRegistry = new FormGroupRegistry();
         ItemRegistry = new FormItemRegistry();
 
-        RegisterGroupHeaderClass<IListFormGroup, ListFormGroupHeader>();
-        RegisterGroupFooterClass<IListFormGroup, ListFormGroupFooter>();
+        RegisterGroupHeader<IListFormGroup, ListFormGroupHeader>();
+        RegisterGroupFooter<IListFormGroup, ListFormGroupFooter>();
         RegisterGroupHandler<IListFormGroup, ListFormGroupHandler>();
 
-        RegisterGroupHeaderClass<TextFormGroup, TextFormGroupHeader>();
-        RegisterGroupFooterClass<TextFormGroup, TextFormGroupFooter>();
+        RegisterGroupHeader<TextFormGroup, TextFormGroupHeader>();
+        RegisterGroupFooter<TextFormGroup, TextFormGroupFooter>();
 
-        RegisterItemClass<ButtonFormItem, ButtonFormCell>();
-        RegisterItemClass<DateTimeFormItem, DateTimeFormCell>();
-        RegisterItemClass<IAsyncPickerFormItem, AsyncPickerFormCell>();
-        RegisterItemClass<ICallbackPickerFormItem, CallbackPickerFormCell>();
-        RegisterItemClass<IMultiValuePickerFormItem, MultiValuePickerFormCell>();
-        RegisterItemClass<IPickerFormItem, PopUpPickerFormCell>();
-        RegisterItemClass<ISegmentsFormItem, SegmentsFormCell>();
-        RegisterItemClass<SliderFormItem, SliderFormCell>();
-        RegisterItemClass<StepperFormItem, StepperFormCell>();
-        RegisterItemClass<SwitchFormItem, SwitchFormCell>();
-        RegisterItemClass<IMultilineTextInputFormItem, MultilineTextInputFormCell>();
-        RegisterItemClass<ITextInputFormItem, TextInputFormCell>();
-        RegisterItemClass<ITextFormItem, TextFormCell>();
+        RegisterItem<ButtonFormItem, ButtonFormCell>();
+        RegisterItem<DateTimeFormItem, DateTimeFormCell>();
+        RegisterItem<IAsyncPickerFormItem, AsyncPickerFormCell>();
+        RegisterItem<ICallbackPickerFormItem, CallbackPickerFormCell>();
+        RegisterItem<IMultiValuePickerFormItem, MultiValuePickerFormCell>();
+        RegisterItem<IPickerFormItem, PopUpPickerFormCell>();
+        RegisterItem<ISegmentsFormItem, SegmentsFormCell>();
+        RegisterItem<SliderFormItem, SliderFormCell>();
+        RegisterItem<StepperFormItem, StepperFormCell>();
+        RegisterItem<SwitchFormItem, SwitchFormCell>();
+        RegisterItem<IMultilineTextInputFormItem, MultilineTextInputFormCell>();
+        RegisterItem<ITextInputFormItem, TextInputFormCell>();
+        RegisterItem<ITextFormItem, TextFormCell>();
     }
 
-    public static void RegisterGroupHeaderClass<TGroup, TGroupView>()
+    public static void RegisterGroupHeader<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooter<TGroup>
     {
-        GroupRegistry.RegisterGroupHeaderClass<TGroup, TGroupView>();
+        GroupRegistry.RegisterGroupHeader<TGroup, TGroupView>();
     }
 
-    public static void RegisterGroupFooterClass<TGroup, TGroupView>()
+    public static void RegisterGroupFooter<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooter<TGroup>
     {
-        GroupRegistry.RegisterGroupFooterClass<TGroup, TGroupView>();
+        GroupRegistry.RegisterGroupFooter<TGroup, TGroupView>();
     }
 
     public static void RegisterGroupHeaderNib<TGroup, TGroupView>()
@@ -62,11 +62,11 @@ public static class FormPlatform
         GroupRegistry.RegisterGroupFooterNib<TGroup, TGroupView>();
     }
 
-    public static void RegisterItemClass<TItem, TItemView>()
+    public static void RegisterItem<TItem, TItemView>()
         where TItem : class, IFormItem
         where TItemView : FormCell<TItem>
     {
-        ItemRegistry.RegisterItemClass<TItem, TItemView>();
+        ItemRegistry.RegisterItem<TItem, TItemView>();
     }
 
     public static void RegisterItemNib<TItem, TItemView>()
@@ -106,11 +106,6 @@ public static class FormPlatform
     public static bool TryGetReuseIdentifier(Type itemType, out string? reuseIdentifier)
     {
         return ItemRegistry.TryGetReuseIdentifier(itemType, out reuseIdentifier);
-    }
-
-    public static bool TryGetExpandedReuseIdentifier(Type itemType, out string? reuseIdentifier)
-    {
-        return ItemRegistry.TryGetExpandedReuseIdentifier(itemType, out reuseIdentifier);
     }
 
     public static IFormGroupHandler GetGroupHandler(IFormGroup group)

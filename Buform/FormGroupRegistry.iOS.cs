@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Buform.Extensions;
 
 namespace Buform;
 
@@ -92,7 +91,7 @@ internal sealed class FormGroupRegistry
         return new FormGroupHandler<IFormGroup>();
     }
 
-    public void RegisterGroupHeaderClass<TGroup, TGroupView>()
+    public void RegisterGroupHeader<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooter<TGroup>
     {
@@ -102,7 +101,7 @@ internal sealed class FormGroupRegistry
         );
     }
 
-    public void RegisterGroupFooterClass<TGroup, TGroupView>()
+    public void RegisterGroupFooter<TGroup, TGroupView>()
         where TGroup : class, IFormGroup
         where TGroupView : FormHeaderFooter<TGroup>
     {

@@ -2,12 +2,11 @@
 // ReSharper disable NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
 
 using System.ComponentModel;
-using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
 public class PickerViewController<TItem> : UITableViewController
-    where TItem : class, IPickerFormItemBase
+    where TItem : class, IOptionsPickerFormItem
 {
     private readonly CGSize _minimumPopUpSize = new(240, 320);
 
@@ -39,17 +38,18 @@ public class PickerViewController<TItem> : UITableViewController
         Item.PropertyChanged += OnPropertyChanged;
     }
 
-    protected virtual void SetLeftBarButtonDoneItem()
+    protected virtual void SetLeftBarButtonCloseItem()
     {
-        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Done, (_, _) =>
-            DismissViewController(true, null)
+        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(
+            UIBarButtonSystemItem.Close,
+            (_, _) => DismissViewController(true, null)
         );
     }
 
     protected virtual void SetRightBarButtonClearItem()
     {
         NavigationItem.RightBarButtonItem = new UIBarButtonItem(
-            PickerFormTexts.Clear,
+            FormTexts.Clear,
             UIBarButtonItemStyle.Plain,
             (_, _) =>
             {
@@ -65,7 +65,7 @@ public class PickerViewController<TItem> : UITableViewController
     {
         await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
 
-        this.InvokeOnMainThreadIfNeeded(() => TableView.ReloadData());
+        InvokeOnMainThread(() => TableView.ReloadData());
     }
 
     public override void ViewDidLoad()
@@ -76,7 +76,7 @@ public class PickerViewController<TItem> : UITableViewController
 
         if (NavigationController?.PopoverPresentationController != null)
         {
-            SetLeftBarButtonDoneItem();
+            SetLeftBarButtonCloseItem();
         }
 
         if (Item?.CanBeCleared ?? false)
@@ -148,7 +148,10 @@ public class PickerViewController<TItem> : UITableViewController
             return;
         }
 
-        cell.TextLabel.Text = item.FormattedValue;
+        var configuration = cell.DefaultContentConfiguration;
+        configuration.Text = item.FormattedValue;
+
+        cell.ContentConfiguration = configuration;
 
         cell.Accessory = Item.IsPicked(item)
             ? UITableViewCellAccessory.Checkmark

@@ -1,5 +1,3 @@
-using Buform.Extensions;
-
 namespace Buform;
 
 internal sealed class FormItemRegistry
@@ -13,16 +11,13 @@ internal sealed class FormItemRegistry
     private sealed class Holder
     {
         public Type CellType { get; }
-        public Type? ExpandedCellType { get; }
-
         public RegistrationType RegistrationType { get; }
 
-        public Holder(Type cellType, Type? expandedCellType, RegistrationType registrationType)
+        public Holder(Type cellType, RegistrationType registrationType)
         {
             ArgumentNullException.ThrowIfNull(cellType);
 
             CellType = cellType;
-            ExpandedCellType = expandedCellType;
             RegistrationType = registrationType;
         }
     }
@@ -54,42 +49,18 @@ internal sealed class FormItemRegistry
         return false;
     }
 
-    public void RegisterItemClass<TItem, TItemView>()
+    public void RegisterItem<TItem, TItemView>()
         where TItem : class, IFormItem
         where TItemView : FormCell<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null, RegistrationType.Class);
-    }
-
-    public void RegisterItemClass<TItem, TItemView, TExpandedItemView>()
-        where TItem : class, IFormItem
-        where TItemView : FormCell<TItem>
-        where TExpandedItemView : FormCell<TItem>
-    {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            typeof(TExpandedItemView),
-            RegistrationType.Class
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), RegistrationType.Class);
     }
 
     public void RegisterItemNib<TItem, TItemView>()
         where TItem : class, IFormItem
         where TItemView : FormCell<TItem>
     {
-        _holders[typeof(TItem)] = new Holder(typeof(TItemView), null, RegistrationType.Nib);
-    }
-
-    public void RegisterItemNib<TItem, TItemView, TExpandedItemView>()
-        where TItem : class, IFormItem
-        where TItemView : FormCell<TItem>
-        where TExpandedItemView : FormCell<TItem>
-    {
-        _holders[typeof(TItem)] = new Holder(
-            typeof(TItemView),
-            typeof(TExpandedItemView),
-            RegistrationType.Nib
-        );
+        _holders[typeof(TItem)] = new Holder(typeof(TItemView), RegistrationType.Nib);
     }
 
     public void Register(UITableView tableView)
@@ -102,26 +73,12 @@ internal sealed class FormItemRegistry
             {
                 case RegistrationType.Class:
                     tableView.RegisterClassForCellReuse(holder.CellType, holder.CellType.Name);
-                    if (holder.ExpandedCellType != null)
-                    {
-                        tableView.RegisterClassForCellReuse(
-                            holder.ExpandedCellType,
-                            holder.ExpandedCellType.Name
-                        );
-                    }
                     break;
                 case RegistrationType.Nib:
                     tableView.RegisterNibForCellReuse(
                         UINib.FromName(holder.CellType.Name, NSBundle.MainBundle),
                         holder.CellType.Name
                     );
-                    if (holder.ExpandedCellType != null)
-                    {
-                        tableView.RegisterNibForCellReuse(
-                            UINib.FromName(holder.ExpandedCellType.Name, NSBundle.MainBundle),
-                            holder.ExpandedCellType.Name
-                        );
-                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -140,24 +97,6 @@ internal sealed class FormItemRegistry
             reuseIdentifier = holder!.CellType.Name;
 
             return true;
-        }
-
-        reuseIdentifier = null;
-
-        return false;
-    }
-
-    public bool TryGetExpandedReuseIdentifier(Type itemType, out string? reuseIdentifier)
-    {
-        ArgumentNullException.ThrowIfNull(itemType);
-
-        var result = TryGetHolder(itemType, out var holder);
-
-        if (result)
-        {
-            reuseIdentifier = holder!.ExpandedCellType?.Name;
-
-            return reuseIdentifier != null;
         }
 
         reuseIdentifier = null;

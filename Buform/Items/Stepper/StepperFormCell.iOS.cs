@@ -28,7 +28,7 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         Label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = FormFonts.GetBody(),
             TextColor = UIColor.Label,
         };
 

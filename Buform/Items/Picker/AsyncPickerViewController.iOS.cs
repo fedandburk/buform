@@ -24,6 +24,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         }
 
         CancellationTokenSource?.Cancel();
+        CancellationTokenSource?.Dispose();
         CancellationTokenSource = new CancellationTokenSource();
 
         var activityIndicator = new UIActivityIndicatorView
@@ -45,11 +46,20 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
 
         activityIndicator.StartAnimating();
 
-        await Item.LoadItemsAsync(CancellationTokenSource.Token).ConfigureAwait(true);
-
-        activityIndicator.StopAnimating();
-        activityIndicator.RemoveFromSuperview();
-        activityIndicator.Dispose();
+        try
+        {
+            await Item.LoadItemsAsync(CancellationTokenSource.Token).ConfigureAwait(true);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        finally
+        {
+            activityIndicator.StopAnimating();
+            activityIndicator.RemoveFromSuperview();
+            activityIndicator.Dispose();
+        }
 
         TableView.ReloadData();
     }
@@ -58,7 +68,7 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
     {
         base.ViewDidLoad();
 
-        await LoadItemsIfNeeded().ConfigureAwait(false);
+        await LoadItemsIfNeeded().ConfigureAwait(true);
     }
 
     public override string TitleForFooter(UITableView tableView, nint section)
@@ -73,6 +83,8 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         if (disposing)
         {
             CancellationTokenSource?.Cancel();
+            CancellationTokenSource?.Dispose();
+            CancellationTokenSource = null;
         }
 
         base.Dispose(disposing);

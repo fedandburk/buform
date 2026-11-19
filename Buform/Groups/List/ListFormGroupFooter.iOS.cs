@@ -17,13 +17,12 @@ public sealed class ListFormGroupFooter : FormHeaderFooter<IListFormGroup>
 
     private void UpdateLabel()
     {
-        var tableView = GetTableView();
+        var configuration = DefaultContentConfiguration;
+        configuration.Text = Group?.FooterLabel;
 
-        tableView?.BeginUpdates();
+        ContentConfiguration = configuration;
 
-        TextLabel.Text = Group?.FooterLabel;
-
-        tableView?.EndUpdates();
+        GetTableView()?.PerformBatchUpdates(null, null);
     }
 
     protected override void OnGroupSet()

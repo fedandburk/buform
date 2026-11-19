@@ -1,5 +1,3 @@
-using Buform.Extensions;
-
 namespace Buform;
 
 public class FormGroupHandler<TGroup> : IFormGroupHandler
@@ -90,7 +88,7 @@ public class FormGroupHandler<TGroup> : IFormGroupHandler
 
     public virtual void MoveItem(IFormItem item, int sourceIndex, int destinationIndex)
     {
-        Group.MoveCommand?.SafeExecute((sourceIndex, destinationIndex));
+        Group.MoveCommand.SafeExecute(FormItemMove.Create(Group, sourceIndex, destinationIndex));
     }
 
     public virtual bool CanRemoveItem(IFormItem item)

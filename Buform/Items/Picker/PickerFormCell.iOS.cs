@@ -1,6 +1,6 @@
 namespace Buform;
 
-public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
+public abstract class PickerFormCell<TItem> : FormCell<TItem>
     where TItem : class, IFormItem
 {
     protected virtual UILabel? Label { get; set; }
@@ -8,12 +8,12 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
     protected override UILabel? ValidationLabel => Label;
     protected virtual UILabel? ValueLabel { get; set; }
 
-    protected PickerFormCellBase()
+    protected PickerFormCell()
     {
         /* Required constructor */
     }
 
-    protected PickerFormCellBase(IntPtr handle)
+    protected PickerFormCell(IntPtr handle)
         : base(handle)
     {
         /* Required constructor */
@@ -26,14 +26,14 @@ public abstract class PickerFormCellBase<TItem> : FormCell<TItem>
         Label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = FormFonts.GetBody(),
             TextColor = UIColor.Label,
         };
 
         ValueLabel = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = FormFonts.GetBody(),
             TextColor = UIColor.SecondaryLabel,
             TextAlignment = UITextAlignment.Right,
         };

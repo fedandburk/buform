@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using Fedandburk.iOS.Extensions;
 
 namespace Buform;
 
@@ -47,9 +46,9 @@ public abstract class FormCell : UITableViewCell
         }
     }
 
-    protected static UIViewController? GetViewController()
+    protected UIViewController? GetViewController()
     {
-        return UIApplication.SharedApplication.GetTopViewController();
+        return this.FindViewController();
     }
 
     protected abstract void Initialize();

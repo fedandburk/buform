@@ -4,6 +4,6 @@ public static class ColorPickerFormPlatform
 {
     public static void Register()
     {
-        FormPlatform.RegisterItemClass<ColorPickerFormItem, ColorPickerFormCell>();
+        FormPlatform.RegisterItem<ColorPickerFormItem, ColorPickerFormCell>();
     }
 }

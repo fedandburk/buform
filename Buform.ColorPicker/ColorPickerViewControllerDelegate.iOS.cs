@@ -1,5 +1,3 @@
-using Fedandburk.iOS.Extensions;
-
 namespace Buform;
 
 public sealed class ColorPickerViewControllerDelegate : UIColorPickerViewControllerDelegate

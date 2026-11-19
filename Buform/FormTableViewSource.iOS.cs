@@ -1,254 +1,262 @@
-using Fedandburk.iOS.Extensions;
+using System.Collections.Specialized;
 
 namespace Buform;
 
-public class FormTableViewSource : TableViewSource
+public class FormTableViewSource : UITableViewDelegate
 {
-    private readonly Dictionary<IFormGroup, IFormGroupHandler> _groupHandlers = new();
+    private readonly FormDataSource _dataSource;
+    private readonly Dictionary<IFormGroup, IFormGroupHandler> _groupHandlers;
+    private readonly List<IFormGroup> _groups;
+
+    private Dictionary<object, FormIdentifier> _identifiers;
+    private bool _isSnapshotApplied;
+
+    protected UITableView TableView { get; }
 
     public Form? Form
     {
-        get => Items as Form;
-        set => Items = value;
+        get;
+        set
+        {
+            if (ReferenceEquals(field, value))
+            {
+                return;
+            }
+
+            if (field != null)
+            {
+                field.CollectionChanged -= OnGroupsChanged;
+            }
+
+            field = value;
+
+            if (field != null)
+            {
+                field.CollectionChanged += OnGroupsChanged;
+            }
+
+            _isSnapshotApplied = false;
+
+            ApplySnapshot();
+        }
     }
 
     public FormTableViewSource(UITableView tableView)
-        : base(tableView)
     {
-        FormPlatform.Register(TableView);
+        ArgumentNullException.ThrowIfNull(tableView);
+
+        TableView = tableView;
+
+        _groupHandlers = [];
+        _groups = [];
+        _identifiers = new Dictionary<object, FormIdentifier>(ReferenceEqualityComparer.Instance);
+        _dataSource = new FormDataSource(this, tableView);
+
+        FormPlatform.Register(tableView);
+
+        tableView.Delegate = this;
     }
 
-    private IFormItem? GetItem(NSIndexPath indexPath)
+    private void OnGroupsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        return Form?.ElementAtOrDefault(indexPath.Section)?.ElementAtOrDefault(indexPath.Row);
+        ApplySnapshot();
     }
 
-    private IFormGroup? GetGroup(nint section)
+    private void OnGroupItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        return Form?.ElementAtOrDefault((int)section);
+        ApplySnapshot();
+    }
+
+    private void ApplySnapshot()
+    {
+        if (!NSThread.IsMain)
+        {
+            BeginInvokeOnMainThread(ApplySnapshot);
+
+            return;
+        }
+
+        foreach (var group in _groups)
+        {
+            group.CollectionChanged -= OnGroupItemsChanged;
+        }
+
+        _groups.Clear();
+        _groups.AddRange(Form ?? Enumerable.Empty<IFormGroup>());
+
+        var identifiers = new Dictionary<object, FormIdentifier>(
+            ReferenceEqualityComparer.Instance
+        );
+        var snapshot = new NSDiffableDataSourceSnapshot<FormIdentifier, FormIdentifier>();
+
+        foreach (var group in _groups)
+        {
+            group.CollectionChanged += OnGroupItemsChanged;
+
+            var groupIdentifier = GetIdentifier(group, identifiers);
+            var itemIdentifiers = group.Select(item => GetIdentifier(item, identifiers)).ToArray();
+
+            snapshot.AppendSections([groupIdentifier]);
+            snapshot.AppendItems(itemIdentifiers, groupIdentifier);
+        }
+
+        _identifiers = identifiers;
+
+        _dataSource.ApplySnapshot(snapshot, _isSnapshotApplied);
+
+        _isSnapshotApplied = true;
+    }
+
+    private FormIdentifier GetIdentifier(
+        object value,
+        Dictionary<object, FormIdentifier> identifiers
+    )
+    {
+        if (!_identifiers.TryGetValue(value, out var identifier))
+        {
+            identifier = new FormIdentifier(value);
+        }
+
+        identifiers[value] = identifier;
+
+        return identifier;
+    }
+
+    private IFormItem GetItem(NSIndexPath indexPath)
+    {
+        return _groups[(int)indexPath.Section][(int)indexPath.Row];
+    }
+
+    private IFormGroup GetGroup(nint section)
+    {
+        return _groups[(int)section];
+    }
+
+    private IFormGroupHandler GetGroupHandler(nint section)
+    {
+        var group = GetGroup(section);
+
+        if (_groupHandlers.TryGetValue(group, out var groupHandler))
+        {
+            return groupHandler;
+        }
+
+        groupHandler = FormPlatform.GetGroupHandler(group);
+        groupHandler.Initialize(group, TableView);
+
+        _groupHandlers[group] = groupHandler;
+
+        return groupHandler;
     }
 
     private FormCell? FindCell(NSIndexPath indexPath)
     {
-        var formItem = GetItem(indexPath);
-
-        if (formItem == null)
-        {
-            return GetCell(TableView, indexPath) as FormCell;
-        }
-
-        if (TableView.CellAt(indexPath) is not FormCell formCell)
-        {
-            return GetCell(TableView, indexPath) as FormCell;
-        }
-
-        if (!ReferenceEquals(formCell.Item, formItem))
-        {
-            return GetCell(TableView, indexPath) as FormCell;
-        }
-
-        return formCell;
+        return TableView.CellAt(indexPath) as FormCell;
     }
 
-    protected override string? GetHeaderReuseIdentifier(object item)
-    {
-        return FormPlatform.TryGetHeaderReuseIdentifier(item.GetType(), out var reuseIdentifier)
-            ? reuseIdentifier
-            : null;
-    }
-
-    protected override string? GetFooterReuseIdentifier(object item)
-    {
-        return FormPlatform.TryGetFooterReuseIdentifier(item.GetType(), out var reuseIdentifier)
-            ? reuseIdentifier
-            : null;
-    }
-
-    protected override string GetCellReuseIdentifier(object item)
+    protected virtual UITableViewCell GetCell(
+        UITableView tableView,
+        NSIndexPath indexPath,
+        IFormItem item
+    )
     {
         if (!FormPlatform.TryGetReuseIdentifier(item.GetType(), out var reuseIdentifier))
         {
             throw new FormViewNotFoundException(item);
         }
 
-        return reuseIdentifier!;
-    }
+        var cell = tableView.DequeueReusableCell(reuseIdentifier!, indexPath);
 
-    protected override string GetExpandedCellReuseIdentifier(object item)
-    {
-        if (!FormPlatform.TryGetExpandedReuseIdentifier(item.GetType(), out var reuseIdentifier))
+        if (cell is FormCell formCell)
         {
-            throw new FormViewNotFoundException(item);
+            GetGroupHandler(indexPath.Section).InitializeCell(formCell, indexPath, item);
         }
 
-        return reuseIdentifier!;
+        return cell;
     }
 
-    protected override UITableViewCell GetCell(NSIndexPath indexPath, object item)
-    {
-        var cell = base.GetCell(indexPath, item);
-
-        if (cell is not FormCell formCell)
-        {
-            return cell;
-        }
-
-        if (item is not IFormItem formItem)
-        {
-            return cell;
-        }
-
-        GetGroupHandler(indexPath).InitializeCell(formCell, indexPath, formItem);
-
-        return formCell;
-    }
-
-    protected override void WillDisplayHeader(
-        nint section,
-        UITableViewHeaderFooterView view,
-        object item
+    protected virtual UITableViewHeaderFooterView? GetHeaderView(
+        UITableView tableView,
+        IFormGroup group
     )
     {
-        base.WillDisplayHeader(section, view, item);
-
-        if (view is not FormHeaderFooter headerFooterView)
+        if (!FormPlatform.TryGetHeaderReuseIdentifier(group.GetType(), out var reuseIdentifier))
         {
-            return;
+            return null;
         }
 
-        if (item is not IFormGroup formGroup)
-        {
-            return;
-        }
+        var view = tableView.DequeueReusableHeaderFooterView(reuseIdentifier!);
 
-        headerFooterView.Initialize(formGroup);
+        (view as FormHeaderFooter)?.Initialize(group);
+
+        return view;
     }
 
-    protected override void WillDisplayFooter(
-        nint section,
-        UITableViewHeaderFooterView view,
-        object item
+    protected virtual UITableViewHeaderFooterView? GetFooterView(
+        UITableView tableView,
+        IFormGroup group
     )
     {
-        base.WillDisplayFooter(section, view, item);
-
-        if (view is not FormHeaderFooter headerFooterView)
+        if (!FormPlatform.TryGetFooterReuseIdentifier(group.GetType(), out var reuseIdentifier))
         {
-            return;
+            return null;
         }
 
-        if (item is not IFormGroup formGroup)
-        {
-            return;
-        }
+        var view = tableView.DequeueReusableHeaderFooterView(reuseIdentifier!);
 
-        headerFooterView.Initialize(formGroup);
+        (view as FormHeaderFooter)?.Initialize(group);
+
+        return view;
     }
 
-    protected override NSIndexPath WillSelectRow(NSIndexPath indexPath, object item)
+    public override UIView GetViewForHeader(UITableView tableView, nint section)
     {
-        if (item is IFormItem formItem)
-        {
-            return GetGroupHandler(indexPath).CanSelectItem(formItem) ? indexPath : null!;
-        }
-
-        return null!;
+        return GetHeaderView(tableView, GetGroup(section))!;
     }
 
-    protected override bool ShouldBeAutomaticallyDeselected(NSIndexPath indexPath, object item)
+    public override UIView GetViewForFooter(UITableView tableView, nint section)
     {
-        if (item is not IFormItem formItem)
-        {
-            return false;
-        }
-
-        return GetGroupHandler(indexPath).ShouldAutomaticallyDeselectItem(formItem);
+        return GetFooterView(tableView, GetGroup(section))!;
     }
 
-    protected override void RowSelected(NSIndexPath indexPath, object item)
+    public override NSIndexPath? WillSelectRow(UITableView tableView, NSIndexPath indexPath)
     {
-        if (item is IFormItem formItem)
+        var item = GetItem(indexPath);
+
+        return GetGroupHandler(indexPath.Section).CanSelectItem(item) ? indexPath : null;
+    }
+
+    public override void RowSelected(UITableView tableView, NSIndexPath indexPath)
+    {
+        var item = GetItem(indexPath);
+        var groupHandler = GetGroupHandler(indexPath.Section);
+
+        if (groupHandler.ShouldAutomaticallyDeselectItem(item))
         {
-            GetGroupHandler(indexPath).OnItemSelected(formItem);
+            tableView.DeselectRow(indexPath, true);
         }
+
+        groupHandler.OnItemSelected(item);
 
         FindCell(indexPath)?.OnSelected();
     }
 
     public override void RowDeselected(UITableView tableView, NSIndexPath indexPath)
     {
-        var item = GetItem(indexPath);
-
-        GetGroupHandler(indexPath).OnItemDeselected(item!);
+        GetGroupHandler(indexPath.Section).OnItemDeselected(GetItem(indexPath));
     }
 
-    protected override bool CanEditRow(NSIndexPath indexPath, object item)
-    {
-        if (item is not IFormItem formItem)
-        {
-            return false;
-        }
-
-        return GetGroupHandler(indexPath).CanEditItem(formItem);
-    }
-
-    protected override UITableViewCellEditingStyle EditingStyleForRow(
-        NSIndexPath indexPath,
-        object item
+    public override UITableViewCellEditingStyle EditingStyleForRow(
+        UITableView tableView,
+        NSIndexPath indexPath
     )
     {
-        if (item is not IFormItem formItem)
-        {
-            return UITableViewCellEditingStyle.None;
-        }
-
-        return GetGroupHandler(indexPath).EditingStyleForItem(formItem);
+        return GetGroupHandler(indexPath.Section).EditingStyleForItem(GetItem(indexPath));
     }
 
-    protected override void CommitEditingStyle(
-        UITableViewCellEditingStyle editingStyle,
-        NSIndexPath indexPath,
-        object item
-    )
+    public override bool ShouldIndentWhileEditing(UITableView tableView, NSIndexPath indexPath)
     {
-        if (item is not IFormItem formItem)
-        {
-            return;
-        }
-
-        GetGroupHandler(indexPath).CommitEditingStyleForItem(editingStyle, formItem);
-    }
-
-    protected override bool CanMoveRow(NSIndexPath indexPath, object item)
-    {
-        if (item is not IFormItem formItem)
-        {
-            return false;
-        }
-
-        return GetGroupHandler(indexPath).CanMoveItem(formItem);
-    }
-
-    protected override void MoveRow(
-        NSIndexPath sourceIndexPath,
-        NSIndexPath destinationIndexPath,
-        object item
-    )
-    {
-        var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
-        var destinationGroupHandler = GetGroupHandler(destinationIndexPath);
-
-        var formItem = GetItem(sourceIndexPath)!;
-
-        if (sourceGroupHandler == destinationGroupHandler)
-        {
-            sourceGroupHandler.MoveItem(formItem, sourceIndexPath.Row, destinationIndexPath.Row);
-        }
-        else
-        {
-            sourceGroupHandler.RemoveItem(formItem);
-            destinationGroupHandler.InsertItem(formItem, destinationIndexPath.Row);
-        }
+        return GetGroupHandler(indexPath.Section).CanEditItem(GetItem(indexPath));
     }
 
     public override NSIndexPath CustomizeMoveTarget(
@@ -257,21 +265,19 @@ public class FormTableViewSource : TableViewSource
         NSIndexPath proposedIndexPath
     )
     {
-        var sourceGroupHandler = GetGroupHandler(sourceIndexPath);
-        var proposedGroupHandler = GetGroupHandler(proposedIndexPath);
-
-        var formItem = GetItem(sourceIndexPath)!;
+        var sourceGroupHandler = GetGroupHandler(sourceIndexPath.Section);
+        var proposedGroupHandler = GetGroupHandler(proposedIndexPath.Section);
 
         if (sourceGroupHandler == proposedGroupHandler)
         {
             return proposedIndexPath;
         }
 
-        var targetGroup = GetGroup(proposedIndexPath.Section)!;
+        var item = GetItem(sourceIndexPath);
 
         if (
-            sourceGroupHandler.CanMoveItemIntoGroup(formItem, targetGroup)
-            && proposedGroupHandler.CanInsertItem(formItem)
+            sourceGroupHandler.CanMoveItemIntoGroup(item, GetGroup(proposedIndexPath.Section))
+            && proposedGroupHandler.CanInsertItem(item)
         )
         {
             return proposedIndexPath;
@@ -280,21 +286,106 @@ public class FormTableViewSource : TableViewSource
         return sourceIndexPath;
     }
 
-    private IFormGroupHandler GetGroupHandler(NSIndexPath indexPath)
+    private bool CanEditRow(NSIndexPath indexPath)
     {
-        var group = GetGroup(indexPath.Section)!;
+        return GetGroupHandler(indexPath.Section).CanEditItem(GetItem(indexPath));
+    }
 
-        if (_groupHandlers.TryGetValue(group, out var groupHandler))
+    private void CommitEditingStyle(UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath)
+    {
+        GetGroupHandler(indexPath.Section)
+            .CommitEditingStyleForItem(editingStyle, GetItem(indexPath));
+    }
+
+    private bool CanMoveRow(NSIndexPath indexPath)
+    {
+        return GetGroupHandler(indexPath.Section).CanMoveItem(GetItem(indexPath));
+    }
+
+    private void MoveRow(NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath)
+    {
+        var sourceGroupHandler = GetGroupHandler(sourceIndexPath.Section);
+        var destinationGroupHandler = GetGroupHandler(destinationIndexPath.Section);
+
+        var item = GetItem(sourceIndexPath);
+
+        if (sourceGroupHandler == destinationGroupHandler)
         {
-            return groupHandler;
+            sourceGroupHandler.MoveItem(item, sourceIndexPath.Row, destinationIndexPath.Row);
+
+            return;
         }
 
-        groupHandler = FormPlatform.GetGroupHandler(group);
+        sourceGroupHandler.RemoveItem(item);
+        destinationGroupHandler.InsertItem(item, destinationIndexPath.Row);
+    }
 
-        groupHandler.Initialize(group, TableView);
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Form = null;
 
-        _groupHandlers[group] = groupHandler;
+            foreach (var group in _groups)
+            {
+                group.CollectionChanged -= OnGroupItemsChanged;
+            }
 
-        return groupHandler;
+            _groups.Clear();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private sealed class FormIdentifier : NSObject
+    {
+        public object Value { get; }
+
+        public FormIdentifier(object value)
+        {
+            Value = value;
+        }
+    }
+
+    private sealed class FormDataSource
+        : UITableViewDiffableDataSource<FormIdentifier, FormIdentifier>
+    {
+        private readonly FormTableViewSource _owner;
+
+        public FormDataSource(FormTableViewSource owner, UITableView tableView)
+            : base(tableView, (view, indexPath, _) =>
+                owner.GetCell(view, indexPath, owner.GetItem(indexPath))
+            )
+        {
+            _owner = owner;
+        }
+
+        public override bool CanEditRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return _owner.CanEditRow(indexPath);
+        }
+
+        public override void CommitEditingStyle(
+            UITableView tableView,
+            UITableViewCellEditingStyle editingStyle,
+            NSIndexPath indexPath
+        )
+        {
+            _owner.CommitEditingStyle(editingStyle, indexPath);
+        }
+
+        public override bool CanMoveRow(UITableView tableView, NSIndexPath indexPath)
+        {
+            return _owner.CanMoveRow(indexPath);
+        }
+
+        public override void MoveRow(
+            UITableView tableView,
+            NSIndexPath sourceIndexPath,
+            NSIndexPath destinationIndexPath
+        )
+        {
+            _owner.MoveRow(sourceIndexPath, destinationIndexPath);
+        }
     }
 }

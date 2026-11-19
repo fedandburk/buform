@@ -1,4 +1,3 @@
-using Buform.Extensions;
 using ObjCRuntime;
 
 namespace Buform;
@@ -32,7 +31,7 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
         Label = new UILabel
         {
             TranslatesAutoresizingMaskIntoConstraints = false,
-            Font = UIFont.PreferredBody,
+            Font = FormFonts.GetBody(),
             TextColor = UIColor.Label,
         };
 
@@ -84,18 +83,26 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
             return;
         }
 
-        Label.TextColor = Item?.InputType switch
+        var inputType = Item?.InputType;
+
+        Label.TextColor = inputType switch
         {
-            ButtonInputType.Default => UIColor.Label,
-            ButtonInputType.Done => UIButton.Appearance.TintColor,
+            ButtonInputType.Default => TintColor,
+            ButtonInputType.Done => TintColor,
             ButtonInputType.Destructive => UIColor.SystemRed,
-            null => UIColor.SystemBlue,
-            _ => throw new ArgumentOutOfRangeException(
-                nameof(Item.InputType),
-                Item?.InputType,
-                null
-            ),
+            null => TintColor,
+            _ => throw new ArgumentOutOfRangeException(nameof(inputType), inputType, null),
         };
+
+        Label.Font =
+            inputType == ButtonInputType.Done ? FormFonts.GetBoldBody() : FormFonts.GetBody();
+    }
+
+    public override void TintColorDidChange()
+    {
+        base.TintColorDidChange();
+
+        UpdateInputType();
     }
 
     protected override void OnItemSet()

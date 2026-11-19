@@ -2,8 +2,8 @@
 
 namespace Buform;
 
-public class DefaultPickerPresenter<TItem> : PickerPresenterBase<TItem>
-    where TItem : class, IPickerFormItemBase
+public class DefaultPickerPresenter<TItem> : PickerPresenter<TItem>
+    where TItem : class, IOptionsPickerFormItem
 {
     protected Func<TItem, UIViewController> ViewControllerFactory { get; }
 
@@ -14,7 +14,7 @@ public class DefaultPickerPresenter<TItem> : PickerPresenterBase<TItem>
 
     public override Task PickAsync(UIView sourceView, TItem item)
     {
-        var viewController = GetViewController();
+        var viewController = sourceView.FindViewController();
 
         if (viewController == null)
         {
