@@ -87,7 +87,10 @@ public static class ValidatableFormSpecs
         public sealed class InvalidItemsAdded : Context
         {
             public InvalidItemsAdded()
-                : base(VisibleProperty) { }
+                : base(VisibleProperty)
+            {
+                /* Required constructor */
+            }
 
             [Fact]
             public void IsInvalid()

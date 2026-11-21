@@ -7,7 +7,10 @@ namespace Buform.Example.Maui;
 public sealed class MainApplication : MauiApplication
 {
     public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-        : base(handle, ownership) { }
+        : base(handle, ownership)
+    {
+        /* Required constructor */
+    }
 
     protected override MauiApp CreateMauiApp()
     {

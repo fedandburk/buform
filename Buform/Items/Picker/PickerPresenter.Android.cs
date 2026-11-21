@@ -9,7 +9,7 @@ public abstract class PickerPresenter<TItem> : IDisposable
 
     protected virtual void Dispose(bool disposing)
     {
-        /* Nothing to dispose */
+        /* Nothing to do */
     }
 
     public void Dispose()
