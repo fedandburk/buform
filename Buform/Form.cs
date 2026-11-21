@@ -1,123 +1,81 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq.Expressions;
+using System.Reactive.Disposables;
+using System.Runtime.CompilerServices;
+using DynamicData;
+using DynamicData.Binding;
 
 namespace Buform;
 
-public class Form : FormCollection<IFormGroup>
+public class Form : ObservableCollection<IFormGroup>, IDisposable
 {
-    private bool _isReadOnly;
+    private readonly ReadOnlyObservableCollection<IFormItem> _items;
+    private readonly CompositeDisposable _subscriptions;
 
-    public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
-
-    public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
-
-    protected virtual object? Target { get; private set; }
-
-    public virtual bool IsReadOnly
-    {
-        get => _isReadOnly;
-        set
-        {
-            if (_isReadOnly == value)
-            {
-                return;
-            }
-
-            _isReadOnly = value;
-
-            NotifyPropertyChanged();
-
-            var items = this.SelectMany(item => item)
-                .Concat(this.SelectMany(item => item.HiddenItems));
-
-            UpdateItems(items);
-        }
-    }
+    private bool _isDisposed;
 
     public Form(object target)
     {
         ArgumentNullException.ThrowIfNull(target);
 
         Target = target;
+
+        var itemsSubscription = this.ToObservableChangeSet()
+            .MergeManyChangeSets(group => group.Connect())
+            .Bind(out _items)
+            .Subscribe();
+
+        var groupsSubscription = this.ToObservableChangeSet()
+            .SubscribeMany(group => group.Connect().SubscribeMany(SubscribeItem).Subscribe())
+            .Subscribe();
+
+        _subscriptions = new CompositeDisposable(itemsSubscription, groupsSubscription);
     }
 
-    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
-    {
-        NotifyValueChanged(e);
-    }
+    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
 
-    protected virtual void UpdateItems(IEnumerable<IFormItem> items)
+    public virtual bool IsReadOnly
     {
-        foreach (var item in items)
+        get;
+        set
         {
-            item.IsReadOnly = IsReadOnly;
+            if (field == value)
+            {
+                return;
+            }
+
+            field = value;
+
+            NotifyPropertyChanged();
+
+            foreach (var item in _items)
+            {
+                item.IsReadOnly = value;
+            }
         }
     }
 
-    protected virtual void InitializeItems(IFormGroup group)
-    {
-        if (Target == null)
-        {
-            return;
-        }
+    protected object? Target { get; private set; }
 
-        foreach (var item in group)
-        {
-            item.Initialize(this, Target);
-        }
+    protected IReadOnlyList<IFormItem> AllItems => _items;
 
-        foreach (var item in group.HiddenItems)
-        {
-            item.Initialize(this, Target);
-        }
-    }
+    public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
 
-    protected override void InsertItem(int index, IFormGroup item)
-    {
-        base.InsertItem(index, item);
-
-        item.ValueChanged += OnItemValueChanged;
-
-        InitializeItems(item);
-        UpdateItems(item);
-    }
-
-    protected override void SetItem(int index, IFormGroup item)
-    {
-        base.SetItem(index, item);
-
-        item.ValueChanged += OnItemValueChanged;
-
-        InitializeItems(item);
-        UpdateItems(item);
-    }
-
-    protected override void RemoveItem(int index)
-    {
-        var item = this[index];
-
-        item.ValueChanged -= OnItemValueChanged;
-
-        base.RemoveItem(index);
-    }
-
-    protected override void ClearItems()
-    {
-        foreach (var item in this)
-        {
-            item.ValueChanged -= OnItemValueChanged;
-        }
-
-        base.ClearItems();
-    }
+    public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
 
     public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property)
         where TItem : class, IFormItem
     {
+        ArgumentNullException.ThrowIfNull(property);
+
         return GetItem<TItem>(property.GetMemberName());
     }
 
     public virtual IFormItem? GetItem(Expression<Func<object?>> property)
     {
+        ArgumentNullException.ThrowIfNull(property);
+
         return GetItem(property.GetMemberName());
     }
 
@@ -129,27 +87,66 @@ public class Form : FormCollection<IFormGroup>
 
     public virtual IFormItem? GetItem(string propertyName)
     {
-        return this.Select(item => item.GetItem(propertyName)).FirstOrDefault(item => item != null);
+        ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
+
+        return _items.FirstOrDefault(item => item.PropertyName == propertyName);
     }
 
-    protected override void Dispose(bool isDisposing)
+    public void Dispose()
     {
-        if (isDisposing)
+        Dispose(true);
+    }
+
+    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
+    {
+        ValueChanged?.Invoke(this, e);
+    }
+
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected virtual void Dispose(bool isDisposing)
+    {
+        if (_isDisposed)
         {
-            foreach (var group in this)
-            {
-                foreach (var item in group)
-                {
-                    item.ValueChanged -= OnItemValueChanged;
-                    item.Dispose();
-                }
-
-                group.Dispose();
-            }
-
-            Target = null;
+            return;
         }
 
-        base.Dispose(isDisposing);
+        _isDisposed = true;
+
+        if (!isDisposing)
+        {
+            return;
+        }
+
+        _subscriptions.Dispose();
+
+        foreach (var group in this)
+        {
+            group.Dispose();
+        }
+
+        Target = null;
+    }
+
+    private IDisposable SubscribeItem(IFormItem item)
+    {
+        item.ValueChanged += OnItemValueChanged;
+
+        InitializeItem(item);
+
+        return Disposable.Create(() => item.ValueChanged -= OnItemValueChanged);
+    }
+
+    private void InitializeItem(IFormItem item)
+    {
+        if (Target != null)
+        {
+            item.Initialize(this, Target);
+        }
+
+        item.IsReadOnly = IsReadOnly;
     }
 }

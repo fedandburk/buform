@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Buform;
+namespace Buform.Example;
 
 public partial class RandomNumberGeneratorItem : TextFormItem<int>
 {

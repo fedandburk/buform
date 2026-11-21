@@ -1,3 +1,5 @@
+// ReSharper disable ClassNeverInstantiated.Global
+
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Drawing;
@@ -6,68 +8,17 @@ using CommunityToolkit.Mvvm.Input;
 using Humanizer;
 using NLipsum.Core;
 
-namespace Buform;
+namespace Buform.Example;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class ComponentsViewModel : ObservableObject
 {
-    public enum Enum
-    {
-        First,
-        Second,
-        Third
-    }
-
-    [ObservableProperty]
-    private Color _color = Color.Gold;
-
-    [ObservableProperty]
-    private ObservableCollection<int> _list = new(Enumerable.Range(1, 10));
-
-    [ObservableProperty]
-    private Enum _segments;
-
-    [ObservableProperty]
-    private string? _text;
-
-    [ObservableProperty]
-    private string? _multilineText = new LipsumGenerator().GenerateLipsum(1);
-
-    [ObservableProperty]
-    private float _slider;
-
-    [ObservableProperty]
-    private int _stepper;
-
-    [ObservableProperty]
-    private DateTime _dateTime = DateTime.UtcNow;
-
-    [ObservableProperty]
-    private bool _switch;
-
-    [ObservableProperty]
-    private string? _hiddenText;
-
-    [ObservableProperty]
-    private string? _callbackPicker;
-
-    [ObservableProperty]
-    private int? _picker;
-
-    [ObservableProperty]
-    private int? _asyncPicker;
-
-    [ObservableProperty]
-    private int[]? _multiValuePicker;
-
-    [ObservableProperty]
-    private int _randomNumber;
-
-    [ObservableProperty]
-    private Form _form;
-
     public ComponentsViewModel()
     {
+        Color = Color.Gold;
+        List = new ObservableCollection<int>(Enumerable.Range(1, 10));
+        MultilineText = new LipsumGenerator().GenerateLipsum(1);
+        DateTime = DateTime.UtcNow;
+
         Form = new Form(this)
         {
             new ListFormGroup<int, TextFormItem<int>>(
@@ -78,169 +29,169 @@ public partial class ComponentsViewModel : ObservableObject
                 Source = List,
                 RemoveCommand = RemoveListItemCommand,
                 MoveCommand = MoveListItemCommand,
-                SelectCommand = SelectListItemCommand
+                SelectCommand = SelectListItemCommand,
             },
-            new TextFormGroup("Pickers")
+            new LabeledFormGroup("Pickers")
             {
                 new MultiValuePickerFormItem<int>(() => MultiValuePicker)
                 {
                     Label = "Multi-value Picker",
                     Message = "Please select a number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Default,
-                    ItemFormatter = item => item.ToWords(),
-                    OptionsFilterValueFactory = option => option.ToWords(),
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Default,
+                    OptionFormatter = item => item.ToWords(),
+                    OptionFilterValueFactory = option => option.ToWords(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
-                    Source = Enumerable.Range(1, 10).ToArray()
+                    Source = Enumerable.Range(1, 10).ToArray(),
                 },
                 new MultiValuePickerFormItem<int>(() => MultiValuePicker)
                 {
                     Label = "Dialog Multi-value Picker",
                     Message = "Please select a roman number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Dialog,
-                    ItemFormatter = item => item.ToRoman(),
-                    OptionsFilterValueFactory = option => option.ToRoman(),
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Dialog,
+                    OptionFormatter = item => item.ToRoman(),
+                    OptionFilterValueFactory = option => option.ToRoman(),
                     ValueFormatter = value => value?.Humanize() ?? "None",
-                    Source = Enumerable.Range(1, 10).ToArray()
+                    Source = Enumerable.Range(1, 10).ToArray(),
                 },
                 new CallbackPickerFormItem(() => CallbackPicker)
                 {
                     Label = "Callback Picker",
                     Formatter = item => item ?? "None",
-                    Callback = () => Task.FromResult(new LipsumGenerator().GenerateWords(1)[0])!
+                    Callback = () => Task.FromResult(new LipsumGenerator().GenerateWords(1)[0])!,
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
                     Label = "Picker",
                     Message = "Please select a number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Default,
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Default,
                     Formatter = item => item?.ToWords() ?? "None",
-                    OptionsFilterValueFactory = option => option?.ToWords() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    OptionFilterValueFactory = option => option?.ToWords() ?? "None",
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
                     Label = "Dialog Picker",
                     Message = "Please select a metric number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Dialog,
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Dialog,
                     Formatter = item => item?.ToMetric() ?? "None",
-                    OptionsFilterValueFactory = option => option?.ToMetric() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    OptionFilterValueFactory = option => option?.ToMetric() ?? "None",
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new PickerFormItem<int?>(() => Picker)
                 {
                     Label = "Pop-up Picker",
                     Message = "Please select a roman number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.PopUp,
+                    IsClearable = true,
+                    Presentation = PickerPresentation.PopUp,
                     Formatter = item => item?.ToRoman() ?? "None",
-                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray()
+                    Source = Enumerable.Range(1, 10).OfType<int?>().ToArray(),
                 },
                 new AsyncPickerFormItem<int?>(() => AsyncPicker)
                 {
                     Label = "Async Picker",
                     Message = "Please select a number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Default,
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Default,
                     Formatter = item => item?.ToWords() ?? "None",
-                    OptionsFilterValueFactory = option => option?.ToWords(),
+                    OptionFilterValueFactory = option => option?.ToWords(),
                     SourceFactory = async cancellationToken =>
                     {
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
                             .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
-                    }
+                    },
                 },
                 new AsyncPickerFormItem<int?>(() => AsyncPicker)
                 {
                     Label = "Dialog Async Picker",
                     Message = "Please select a roman number.",
-                    CanBeCleared = true,
-                    InputType = PickerInputType.Dialog,
+                    IsClearable = true,
+                    Presentation = PickerPresentation.Dialog,
                     Formatter = item => item?.ToRoman() ?? "None",
-                    OptionsFilterValueFactory = option => option?.ToRoman() ?? "None",
+                    OptionFilterValueFactory = option => option?.ToRoman() ?? "None",
                     SourceFactory = async cancellationToken =>
                     {
                         await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken)
                             .ConfigureAwait(false);
                         return Enumerable.Range(1, 10).OfType<int?>().ToArray();
-                    }
+                    },
                 },
-                new ColorPickerFormItem(() => Color) { Label = "Color Picker" }
+                new ColorPickerFormItem(() => Color) { Label = "Color Picker" },
             },
-            new TextFormGroup("Buttons")
+            new LabeledFormGroup("Buttons")
             {
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Default Button",
-                    InputType = ButtonInputType.Default
+                    Style = ButtonStyle.Default,
                 },
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Destructive Button",
-                    InputType = ButtonInputType.Destructive
+                    Style = ButtonStyle.Destructive,
                 },
                 new ButtonFormItem(WriteLineCommand)
                 {
                     Label = "Done Button",
-                    InputType = ButtonInputType.Done
-                }
+                    Style = ButtonStyle.Done,
+                },
             },
-            new TextFormGroup("Segments")
+            new LabeledFormGroup("Segments")
             {
                 new SegmentsFormItem<Enum>(() => Segments)
                 {
                     Label = "Segments",
-                    Source = System.Enum.GetValues(typeof(Enum)).OfType<Enum>()
-                }
+                    Source = System.Enum.GetValues(typeof(Enum)).OfType<Enum>(),
+                },
             },
-            new TextFormGroup("Texts")
+            new LabeledFormGroup("Texts")
             {
                 new TextInputFormItem(() => Text)
                 {
                     Placeholder = "Default text",
-                    InputType = TextInputType.Default
+                    InputType = TextInputType.Default,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Number & Punctuation Text",
-                    InputType = TextInputType.NumberAndPunctuation
+                    InputType = TextInputType.NumberAndPunctuation,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Number Text",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Decimal Text",
-                    InputType = TextInputType.Decimal
+                    InputType = TextInputType.Decimal,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Phone Text",
-                    InputType = TextInputType.Phone
+                    InputType = TextInputType.Phone,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Url Text",
-                    InputType = TextInputType.Url
+                    InputType = TextInputType.Url,
                 },
                 new TextInputFormItem(() => Text)
                 {
                     Label = "Email Address Text",
-                    InputType = TextInputType.EmailAddress
+                    InputType = TextInputType.EmailAddress,
                 },
-                new TextInputFormItem(() => Text) { Label = "Password Text", IsSecured = true },
+                new TextInputFormItem(() => Text) { Label = "Password Text", IsSecure = true },
                 new MultilineTextInputFormItem(() => MultilineText)
                 {
-                    Placeholder = "Multiline text"
-                }
+                    Placeholder = "Multiline text",
+                },
             },
-            new TextFormGroup("Sliders")
+            new LabeledFormGroup("Sliders")
             {
                 new TextInputFormItem<float>(
                     () => Slider,
@@ -248,21 +199,25 @@ public partial class ComponentsViewModel : ObservableObject
                 )
                 {
                     Label = "Slider value",
-                    InputType = TextInputType.Decimal
+                    InputType = TextInputType.Decimal,
                 },
-                new SliderFormItem(() => Slider) { MinValue = 0, MaxValue = 10 }
+                new SliderFormItem(() => Slider) { MinValue = 0, MaxValue = 10 },
             },
-            new TextFormGroup("Switches")
+            new LabeledFormGroup("Switches")
             {
                 new SwitchFormItem(() => Switch)
                 {
                     Label = "Switch",
                     ValueChangedCallback = (form, value) =>
-                        form.GetItem(() => HiddenText)!.IsVisible = value
+                        form.GetItem(() => HiddenText)!.IsVisible = value,
                 },
-                new TextInputFormItem(() => HiddenText) { Label = "Hidden text", IsVisible = false }
+                new TextInputFormItem(() => HiddenText)
+                {
+                    Label = "Hidden text",
+                    IsVisible = false,
+                },
             },
-            new TextFormGroup("Steppers")
+            new LabeledFormGroup("Steppers")
             {
                 new TextInputFormItem<int>(
                     () => Stepper,
@@ -270,50 +225,95 @@ public partial class ComponentsViewModel : ObservableObject
                 )
                 {
                     Label = "Stepper value",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new StepperFormItem(() => Stepper)
                 {
                     Label = "Stepper",
-                    StepAmount = 5,
+                    Step = 5,
                     MinValue = -10,
-                    MaxValue = 10
-                }
+                    MaxValue = 10,
+                },
             },
-            new TextFormGroup("Date & Time")
+            new LabeledFormGroup("Date & Time")
             {
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Date and time",
-                    InputType = DateTimeInputType.DateTime
+                    InputType = DateTimeInputType.DateTime,
                 },
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Date",
-                    InputType = DateTimeInputType.Date
+                    InputType = DateTimeInputType.Date,
                 },
                 new DateTimeFormItem(() => DateTime)
                 {
                     Label = "Time",
-                    InputType = DateTimeInputType.Time
-                }
+                    InputType = DateTimeInputType.Time,
+                },
             },
-            new TextFormGroup("Custom views & items", "Demonstrates custom items and item views")
+            new LabeledFormGroup("Custom views & items", "Demonstrates custom items and item views")
             {
-                new RandomNumberGeneratorItem(() => RandomNumber)
+                new RandomNumberGeneratorItem(() => RandomNumber),
             },
-            new TextFormGroup("MvvmCross", "Demonstrates MvvmCross bindings in item views")
-            {
-                // new MvxButtonFormItem(WriteLineCommand) { Label = "MvvmCross Button" }
-            }
         };
     }
 
-    [RelayCommand]
-    private void ToggleReadOnlyMode()
+    public enum Enum
     {
-        Form.IsReadOnly = !Form.IsReadOnly;
+        First,
+        Second,
+        Third,
     }
+
+    [ObservableProperty]
+    public partial Color Color { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<int> List { get; set; }
+
+    [ObservableProperty]
+    public partial Enum Segments { get; set; }
+
+    [ObservableProperty]
+    public partial string? Text { get; set; }
+
+    [ObservableProperty]
+    public partial string? MultilineText { get; set; }
+
+    [ObservableProperty]
+    public partial float Slider { get; set; }
+
+    [ObservableProperty]
+    public partial int Stepper { get; set; }
+
+    [ObservableProperty]
+    public partial DateTime DateTime { get; set; }
+
+    [ObservableProperty]
+    public partial bool Switch { get; set; }
+
+    [ObservableProperty]
+    public partial string? HiddenText { get; set; }
+
+    [ObservableProperty]
+    public partial string? CallbackPicker { get; set; }
+
+    [ObservableProperty]
+    public partial int? Picker { get; set; }
+
+    [ObservableProperty]
+    public partial int? AsyncPicker { get; set; }
+
+    [ObservableProperty]
+    public partial int[]? MultiValuePicker { get; set; }
+
+    [ObservableProperty]
+    public partial int RandomNumber { get; set; }
+
+    [ObservableProperty]
+    public partial Form Form { get; set; }
 
     [RelayCommand]
     private static void WriteLine()
@@ -328,42 +328,20 @@ public partial class ComponentsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ToggleReadOnlyMode()
+    {
+        Form.IsReadOnly = !Form.IsReadOnly;
+    }
+
+    [RelayCommand]
     private void RemoveListItem(int item)
     {
         List.Remove(item);
     }
 
     [RelayCommand]
-    private void MoveListItem((int oldIndex, int newIndex) move)
+    private void MoveListItem(FormItemMove move)
     {
-        List.Move(move.oldIndex, move.newIndex);
-    }
-
-    protected override void OnPropertyChanging(PropertyChangingEventArgs e)
-    {
-        base.OnPropertyChanging(e);
-
-        if (e.PropertyName == null)
-        {
-            return;
-        }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changing: {value}");
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == null)
-        {
-            return;
-        }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changed: {value}");
+        List.Move(move.OldIndex, move.NewIndex);
     }
 }

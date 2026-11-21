@@ -1,12 +1,14 @@
 ﻿using Foundation;
 
-namespace Buform;
+namespace Buform.Example.Maui;
 
 [Register(nameof(AppDelegate))]
-public class AppDelegate : MauiUIApplicationDelegate
+public sealed class AppDelegate : MauiUIApplicationDelegate
 {
     protected override MauiApp CreateMauiApp()
     {
+        ColorPickerFormPlatform.Register();
+
         return MauiProgram.CreateMauiApp();
     }
 }

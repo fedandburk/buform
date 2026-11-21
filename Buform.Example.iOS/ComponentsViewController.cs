@@ -1,15 +1,12 @@
-using Fedandburk.Common.Extensions;
+namespace Buform.Example.iOS;
 
-namespace Buform;
-
-[Preserve(AllMembers = true)]
 public sealed class ComponentsViewController : UITableViewController
 {
     private readonly ComponentsViewModel _viewModel;
 
     private UIBarButtonItem? _cancelButtonItem;
     private UIBarButtonItem? _toggleReadOnlyButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public ComponentsViewController()
         : base(UITableViewStyle.InsetGrouped)
@@ -23,15 +20,14 @@ public sealed class ComponentsViewController : UITableViewController
 
         Title = "Components";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
         _toggleReadOnlyButtonItem = new UIBarButtonItem(
             "Read-only",
             UIBarButtonItemStyle.Plain,
-            (_, _) => _viewModel.ToggleReadOnlyModeCommand.SafeExecute()
+            (_, _) => ToggleReadOnlyMode()
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;
@@ -54,5 +50,12 @@ public sealed class ComponentsViewController : UITableViewController
         _cancelButtonItem?.Dispose();
         _toggleReadOnlyButtonItem?.Dispose();
         _source?.Dispose();
+    }
+
+    private void ToggleReadOnlyMode()
+    {
+        _viewModel.ToggleReadOnlyModeCommand.Execute(null);
+
+        _toggleReadOnlyButtonItem?.Selected = _viewModel.Form.IsReadOnly;
     }
 }

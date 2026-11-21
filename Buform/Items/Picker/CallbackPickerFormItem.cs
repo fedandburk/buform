@@ -4,16 +4,21 @@ namespace Buform;
 
 public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICallbackPickerFormItem
 {
-    private string? _label;
     private Func<Task<TValue>>? _callback;
     private Func<TValue?, string?>? _formatter;
 
+    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -44,13 +49,7 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
-    }
-
-    public virtual async void ExecuteCallback()
+    public virtual async Task ExecuteCallbackAsync()
     {
         if (_callback == null)
         {

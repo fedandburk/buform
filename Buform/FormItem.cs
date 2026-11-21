@@ -10,11 +10,33 @@ public abstract class FormItem<TValue> : IFormItem
     private PropertyInfo? _propertyInfo;
     private Expression<Func<TValue>>? _property;
     private TValue? _value;
-    private bool _isReadOnly;
     private bool _isVisible;
     private bool _shouldSkipValueChangedCallback;
 
-    protected Form? Form { get; private set; }
+    protected FormItem(Expression<Func<TValue>> targetProperty)
+    {
+        ArgumentNullException.ThrowIfNull(targetProperty);
+
+        _property = targetProperty;
+
+        var member = _property.GetMember();
+
+        PropertyName = member.Name;
+        _propertyInfo = member as PropertyInfo;
+
+        _isVisible = true;
+    }
+
+    protected FormItem(TValue value)
+    {
+        _value = value;
+
+        _isVisible = true;
+    }
+
+    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public object? Target { get; private set; }
 
@@ -22,10 +44,10 @@ public abstract class FormItem<TValue> : IFormItem
 
     public virtual bool IsReadOnly
     {
-        get => _isReadOnly;
+        get;
         set
         {
-            _isReadOnly = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
@@ -44,7 +66,6 @@ public abstract class FormItem<TValue> : IFormItem
             _isVisible = value;
 
             NotifyPropertyChanged();
-            OnIsVisibleChanged();
         }
     }
 
@@ -60,74 +81,49 @@ public abstract class FormItem<TValue> : IFormItem
         set => SetValue(value);
     }
 
-    protected virtual bool IsValueChanged { get; set; }
-
     public virtual Action<Form, TValue?>? ValueChangedCallback { get; set; }
 
-    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-    public event EventHandler? VisibilityChanged;
+    protected Form? Form { get; private set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    protected virtual bool IsValueChanged { get; set; }
 
-    protected FormItem(Expression<Func<TValue>> property)
+    public void Initialize(Form form, object target)
     {
-        ArgumentNullException.ThrowIfNull(property);
+        ArgumentNullException.ThrowIfNull(form);
+        ArgumentNullException.ThrowIfNull(target);
 
-        _property = property;
-
-        PropertyName = _property.GetMemberName();
-
-        _isVisible = true;
-    }
-
-    protected FormItem(TValue value)
-    {
-        ArgumentNullException.ThrowIfNull(value);
-
-        _value = value;
-
-        _isVisible = true;
-    }
-
-    private TValue? GetValue()
-    {
-        if (_propertyInfo == null)
+        if (_propertyInfo?.DeclaringType?.IsInstanceOfType(target) == false)
         {
-            return _value;
+            throw new ArgumentException(
+                $"Target of type '{target.GetType()}' does not declare property '{PropertyName}'.",
+                nameof(target)
+            );
         }
 
-        return Target == null ? default : (TValue?)_propertyInfo.GetValue(Target);
-    }
+        Form = form;
 
-    private void SetValue(TValue? value)
-    {
-        if (Target == null)
+        if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)
         {
-            return;
+            oldNotifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
         }
 
-        if (!Equals(value, Value))
+        Target = target;
+
+        if (Target is INotifyPropertyChanged newNotifyPropertyChanged)
         {
-            IsValueChanged = true;
+            newNotifyPropertyChanged.PropertyChanged += OnTargetPropertyChanged;
         }
 
         _shouldSkipValueChangedCallback = true;
 
-        _propertyInfo?.SetValue(Target, value);
+        OnValueChanged();
 
         _shouldSkipValueChangedCallback = false;
-
-        OnValueChanged();
     }
 
-    private void OnTargetPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public void Dispose()
     {
-        if (e.PropertyName != PropertyName && !string.IsNullOrWhiteSpace(e.PropertyName))
-        {
-            return;
-        }
-
-        OnValueChanged();
+        Dispose(true);
     }
 
     protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
@@ -154,44 +150,6 @@ public abstract class FormItem<TValue> : IFormItem
         ValueChangedCallback?.Invoke(Form, Value);
     }
 
-    protected virtual void OnIsVisibleChanged()
-    {
-        VisibilityChanged?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void Initialize(Form form, object target)
-    {
-        ArgumentNullException.ThrowIfNull(form);
-        ArgumentNullException.ThrowIfNull(target);
-
-        Form = form;
-
-        if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)
-        {
-            oldNotifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
-        }
-
-        Target = target;
-
-        if (Target is INotifyPropertyChanged newNotifyPropertyChanged)
-        {
-            newNotifyPropertyChanged.PropertyChanged += OnTargetPropertyChanged;
-        }
-
-        _propertyInfo = Target?.GetType().GetProperty(PropertyName ?? string.Empty);
-
-        _shouldSkipValueChangedCallback = true;
-
-        OnValueChanged();
-
-        _shouldSkipValueChangedCallback = false;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-    }
-
     protected virtual void Dispose(bool isDisposing)
     {
         if (!isDisposing)
@@ -210,5 +168,55 @@ public abstract class FormItem<TValue> : IFormItem
         Target = null;
 
         _value = default;
+    }
+
+    private TValue? GetValue()
+    {
+        if (_propertyInfo == null)
+        {
+            return _value;
+        }
+
+        return Target == null ? default : (TValue?)_propertyInfo.GetValue(Target);
+    }
+
+    private void SetValue(TValue? value)
+    {
+        if (!Equals(value, Value))
+        {
+            IsValueChanged = true;
+        }
+
+        if (_propertyInfo == null)
+        {
+            _value = value;
+
+            OnValueChanged();
+
+            return;
+        }
+
+        if (Target == null)
+        {
+            return;
+        }
+
+        _shouldSkipValueChangedCallback = true;
+
+        _propertyInfo.SetValue(Target, value);
+
+        _shouldSkipValueChangedCallback = false;
+
+        OnValueChanged();
+    }
+
+    private void OnTargetPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != PropertyName && !string.IsNullOrWhiteSpace(e.PropertyName))
+        {
+            return;
+        }
+
+        OnValueChanged();
     }
 }

@@ -7,6 +7,13 @@ public class SliderFormItem : FormItem<float>
     private float _minValue;
     private float _maxValue;
 
+    public SliderFormItem(Expression<Func<float>> targetProperty)
+        : base(targetProperty)
+    {
+        _minValue = float.MinValue;
+        _maxValue = float.MaxValue;
+    }
+
     public virtual float MinValue
     {
         get => _minValue;
@@ -27,12 +34,5 @@ public class SliderFormItem : FormItem<float>
 
             NotifyPropertyChanged();
         }
-    }
-
-    public SliderFormItem(Expression<Func<float>> targetProperty)
-        : base(targetProperty)
-    {
-        _minValue = float.MinValue;
-        _maxValue = float.MaxValue;
     }
 }

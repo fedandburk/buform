@@ -1,11 +1,12 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Input;
+using DynamicData;
 
 namespace Buform;
 
 public interface IFormGroup
-    : IEnumerable<IFormItem>,
+    : IReadOnlyList<IFormItem>,
         INotifyCollectionChanged,
         INotifyPropertyChanged,
         IDisposable
@@ -14,9 +15,7 @@ public interface IFormGroup
     ICommand? MoveCommand { get; }
     ICommand? InsertCommand { get; }
 
-    IEnumerable<IFormItem> HiddenItems { get; }
+    IObservable<IChangeSet<IFormItem>> Connect();
 
-    event EventHandler<FormValueChangedEventArgs>? ValueChanged;
-
-    IFormItem? GetItem(string propertyName);
+    int GetSourceIndex(IFormItem item);
 }

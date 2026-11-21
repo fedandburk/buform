@@ -1,0 +1,69 @@
+namespace Buform;
+
+[Register(nameof(FormTextView))]
+public sealed class FormTextView : UITextView
+{
+    private readonly UILabel _placeholderLabel;
+
+    public FormTextView()
+    {
+        TextContainerInset = UIEdgeInsets.Zero;
+        DataDetectorTypes = UIDataDetectorType.All;
+        Font = FormFonts.GetBody();
+        TextColor = UIColor.Label;
+
+        TextContainer.LineFragmentPadding = 0;
+
+        Changed += OnChanged;
+
+        _placeholderLabel = new UILabel
+        {
+            TranslatesAutoresizingMaskIntoConstraints = false,
+            TextColor = UIColor.PlaceholderText,
+            Font = FormFonts.GetBody(),
+            TextAlignment = TextAlignment,
+            Lines = 0,
+        };
+
+        AddSubview(_placeholderLabel);
+    }
+
+    public string? Placeholder
+    {
+        get => _placeholderLabel.Text;
+        set => _placeholderLabel.Text = value;
+    }
+
+    public override string? Text
+    {
+        get => base.Text;
+        set
+        {
+            base.Text = value;
+
+            TextChanged();
+        }
+    }
+
+    public override CGSize IntrinsicContentSize => new(base.IntrinsicContentSize.Width, 200);
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Changed -= OnChanged;
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private void OnChanged(object? sender, EventArgs e)
+    {
+        TextChanged();
+    }
+
+    private void TextChanged()
+    {
+        _placeholderLabel.Hidden = !string.IsNullOrEmpty(Text);
+    }
+}

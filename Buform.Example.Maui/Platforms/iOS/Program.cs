@@ -1,6 +1,6 @@
 ﻿using UIKit;
 
-namespace Buform;
+namespace Buform.Example.Maui;
 
 public class Program
 {

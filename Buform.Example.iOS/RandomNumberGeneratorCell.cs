@@ -1,31 +1,24 @@
-using Fedandburk.Common.Extensions;
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedMember.Global
+
 using ObjCRuntime;
 
-namespace Buform;
+namespace Buform.Example.iOS;
 
-[Preserve(AllMembers = true)]
 [Register(nameof(RandomNumberGeneratorCell))]
-// ReSharper disable once ClassNeverInstantiated.Global
 public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGeneratorItem>
 {
     private UIButton? _button;
 
-    // ReSharper disable once UnusedMember.Global
     public RandomNumberGeneratorCell()
     {
         /* Required constructor */
     }
 
-    // ReSharper disable once UnusedMember.Global
     public RandomNumberGeneratorCell(NativeHandle handle)
         : base(handle)
     {
         /* Required constructor */
-    }
-
-    private void OnTouchUpInside(object? _, EventArgs __)
-    {
-        Item?.GenerateCommand.SafeExecute();
     }
 
     protected override void Initialize()
@@ -52,9 +45,11 @@ public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGenerat
         }
 
         var button = _button;
-        if (button != null)
-        {
-            button.TouchUpInside -= OnTouchUpInside;
-        }
+        button?.TouchUpInside -= OnTouchUpInside;
+    }
+
+    private void OnTouchUpInside(object? _, EventArgs __)
+    {
+        Item?.GenerateCommand.Execute(null);
     }
 }

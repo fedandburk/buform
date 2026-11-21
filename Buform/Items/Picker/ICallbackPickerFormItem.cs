@@ -6,5 +6,5 @@ public interface ICallbackPickerFormItem : IValidatableFormItem
 
     string? FormattedValue { get; }
 
-    void ExecuteCallback();
+    Task ExecuteCallbackAsync();
 }

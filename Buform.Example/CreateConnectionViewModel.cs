@@ -1,58 +1,16 @@
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
 
-namespace Buform;
+namespace Buform.Example;
 
-// ReSharper disable once ClassNeverInstantiated.Global
 public partial class CreateConnectionViewModel : ObservableObject
 {
-    public class Validator : AbstractValidator<CreateConnectionViewModel>
-    {
-        public Validator()
-        {
-            RuleFor(item => item.Server).NotEmpty();
-            RuleFor(item => item.Port).NotEmpty().GreaterThan(0);
-            RuleFor(item => item.Password).NotEmpty();
-        }
-    }
-
-    public enum ConnectionType
-    {
-        Ftp,
-        FtpSsl,
-        WebDav
-    }
-
     private const string AnonymousUsername = "anonymous";
-
-    [ObservableProperty]
-    private string? _server;
-
-    [ObservableProperty]
-    private int? _port;
-
-    [ObservableProperty]
-    private ConnectionType _type;
-
-    [ObservableProperty]
-    private bool _isAnonymousLogin;
-
-    [ObservableProperty]
-    private string? _username;
-
-    [ObservableProperty]
-    private string? _password;
-
-    [ObservableProperty]
-    private string? _sshPrivateKey;
-
-    [ObservableProperty]
-    private FluentValidationForm<CreateConnectionViewModel> _form;
-
-    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
-    private bool _canConnect;
 
     public CreateConnectionViewModel()
     {
@@ -60,12 +18,12 @@ public partial class CreateConnectionViewModel : ObservableObject
 
         Form = new FluentValidationForm<CreateConnectionViewModel>(this, new Validator())
         {
-            new TextFormGroup("Server")
+            new LabeledFormGroup("Server")
             {
                 new TextInputFormItem(() => Server)
                 {
                     Placeholder = "Server",
-                    InputType = TextInputType.Url
+                    InputType = TextInputType.Url,
                 },
                 new TextInputFormItem<int?>(
                     () => Port,
@@ -74,7 +32,7 @@ public partial class CreateConnectionViewModel : ObservableObject
                 {
                     Label = "Port",
                     Placeholder = "21",
-                    InputType = TextInputType.Number
+                    InputType = TextInputType.Number,
                 },
                 new SegmentsFormItem<ConnectionType>(() => Type)
                 {
@@ -83,11 +41,11 @@ public partial class CreateConnectionViewModel : ObservableObject
                     {
                         ConnectionType.Ftp,
                         ConnectionType.FtpSsl,
-                        ConnectionType.WebDav
-                    }
-                }
+                        ConnectionType.WebDav,
+                    },
+                },
             },
-            new TextFormGroup(
+            new LabeledFormGroup(
                 "Authorization",
                 "Anonymous FTP logins are usually the username 'anonymous' with the user's email address as the password."
             )
@@ -100,55 +58,80 @@ public partial class CreateConnectionViewModel : ObservableObject
                         form[() => Username]!.IsReadOnly = value;
                         Username = value ? AnonymousUsername : null;
                         Password = null;
-                    }
+                    },
                 },
                 new TextInputFormItem(() => Username)
                 {
                     Label = "Username",
                     Placeholder = "Username",
-                    InputType = TextInputType.EmailAddress
+                    InputType = TextInputType.EmailAddress,
                 },
                 new TextInputFormItem(() => Password)
                 {
                     Label = "Password",
                     Placeholder = "Password",
-                    IsSecured = true
-                }
+                    IsSecure = true,
+                },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new PickerFormItem(() => SshPrivateKey)
                 {
                     Label = "SSH Private Key",
-                    InputType = PickerInputType.PopUp,
-                    Source = new[] { "Key 1", "Key 2", "Key 3" }
-                }
+                    Presentation = PickerPresentation.PopUp,
+                    Source = new[] { "Key 1", "Key 2", "Key 3" },
+                },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
-                new ButtonFormItem(ConnectCommand)
-                {
-                    Label = "Connect",
-                    InputType = ButtonInputType.Done
-                }
+                new ButtonFormItem(ConnectCommand) { Label = "Connect", Style = ButtonStyle.Done },
             },
-            new TextFormGroup
+            new LabeledFormGroup
             {
                 new ButtonFormItem(ResetCommand)
                 {
                     Label = "Reset",
-                    InputType = ButtonInputType.Destructive
-                }
-            }
+                    Style = ButtonStyle.Destructive,
+                },
+            },
         };
 
         (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
     }
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public enum ConnectionType
     {
-        CanConnect = Form.IsValid;
+        Ftp,
+        FtpSsl,
+        WebDav,
     }
+
+    [ObservableProperty]
+    public partial string? Server { get; set; }
+
+    [ObservableProperty]
+    public partial int? Port { get; set; }
+
+    [ObservableProperty]
+    public partial ConnectionType Type { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsAnonymousLogin { get; set; }
+
+    [ObservableProperty]
+    public partial string? Username { get; set; }
+
+    [ObservableProperty]
+    public partial string? Password { get; set; }
+
+    [ObservableProperty]
+    public partial string? SshPrivateKey { get; set; }
+
+    [ObservableProperty]
+    public partial FluentValidationForm<CreateConnectionViewModel> Form { get; set; }
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    public partial bool CanConnect { get; set; }
 
     private static string FormatConnectionType(ConnectionType value)
     {
@@ -157,7 +140,7 @@ public partial class CreateConnectionViewModel : ObservableObject
             ConnectionType.Ftp => "FTP",
             ConnectionType.FtpSsl => "FTP-SSL",
             ConnectionType.WebDav => "WebDAW",
-            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
+            _ => throw new ArgumentOutOfRangeException(nameof(value), value, null),
         };
     }
 
@@ -167,10 +150,14 @@ public partial class CreateConnectionViewModel : ObservableObject
         Console.WriteLine("Connect command executed");
     }
 
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CanConnect = Form.IsValid;
+    }
+
     [RelayCommand]
     private void Reset()
     {
-        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         Form?.ResetValidation();
 
         Server = null;
@@ -182,17 +169,13 @@ public partial class CreateConnectionViewModel : ObservableObject
         SshPrivateKey = null;
     }
 
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    public class Validator : AbstractValidator<CreateConnectionViewModel>
     {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == null)
+        public Validator()
         {
-            return;
+            RuleFor(item => item.Server).NotEmpty();
+            RuleFor(item => item.Port).NotEmpty().GreaterThan(0);
+            RuleFor(item => item.Password).NotEmpty();
         }
-
-        var value = GetType().GetProperty(e.PropertyName!)?.GetValue(this);
-
-        Console.WriteLine($"{e.PropertyName} changed: {value}");
     }
 }

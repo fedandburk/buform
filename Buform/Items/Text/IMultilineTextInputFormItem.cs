@@ -8,5 +8,5 @@ public interface IMultilineTextInputFormItem : IValidatableFormItem
 
     string? FormattedValue { get; }
 
-    void SetValue(string? value);
+    void SetText(string? text);
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.listitem.ListItemLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/form_horizontal_padding"
+  android:paddingEnd="@dimen/form_horizontal_padding"
+>
+  <com.google.android.material.listitem.ListItemCardView
+    android:id="@+id/Card"
+    style="?attr/listItemCardViewSegmentedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:duplicateParentState="true"
+  />
+</com.google.android.material.listitem.ListItemLayout>

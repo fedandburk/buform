@@ -1,12 +1,13 @@
+// ReSharper disable UnusedType.Global
+
 using Android;
 using Android.Runtime;
 
 [assembly: UsesPermission(Manifest.Permission.Internet)]
 
-namespace Buform;
+namespace Buform.Example.Droid;
 
-[Application(Theme = "@style/Theme.Material3.DayNight")]
-// ReSharper disable once UnusedType.Global
+[Application(Theme = "@style/Theme.Material3.DayNight.NoActionBar")]
 public sealed class AndroidApplication : Application
 {
     public AndroidApplication(IntPtr javaReference, JniHandleOwnership transfer)
@@ -19,12 +20,18 @@ public sealed class AndroidApplication : Application
     {
         base.OnCreate();
 
+        ColorPickerFormPlatform.Register();
+
         FormPlatform.RegisterGroupHeader<LogoFormGroup, LogoFormGroupHeaderViewHolder>(
-            Resource.Layout.FormGroupTextHeaderLayout
+            Resource.Layout.FormGroupLogoHeaderLayout
         );
 
         FormPlatform.RegisterGroupFooter<LogoFormGroup, LogoFormGroupFooterViewHolder>(
-            Resource.Layout.FormGroupTextFooterLayout
+            Resource.Layout.FormGroupLogoFooterLayout
+        );
+
+        FormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorViewHolder>(
+            Resource.Layout.FormItemRandomNumberGeneratorLayout
         );
     }
 }

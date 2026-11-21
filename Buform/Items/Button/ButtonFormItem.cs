@@ -1,12 +1,18 @@
 using System.Windows.Input;
-using Fedandburk.Common.Extensions;
 
 namespace Buform;
 
 public class ButtonFormItem : FormItem<ICommand>
 {
-    private string? _label;
-    private ButtonInputType _inputType;
+    private ICommand? _command;
+
+    public ButtonFormItem(ICommand value)
+        : base(value)
+    {
+        ArgumentNullException.ThrowIfNull(value);
+
+        SubscribeToCommand(value);
+    }
 
     public override bool IsReadOnly
     {
@@ -16,35 +22,24 @@ public class ButtonFormItem : FormItem<ICommand>
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
     }
 
-    public virtual ButtonInputType InputType
+    public virtual ButtonStyle Style
     {
-        get => _inputType;
+        get;
         set
         {
-            _inputType = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
-    }
-
-    public ButtonFormItem(ICommand value)
-        : base(value)
-    {
-        if (Value == null)
-        {
-            return;
-        }
-
-        Value.CanExecuteChanged += OnCanExecuteChanged;
     }
 
     protected virtual void OnCanExecuteChanged(object? sender, EventArgs e)
@@ -52,16 +47,36 @@ public class ButtonFormItem : FormItem<ICommand>
         NotifyPropertyChanged(nameof(IsReadOnly));
     }
 
+    protected override void OnValueChanged()
+    {
+        SubscribeToCommand(Value);
+
+        base.OnValueChanged();
+
+        NotifyPropertyChanged(nameof(IsReadOnly));
+    }
+
     protected override void Dispose(bool isDisposing)
     {
         if (isDisposing)
         {
-            if (Value != null)
-            {
-                Value.CanExecuteChanged -= OnCanExecuteChanged;
-            }
+            SubscribeToCommand(null);
         }
 
         base.Dispose(isDisposing);
+    }
+
+    private void SubscribeToCommand(ICommand? command)
+    {
+        if (ReferenceEquals(_command, command))
+        {
+            return;
+        }
+
+        _command?.CanExecuteChanged -= OnCanExecuteChanged;
+
+        _command = command;
+
+        _command?.CanExecuteChanged += OnCanExecuteChanged;
     }
 }

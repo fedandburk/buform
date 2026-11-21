@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Buform.FormRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RecyclerView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+<Buform.FormRecyclerView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/RecyclerView"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:clipToPadding="false"
+  android:fitsSystemWindows="true"
+/>

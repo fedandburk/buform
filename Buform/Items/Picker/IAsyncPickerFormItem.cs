@@ -1,8 +1,10 @@
 namespace Buform;
 
-public interface IAsyncPickerFormItem : IPickerFormItemBase
+public interface IAsyncPickerFormItem : IOptionsPickerFormItem
 {
     AsyncPickerLoadingState State { get; }
 
-    Task LoadItemsAsync(CancellationToken cancellationToken);
+    Exception? LoadException { get; }
+
+    Task LoadOptionsAsync(CancellationToken cancellationToken);
 }

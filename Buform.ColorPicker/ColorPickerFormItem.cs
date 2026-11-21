@@ -5,22 +5,20 @@ namespace Buform;
 
 public class ColorPickerFormItem : ValidatableFormItem<Color>
 {
-    private string? _label;
-
-    public virtual string? Label
-    {
-        get => _label;
-        set
-        {
-            _label = value;
-
-            NotifyPropertyChanged();
-        }
-    }
-
     public ColorPickerFormItem(Expression<Func<Color>> targetProperty)
         : base(targetProperty)
     {
         /* Required constructor */
+    }
+
+    public virtual string? Label
+    {
+        get;
+        set
+        {
+            field = value;
+
+            NotifyPropertyChanged();
+        }
     }
 }

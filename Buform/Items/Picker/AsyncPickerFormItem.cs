@@ -2,53 +2,36 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPickerFormItem
+public class AsyncPickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IAsyncPickerFormItem
 {
-    private Func<TValue?, string?>? _formatter;
-    private IList<IPickerOptionFormItem> _options;
-    private Func<TValue?, string?>? _optionsFilterValueFactory;
-    private Func<CancellationToken, Task<IEnumerable<TValue>>>? _sourceFactory;
+    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
 
     public virtual Func<TValue?, string?>? Formatter
     {
-        get => _formatter;
+        get;
         set
         {
-            _formatter = value;
+            field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.Formatter = Formatter;
-            }
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
 
-    public virtual Func<TValue?, string?>? OptionsFilterValueFactory
+    public virtual Func<TValue?, string?>? OptionFilterValueFactory
     {
-        get => _optionsFilterValueFactory;
+        get;
         set
         {
-            _optionsFilterValueFactory = value;
+            field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.FilterValueFactory = _optionsFilterValueFactory;
-            }
-
-            NotifyPropertyChanged();
-            UpdateOptions();
-        }
-    }
-
-    public override string? FilterQuery
-    {
-        get => base.FilterQuery;
-        set
-        {
-            base.FilterQuery = value;
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
 
@@ -58,115 +41,103 @@ public class AsyncPickerFormItem<TValue> : PickerFormItemBase<TValue>, IAsyncPic
 
     public virtual Func<CancellationToken, Task<IEnumerable<TValue>>>? SourceFactory
     {
-        get => _sourceFactory;
+        get;
         set
         {
-            _sourceFactory = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
     }
 
-    public virtual AsyncPickerLoadingState State { get; private set; }
+    public AsyncPickerLoadingState State { get; private set; }
+
+    public Exception? LoadException { get; private set; }
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
+    public virtual async Task LoadOptionsAsync(CancellationToken cancellationToken)
     {
-        _options = Array.Empty<IPickerOptionFormItem>();
+        if (State != AsyncPickerLoadingState.None)
+        {
+            return;
+        }
+
+        if (SourceFactory == null)
+        {
+            SetState(AsyncPickerLoadingState.Loaded, null);
+
+            return;
+        }
+
+        SetState(AsyncPickerLoadingState.Loading, null);
+
+        try
+        {
+            var source = await SourceFactory(cancellationToken);
+
+            SetOptions(CreateOptions(source));
+
+            SetState(AsyncPickerLoadingState.Loaded, null);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            SetState(AsyncPickerLoadingState.None, null);
+
+            throw;
+        }
+        catch (Exception exception)
+        {
+            SetState(AsyncPickerLoadingState.Failed, exception);
+        }
     }
 
-    protected virtual IPickerOptionFormItem CreateOption(TValue value)
+    public override void Pick(IFormOption? option)
     {
-        return new PickerOptionFormItem<TValue>(value)
+        Value = option?.Value is TValue value ? value : default;
+    }
+
+    public override bool IsPicked(IFormOption option)
+    {
+        ArgumentNullException.ThrowIfNull(option);
+
+        return Equals(Value, option.Value);
+    }
+
+    protected virtual IFormOption CreateOption(TValue value)
+    {
+        return new FormOption<TValue>(value)
         {
             Formatter = Formatter,
-            FilterValueFactory = OptionsFilterValueFactory
+            FilterValueFactory = OptionFilterValueFactory,
         };
     }
 
-    public virtual async Task LoadItemsAsync(CancellationToken cancellationToken)
+    protected virtual IEnumerable<IFormOption> CreateOptions(IEnumerable<TValue> source)
     {
-        try
-        {
-            if (State != AsyncPickerLoadingState.None)
-            {
-                return;
-            }
+        ArgumentNullException.ThrowIfNull(source);
 
-            if (SourceFactory == null)
-            {
-                State = AsyncPickerLoadingState.Loaded;
-                NotifyPropertyChanged(nameof(State));
-
-                return;
-            }
-
-            State = AsyncPickerLoadingState.Loading;
-            NotifyPropertyChanged(nameof(State));
-
-            var source =
-                SourceFactory == null
-                    ? null
-                    : await SourceFactory(cancellationToken).ConfigureAwait(false);
-
-            _options = InitOptions(source!);
-
-            UpdateOptions();
-
-            State = AsyncPickerLoadingState.Loaded;
-            NotifyPropertyChanged(nameof(State));
-        }
-        catch
-        {
-            State = AsyncPickerLoadingState.Failed;
-            NotifyPropertyChanged(nameof(State));
-        }
+        return source.Select(CreateOption);
     }
 
-    protected virtual IList<IPickerOptionFormItem> InitOptions(IEnumerable<TValue> source)
+    private void UpdateOptionFormatters()
     {
-        return source.Select(CreateOption).ToList();
-    }
-
-    protected virtual void UpdateOptions()
-    {
-        if (!string.IsNullOrEmpty(FilterQuery))
+        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
         {
-            Options = _options
-                .Where(option =>
-                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
-                    ?? false
-                )
-                .ToList();
-        }
-        else
-        {
-            Options = _options;
+            option.Formatter = Formatter;
+            option.FilterValueFactory = OptionFilterValueFactory;
         }
 
         NotifyPropertyChanged(nameof(Options));
     }
 
-    public override void Pick(IPickerOptionFormItem? item)
+    private void SetState(AsyncPickerLoadingState state, Exception? loadException)
     {
-        Value = (TValue?)item?.Value;
-    }
+        State = state;
+        LoadException = loadException;
 
-    public override bool IsPicked(IPickerOptionFormItem item)
-    {
-        return Equals(Value, item.Value);
-    }
-
-    protected override void Dispose(bool isDisposing)
-    {
-        if (isDisposing)
-        {
-            _formatter = null;
-        }
-
-        base.Dispose(isDisposing);
+        NotifyPropertyChanged(nameof(State));
+        NotifyPropertyChanged(nameof(LoadException));
     }
 }
 

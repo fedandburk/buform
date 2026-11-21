@@ -1,25 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0-ios</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Buform.Example.iOS</RootNamespace>
+    <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+    <ApplicationId>com.fedandburk.buform</ApplicationId>
+    <ApplicationTitle>Buform</ApplicationTitle>
+    <MtouchLink>SdkOnly</MtouchLink>
+    <ValidateXcodeVersion>false</ValidateXcodeVersion>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net9.0-ios</TargetFramework>
-        <OutputType>Exe</OutputType>
-        <IsPackable>false</IsPackable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Buform</RootNamespace>
-        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
-        <ApplicationId>com.fedandburk.buform</ApplicationId>
-        <ApplicationTitle>Buform</ApplicationTitle>
-        <MtouchLink>SdkOnly</MtouchLink>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
-        <ProjectReference Include="..\Buform.MvvmCross\Buform.MvvmCross.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="MvvmCross" Version="9.3.1" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
+  </ItemGroup>
 </Project>

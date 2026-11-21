@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="color_picker_swatch_size">28dp</dimen>
+  <dimen name="color_picker_palette_swatch_size">48dp</dimen>
+  <dimen name="color_picker_palette_spacing">8dp</dimen>
+  <dimen name="color_picker_swatch_stroke_width">1dp</dimen>
+  <dimen name="color_picker_selected_swatch_stroke_width">3dp</dimen>
+</resources>

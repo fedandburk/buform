@@ -1,11 +1,7 @@
-using Microsoft.Maui.Controls.Internals;
-
 namespace Buform;
 
-[Preserve(AllMembers = true)]
-public abstract class FormHeaderFooterView : ContentView { }
+public abstract class FormHeaderFooterView : ContentView;
 
-[Preserve(AllMembers = true)]
 public abstract class FormHeaderFooterView<TGroup> : FormHeaderFooterView
     where TGroup : class, IFormGroup
 {

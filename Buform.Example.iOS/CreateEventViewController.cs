@@ -1,15 +1,12 @@
-using Fedandburk.Common.Extensions;
+namespace Buform.Example.iOS;
 
-namespace Buform;
-
-[Preserve(AllMembers = true)]
 public sealed class CreateEventViewController : UITableViewController
 {
     private readonly CreateEventViewModel _viewModel;
 
     private UIBarButtonItem? _cancelButtonItem;
     private UIBarButtonItem? _createButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public CreateEventViewController()
         : base(UITableViewStyle.InsetGrouped)
@@ -18,33 +15,21 @@ public sealed class CreateEventViewController : UITableViewController
         _viewModel.CreateCommand.CanExecuteChanged += CreateCommandOnCanExecuteChanged;
     }
 
-    private void CreateCommandOnCanExecuteChanged(object? sender, EventArgs e)
-    {
-        var createButtonItem = _createButtonItem;
-        if (createButtonItem != null)
-        {
-            createButtonItem.Enabled = _viewModel.CreateCommand.SafeCanExecute();
-        }
-    }
-
     public override void ViewDidLoad()
     {
         base.ViewDidLoad();
 
         Title = "New Event";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
-        _createButtonItem = new UIBarButtonItem(
-            "Add",
-            UIBarButtonItemStyle.Done,
-            (_, _) => _viewModel.CreateCommand.SafeExecute()
+        _createButtonItem = new UIBarButtonItem("Add", UIBarButtonItemStyle.Done, (_, _) =>
+            _viewModel.CreateCommand.Execute(null)
         );
 
-        _createButtonItem.Enabled = _viewModel.CreateCommand.SafeCanExecute();
+        _createButtonItem.Enabled = _viewModel.CreateCommand.CanExecute(null);
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;
         NavigationItem.RightBarButtonItem = _createButtonItem;
@@ -68,5 +53,10 @@ public sealed class CreateEventViewController : UITableViewController
         _cancelButtonItem?.Dispose();
         _createButtonItem?.Dispose();
         _source?.Dispose();
+    }
+
+    private void CreateCommandOnCanExecuteChanged(object? sender, EventArgs e)
+    {
+        _createButtonItem?.Enabled = _viewModel.CreateCommand.CanExecute(null);
     }
 }

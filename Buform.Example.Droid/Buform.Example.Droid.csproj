@@ -1,25 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0-android</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Buform.Example.Droid</RootNamespace>
+    <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
+    <ApplicationId>com.fedandburk.buform</ApplicationId>
+    <ApplicationTitle>Buform</ApplicationTitle>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net9.0-android</TargetFramework>
-        <OutputType>Exe</OutputType>
-        <IsPackable>false</IsPackable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <RootNamespace>Buform</RootNamespace>
-        <SupportedOSPlatformVersion>26</SupportedOSPlatformVersion>
-        <ApplicationId>com.fedandburk.buform</ApplicationId>
-        <ApplicationTitle>Buform</ApplicationTitle>
-    </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
+    <ProjectReference Include="..\Buform.ColorPicker\Buform.ColorPicker.csproj" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Buform.Example\Buform.Example.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Xamarin.Google.Android.Material" Version="1.9.0.3" />
-        <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.4.0.5" />
-        <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.4.0.4" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Google.Android.Material" Version="1.14.0.6" />
+    <PackageReference Include="Xamarin.AndroidX.Collection" Version="1.6.0.1" />
+    <PackageReference Include="Xamarin.AndroidX.Collection.Ktx" Version="1.6.0.1" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="form_horizontal_padding">16dp</dimen>
+  <dimen name="form_vertical_padding">8dp</dimen>
+  <dimen name="form_item_spacing">8dp</dimen>
+  <dimen name="form_item_height">56dp</dimen>
+  <dimen name="form_item_gap">2dp</dimen>
+</resources>

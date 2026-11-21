@@ -4,28 +4,30 @@ namespace Buform;
 
 public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatableFormItem
 {
-    private string? _validationErrorMessage;
-
-    public virtual string? ValidationErrorMessage
-    {
-        get => _validationErrorMessage;
-        private set
-        {
-            _validationErrorMessage = value;
-
-            NotifyPropertyChanged();
-        }
-    }
-
     protected ValidatableFormItem(Expression<Func<TValue>> targetProperty)
         : base(targetProperty)
     {
         /* Required constructor */
     }
 
-    public virtual void SetValidationError(FormValidationError? validationError, bool isForced)
+    public string? ValidationErrorMessage
     {
-        ValidationErrorMessage = IsValueChanged || isForced ? validationError?.ErrorMessage : null;
+        get;
+        private set
+        {
+            field = value;
+
+            NotifyPropertyChanged();
+        }
+    }
+
+    public virtual void SetValidationError(
+        FormValidationError? validationError,
+        bool showsUnchangedValue
+    )
+    {
+        ValidationErrorMessage =
+            IsValueChanged || showsUnchangedValue ? validationError?.ErrorMessage : null;
     }
 
     public virtual void ResetValidationError()

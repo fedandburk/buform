@@ -4,75 +4,59 @@ namespace Buform;
 
 public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFormItem
 {
-    private string? _label;
-    private Func<TValue?, string?>? _formatter;
-    private IEnumerable<TValue>? _source;
-
-    IEnumerable<ISegmentsOptionFormItem> ISegmentsFormItem.Items => Items;
+    public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        Options = [];
+    }
 
     public virtual string? Label
     {
-        get => _label;
+        get;
         set
         {
-            _label = value;
+            field = value;
 
             NotifyPropertyChanged();
         }
     }
 
-    public virtual Func<TValue?, string?>? Formatter
+    public virtual Func<TValue, string?>? Formatter
     {
-        get => _formatter;
+        get;
         set
         {
-            _formatter = value;
+            field = value;
 
-            foreach (var item in Items)
+            foreach (var option in Options.OfType<FormOption<TValue>>())
             {
-                item.Formatter = Formatter;
+                option.Formatter = field;
             }
 
             NotifyPropertyChanged();
+            NotifyPropertyChanged(nameof(Options));
         }
     }
 
     public virtual IEnumerable<TValue>? Source
     {
-        get => _source;
+        get;
         set
         {
-            _source = value;
+            field = value;
 
-            Items = _source?.Select(CreateItem) ?? Array.Empty<SegmentsOptionFormItem<TValue>>();
+            Options = field?.Select(CreateOption).ToList() ?? [];
 
             NotifyPropertyChanged();
-            NotifyPropertyChanged(nameof(Items));
+            NotifyPropertyChanged(nameof(Options));
         }
     }
 
-    public virtual IEnumerable<SegmentsOptionFormItem<TValue>> Items { get; private set; }
+    public IReadOnlyList<IFormOption> Options { get; private set; }
 
-    public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
+    protected virtual IFormOption CreateOption(TValue value)
     {
-        Items = Array.Empty<SegmentsOptionFormItem<TValue>>();
-    }
-
-    protected virtual SegmentsOptionFormItem<TValue> CreateItem(TValue value)
-    {
-        return new SegmentsOptionFormItem<TValue>(value) { Formatter = Formatter };
-    }
-
-    protected override void Dispose(bool isDisposing)
-    {
-        if (isDisposing)
-        {
-            _formatter = null;
-            _source = null;
-        }
-
-        base.Dispose(isDisposing);
+        return new FormOption<TValue>(value) { Formatter = Formatter };
     }
 }
 

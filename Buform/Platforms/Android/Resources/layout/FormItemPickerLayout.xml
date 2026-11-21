@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.listitem.ListItemLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingStart="@dimen/form_horizontal_padding"
+  android:paddingEnd="@dimen/form_horizontal_padding"
+  android:clickable="true"
+  android:focusable="true"
+>
+  <com.google.android.material.listitem.ListItemCardView
+    style="?attr/listItemCardViewSegmentedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/form_item_height"
+    android:duplicateParentState="true"
+  >
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:gravity="center_vertical"
+      android:layout_gravity="center_vertical"
+    >
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+      >
+        <com.google.android.material.textview.MaterialTextView
+          android:id="@+id/Label"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:textAppearance="?attr/textAppearanceBodyLarge"
+          android:textColor="?android:attr/textColorPrimary"
+          tools:text="Label"
+        />
+        <com.google.android.material.textview.MaterialTextView
+          android:id="@+id/Value"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/form_item_spacing"
+          android:textAppearance="?attr/textAppearanceBodyMedium"
+          android:textColor="?android:attr/textColorSecondary"
+          android:maxLines="1"
+          android:ellipsize="end"
+          tools:text="Value"
+        />
+      </LinearLayout>
+      <include layout="@layout/FormItemErrorLayout" />
+    </LinearLayout>
+  </com.google.android.material.listitem.ListItemCardView>
+</com.google.android.material.listitem.ListItemLayout>

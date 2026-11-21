@@ -1,4 +1,4 @@
-namespace Buform;
+namespace Buform.Example;
 
 public interface INavigationService
 {

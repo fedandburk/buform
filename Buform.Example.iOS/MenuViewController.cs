@@ -1,11 +1,10 @@
-namespace Buform;
+namespace Buform.Example.iOS;
 
-[Preserve(AllMembers = true)]
 public sealed class MenuViewController : UITableViewController, INavigationService
 {
     private readonly MenuViewModel _viewModel;
 
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public MenuViewController()
         : base(UITableViewStyle.InsetGrouped)

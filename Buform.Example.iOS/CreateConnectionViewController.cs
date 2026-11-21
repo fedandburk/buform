@@ -1,12 +1,11 @@
-namespace Buform;
+namespace Buform.Example.iOS;
 
-[Preserve(AllMembers = true)]
 public sealed class CreateConnectionViewController : UITableViewController
 {
     private readonly CreateConnectionViewModel _viewModel;
 
     private UIBarButtonItem? _cancelButtonItem;
-    private UITableViewSource? _source;
+    private FormTableViewSource? _source;
 
     public CreateConnectionViewController()
         : base(UITableViewStyle.InsetGrouped)
@@ -20,9 +19,8 @@ public sealed class CreateConnectionViewController : UITableViewController
 
         Title = "New Connection";
 
-        _cancelButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Cancel,
-            (_, _) => DismissViewController(true, null)
+        _cancelButtonItem = new UIBarButtonItem(UIBarButtonSystemItem.Cancel, (_, _) =>
+            DismissViewController(true, null)
         );
 
         NavigationItem.LeftBarButtonItem = _cancelButtonItem;

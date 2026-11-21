@@ -2,132 +2,88 @@ using System.Linq.Expressions;
 
 namespace Buform;
 
-public class PickerFormItem<TValue> : PickerFormItemBase<TValue>, IPickerFormItem
+public class PickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IPickerFormItem
 {
-    private Func<TValue?, string?>? _formatter;
-    private Func<TValue?, string?>? _optionsFilterValueFactory;
-    private IEnumerable<TValue>? _source;
-    private IList<IPickerOptionFormItem> _options;
+    public PickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
 
     public virtual Func<TValue?, string?>? Formatter
     {
-        get => _formatter;
+        get;
         set
         {
-            _formatter = value;
+            field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.Formatter = Formatter;
-            }
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
             NotifyPropertyChanged(nameof(FormattedValue));
         }
     }
 
-    public virtual Func<TValue?, string?>? OptionsFilterValueFactory
+    public virtual Func<TValue?, string?>? OptionFilterValueFactory
     {
-        get => _optionsFilterValueFactory;
+        get;
         set
         {
-            _optionsFilterValueFactory = value;
+            field = value;
 
-            foreach (var option in Options.OfType<PickerOptionFormItem<TValue>>())
-            {
-                option.FilterValueFactory = _optionsFilterValueFactory;
-            }
+            UpdateOptionFormatters();
 
             NotifyPropertyChanged();
+
             UpdateOptions();
         }
     }
 
     public virtual IEnumerable<TValue>? Source
     {
-        get => _source;
+        get;
         set
         {
-            _source = value;
+            field = value;
 
-            _options =
-                _source?.Select(CreateOption).ToList()
-                ?? Array.Empty<IPickerOptionFormItem>().ToList();
-
-            UpdateOptions();
+            SetOptions(field?.Select(CreateOption) ?? []);
 
             NotifyPropertyChanged();
-        }
-    }
-
-    private void UpdateOptions()
-    {
-        if (!string.IsNullOrEmpty(FilterQuery))
-        {
-            Options = _options
-                .Where(option =>
-                    option.FilterValue?.Contains(FilterQuery, StringComparison.OrdinalIgnoreCase)
-                    ?? false
-                )
-                .ToList();
-        }
-        else
-        {
-            Options = _options;
-        }
-
-        NotifyPropertyChanged(nameof(Options));
-    }
-
-    public override string? FilterQuery
-    {
-        get => base.FilterQuery;
-        set
-        {
-            base.FilterQuery = value;
-
-            NotifyPropertyChanged();
-
-            UpdateOptions();
         }
     }
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public PickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
+    public override void Pick(IFormOption? option)
     {
-        _options = Array.Empty<IPickerOptionFormItem>();
+        Value = option?.Value is TValue value ? value : default;
     }
 
-    protected virtual IPickerOptionFormItem CreateOption(TValue value)
+    public override bool IsPicked(IFormOption option)
     {
-        return new PickerOptionFormItem<TValue>(value)
+        ArgumentNullException.ThrowIfNull(option);
+
+        return Equals(Value, option.Value);
+    }
+
+    protected virtual IFormOption CreateOption(TValue value)
+    {
+        return new FormOption<TValue>(value)
         {
             Formatter = Formatter,
-            FilterValueFactory = OptionsFilterValueFactory
+            FilterValueFactory = OptionFilterValueFactory,
         };
     }
 
-    public override void Pick(IPickerOptionFormItem? item)
+    private void UpdateOptionFormatters()
     {
-        Value = (TValue?)item?.Value;
-    }
-
-    public override bool IsPicked(IPickerOptionFormItem item)
-    {
-        return Equals(Value, item.Value);
-    }
-
-    protected override void Dispose(bool isDisposing)
-    {
-        if (isDisposing)
+        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
         {
-            _formatter = null;
-            _source = null;
+            option.Formatter = Formatter;
+            option.FilterValueFactory = OptionFilterValueFactory;
         }
 
-        base.Dispose(isDisposing);
+        NotifyPropertyChanged(nameof(Options));
     }
 }
 
