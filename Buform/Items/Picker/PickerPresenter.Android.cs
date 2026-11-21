@@ -7,14 +7,14 @@ public abstract class PickerPresenter<TItem> : IDisposable
 {
     public abstract Task PickAsync(View sourceView, TItem item);
 
-    protected virtual void Dispose(bool disposing)
-    {
-        /* Nothing to do */
-    }
-
     public void Dispose()
     {
         Dispose(true);
         GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        /* Nothing to do */
     }
 }

@@ -12,61 +12,6 @@ namespace Buform.Example;
 
 public partial class ComponentsViewModel : ObservableObject
 {
-    public enum Enum
-    {
-        First,
-        Second,
-        Third,
-    }
-
-    [ObservableProperty]
-    public partial Color Color { get; set; }
-
-    [ObservableProperty]
-    public partial ObservableCollection<int> List { get; set; }
-
-    [ObservableProperty]
-    public partial Enum Segments { get; set; }
-
-    [ObservableProperty]
-    public partial string? Text { get; set; }
-
-    [ObservableProperty]
-    public partial string? MultilineText { get; set; }
-
-    [ObservableProperty]
-    public partial float Slider { get; set; }
-
-    [ObservableProperty]
-    public partial int Stepper { get; set; }
-
-    [ObservableProperty]
-    public partial DateTime DateTime { get; set; }
-
-    [ObservableProperty]
-    public partial bool Switch { get; set; }
-
-    [ObservableProperty]
-    public partial string? HiddenText { get; set; }
-
-    [ObservableProperty]
-    public partial string? CallbackPicker { get; set; }
-
-    [ObservableProperty]
-    public partial int? Picker { get; set; }
-
-    [ObservableProperty]
-    public partial int? AsyncPicker { get; set; }
-
-    [ObservableProperty]
-    public partial int[]? MultiValuePicker { get; set; }
-
-    [ObservableProperty]
-    public partial int RandomNumber { get; set; }
-
-    [ObservableProperty]
-    public partial Form Form { get; set; }
-
     public ComponentsViewModel()
     {
         Color = Color.Gold;
@@ -315,11 +260,60 @@ public partial class ComponentsViewModel : ObservableObject
         };
     }
 
-    [RelayCommand]
-    private void ToggleReadOnlyMode()
+    public enum Enum
     {
-        Form.IsReadOnly = !Form.IsReadOnly;
+        First,
+        Second,
+        Third,
     }
+
+    [ObservableProperty]
+    public partial Color Color { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<int> List { get; set; }
+
+    [ObservableProperty]
+    public partial Enum Segments { get; set; }
+
+    [ObservableProperty]
+    public partial string? Text { get; set; }
+
+    [ObservableProperty]
+    public partial string? MultilineText { get; set; }
+
+    [ObservableProperty]
+    public partial float Slider { get; set; }
+
+    [ObservableProperty]
+    public partial int Stepper { get; set; }
+
+    [ObservableProperty]
+    public partial DateTime DateTime { get; set; }
+
+    [ObservableProperty]
+    public partial bool Switch { get; set; }
+
+    [ObservableProperty]
+    public partial string? HiddenText { get; set; }
+
+    [ObservableProperty]
+    public partial string? CallbackPicker { get; set; }
+
+    [ObservableProperty]
+    public partial int? Picker { get; set; }
+
+    [ObservableProperty]
+    public partial int? AsyncPicker { get; set; }
+
+    [ObservableProperty]
+    public partial int[]? MultiValuePicker { get; set; }
+
+    [ObservableProperty]
+    public partial int RandomNumber { get; set; }
+
+    [ObservableProperty]
+    public partial Form Form { get; set; }
 
     [RelayCommand]
     private static void WriteLine()
@@ -331,6 +325,12 @@ public partial class ComponentsViewModel : ObservableObject
     private static void SelectListItem(int item)
     {
         Console.WriteLine($"Selected item: {item}");
+    }
+
+    [RelayCommand]
+    private void ToggleReadOnlyMode()
+    {
+        Form.IsReadOnly = !Form.IsReadOnly;
     }
 
     [RelayCommand]

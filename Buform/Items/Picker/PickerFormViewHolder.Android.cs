@@ -6,10 +6,6 @@ namespace Buform;
 public abstract class PickerFormViewHolder<TItem> : FormViewHolder<TItem>
     where TItem : class, IFormItem
 {
-    protected virtual TextView? LabelView { get; set; }
-
-    protected virtual TextView? ValueView { get; set; }
-
     protected PickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -22,15 +18,9 @@ public abstract class PickerFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private async void OnItemViewClick(object? sender, EventArgs e)
-    {
-        if (Item == null || Item.IsReadOnly)
-        {
-            return;
-        }
+    protected virtual TextView? LabelView { get; set; }
 
-        await OnClickAsync().ConfigureAwait(true);
-    }
+    protected virtual TextView? ValueView { get; set; }
 
     protected abstract string? GetLabel(TItem item);
 
@@ -104,5 +94,15 @@ public abstract class PickerFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private async void OnItemViewClick(object? sender, EventArgs e)
+    {
+        if (Item == null || Item.IsReadOnly)
+        {
+            return;
+        }
+
+        await OnClickAsync().ConfigureAwait(true);
     }
 }

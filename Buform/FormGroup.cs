@@ -19,11 +19,28 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     private bool _isDisposed;
 
+    protected FormGroup()
+    {
+        _items = new SourceList<TFormItem>();
+
+        var visibleItemsSubscription = _items
+            .Connect()
+            .DisposeMany()
+            .AutoRefresh(item => item.IsVisible)
+            .Filter(item => item.IsVisible)
+            .Bind(out _visibleItems)
+            .Subscribe();
+
+        _subscriptions = new CompositeDisposable(visibleItemsSubscription, _items);
+
+        ((INotifyCollectionChanged)_visibleItems).CollectionChanged += OnVisibleItemsChanged;
+        ((INotifyPropertyChanged)_visibleItems).PropertyChanged += OnVisibleItemsPropertyChanged;
+    }
+
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public int Count => _visibleItems.Count;
-
-    public TFormItem this[int index] => _visibleItems[index];
-
-    IFormItem IReadOnlyList<IFormItem>.this[int index] => this[index];
 
     public virtual ICommand? RemoveCommand
     {
@@ -57,41 +74,9 @@ public abstract class FormGroup<TFormItem> : IFormGroup
 
     protected ISourceList<TFormItem> Items => _items;
 
-    public event NotifyCollectionChangedEventHandler? CollectionChanged;
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public TFormItem this[int index] => _visibleItems[index];
 
-    protected FormGroup()
-    {
-        _items = new SourceList<TFormItem>();
-
-        var visibleItemsSubscription = _items
-            .Connect()
-            .DisposeMany()
-            .AutoRefresh(item => item.IsVisible)
-            .Filter(item => item.IsVisible)
-            .Bind(out _visibleItems)
-            .Subscribe();
-
-        _subscriptions = new CompositeDisposable(visibleItemsSubscription, _items);
-
-        ((INotifyCollectionChanged)_visibleItems).CollectionChanged += OnVisibleItemsChanged;
-        ((INotifyPropertyChanged)_visibleItems).PropertyChanged += OnVisibleItemsPropertyChanged;
-    }
-
-    private void OnVisibleItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        CollectionChanged?.Invoke(this, e);
-    }
-
-    private void OnVisibleItemsPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        PropertyChanged?.Invoke(this, e);
-    }
-
-    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    IFormItem IReadOnlyList<IFormItem>.this[int index] => this[index];
 
     public IObservable<IChangeSet<IFormItem>> Connect()
     {
@@ -158,6 +143,11 @@ public abstract class FormGroup<TFormItem> : IFormGroup
         Dispose(true);
     }
 
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     protected virtual void Dispose(bool isDisposing)
     {
         if (_isDisposed)
@@ -176,5 +166,15 @@ public abstract class FormGroup<TFormItem> : IFormGroup
         ((INotifyPropertyChanged)_visibleItems).PropertyChanged -= OnVisibleItemsPropertyChanged;
 
         _subscriptions.Dispose();
+    }
+
+    private void OnVisibleItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        CollectionChanged?.Invoke(this, e);
+    }
+
+    private void OnVisibleItemsPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        PropertyChanged?.Invoke(this, e);
     }
 }

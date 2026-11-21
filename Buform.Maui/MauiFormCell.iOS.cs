@@ -46,22 +46,6 @@ internal sealed class MauiFormCell : UITableViewCell
         EstimateViewSize();
     }
 
-    private void EstimateViewSize()
-    {
-        if (_formItemView == null || _view == null)
-        {
-            return;
-        }
-
-        var width = Bounds.Width;
-
-        var measuredSize = _formItemView.Measure(width, double.PositiveInfinity);
-
-        var height = Math.Ceiling(measuredSize.Height);
-
-        _estimatedSize = new CGSize(width, height);
-    }
-
     public override CGSize SizeThatFits(CGSize size)
     {
         return _estimatedSize;
@@ -83,5 +67,21 @@ internal sealed class MauiFormCell : UITableViewCell
         _formItemView.Arrange(bounds);
 
         _view.Frame = bounds;
+    }
+
+    private void EstimateViewSize()
+    {
+        if (_formItemView == null || _view == null)
+        {
+            return;
+        }
+
+        var width = Bounds.Width;
+
+        var measuredSize = _formItemView.Measure(width, double.PositiveInfinity);
+
+        var height = Math.Ceiling(measuredSize.Height);
+
+        _estimatedSize = new CGSize(width, height);
     }
 }

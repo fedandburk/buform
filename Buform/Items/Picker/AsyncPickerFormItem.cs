@@ -4,6 +4,12 @@ namespace Buform;
 
 public class AsyncPickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IAsyncPickerFormItem
 {
+    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public virtual Func<TValue?, string?>? Formatter
     {
         get;
@@ -49,48 +55,6 @@ public class AsyncPickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IAsync
     public Exception? LoadException { get; private set; }
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
-
-    public AsyncPickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
-    }
-
-    protected virtual IFormOption CreateOption(TValue value)
-    {
-        return new FormOption<TValue>(value)
-        {
-            Formatter = Formatter,
-            FilterValueFactory = OptionFilterValueFactory,
-        };
-    }
-
-    protected virtual IEnumerable<IFormOption> CreateOptions(IEnumerable<TValue> source)
-    {
-        ArgumentNullException.ThrowIfNull(source);
-
-        return source.Select(CreateOption);
-    }
-
-    private void UpdateOptionFormatters()
-    {
-        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
-        {
-            option.Formatter = Formatter;
-            option.FilterValueFactory = OptionFilterValueFactory;
-        }
-
-        NotifyPropertyChanged(nameof(Options));
-    }
-
-    private void SetState(AsyncPickerLoadingState state, Exception? loadException)
-    {
-        State = state;
-        LoadException = loadException;
-
-        NotifyPropertyChanged(nameof(State));
-        NotifyPropertyChanged(nameof(LoadException));
-    }
 
     public virtual async Task LoadOptionsAsync(CancellationToken cancellationToken)
     {
@@ -138,6 +102,42 @@ public class AsyncPickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IAsync
         ArgumentNullException.ThrowIfNull(option);
 
         return Equals(Value, option.Value);
+    }
+
+    protected virtual IFormOption CreateOption(TValue value)
+    {
+        return new FormOption<TValue>(value)
+        {
+            Formatter = Formatter,
+            FilterValueFactory = OptionFilterValueFactory,
+        };
+    }
+
+    protected virtual IEnumerable<IFormOption> CreateOptions(IEnumerable<TValue> source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
+
+        return source.Select(CreateOption);
+    }
+
+    private void UpdateOptionFormatters()
+    {
+        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
+        {
+            option.Formatter = Formatter;
+            option.FilterValueFactory = OptionFilterValueFactory;
+        }
+
+        NotifyPropertyChanged(nameof(Options));
+    }
+
+    private void SetState(AsyncPickerLoadingState state, Exception? loadException)
+    {
+        State = state;
+        LoadException = loadException;
+
+        NotifyPropertyChanged(nameof(State));
+        NotifyPropertyChanged(nameof(LoadException));
     }
 }
 

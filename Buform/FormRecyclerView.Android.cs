@@ -8,14 +8,6 @@ namespace Buform;
 [Register("Buform.FormRecyclerView")]
 public sealed class FormRecyclerView : RecyclerView
 {
-    public Form? Form
-    {
-        get => (GetAdapter() as FormRecyclerViewAdapter)!.Form;
-        set => (GetAdapter() as FormRecyclerViewAdapter)!.Form = value;
-    }
-
-    public override bool HasFixedSize => false;
-
     public FormRecyclerView(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -40,6 +32,19 @@ public sealed class FormRecyclerView : RecyclerView
         Initialize();
     }
 
+    public Form? Form
+    {
+        get => (GetAdapter() as FormRecyclerViewAdapter)!.Form;
+        set => (GetAdapter() as FormRecyclerViewAdapter)!.Form = value;
+    }
+
+    public override bool HasFixedSize => false;
+
+    private static Adapter CreateAdapter()
+    {
+        return new FormRecyclerViewAdapter();
+    }
+
     private void Initialize()
     {
         SetLayoutManager(CreateLayoutManager());
@@ -56,10 +61,5 @@ public sealed class FormRecyclerView : RecyclerView
         layoutManager.SetSpanSizeLookup(new GridLayoutManager.DefaultSpanSizeLookup());
 
         return layoutManager;
-    }
-
-    private static Adapter CreateAdapter()
-    {
-        return new FormRecyclerViewAdapter();
     }
 }

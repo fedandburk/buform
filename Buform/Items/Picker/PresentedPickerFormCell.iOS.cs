@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class PresentedPickerFormCell<TItem> : PickerFormCell<TItem>
     where TItem : class, IOptionsPickerFormItem
 {
-    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
-
     protected PresentedPickerFormCell()
     {
         /* Required constructor */
@@ -16,6 +14,20 @@ public abstract class PresentedPickerFormCell<TItem> : PickerFormCell<TItem>
         : base(handle)
     {
         /* Required constructor */
+    }
+
+    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
+
+    public override async void OnSelected()
+    {
+        base.OnSelected();
+
+        if (Item == null || PickerPresenter == null)
+        {
+            return;
+        }
+
+        await PickerPresenter.PickAsync(this, Item).ConfigureAwait(true);
     }
 
     protected override string? GetLabel(TItem item)
@@ -71,18 +83,6 @@ public abstract class PresentedPickerFormCell<TItem> : PickerFormCell<TItem>
         }
 
         base.OnItemPropertyChanged(propertyName);
-    }
-
-    public override async void OnSelected()
-    {
-        base.OnSelected();
-
-        if (Item == null || PickerPresenter == null)
-        {
-            return;
-        }
-
-        await PickerPresenter.PickAsync(this, Item).ConfigureAwait(true);
     }
 
     protected override void Dispose(bool disposing)

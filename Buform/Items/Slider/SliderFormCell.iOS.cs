@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class SliderFormCell<TItem> : FormCell<TItem>
     where TItem : SliderFormItem
 {
-    protected virtual UISlider? Slider { get; set; }
-
     protected SliderFormCell()
     {
         /* Required constructor */
@@ -17,6 +15,8 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual UISlider? Slider { get; set; }
 
     protected override void Initialize()
     {
@@ -41,21 +41,6 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnValueChanged(object? sender, EventArgs e)
-    {
-        if (Slider == null)
-        {
-            return;
-        }
-
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.Value = Slider.Value;
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -115,6 +100,21 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChanged(object? sender, EventArgs e)
+    {
+        if (Slider == null)
+        {
+            return;
+        }
+
+        if (Item == null)
+        {
+            return;
+        }
+
+        Item.Value = Slider.Value;
     }
 }
 

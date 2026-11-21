@@ -14,6 +14,15 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
     private Form? _form;
     private FormRowList? _rows;
 
+    public MauiFormRecyclerAdapter(IMauiContext mauiContext)
+    {
+        ArgumentNullException.ThrowIfNull(mauiContext);
+
+        _mauiContext = mauiContext;
+
+        _groupHandlers = new FormGroupHandlerList();
+    }
+
     public Form? Form
     {
         get => _form;
@@ -41,15 +50,6 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
     }
 
     public override int ItemCount => _rows?.Count ?? 0;
-
-    public MauiFormRecyclerAdapter(IMauiContext mauiContext)
-    {
-        ArgumentNullException.ThrowIfNull(mauiContext);
-
-        _mauiContext = mauiContext;
-
-        _groupHandlers = new FormGroupHandlerList();
-    }
 
     public override int GetItemViewType(int position)
     {
@@ -119,32 +119,6 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
         ApplyAppearance(itemHolder, GetRow(position));
     }
 
-    private void BindItem(MauiFormItemViewHolder holder, FormRow row)
-    {
-        var item = row.Item ?? throw new InvalidOperationException("The item row has no item.");
-
-        holder.Unbind();
-        holder.Bind(item);
-
-        var groupHandler = _groupHandlers.Get(row.Group);
-
-        FormItemClickListener.Attach(holder.ItemView, groupHandler, item);
-
-        ApplyAppearance(holder, row);
-    }
-
-    private static void ApplyAppearance(MauiFormItemViewHolder holder, FormRow row)
-    {
-        var contentView = holder.ContentView;
-
-        if (contentView == null)
-        {
-            return;
-        }
-
-        FormRowAppearance.Apply(contentView, row);
-    }
-
     public override void OnViewRecycled(Object holder)
     {
         Unbind(holder);
@@ -157,6 +131,42 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
         Unbind(holder);
 
         return base.OnFailedToRecycleView(holder);
+    }
+
+    public FormRow GetRow(int position)
+    {
+        if (_rows == null || position < 0 || position >= _rows.Count)
+        {
+            throw new FormViewNotFoundException(position);
+        }
+
+        return _rows[position];
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DisposeRows();
+
+            _groupHandlers.Clear();
+
+            _form = null;
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private static void ApplyAppearance(MauiFormItemViewHolder holder, FormRow row)
+    {
+        var contentView = holder.ContentView;
+
+        if (contentView == null)
+        {
+            return;
+        }
+
+        FormRowAppearance.Apply(contentView, row);
     }
 
     private static void Unbind(Object holder)
@@ -172,19 +182,23 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
         }
     }
 
+    private void BindItem(MauiFormItemViewHolder holder, FormRow row)
+    {
+        var item = row.Item ?? throw new InvalidOperationException("The item row has no item.");
+
+        holder.Unbind();
+        holder.Bind(item);
+
+        var groupHandler = _groupHandlers.Get(row.Group);
+
+        FormItemClickListener.Attach(holder.ItemView, groupHandler, item);
+
+        ApplyAppearance(holder, row);
+    }
+
     private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
     {
         FormRowAppearance.NotifyRowsChanged(this, args);
-    }
-
-    public FormRow GetRow(int position)
-    {
-        if (_rows == null || position < 0 || position >= _rows.Count)
-        {
-            throw new FormViewNotFoundException(position);
-        }
-
-        return _rows[position];
     }
 
     private void DisposeRows()
@@ -197,19 +211,5 @@ internal sealed class MauiFormRecyclerAdapter : RecyclerView.Adapter, IFormRowSo
         _rows.CollectionChanged -= OnRowsChanged;
         _rows.Dispose();
         _rows = null;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            DisposeRows();
-
-            _groupHandlers.Clear();
-
-            _form = null;
-        }
-
-        base.Dispose(disposing);
     }
 }

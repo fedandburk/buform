@@ -5,11 +5,6 @@ public sealed class AppDelegate : UIApplicationDelegate
 {
     private const string SceneConfigurationName = "Default Configuration";
 
-    private static void Main(string[] args)
-    {
-        UIApplication.Main(args, null, typeof(AppDelegate));
-    }
-
     public override bool FinishedLaunching(UIApplication application, NSDictionary? launchOptions)
     {
         ColorPickerFormPlatform.Register();
@@ -31,5 +26,10 @@ public sealed class AppDelegate : UIApplicationDelegate
         {
             DelegateType = typeof(SceneDelegate),
         };
+    }
+
+    private static void Main(string[] args)
+    {
+        UIApplication.Main(args, null, typeof(AppDelegate));
     }
 }

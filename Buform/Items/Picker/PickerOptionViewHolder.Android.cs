@@ -21,16 +21,6 @@ internal sealed class PickerOptionViewHolder : RecyclerView.ViewHolder
         _optionView.Click += OnOptionClick;
     }
 
-    private void OnOptionClick(object? sender, EventArgs e)
-    {
-        if (_option == null)
-        {
-            return;
-        }
-
-        _onClick(_option);
-    }
-
     public void Bind(PickerOptionState state)
     {
         _option = state.Option;
@@ -47,5 +37,15 @@ internal sealed class PickerOptionViewHolder : RecyclerView.ViewHolder
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnOptionClick(object? sender, EventArgs e)
+    {
+        if (_option == null)
+        {
+            return;
+        }
+
+        _onClick(_option);
     }
 }

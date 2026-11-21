@@ -7,38 +7,6 @@ namespace Buform.Tests;
 
 public static class FormSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Changed = "changed";
-
-        protected Context()
-        {
-            Target = new Model();
-            Sut = new Form(Target);
-
-            ValueChanges = [];
-
-            Sut.ValueChanged += (_, args) => ValueChanges.Add(args.PropertyName);
-        }
-
-        protected Model Target { get; }
-
-        protected Form Sut { get; }
-
-        protected List<string> ValueChanges { get; }
-
-        protected TextFormItem<string?> CreateNameItem()
-        {
-            return new TextFormItem<string?>(() => Target.Name);
-        }
-
-        protected TextFormItem<string?> CreateHiddenNameItem()
-        {
-            return new TextFormItem<string?>(() => Target.Name) { IsVisible = false };
-        }
-    }
-
     public static class Initialization
     {
         public sealed class ItemAddedToReadOnlyForm : Context
@@ -340,6 +308,38 @@ public static class FormSpecs
             {
                 _group.Received(1).Dispose();
             }
+        }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Changed = "changed";
+
+        protected Context()
+        {
+            Target = new Model();
+            Sut = new Form(Target);
+
+            ValueChanges = [];
+
+            Sut.ValueChanged += (_, args) => ValueChanges.Add(args.PropertyName);
+        }
+
+        protected Model Target { get; }
+
+        protected Form Sut { get; }
+
+        protected List<string> ValueChanges { get; }
+
+        protected TextFormItem<string?> CreateNameItem()
+        {
+            return new TextFormItem<string?>(() => Target.Name);
+        }
+
+        protected TextFormItem<string?> CreateHiddenNameItem()
+        {
+            return new TextFormItem<string?>(() => Target.Name) { IsVisible = false };
         }
     }
 }

@@ -16,6 +16,8 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
         /* Required constructor */
     }
 
+    public abstract void Initialize(IFormGroup group);
+
     protected UITableView? GetTableView()
     {
         var view = this as UIView;
@@ -34,15 +36,11 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
             }
         }
     }
-
-    public abstract void Initialize(IFormGroup group);
 }
 
 public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
     where TGroup : class, IFormGroup
 {
-    public TGroup? Group { get; private set; }
-
     protected FormHeaderFooter()
     {
         /* Required constructor */
@@ -54,25 +52,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
         /* Required constructor */
     }
 
-    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (Group == null)
-        {
-            return;
-        }
-
-        OnGroupPropertyChanged(e.PropertyName);
-    }
-
-    protected virtual void OnGroupSet()
-    {
-        /* Nothing to do */
-    }
-
-    protected virtual void OnGroupPropertyChanged(string? propertyName)
-    {
-        /* Nothing to do */
-    }
+    public TGroup? Group { get; private set; }
 
     public sealed override void Initialize(IFormGroup group)
     {
@@ -100,6 +80,16 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
         OnGroupSet();
     }
 
+    protected virtual void OnGroupSet()
+    {
+        /* Nothing to do */
+    }
+
+    protected virtual void OnGroupPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -111,5 +101,15 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (Group == null)
+        {
+            return;
+        }
+
+        OnGroupPropertyChanged(e.PropertyName);
     }
 }

@@ -6,6 +6,12 @@ public class MultiValuePickerFormItem<TValue>
     : OptionsPickerFormItem<IEnumerable<TValue>?>,
         IMultiValuePickerFormItem
 {
+    public MultiValuePickerFormItem(Expression<Func<IEnumerable<TValue>?>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public override string? FormattedValue => ValueFormatter?.Invoke(Value) ?? Value?.ToString();
 
     public virtual Func<TValue, string?>? OptionFormatter
@@ -61,32 +67,6 @@ public class MultiValuePickerFormItem<TValue>
         }
     }
 
-    public MultiValuePickerFormItem(Expression<Func<IEnumerable<TValue>?>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
-    }
-
-    protected virtual IFormOption CreateOption(TValue value)
-    {
-        return new FormOption<TValue>(value)
-        {
-            Formatter = OptionFormatter,
-            FilterValueFactory = OptionFilterValueFactory,
-        };
-    }
-
-    private void UpdateOptionFormatters()
-    {
-        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
-        {
-            option.Formatter = OptionFormatter;
-            option.FilterValueFactory = OptionFilterValueFactory;
-        }
-
-        NotifyPropertyChanged(nameof(Options));
-    }
-
     public override void Pick(IFormOption? option)
     {
         if (option?.Value is not TValue value)
@@ -109,6 +89,26 @@ public class MultiValuePickerFormItem<TValue>
         ArgumentNullException.ThrowIfNull(option);
 
         return option.Value is TValue value && (Value?.Contains(value) ?? false);
+    }
+
+    protected virtual IFormOption CreateOption(TValue value)
+    {
+        return new FormOption<TValue>(value)
+        {
+            Formatter = OptionFormatter,
+            FilterValueFactory = OptionFilterValueFactory,
+        };
+    }
+
+    private void UpdateOptionFormatters()
+    {
+        foreach (var option in AllOptions.OfType<FormOption<TValue>>())
+        {
+            option.Formatter = OptionFormatter;
+            option.FilterValueFactory = OptionFilterValueFactory;
+        }
+
+        NotifyPropertyChanged(nameof(Options));
     }
 }
 

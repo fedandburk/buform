@@ -10,6 +10,17 @@ public class MultilineTextInputFormItem<TValue>
 
     private Func<TValue?, string?>? _formatter;
 
+    public MultilineTextInputFormItem(
+        Expression<Func<TValue>> targetProperty,
+        Func<string?, TValue?> converter
+    )
+        : base(targetProperty)
+    {
+        ArgumentNullException.ThrowIfNull(converter);
+
+        _converter = converter;
+    }
+
     public virtual string? Placeholder
     {
         get;
@@ -46,15 +57,9 @@ public class MultilineTextInputFormItem<TValue>
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public MultilineTextInputFormItem(
-        Expression<Func<TValue>> targetProperty,
-        Func<string?, TValue?> converter
-    )
-        : base(targetProperty)
+    public virtual void SetText(string? text)
     {
-        ArgumentNullException.ThrowIfNull(converter);
-
-        _converter = converter;
+        Value = _converter.Invoke(text);
     }
 
     protected override void OnValueChanged()
@@ -62,11 +67,6 @@ public class MultilineTextInputFormItem<TValue>
         base.OnValueChanged();
 
         NotifyPropertyChanged(nameof(FormattedValue));
-    }
-
-    public virtual void SetText(string? text)
-    {
-        Value = _converter.Invoke(text);
     }
 
     protected override void Dispose(bool isDisposing)

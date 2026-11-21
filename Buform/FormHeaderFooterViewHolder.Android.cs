@@ -7,8 +7,6 @@ namespace Buform;
 public abstract class FormHeaderFooterViewHolder<TGroup> : FormViewHolder
     where TGroup : class, IFormGroup
 {
-    public TGroup? Group { get; private set; }
-
     protected FormHeaderFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -21,20 +19,7 @@ public abstract class FormHeaderFooterViewHolder<TGroup> : FormViewHolder
         /* Required constructor */
     }
 
-    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        OnGroupPropertyChanged(e.PropertyName);
-    }
-
-    protected virtual void OnGroupSet()
-    {
-        /* Nothing to do */
-    }
-
-    protected virtual void OnGroupPropertyChanged(string? propertyName)
-    {
-        /* Nothing to do */
-    }
+    public TGroup? Group { get; private set; }
 
     public override void Initialize(IDisposable data)
     {
@@ -63,6 +48,16 @@ public abstract class FormHeaderFooterViewHolder<TGroup> : FormViewHolder
         OnGroupSet();
     }
 
+    protected virtual void OnGroupSet()
+    {
+        /* Nothing to do */
+    }
+
+    protected virtual void OnGroupPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -72,5 +67,10 @@ public abstract class FormHeaderFooterViewHolder<TGroup> : FormViewHolder
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnGroupPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        OnGroupPropertyChanged(e.PropertyName);
     }
 }

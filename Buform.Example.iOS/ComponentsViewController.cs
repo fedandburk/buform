@@ -38,18 +38,6 @@ public sealed class ComponentsViewController : UITableViewController
         _source = new FormTableViewSource(TableView) { Form = _viewModel.Form };
     }
 
-    private void ToggleReadOnlyMode()
-    {
-        _viewModel.ToggleReadOnlyModeCommand.Execute(null);
-
-        if (_toggleReadOnlyButtonItem == null)
-        {
-            return;
-        }
-
-        _toggleReadOnlyButtonItem.Selected = _viewModel.Form.IsReadOnly;
-    }
-
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
@@ -62,5 +50,17 @@ public sealed class ComponentsViewController : UITableViewController
         _cancelButtonItem?.Dispose();
         _toggleReadOnlyButtonItem?.Dispose();
         _source?.Dispose();
+    }
+
+    private void ToggleReadOnlyMode()
+    {
+        _viewModel.ToggleReadOnlyModeCommand.Execute(null);
+
+        if (_toggleReadOnlyButtonItem == null)
+        {
+            return;
+        }
+
+        _toggleReadOnlyButtonItem.Selected = _viewModel.Form.IsReadOnly;
     }
 }

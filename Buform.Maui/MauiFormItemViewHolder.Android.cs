@@ -32,18 +32,6 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolder<FormItemView>
         BindNativeView(item);
     }
 
-    private void BindNativeView(IFormItem item)
-    {
-        var itemType = item.GetType();
-
-        if (!FormPlatform.TryGetItemViewType(itemType, out var viewType))
-        {
-            throw new FormViewNotFoundException(itemType);
-        }
-
-        BindNativeView(viewType!.Value, item);
-    }
-
     protected override AView WrapPlatformView(AView platformView)
     {
         ArgumentNullException.ThrowIfNull(platformView);
@@ -89,5 +77,17 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolder<FormItemView>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void BindNativeView(IFormItem item)
+    {
+        var itemType = item.GetType();
+
+        if (!FormPlatform.TryGetItemViewType(itemType, out var viewType))
+        {
+            throw new FormViewNotFoundException(itemType);
+        }
+
+        BindNativeView(viewType!.Value, item);
     }
 }

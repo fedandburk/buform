@@ -9,9 +9,6 @@ public sealed partial class MenuViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
 
-    [ObservableProperty]
-    public partial Form Form { get; set; }
-
     public MenuViewModel(INavigationService navigationService)
     {
         _navigationService = navigationService;
@@ -42,6 +39,9 @@ public sealed partial class MenuViewModel : ObservableObject
             },
         };
     }
+
+    [ObservableProperty]
+    public partial Form Form { get; set; }
 
     [RelayCommand]
     private Task CreateConnectionAsync()

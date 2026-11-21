@@ -2,12 +2,6 @@ namespace Buform;
 
 public sealed class FormItemMove
 {
-    public object? Value { get; }
-
-    public int OldIndex { get; }
-
-    public int NewIndex { get; }
-
     public FormItemMove(object? value, int oldIndex, int newIndex)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(oldIndex);
@@ -17,6 +11,12 @@ public sealed class FormItemMove
         OldIndex = oldIndex;
         NewIndex = newIndex;
     }
+
+    public object? Value { get; }
+
+    public int OldIndex { get; }
+
+    public int NewIndex { get; }
 
     internal static FormItemMove Create(IFormGroup group, int oldVisibleIndex, int newVisibleIndex)
     {

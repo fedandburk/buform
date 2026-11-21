@@ -14,6 +14,19 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
     private string? _footerLabel;
     private IDisposable? _sourceSubscription;
 
+    public ListFormGroup(
+        Func<TValue, TItem> itemFactory,
+        string? headerLabel = null,
+        string? footerLabel = null
+    )
+    {
+        ArgumentNullException.ThrowIfNull(itemFactory);
+
+        _itemFactory = itemFactory;
+        _headerLabel = headerLabel;
+        _footerLabel = footerLabel;
+    }
+
     public virtual ICommand? SelectCommand
     {
         get;
@@ -66,17 +79,14 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
         }
     }
 
-    public ListFormGroup(
-        Func<TValue, TItem> itemFactory,
-        string? headerLabel = null,
-        string? footerLabel = null
-    )
+    protected override void Dispose(bool isDisposing)
     {
-        ArgumentNullException.ThrowIfNull(itemFactory);
+        if (isDisposing)
+        {
+            _sourceSubscription?.Dispose();
+        }
 
-        _itemFactory = itemFactory;
-        _headerLabel = headerLabel;
-        _footerLabel = footerLabel;
+        base.Dispose(isDisposing);
     }
 
     private static IObservable<IChangeSet<TValue>> ToChangeSet(IEnumerable<TValue> source)
@@ -87,15 +97,5 @@ public class ListFormGroup<TValue, TItem> : FormGroup<TItem>, IListFormGroup
             ReadOnlyObservableCollection<TValue> collection => collection.ToObservableChangeSet(),
             _ => source.AsObservableChangeSet(),
         };
-    }
-
-    protected override void Dispose(bool isDisposing)
-    {
-        if (isDisposing)
-        {
-            _sourceSubscription?.Dispose();
-        }
-
-        base.Dispose(isDisposing);
     }
 }

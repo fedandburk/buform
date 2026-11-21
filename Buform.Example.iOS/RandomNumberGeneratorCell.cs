@@ -21,11 +21,6 @@ public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGenerat
         /* Required constructor */
     }
 
-    private void OnTouchUpInside(object? _, EventArgs __)
-    {
-        Item?.GenerateCommand.Execute(null);
-    }
-
     protected override void Initialize()
     {
         base.Initialize();
@@ -51,5 +46,10 @@ public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGenerat
 
         var button = _button;
         button?.TouchUpInside -= OnTouchUpInside;
+    }
+
+    private void OnTouchUpInside(object? _, EventArgs __)
+    {
+        Item?.GenerateCommand.Execute(null);
     }
 }

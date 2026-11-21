@@ -13,14 +13,6 @@ public static class MauiFormPlatform
         ItemRegistry = new MauiFormItemRegistry();
     }
 
-    internal static void Initialize(MauiAppBuilder builder)
-    {
-        builder.ConfigureMauiHandlers(handlers =>
-        {
-            handlers.AddHandler<FormView, FormViewHandler>();
-        });
-    }
-
     public static void RegisterGroupHeader<
         TGroup,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
@@ -52,6 +44,14 @@ public static class MauiFormPlatform
         where TItemView : FormItemView<TItem>
     {
         ItemRegistry.RegisterItem<TItem, TItemView>();
+    }
+
+    internal static void Initialize(MauiAppBuilder builder)
+    {
+        builder.ConfigureMauiHandlers(handlers =>
+        {
+            handlers.AddHandler<FormView, FormViewHandler>();
+        });
     }
 
     internal static bool TryGetHeaderViewType(

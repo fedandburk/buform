@@ -5,10 +5,6 @@ namespace Buform;
 public abstract class ButtonFormCell<TItem> : FormCell<TItem>
     where TItem : ButtonFormItem
 {
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
-    protected virtual UILabel? Label { get; set; }
-
     protected ButtonFormCell()
     {
         /* Required constructor */
@@ -18,6 +14,24 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
         : base(handle)
     {
         /* Required constructor */
+    }
+
+    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
+
+    protected virtual UILabel? Label { get; set; }
+
+    public override void TintColorDidChange()
+    {
+        base.TintColorDidChange();
+
+        UpdateStyle();
+    }
+
+    public override void OnSelected()
+    {
+        base.OnSelected();
+
+        Item?.Value.SafeExecute();
     }
 
     protected override void Initialize()
@@ -86,13 +100,6 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
         Label.Font = style == ButtonStyle.Done ? FormFonts.GetBoldBody() : FormFonts.GetBody();
     }
 
-    public override void TintColorDidChange()
-    {
-        base.TintColorDidChange();
-
-        UpdateStyle();
-    }
-
     protected override void OnItemSet()
     {
         UpdateReadOnlyState();
@@ -114,13 +121,6 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
                 UpdateStyle();
                 break;
         }
-    }
-
-    public override void OnSelected()
-    {
-        base.OnSelected();
-
-        Item?.Value.SafeExecute();
     }
 
     protected override void Dispose(bool disposing)

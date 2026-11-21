@@ -6,8 +6,6 @@ namespace Buform;
 public abstract class ColorPickerFormViewHolder<TItem> : PickerFormViewHolder<TItem>
     where TItem : ColorPickerFormItem
 {
-    protected virtual View? SwatchView { get; set; }
-
     protected ColorPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -19,6 +17,8 @@ public abstract class ColorPickerFormViewHolder<TItem> : PickerFormViewHolder<TI
     {
         /* Required constructor */
     }
+
+    protected virtual View? SwatchView { get; set; }
 
     protected override string? GetLabel(TItem item)
     {

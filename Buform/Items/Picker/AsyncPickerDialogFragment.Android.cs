@@ -13,16 +13,16 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
         /* Required constructor */
     }
 
-    protected AsyncPickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
-        : base(javaReference, transfer)
-    {
-        /* Required constructor */
-    }
-
     public AsyncPickerDialogFragment(IAsyncPickerFormItem item)
         : base(item)
     {
         _item = item;
+    }
+
+    protected AsyncPickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
     }
 
     public override void OnStart()
@@ -37,36 +37,6 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
         CancelLoading();
 
         base.OnStop();
-    }
-
-    private async void LoadOptions()
-    {
-        if (_item is not { State: AsyncPickerLoadingState.None })
-        {
-            return;
-        }
-
-        CancelLoading();
-
-        _cancellationTokenSource = new CancellationTokenSource();
-
-        var cancellationToken = _cancellationTokenSource.Token;
-
-        try
-        {
-            await _item.LoadOptionsAsync(cancellationToken);
-        }
-        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-        {
-            return;
-        }
-    }
-
-    private void CancelLoading()
-    {
-        _cancellationTokenSource?.Cancel();
-        _cancellationTokenSource?.Dispose();
-        _cancellationTokenSource = null;
     }
 
     protected override void UpdateSearchVisibility(int optionCount)
@@ -100,5 +70,35 @@ public class AsyncPickerDialogFragment : PickerDialogFragment
             default:
                 throw new ArgumentOutOfRangeException(nameof(state), state, null);
         }
+    }
+
+    private async void LoadOptions()
+    {
+        if (_item is not { State: AsyncPickerLoadingState.None })
+        {
+            return;
+        }
+
+        CancelLoading();
+
+        _cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try
+        {
+            await _item.LoadOptionsAsync(cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return;
+        }
+    }
+
+    private void CancelLoading()
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = null;
     }
 }

@@ -5,14 +5,6 @@ namespace Buform;
 public abstract class PickerFormCell<TItem> : FormCell<TItem>
     where TItem : class, IFormItem
 {
-    protected virtual UILabel? Label { get; set; }
-
-    protected virtual UILabel? ValueLabel { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected PickerFormCell()
     {
         /* Required constructor */
@@ -23,6 +15,14 @@ public abstract class PickerFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected virtual UILabel? ValueLabel { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
 
     protected abstract string? GetLabel(TItem item);
 

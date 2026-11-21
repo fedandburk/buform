@@ -10,14 +10,6 @@ public abstract class StepperFormViewHolder<TItem> : FormViewHolder<TItem>
     private const int DecreaseDirection = -1;
     private const int IncreaseDirection = 1;
 
-    protected virtual TextView? LabelView { get; set; }
-
-    protected virtual TextView? ValueView { get; set; }
-
-    protected virtual View? DecreaseButtonView { get; set; }
-
-    protected virtual View? IncreaseButtonView { get; set; }
-
     protected StepperFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -30,41 +22,13 @@ public abstract class StepperFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private void OnDecreaseClick(object? sender, EventArgs e)
-    {
-        ChangeValue(DecreaseDirection);
-    }
+    protected virtual TextView? LabelView { get; set; }
 
-    private void OnIncreaseClick(object? sender, EventArgs e)
-    {
-        ChangeValue(IncreaseDirection);
-    }
+    protected virtual TextView? ValueView { get; set; }
 
-    private void ChangeValue(int direction)
-    {
-        if (Item == null || Item.IsReadOnly)
-        {
-            return;
-        }
+    protected virtual View? DecreaseButtonView { get; set; }
 
-        var value = (long)Item.Value + (long)direction * Item.Step;
-        var clampedValue = Math.Clamp(value, Item.MinValue, Item.MaxValue);
-
-        Item.Value = (int)clampedValue;
-    }
-
-    private void UpdateButtonState()
-    {
-        if (Item == null)
-        {
-            return;
-        }
-
-        var isEnabled = !Item.IsReadOnly;
-
-        DecreaseButtonView?.Enabled = isEnabled && Item.Value > Item.MinValue;
-        IncreaseButtonView?.Enabled = isEnabled && Item.Value < Item.MaxValue;
-    }
+    protected virtual View? IncreaseButtonView { get; set; }
 
     protected override void Initialize()
     {
@@ -156,6 +120,42 @@ public abstract class StepperFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnDecreaseClick(object? sender, EventArgs e)
+    {
+        ChangeValue(DecreaseDirection);
+    }
+
+    private void OnIncreaseClick(object? sender, EventArgs e)
+    {
+        ChangeValue(IncreaseDirection);
+    }
+
+    private void ChangeValue(int direction)
+    {
+        if (Item == null || Item.IsReadOnly)
+        {
+            return;
+        }
+
+        var value = (long)Item.Value + (long)direction * Item.Step;
+        var clampedValue = Math.Clamp(value, Item.MinValue, Item.MaxValue);
+
+        Item.Value = (int)clampedValue;
+    }
+
+    private void UpdateButtonState()
+    {
+        if (Item == null)
+        {
+            return;
+        }
+
+        var isEnabled = !Item.IsReadOnly;
+
+        DecreaseButtonView?.Enabled = isEnabled && Item.Value > Item.MinValue;
+        IncreaseButtonView?.Enabled = isEnabled && Item.Value < Item.MaxValue;
     }
 }
 

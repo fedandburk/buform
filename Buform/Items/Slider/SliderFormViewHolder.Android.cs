@@ -9,8 +9,6 @@ public abstract class SliderFormViewHolder<TItem> : FormViewHolder<TItem>
 {
     private SliderChangeListener? _changeListener;
 
-    protected virtual Slider? SliderView { get; set; }
-
     protected SliderFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -23,15 +21,7 @@ public abstract class SliderFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private void OnValueChange(float value, bool isFromUser)
-    {
-        if (!isFromUser || Item == null)
-        {
-            return;
-        }
-
-        Item.Value = value;
-    }
+    protected virtual Slider? SliderView { get; set; }
 
     protected override void Initialize()
     {
@@ -121,6 +111,16 @@ public abstract class SliderFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChange(float value, bool isFromUser)
+    {
+        if (!isFromUser || Item == null)
+        {
+            return;
+        }
+
+        Item.Value = value;
     }
 }
 

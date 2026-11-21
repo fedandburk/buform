@@ -5,26 +5,6 @@ namespace Buform.Tests;
 
 public static class SegmentsFormItemSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Second = "second";
-        protected const string Prefix = "formatted ";
-
-        protected Context()
-        {
-            Target = new Model();
-
-            Sut = new SegmentsFormItem(() => Target.Name) { Source = [First, Second] };
-
-            _ = new Form(Target) { new LabeledFormGroup { Sut } };
-        }
-
-        protected Model Target { get; }
-
-        protected SegmentsFormItem Sut { get; }
-    }
-
     public static class Options
     {
         public sealed class OptionsReadTwice : Context
@@ -75,5 +55,25 @@ public static class SegmentsFormItemSpecs
                 _propertyChanges.Should().Contain(nameof(SegmentsFormItem.Options));
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Second = "second";
+        protected const string Prefix = "formatted ";
+
+        protected Context()
+        {
+            Target = new Model();
+
+            Sut = new SegmentsFormItem(() => Target.Name) { Source = [First, Second] };
+
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
+        }
+
+        protected Model Target { get; }
+
+        protected SegmentsFormItem Sut { get; }
     }
 }

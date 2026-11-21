@@ -13,7 +13,30 @@ public abstract class FormItem<TValue> : IFormItem
     private bool _isVisible;
     private bool _shouldSkipValueChangedCallback;
 
-    protected Form? Form { get; private set; }
+    protected FormItem(Expression<Func<TValue>> targetProperty)
+    {
+        ArgumentNullException.ThrowIfNull(targetProperty);
+
+        _property = targetProperty;
+
+        var member = _property.GetMember();
+
+        PropertyName = member.Name;
+        _propertyInfo = member as PropertyInfo;
+
+        _isVisible = true;
+    }
+
+    protected FormItem(TValue value)
+    {
+        _value = value;
+
+        _isVisible = true;
+    }
+
+    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public object? Target { get; private set; }
 
@@ -58,33 +81,93 @@ public abstract class FormItem<TValue> : IFormItem
         set => SetValue(value);
     }
 
-    protected virtual bool IsValueChanged { get; set; }
-
     public virtual Action<Form, TValue?>? ValueChangedCallback { get; set; }
 
-    public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
+    protected Form? Form { get; private set; }
 
-    public event PropertyChangedEventHandler? PropertyChanged;
+    protected virtual bool IsValueChanged { get; set; }
 
-    protected FormItem(Expression<Func<TValue>> targetProperty)
+    public void Initialize(Form form, object target)
     {
-        ArgumentNullException.ThrowIfNull(targetProperty);
+        ArgumentNullException.ThrowIfNull(form);
+        ArgumentNullException.ThrowIfNull(target);
 
-        _property = targetProperty;
+        if (_propertyInfo?.DeclaringType?.IsInstanceOfType(target) == false)
+        {
+            throw new ArgumentException(
+                $"Target of type '{target.GetType()}' does not declare property '{PropertyName}'.",
+                nameof(target)
+            );
+        }
 
-        var member = _property.GetMember();
+        Form = form;
 
-        PropertyName = member.Name;
-        _propertyInfo = member as PropertyInfo;
+        if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)
+        {
+            oldNotifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
+        }
 
-        _isVisible = true;
+        Target = target;
+
+        if (Target is INotifyPropertyChanged newNotifyPropertyChanged)
+        {
+            newNotifyPropertyChanged.PropertyChanged += OnTargetPropertyChanged;
+        }
+
+        _shouldSkipValueChangedCallback = true;
+
+        OnValueChanged();
+
+        _shouldSkipValueChangedCallback = false;
     }
 
-    protected FormItem(TValue value)
+    public void Dispose()
     {
-        _value = value;
+        Dispose(true);
+    }
 
-        _isVisible = true;
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected virtual void OnValueChanged()
+    {
+        if (Form == null)
+        {
+            return;
+        }
+
+        NotifyPropertyChanged(nameof(Value));
+
+        ValueChanged?.Invoke(this, new FormValueChangedEventArgs(PropertyName ?? string.Empty));
+
+        if (_shouldSkipValueChangedCallback)
+        {
+            return;
+        }
+
+        ValueChangedCallback?.Invoke(Form, Value);
+    }
+
+    protected virtual void Dispose(bool isDisposing)
+    {
+        if (!isDisposing)
+        {
+            return;
+        }
+
+        _propertyInfo = null;
+        _property = null;
+
+        if (Target is INotifyPropertyChanged notifyPropertyChanged)
+        {
+            notifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
+        }
+
+        Target = null;
+
+        _value = default;
     }
 
     private TValue? GetValue()
@@ -135,88 +218,5 @@ public abstract class FormItem<TValue> : IFormItem
         }
 
         OnValueChanged();
-    }
-
-    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected virtual void OnValueChanged()
-    {
-        if (Form == null)
-        {
-            return;
-        }
-
-        NotifyPropertyChanged(nameof(Value));
-
-        ValueChanged?.Invoke(this, new FormValueChangedEventArgs(PropertyName ?? string.Empty));
-
-        if (_shouldSkipValueChangedCallback)
-        {
-            return;
-        }
-
-        ValueChangedCallback?.Invoke(Form, Value);
-    }
-
-    public void Initialize(Form form, object target)
-    {
-        ArgumentNullException.ThrowIfNull(form);
-        ArgumentNullException.ThrowIfNull(target);
-
-        if (_propertyInfo?.DeclaringType?.IsInstanceOfType(target) == false)
-        {
-            throw new ArgumentException(
-                $"Target of type '{target.GetType()}' does not declare property '{PropertyName}'.",
-                nameof(target)
-            );
-        }
-
-        Form = form;
-
-        if (Target is INotifyPropertyChanged oldNotifyPropertyChanged)
-        {
-            oldNotifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
-        }
-
-        Target = target;
-
-        if (Target is INotifyPropertyChanged newNotifyPropertyChanged)
-        {
-            newNotifyPropertyChanged.PropertyChanged += OnTargetPropertyChanged;
-        }
-
-        _shouldSkipValueChangedCallback = true;
-
-        OnValueChanged();
-
-        _shouldSkipValueChangedCallback = false;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-    }
-
-    protected virtual void Dispose(bool isDisposing)
-    {
-        if (!isDisposing)
-        {
-            return;
-        }
-
-        _propertyInfo = null;
-        _property = null;
-
-        if (Target is INotifyPropertyChanged notifyPropertyChanged)
-        {
-            notifyPropertyChanged.PropertyChanged -= OnTargetPropertyChanged;
-        }
-
-        Target = null;
-
-        _value = default;
     }
 }

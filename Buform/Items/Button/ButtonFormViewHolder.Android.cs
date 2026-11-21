@@ -8,8 +8,6 @@ namespace Buform;
 public abstract class ButtonFormViewHolder<TItem> : FormViewHolder<TItem>
     where TItem : ButtonFormItem
 {
-    protected virtual TextView? LabelView { get; set; }
-
     protected ButtonFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -22,15 +20,7 @@ public abstract class ButtonFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private void OnItemViewClick(object? sender, EventArgs e)
-    {
-        if (Item == null || Item.IsReadOnly)
-        {
-            return;
-        }
-
-        Item.Value.SafeExecute();
-    }
+    protected virtual TextView? LabelView { get; set; }
 
     protected override void Initialize()
     {
@@ -123,6 +113,16 @@ public abstract class ButtonFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnItemViewClick(object? sender, EventArgs e)
+    {
+        if (Item == null || Item.IsReadOnly)
+        {
+            return;
+        }
+
+        Item.Value.SafeExecute();
     }
 }
 

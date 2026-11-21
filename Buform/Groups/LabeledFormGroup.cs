@@ -2,6 +2,12 @@ namespace Buform;
 
 public class LabeledFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
 {
+    public LabeledFormGroup(string? headerLabel = null, string? footerLabel = null)
+    {
+        HeaderLabel = headerLabel;
+        FooterLabel = footerLabel;
+    }
+
     public virtual string? HeaderLabel
     {
         get;
@@ -22,11 +28,5 @@ public class LabeledFormGroup : FormGroup<IFormItem>, ILabeledFormGroup
 
             NotifyPropertyChanged();
         }
-    }
-
-    public LabeledFormGroup(string? headerLabel = null, string? footerLabel = null)
-    {
-        HeaderLabel = headerLabel;
-        FooterLabel = footerLabel;
     }
 }

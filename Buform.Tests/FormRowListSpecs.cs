@@ -6,62 +6,6 @@ namespace Buform.Tests;
 
 public static class FormRowListSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Second = "second";
-        protected const string Third = "third";
-        protected const string Added = "added";
-
-        protected Context()
-        {
-            FirstItem = new TextFormItem<string>(First);
-            SecondItem = new TextFormItem<string>(Second);
-            ThirdItem = new TextFormItem<string>(Third);
-
-            FirstGroup = new LabeledFormGroup { FirstItem, SecondItem };
-            SecondGroup = new LabeledFormGroup { ThirdItem };
-
-            Form = new Form(new Model()) { FirstGroup, SecondGroup };
-
-            Sut = new FormRowList(Form);
-
-            Changes = [];
-
-            Sut.CollectionChanged += (_, args) => Changes.Add(args);
-        }
-
-        protected TextFormItem<string> FirstItem { get; }
-        protected TextFormItem<string> SecondItem { get; }
-        protected TextFormItem<string> ThirdItem { get; }
-
-        protected LabeledFormGroup FirstGroup { get; }
-        protected LabeledFormGroup SecondGroup { get; }
-
-        protected Form Form { get; }
-
-        internal FormRowList Sut { get; }
-
-        protected List<NotifyCollectionChangedEventArgs> Changes { get; }
-
-        internal IReadOnlyList<(FormRowType, IDisposable)> Rows =>
-            Sut.Select(row => (row.Type, row.Data)).ToList();
-
-        protected IReadOnlyList<(NotifyCollectionChangedAction, int, int)> NewChanges =>
-            Changes
-                .Select(change =>
-                    (change.Action, change.NewStartingIndex, change.NewItems?.Count ?? 0)
-                )
-                .ToList();
-
-        protected IReadOnlyList<(NotifyCollectionChangedAction, int, int)> OldChanges =>
-            Changes
-                .Select(change =>
-                    (change.Action, change.OldStartingIndex, change.OldItems?.Count ?? 0)
-                )
-                .ToList();
-    }
-
     public static class Enumeration
     {
         public sealed class TwoGroups : Context
@@ -223,5 +167,64 @@ public static class FormRowListSpecs
                 Changes.Should().BeEmpty();
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Second = "second";
+        protected const string Third = "third";
+        protected const string Added = "added";
+
+        protected Context()
+        {
+            FirstItem = new TextFormItem<string>(First);
+            SecondItem = new TextFormItem<string>(Second);
+            ThirdItem = new TextFormItem<string>(Third);
+
+            FirstGroup = new LabeledFormGroup { FirstItem, SecondItem };
+            SecondGroup = new LabeledFormGroup { ThirdItem };
+
+            Form = new Form(new Model()) { FirstGroup, SecondGroup };
+
+            Sut = new FormRowList(Form);
+
+            Changes = [];
+
+            Sut.CollectionChanged += (_, args) => Changes.Add(args);
+        }
+
+        internal FormRowList Sut { get; }
+
+        internal IReadOnlyList<(FormRowType, IDisposable)> Rows =>
+            Sut.Select(row => (row.Type, row.Data)).ToList();
+
+        protected TextFormItem<string> FirstItem { get; }
+
+        protected TextFormItem<string> SecondItem { get; }
+
+        protected TextFormItem<string> ThirdItem { get; }
+
+        protected LabeledFormGroup FirstGroup { get; }
+
+        protected LabeledFormGroup SecondGroup { get; }
+
+        protected Form Form { get; }
+
+        protected List<NotifyCollectionChangedEventArgs> Changes { get; }
+
+        protected IReadOnlyList<(NotifyCollectionChangedAction, int, int)> NewChanges =>
+            Changes
+                .Select(change =>
+                    (change.Action, change.NewStartingIndex, change.NewItems?.Count ?? 0)
+                )
+                .ToList();
+
+        protected IReadOnlyList<(NotifyCollectionChangedAction, int, int)> OldChanges =>
+            Changes
+                .Select(change =>
+                    (change.Action, change.OldStartingIndex, change.OldItems?.Count ?? 0)
+                )
+                .ToList();
     }
 }

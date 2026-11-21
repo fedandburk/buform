@@ -5,8 +5,6 @@ namespace Buform;
 
 public class LabeledFormGroupFooterViewHolder : FormHeaderFooterViewHolder<ILabeledFormGroup>
 {
-    protected virtual TextView? LabelView { get; set; }
-
     public LabeledFormGroupFooterViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -18,6 +16,8 @@ public class LabeledFormGroupFooterViewHolder : FormHeaderFooterViewHolder<ILabe
     {
         /* Required constructor */
     }
+
+    protected virtual TextView? LabelView { get; set; }
 
     protected override void Initialize()
     {

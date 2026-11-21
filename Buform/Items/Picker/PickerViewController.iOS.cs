@@ -10,7 +10,15 @@ public class PickerViewController<TItem> : UITableViewController
 {
     private readonly CGSize _minimumPopUpSize = new(240, 320);
 
-    protected TItem? Item { get; private set; }
+    public PickerViewController(UITableViewStyle style, TItem item)
+        : base(style)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        Item = item;
+
+        Item.PropertyChanged += OnPropertyChanged;
+    }
 
     public override CGSize PreferredContentSize
     {
@@ -28,42 +36,7 @@ public class PickerViewController<TItem> : UITableViewController
         }
     }
 
-    public PickerViewController(UITableViewStyle style, TItem item)
-        : base(style)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        Item = item;
-
-        Item.PropertyChanged += OnPropertyChanged;
-    }
-
-    protected virtual void SetLeftBarButtonCloseItem()
-    {
-        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(
-            UIBarButtonSystemItem.Close,
-            (_, _) => DismissViewController(true, null)
-        );
-    }
-
-    protected virtual void SetRightBarButtonClearItem()
-    {
-        NavigationItem.RightBarButtonItem = new UIBarButtonItem(
-            FormTexts.Clear,
-            UIBarButtonItemStyle.Plain,
-            (_, _) =>
-            {
-                Item?.Value = null;
-            }
-        );
-    }
-
-    private async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
-
-        InvokeOnMainThread(() => TableView.ReloadData());
-    }
+    protected TItem? Item { get; private set; }
 
     public override void ViewDidLoad()
     {
@@ -89,26 +62,6 @@ public class PickerViewController<TItem> : UITableViewController
         NavigationItem.SearchController.SearchBar.TextChanged += OnSearchTextChanged;
         NavigationItem.SearchController.SearchBar.CancelButtonClicked +=
             OnSearchCancelButtonClicked;
-    }
-
-    private void OnSearchTextChanged(object? sender, UISearchBarTextChangedEventArgs e)
-    {
-        if (Item is null)
-        {
-            return;
-        }
-
-        Item.FilterQuery = e.SearchText;
-    }
-
-    private void OnSearchCancelButtonClicked(object? sender, EventArgs e)
-    {
-        if (Item is null)
-        {
-            return;
-        }
-
-        Item.FilterQuery = null;
     }
 
     public override nint RowsInSection(UITableView tableView, nint section)
@@ -185,6 +138,26 @@ public class PickerViewController<TItem> : UITableViewController
         }
     }
 
+    protected virtual void SetLeftBarButtonCloseItem()
+    {
+        NavigationItem.LeftBarButtonItem = new UIBarButtonItem(
+            UIBarButtonSystemItem.Close,
+            (_, _) => DismissViewController(true, null)
+        );
+    }
+
+    protected virtual void SetRightBarButtonClearItem()
+    {
+        NavigationItem.RightBarButtonItem = new UIBarButtonItem(
+            FormTexts.Clear,
+            UIBarButtonItemStyle.Plain,
+            (_, _) =>
+            {
+                Item?.Value = null;
+            }
+        );
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -200,5 +173,32 @@ public class PickerViewController<TItem> : UITableViewController
         }
 
         base.Dispose(disposing);
+    }
+
+    private async void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        await Task.Delay(TimeSpan.FromMilliseconds(100)).ConfigureAwait(false);
+
+        InvokeOnMainThread(() => TableView.ReloadData());
+    }
+
+    private void OnSearchTextChanged(object? sender, UISearchBarTextChangedEventArgs e)
+    {
+        if (Item is null)
+        {
+            return;
+        }
+
+        Item.FilterQuery = e.SearchText;
+    }
+
+    private void OnSearchCancelButtonClicked(object? sender, EventArgs e)
+    {
+        if (Item is null)
+        {
+            return;
+        }
+
+        Item.FilterQuery = null;
     }
 }

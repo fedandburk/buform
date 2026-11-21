@@ -10,19 +10,6 @@ public sealed class MenuActivity : AndroidX.AppCompat.App.AppCompatActivity, INa
         _viewModel = new MenuViewModel(this);
     }
 
-    protected override void OnCreate(Bundle? savedInstanceState)
-    {
-        AndroidX.Activity.EdgeToEdge.Enable(this);
-
-        base.OnCreate(savedInstanceState);
-
-        SetContentView(Resource.Layout.ActivityMenu);
-
-        var recyclerView = FindViewById<FormRecyclerView>(Resource.Id.RecyclerView)!;
-
-        recyclerView.Form = _viewModel.Form;
-    }
-
     public Task OpenComponentsAsync()
     {
         StartActivity(typeof(ComponentsActivity));
@@ -42,5 +29,18 @@ public sealed class MenuActivity : AndroidX.AppCompat.App.AppCompatActivity, INa
         StartActivity(typeof(CreateEventActivity));
 
         return Task.CompletedTask;
+    }
+
+    protected override void OnCreate(Bundle? savedInstanceState)
+    {
+        AndroidX.Activity.EdgeToEdge.Enable(this);
+
+        base.OnCreate(savedInstanceState);
+
+        SetContentView(Resource.Layout.ActivityMenu);
+
+        var recyclerView = FindViewById<FormRecyclerView>(Resource.Id.RecyclerView)!;
+
+        recyclerView.Form = _viewModel.Form;
     }
 }

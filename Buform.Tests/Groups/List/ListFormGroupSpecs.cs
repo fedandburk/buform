@@ -7,48 +7,6 @@ namespace Buform.Tests;
 
 public static class ListFormGroupSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Second = "second";
-        protected const string Third = "third";
-        protected const string Inserted = "inserted";
-        protected const string Replacement = "replacement";
-
-        protected Context(params string[] values)
-        {
-            Source = new ObservableCollection<string>(values);
-            Sut = new ListFormGroup<string, TextFormItem<string>>(value => new TextFormItem<string>(
-                value
-            ))
-            {
-                Source = Source,
-            };
-        }
-
-        protected ObservableCollection<string> Source { get; }
-
-        protected ListFormGroup<string, TextFormItem<string>> Sut { get; }
-
-        protected IReadOnlyList<string?> VisibleValues =>
-            Sut.Cast<TextFormItem<string>>().Select(item => item.Value).ToList();
-
-        protected IReadOnlyList<object?> HiddenValues
-        {
-            get
-            {
-                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
-
-                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
-            }
-        }
-
-        protected TextFormItem<string> VisibleItem(string value)
-        {
-            return Sut.Cast<TextFormItem<string>>().Single(item => item.Value == value);
-        }
-    }
-
     public static class Source
     {
         public sealed class InsertAfterHiddenItem : Context
@@ -309,6 +267,48 @@ public static class ListFormGroupSpecs
                     .Should()
                     .AllSatisfy(value => value.Should().BeNull());
             }
+        }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Second = "second";
+        protected const string Third = "third";
+        protected const string Inserted = "inserted";
+        protected const string Replacement = "replacement";
+
+        protected Context(params string[] values)
+        {
+            Source = new ObservableCollection<string>(values);
+            Sut = new ListFormGroup<string, TextFormItem<string>>(value => new TextFormItem<string>(
+                value
+            ))
+            {
+                Source = Source,
+            };
+        }
+
+        protected ObservableCollection<string> Source { get; }
+
+        protected ListFormGroup<string, TextFormItem<string>> Sut { get; }
+
+        protected IReadOnlyList<string?> VisibleValues =>
+            Sut.Cast<TextFormItem<string>>().Select(item => item.Value).ToList();
+
+        protected IReadOnlyList<object?> HiddenValues
+        {
+            get
+            {
+                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
+
+                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
+            }
+        }
+
+        protected TextFormItem<string> VisibleItem(string value)
+        {
+            return Sut.Cast<TextFormItem<string>>().Single(item => item.Value == value);
         }
     }
 }

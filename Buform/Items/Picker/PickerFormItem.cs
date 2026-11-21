@@ -4,6 +4,12 @@ namespace Buform;
 
 public class PickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IPickerFormItem
 {
+    public PickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public virtual Func<TValue?, string?>? Formatter
     {
         get;
@@ -48,10 +54,16 @@ public class PickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IPickerForm
 
     public override string? FormattedValue => Formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public PickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
+    public override void Pick(IFormOption? option)
     {
-        /* Required constructor */
+        Value = option?.Value is TValue value ? value : default;
+    }
+
+    public override bool IsPicked(IFormOption option)
+    {
+        ArgumentNullException.ThrowIfNull(option);
+
+        return Equals(Value, option.Value);
     }
 
     protected virtual IFormOption CreateOption(TValue value)
@@ -72,18 +84,6 @@ public class PickerFormItem<TValue> : OptionsPickerFormItem<TValue>, IPickerForm
         }
 
         NotifyPropertyChanged(nameof(Options));
-    }
-
-    public override void Pick(IFormOption? option)
-    {
-        Value = option?.Value is TValue value ? value : default;
-    }
-
-    public override bool IsPicked(IFormOption option)
-    {
-        ArgumentNullException.ThrowIfNull(option);
-
-        return Equals(Value, option.Value);
     }
 }
 

@@ -38,17 +38,17 @@ internal sealed class ColorPickerDialogFragment : AppCompatDialogFragment
         /* Required constructor */
     }
 
-    private ColorPickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
-        : base(javaReference, transfer)
-    {
-        /* Required constructor */
-    }
-
     public ColorPickerDialogFragment(ColorPickerFormItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
 
         _item = item;
+    }
+
+    private ColorPickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
     }
 
     public static void Show(FragmentManager fragmentManager, ColorPickerFormItem item)

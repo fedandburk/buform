@@ -10,6 +10,21 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
     private readonly Form _form;
     private readonly List<IFormGroup> _groups;
 
+    public FormRowList(Form form)
+    {
+        ArgumentNullException.ThrowIfNull(form);
+
+        _form = form;
+
+        _groups = [];
+
+        Synchronize();
+
+        _form.CollectionChanged += OnGroupsChanged;
+    }
+
+    public event NotifyCollectionChangedEventHandler? CollectionChanged;
+
     public int Count => _groups.Sum(group => group.Count + GroupRowCount);
 
     public FormRow this[int index]
@@ -48,24 +63,32 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
         }
     }
 
-    public event NotifyCollectionChangedEventHandler? CollectionChanged;
-
-    public FormRowList(Form form)
+    public IEnumerator<FormRow> GetEnumerator()
     {
-        ArgumentNullException.ThrowIfNull(form);
-
-        _form = form;
-
-        _groups = [];
-
-        Synchronize();
-
-        _form.CollectionChanged += OnGroupsChanged;
+        foreach (var group in _groups)
+        {
+            foreach (var row in CreateRows(group))
+            {
+                yield return row;
+            }
+        }
     }
 
-    private int GetOffset(int groupIndex)
+    IEnumerator IEnumerable.GetEnumerator()
     {
-        return _groups.Take(groupIndex).Sum(group => group.Count + GroupRowCount);
+        return GetEnumerator();
+    }
+
+    public void Dispose()
+    {
+        _form.CollectionChanged -= OnGroupsChanged;
+
+        foreach (var group in _groups)
+        {
+            group.CollectionChanged -= OnGroupItemsChanged;
+        }
+
+        _groups.Clear();
     }
 
     private static List<FormRow> CreateRows(IFormGroup group)
@@ -85,6 +108,11 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
             .Select((item, index) => FormRow.ForItem(group, item, startIndex + index))
             .ToList()
             ?? [];
+    }
+
+    private int GetOffset(int groupIndex)
+    {
+        return _groups.Take(groupIndex).Sum(group => group.Count + GroupRowCount);
     }
 
     private void Synchronize()
@@ -195,33 +223,5 @@ internal sealed class FormRowList : IReadOnlyList<FormRow>, INotifyCollectionCha
     private void Raise(NotifyCollectionChangedEventArgs args)
     {
         CollectionChanged?.Invoke(this, args);
-    }
-
-    public IEnumerator<FormRow> GetEnumerator()
-    {
-        foreach (var group in _groups)
-        {
-            foreach (var row in CreateRows(group))
-            {
-                yield return row;
-            }
-        }
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
-
-    public void Dispose()
-    {
-        _form.CollectionChanged -= OnGroupsChanged;
-
-        foreach (var group in _groups)
-        {
-            group.CollectionChanged -= OnGroupItemsChanged;
-        }
-
-        _groups.Clear();
     }
 }

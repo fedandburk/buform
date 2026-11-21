@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
     where TItem : class, IMultilineTextInputFormItem
 {
-    protected virtual FormTextView? TextView { get; set; }
-
     protected MultilineTextInputFormCell()
     {
         /* Required constructor */
@@ -17,6 +15,8 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual FormTextView? TextView { get; set; }
 
     protected override void Initialize()
     {
@@ -43,16 +43,6 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnChanged(object? sender, EventArgs e)
-    {
-        if (TextView == null)
-        {
-            return;
-        }
-
-        Item?.SetText(TextView.Text);
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -134,6 +124,16 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnChanged(object? sender, EventArgs e)
+    {
+        if (TextView == null)
+        {
+            return;
+        }
+
+        Item?.SetText(TextView.Text);
     }
 }
 

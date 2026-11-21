@@ -11,10 +11,6 @@ public static class TypeExtensionsSpecs
 
     public interface ISecond : IThird;
 
-    public class Base : IFirst;
-
-    public sealed class Derived : Base, ISecond;
-
     public static class GetRegistrationTypes
     {
         public sealed class DerivedType
@@ -41,4 +37,8 @@ public static class TypeExtensionsSpecs
             }
         }
     }
+
+    public class Base : IFirst;
+
+    public sealed class Derived : Base, ISecond;
 }

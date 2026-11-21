@@ -5,8 +5,6 @@ namespace Buform;
 public abstract class TextFormCell<TItem> : FormCell<TItem>
     where TItem : class, ITextFormItem
 {
-    protected virtual UILabel? Label { get; set; }
-
     protected TextFormCell()
     {
         /* Required constructor */
@@ -17,6 +15,8 @@ public abstract class TextFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual UILabel? Label { get; set; }
 
     protected override void Initialize()
     {

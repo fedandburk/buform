@@ -9,12 +9,12 @@ public sealed class ComponentsActivity : FormActivity
 
     private readonly ComponentsViewModel _viewModel;
 
-    protected override Form Form => _viewModel.Form;
-
     public ComponentsActivity()
     {
         _viewModel = new ComponentsViewModel();
     }
+
+    protected override Form Form => _viewModel.Form;
 
     protected override void OnCreateMenu(IMenu menu)
     {

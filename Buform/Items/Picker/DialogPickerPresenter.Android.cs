@@ -7,14 +7,14 @@ public class DialogPickerPresenter<TItem> : PickerPresenter<TItem>
 {
     private const string FragmentTag = nameof(PickerDialogFragment);
 
-    protected Func<TItem, PickerDialogFragment> FragmentFactory { get; }
-
     public DialogPickerPresenter(Func<TItem, PickerDialogFragment> fragmentFactory)
     {
         ArgumentNullException.ThrowIfNull(fragmentFactory);
 
         FragmentFactory = fragmentFactory;
     }
+
+    protected Func<TItem, PickerDialogFragment> FragmentFactory { get; }
 
     public override Task PickAsync(View sourceView, TItem item)
     {

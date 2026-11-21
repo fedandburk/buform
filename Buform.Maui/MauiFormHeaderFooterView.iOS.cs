@@ -44,24 +44,6 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
         EstimateViewSize();
     }
 
-    private void EstimateViewSize()
-    {
-        if (_formHeaderFooterView == null || _view == null)
-        {
-            return;
-        }
-
-        var horizontalMargins = ContentView.LayoutMargins.Left + ContentView.LayoutMargins.Right;
-        var width = Bounds.Width - horizontalMargins;
-
-        var measuredSize = _formHeaderFooterView.Measure(width, double.PositiveInfinity);
-
-        var verticalMargins = ContentView.LayoutMargins.Top + ContentView.LayoutMargins.Bottom;
-        var height = measuredSize.Height - verticalMargins;
-
-        _estimatedSize = new CGSize(width, Math.Ceiling(height));
-    }
-
     public override CGSize SizeThatFits(CGSize size)
     {
         return _estimatedSize;
@@ -83,5 +65,23 @@ internal sealed class MauiFormHeaderFooterView : UITableViewHeaderFooterView
         _formHeaderFooterView.Arrange(bounds);
 
         _view.Frame = bounds;
+    }
+
+    private void EstimateViewSize()
+    {
+        if (_formHeaderFooterView == null || _view == null)
+        {
+            return;
+        }
+
+        var horizontalMargins = ContentView.LayoutMargins.Left + ContentView.LayoutMargins.Right;
+        var width = Bounds.Width - horizontalMargins;
+
+        var measuredSize = _formHeaderFooterView.Measure(width, double.PositiveInfinity);
+
+        var verticalMargins = ContentView.LayoutMargins.Top + ContentView.LayoutMargins.Bottom;
+        var height = measuredSize.Height - verticalMargins;
+
+        _estimatedSize = new CGSize(width, Math.Ceiling(height));
     }
 }

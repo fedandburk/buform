@@ -5,27 +5,6 @@ namespace Buform.Tests;
 
 public static class FormItemMoveSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Hidden = "hidden";
-        protected const string Second = "second";
-        protected const string Third = "third";
-
-        protected Context()
-        {
-            Group = new LabeledFormGroup
-            {
-                new TextFormItem<string>(First),
-                new TextFormItem<string>(Hidden) { IsVisible = false },
-                new TextFormItem<string>(Second),
-                new TextFormItem<string>(Third),
-            };
-        }
-
-        protected LabeledFormGroup Group { get; }
-    }
-
     public static class Create
     {
         public sealed class FirstRowMovedToLast : Context
@@ -65,5 +44,26 @@ public static class FormItemMoveSpecs
                 (_move.OldIndex, _move.NewIndex).Should().Be((3, 0));
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Hidden = "hidden";
+        protected const string Second = "second";
+        protected const string Third = "third";
+
+        protected Context()
+        {
+            Group = new LabeledFormGroup
+            {
+                new TextFormItem<string>(First),
+                new TextFormItem<string>(Hidden) { IsVisible = false },
+                new TextFormItem<string>(Second),
+                new TextFormItem<string>(Third),
+            };
+        }
+
+        protected LabeledFormGroup Group { get; }
     }
 }

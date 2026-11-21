@@ -5,25 +5,6 @@ public sealed class FormTextView : UITextView
 {
     private readonly UILabel _placeholderLabel;
 
-    public string? Placeholder
-    {
-        get => _placeholderLabel.Text;
-        set => _placeholderLabel.Text = value;
-    }
-
-    public override string? Text
-    {
-        get => base.Text;
-        set
-        {
-            base.Text = value;
-
-            TextChanged();
-        }
-    }
-
-    public override CGSize IntrinsicContentSize => new(base.IntrinsicContentSize.Width, 200);
-
     public FormTextView()
     {
         TextContainerInset = UIEdgeInsets.Zero;
@@ -47,15 +28,24 @@ public sealed class FormTextView : UITextView
         AddSubview(_placeholderLabel);
     }
 
-    private void OnChanged(object? sender, EventArgs e)
+    public string? Placeholder
     {
-        TextChanged();
+        get => _placeholderLabel.Text;
+        set => _placeholderLabel.Text = value;
     }
 
-    private void TextChanged()
+    public override string? Text
     {
-        _placeholderLabel.Hidden = !string.IsNullOrEmpty(Text);
+        get => base.Text;
+        set
+        {
+            base.Text = value;
+
+            TextChanged();
+        }
     }
+
+    public override CGSize IntrinsicContentSize => new(base.IntrinsicContentSize.Width, 200);
 
     protected override void Dispose(bool disposing)
     {
@@ -65,5 +55,15 @@ public sealed class FormTextView : UITextView
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnChanged(object? sender, EventArgs e)
+    {
+        TextChanged();
+    }
+
+    private void TextChanged()
+    {
+        _placeholderLabel.Hidden = !string.IsNullOrEmpty(Text);
     }
 }

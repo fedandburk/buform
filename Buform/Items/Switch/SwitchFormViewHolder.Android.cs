@@ -8,10 +8,6 @@ public abstract class SwitchFormViewHolder<TItem> : FormViewHolder<TItem>
 {
     private bool _isUpdatingValue;
 
-    protected virtual TextView? LabelView { get; set; }
-
-    protected virtual CompoundButton? SwitchView { get; set; }
-
     protected SwitchFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -24,20 +20,9 @@ public abstract class SwitchFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private void OnItemViewClick(object? sender, EventArgs e)
-    {
-        SwitchView?.Toggle();
-    }
+    protected virtual TextView? LabelView { get; set; }
 
-    private void OnCheckedChange(object? sender, CompoundButton.CheckedChangeEventArgs e)
-    {
-        if (_isUpdatingValue || Item == null)
-        {
-            return;
-        }
-
-        Item.Value = e.IsChecked;
-    }
+    protected virtual CompoundButton? SwitchView { get; set; }
 
     protected override void Initialize()
     {
@@ -125,6 +110,21 @@ public abstract class SwitchFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnItemViewClick(object? sender, EventArgs e)
+    {
+        SwitchView?.Toggle();
+    }
+
+    private void OnCheckedChange(object? sender, CompoundButton.CheckedChangeEventArgs e)
+    {
+        if (_isUpdatingValue || Item == null)
+        {
+            return;
+        }
+
+        Item.Value = e.IsChecked;
     }
 }
 

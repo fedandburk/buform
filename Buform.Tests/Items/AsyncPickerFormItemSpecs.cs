@@ -5,25 +5,6 @@ namespace Buform.Tests;
 
 public static class AsyncPickerFormItemSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Second = "second";
-
-        protected Context()
-        {
-            Target = new Model();
-
-            Sut = new AsyncPickerFormItem<string?>(() => Target.Name);
-
-            _ = new Form(Target) { new LabeledFormGroup { Sut } };
-        }
-
-        protected Model Target { get; }
-
-        protected AsyncPickerFormItem<string?> Sut { get; }
-    }
-
     public static class LoadOptionsAsync
     {
         public sealed class SourceLoaded : Context, IAsyncLifetime
@@ -170,5 +151,24 @@ public static class AsyncPickerFormItemSpecs
                 Sut.State.Should().Be(AsyncPickerLoadingState.Loaded);
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Second = "second";
+
+        protected Context()
+        {
+            Target = new Model();
+
+            Sut = new AsyncPickerFormItem<string?>(() => Target.Name);
+
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
+        }
+
+        protected Model Target { get; }
+
+        protected AsyncPickerFormItem<string?> Sut { get; }
     }
 }

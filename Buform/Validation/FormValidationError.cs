@@ -2,10 +2,6 @@ namespace Buform;
 
 public sealed class FormValidationError
 {
-    public string PropertyName { get; }
-
-    public string ErrorMessage { get; }
-
     public FormValidationError(string propertyName, string errorMessage)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(propertyName);
@@ -14,4 +10,8 @@ public sealed class FormValidationError
         PropertyName = propertyName;
         ErrorMessage = errorMessage;
     }
+
+    public string PropertyName { get; }
+
+    public string ErrorMessage { get; }
 }

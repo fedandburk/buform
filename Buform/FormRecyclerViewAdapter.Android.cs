@@ -11,6 +11,11 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
     private Form? _form;
     private FormRowList? _rows;
 
+    public FormRecyclerViewAdapter()
+    {
+        _groupHandlers = new FormGroupHandlerList();
+    }
+
     public Form? Form
     {
         get => _form;
@@ -40,17 +45,6 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
 
     public override int ItemCount => _rows?.Count ?? 0;
 
-    public FormRecyclerViewAdapter()
-    {
-        _groupHandlers = new FormGroupHandlerList();
-    }
-
-    private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
-    {
-        // TODO: Use Looper.MainLooper.
-        FormRowAppearance.NotifyRowsChanged(this, args);
-    }
-
     public FormRow GetRow(int position)
     {
         if (_rows == null || position < 0 || position >= _rows.Count)
@@ -59,18 +53,6 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
         }
 
         return _rows[position];
-    }
-
-    private void DisposeRows()
-    {
-        if (_rows == null)
-        {
-            return;
-        }
-
-        _rows.CollectionChanged -= OnRowsChanged;
-        _rows.Dispose();
-        _rows = null;
     }
 
     public override int GetItemViewType(int position)
@@ -166,5 +148,23 @@ internal sealed class FormRecyclerViewAdapter : RecyclerView.Adapter, IFormRowSo
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnRowsChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    {
+        // TODO: Use Looper.MainLooper.
+        FormRowAppearance.NotifyRowsChanged(this, args);
+    }
+
+    private void DisposeRows()
+    {
+        if (_rows == null)
+        {
+            return;
+        }
+
+        _rows.CollectionChanged -= OnRowsChanged;
+        _rows.Dispose();
+        _rows = null;
     }
 }

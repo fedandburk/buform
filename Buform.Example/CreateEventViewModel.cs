@@ -12,54 +12,6 @@ namespace Buform.Example;
 
 public partial class CreateEventViewModel : ObservableObject
 {
-    public enum RepeatType
-    {
-        Never,
-        EveryDay,
-        EveryWeek,
-        Every2Weeks,
-        EveryMonth,
-        EveryYear,
-    }
-
-    public enum TravelTimeType
-    {
-        None,
-        FiveMinutes,
-        FifteenMinutes,
-        ThirtyMinutes,
-        OneHour,
-        OneHourThirtyMinutes,
-        TwoHours,
-    }
-
-    public class Model
-    {
-        public string? Title { get; set; }
-        public string? Location { get; set; }
-        public bool IsAllDay { get; set; }
-        public DateTime? StartsAt { get; set; } = DateTime.UtcNow;
-        public DateTime? EndsAt { get; set; } = DateTime.UtcNow + TimeSpan.FromHours(1);
-        public RepeatType Repeat { get; set; }
-        public TravelTimeType TravelTime { get; set; }
-        public string? Url { get; set; }
-        public string? Notes { get; set; }
-    }
-
-    public class Validator : AbstractValidator<Model>
-    {
-        public Validator()
-        {
-            RuleFor(item => item.Title).NotEmpty();
-        }
-    }
-
-    [ObservableProperty]
-    public partial FluentValidationForm<Model> Form { get; set; }
-
-    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    public partial bool CanCreate { get; set; }
-
     public CreateEventViewModel()
     {
         var model = new Model();
@@ -130,10 +82,32 @@ public partial class CreateEventViewModel : ObservableObject
         (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
     }
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public enum RepeatType
     {
-        CanCreate = Form.IsValid;
+        Never,
+        EveryDay,
+        EveryWeek,
+        Every2Weeks,
+        EveryMonth,
+        EveryYear,
     }
+
+    public enum TravelTimeType
+    {
+        None,
+        FiveMinutes,
+        FifteenMinutes,
+        ThirtyMinutes,
+        OneHour,
+        OneHourThirtyMinutes,
+        TwoHours,
+    }
+
+    [ObservableProperty]
+    public partial FluentValidationForm<Model> Form { get; set; }
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
+    public partial bool CanCreate { get; set; }
 
     [RelayCommand(CanExecute = nameof(CanCreate))]
     private static void Create()
@@ -145,5 +119,31 @@ public partial class CreateEventViewModel : ObservableObject
     private static void AddAttachment()
     {
         Console.WriteLine("AddAttachment command executed");
+    }
+
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CanCreate = Form.IsValid;
+    }
+
+    public class Model
+    {
+        public string? Title { get; set; }
+        public string? Location { get; set; }
+        public bool IsAllDay { get; set; }
+        public DateTime? StartsAt { get; set; } = DateTime.UtcNow;
+        public DateTime? EndsAt { get; set; } = DateTime.UtcNow + TimeSpan.FromHours(1);
+        public RepeatType Repeat { get; set; }
+        public TravelTimeType TravelTime { get; set; }
+        public string? Url { get; set; }
+        public string? Notes { get; set; }
+    }
+
+    public class Validator : AbstractValidator<Model>
+    {
+        public Validator()
+        {
+            RuleFor(item => item.Title).NotEmpty();
+        }
     }
 }

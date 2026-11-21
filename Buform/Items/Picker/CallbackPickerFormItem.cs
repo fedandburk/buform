@@ -7,6 +7,12 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
     private Func<Task<TValue>>? _callback;
     private Func<TValue?, string?>? _formatter;
 
+    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public virtual string? Label
     {
         get;
@@ -42,12 +48,6 @@ public class CallbackPickerFormItem<TValue> : ValidatableFormItem<TValue>, ICall
     }
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
-
-    public CallbackPickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
-    }
 
     public virtual async Task ExecuteCallbackAsync()
     {

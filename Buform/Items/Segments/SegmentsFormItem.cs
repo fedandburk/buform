@@ -4,6 +4,12 @@ namespace Buform;
 
 public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFormItem
 {
+    public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        Options = [];
+    }
+
     public virtual string? Label
     {
         get;
@@ -47,12 +53,6 @@ public class SegmentsFormItem<TValue> : ValidatableFormItem<TValue>, ISegmentsFo
     }
 
     public IReadOnlyList<IFormOption> Options { get; private set; }
-
-    public SegmentsFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        Options = [];
-    }
 
     protected virtual IFormOption CreateOption(TValue value)
     {

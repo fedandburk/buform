@@ -10,8 +10,6 @@ internal sealed class PickerOptionsAdapter : RecyclerView.Adapter
 
     private IReadOnlyList<PickerOptionState> _options;
 
-    public override int ItemCount => _options.Count;
-
     public PickerOptionsAdapter(int layoutId, Action<IFormOption> onClick)
     {
         ArgumentNullException.ThrowIfNull(onClick);
@@ -21,6 +19,8 @@ internal sealed class PickerOptionsAdapter : RecyclerView.Adapter
 
         _options = [];
     }
+
+    public override int ItemCount => _options.Count;
 
     public void SetOptions(IReadOnlyList<PickerOptionState> options)
     {
@@ -57,10 +57,6 @@ internal sealed class PickerOptionsAdapter : RecyclerView.Adapter
         private readonly IReadOnlyList<PickerOptionState> _oldOptions;
         private readonly IReadOnlyList<PickerOptionState> _newOptions;
 
-        public override int OldListSize => _oldOptions.Count;
-
-        public override int NewListSize => _newOptions.Count;
-
         public DiffCallback(
             IReadOnlyList<PickerOptionState> oldOptions,
             IReadOnlyList<PickerOptionState> newOptions
@@ -69,6 +65,10 @@ internal sealed class PickerOptionsAdapter : RecyclerView.Adapter
             _oldOptions = oldOptions;
             _newOptions = newOptions;
         }
+
+        public override int OldListSize => _oldOptions.Count;
+
+        public override int NewListSize => _newOptions.Count;
 
         public override bool AreItemsTheSame(int oldItemPosition, int newItemPosition)
         {

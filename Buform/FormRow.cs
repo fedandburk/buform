@@ -2,6 +2,16 @@ namespace Buform;
 
 internal sealed class FormRow
 {
+    private FormRow(FormRowType type, IFormGroup group, IFormItem? item, int itemIndex)
+    {
+        Type = type;
+        Group = group;
+        Item = item;
+        ItemIndex = itemIndex;
+
+        GroupItemCount = group.Count;
+    }
+
     public FormRowType Type { get; }
 
     public IFormGroup Group { get; }
@@ -13,16 +23,6 @@ internal sealed class FormRow
     public int GroupItemCount { get; }
 
     public IDisposable Data => (IDisposable?)Item ?? Group;
-
-    private FormRow(FormRowType type, IFormGroup group, IFormItem? item, int itemIndex)
-    {
-        Type = type;
-        Group = group;
-        Item = item;
-        ItemIndex = itemIndex;
-
-        GroupItemCount = group.Count;
-    }
 
     public static FormRow Header(IFormGroup group)
     {

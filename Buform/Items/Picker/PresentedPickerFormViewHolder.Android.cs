@@ -6,8 +6,6 @@ namespace Buform;
 public abstract class PresentedPickerFormViewHolder<TItem> : PickerFormViewHolder<TItem>
     where TItem : class, IOptionsPickerFormItem
 {
-    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
-
     protected PresentedPickerFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -19,6 +17,8 @@ public abstract class PresentedPickerFormViewHolder<TItem> : PickerFormViewHolde
     {
         /* Required constructor */
     }
+
+    protected virtual PickerPresenter<TItem>? PickerPresenter { get; set; }
 
     protected override string? GetLabel(TItem item)
     {

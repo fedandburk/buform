@@ -13,17 +13,12 @@ internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
         [nameof(FormView.Form)] = MapForm,
     };
 
+    private MauiFormTableViewSource? _source;
+
     public FormViewHandler()
         : base(PropertyMapper)
     {
         /* Required constructor */
-    }
-
-    private MauiFormTableViewSource? _source;
-
-    private static void MapForm(FormViewHandler handler, FormView view)
-    {
-        handler._source?.Form = view.Form;
     }
 
     protected override void ConnectHandler(UITableView platformView)
@@ -50,5 +45,10 @@ internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
         tableView.KeyboardDismissMode = UIScrollViewKeyboardDismissMode.Interactive;
 
         return tableView;
+    }
+
+    private static void MapForm(FormViewHandler handler, FormView view)
+    {
+        handler._source?.Form = view.Form;
     }
 }

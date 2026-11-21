@@ -6,8 +6,6 @@ namespace Buform;
 public abstract class TextFormViewHolder<TItem> : FormViewHolder<TItem>
     where TItem : class, ITextFormItem
 {
-    protected virtual TextView? LabelView { get; set; }
-
     protected TextFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -19,6 +17,8 @@ public abstract class TextFormViewHolder<TItem> : FormViewHolder<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual TextView? LabelView { get; set; }
 
     protected override void Initialize()
     {

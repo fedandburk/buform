@@ -5,11 +5,6 @@ namespace Buform;
 public abstract class StepperFormCell<TItem> : FormCell<TItem>
     where TItem : StepperFormItem
 {
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UIStepper? Stepper { get; set; }
-
     protected StepperFormCell()
     {
         /* Required constructor */
@@ -20,6 +15,12 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UIStepper? Stepper { get; set; }
 
     protected override void Initialize()
     {
@@ -50,11 +51,6 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnValueChanged(object? sender, EventArgs e)
-    {
-        Item?.Value = (int)(Stepper?.Value ?? 0);
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -135,6 +131,11 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChanged(object? sender, EventArgs e)
+    {
+        Item?.Value = (int)(Stepper?.Value ?? 0);
     }
 }
 

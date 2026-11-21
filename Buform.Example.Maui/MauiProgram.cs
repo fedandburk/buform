@@ -4,6 +4,21 @@ namespace Buform.Example.Maui;
 
 public static class MauiProgram
 {
+    public static MauiApp CreateMauiApp()
+    {
+        MauiFormPlatform.RegisterGroupHeader<LogoFormGroup, LogoHeaderView>();
+        MauiFormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorView>();
+
+        return MauiApp
+            .CreateBuilder()
+            .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .UseBuform()
+            .RegisterServices()
+            .RegisterRoutes()
+            .Build();
+    }
+
     private static MauiAppBuilder RegisterServices(this MauiAppBuilder builder)
     {
         builder.Services.AddSingleton<INavigationService, AppShell>();
@@ -26,20 +41,5 @@ public static class MauiProgram
         );
 
         return builder;
-    }
-
-    public static MauiApp CreateMauiApp()
-    {
-        MauiFormPlatform.RegisterGroupHeader<LogoFormGroup, LogoHeaderView>();
-        MauiFormPlatform.RegisterItem<RandomNumberGeneratorItem, RandomNumberGeneratorView>();
-
-        return MauiApp
-            .CreateBuilder()
-            .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .UseBuform()
-            .RegisterServices()
-            .RegisterRoutes()
-            .Build();
     }
 }

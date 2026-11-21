@@ -5,11 +5,6 @@ namespace Buform;
 public abstract class SwitchFormCell<TItem> : FormCell<TItem>
     where TItem : SwitchFormItem
 {
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UISwitch? Switch { get; set; }
-
     protected SwitchFormCell()
     {
         /* Required constructor */
@@ -20,6 +15,12 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UISwitch? Switch { get; set; }
 
     protected override void Initialize()
     {
@@ -50,11 +51,6 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnValueChanged(object? sender, EventArgs e)
-    {
-        Item?.Value = Switch?.On ?? false;
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -113,6 +109,11 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChanged(object? sender, EventArgs e)
+    {
+        Item?.Value = Switch?.On ?? false;
     }
 }
 

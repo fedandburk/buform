@@ -8,18 +8,6 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
 {
     private const int PopUpIndicatorMinimumVersion = 16;
 
-    [SupportedOSPlatformGuard("ios16.0")]
-    [SupportedOSPlatformGuard("maccatalyst16.0")]
-    private static bool IsPopUpIndicatorSupported =>
-        OperatingSystem.IsIOSVersionAtLeast(PopUpIndicatorMinimumVersion)
-        || OperatingSystem.IsMacCatalystVersionAtLeast(PopUpIndicatorMinimumVersion);
-
-    protected virtual UIButton? MenuButton { get; set; }
-
-    protected virtual bool IsPopUp => Item?.Presentation == PickerPresentation.PopUp;
-
-    public override bool IsSelectable => !IsPopUp && base.IsSelectable;
-
     protected PopUpPickerFormCell()
     {
         /* Required constructor */
@@ -30,6 +18,18 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
     {
         /* Required constructor */
     }
+
+    public override bool IsSelectable => !IsPopUp && base.IsSelectable;
+
+    protected virtual UIButton? MenuButton { get; set; }
+
+    protected virtual bool IsPopUp => Item?.Presentation == PickerPresentation.PopUp;
+
+    [SupportedOSPlatformGuard("ios16.0")]
+    [SupportedOSPlatformGuard("maccatalyst16.0")]
+    private static bool IsPopUpIndicatorSupported =>
+        OperatingSystem.IsIOSVersionAtLeast(PopUpIndicatorMinimumVersion)
+        || OperatingSystem.IsMacCatalystVersionAtLeast(PopUpIndicatorMinimumVersion);
 
     protected override void Initialize()
     {
@@ -71,16 +71,6 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
                 ),
             }
         );
-    }
-
-    private UIMenuElement[] CreateMenuElements()
-    {
-        if (Item == null)
-        {
-            return [];
-        }
-
-        return CreateMenuElements(Item);
     }
 
     protected virtual UIMenuElement[] CreateMenuElements(TItem item)
@@ -194,6 +184,16 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
         }
 
         base.Dispose(disposing);
+    }
+
+    private UIMenuElement[] CreateMenuElements()
+    {
+        if (Item == null)
+        {
+            return [];
+        }
+
+        return CreateMenuElements(Item);
     }
 }
 

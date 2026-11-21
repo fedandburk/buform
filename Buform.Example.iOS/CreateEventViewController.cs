@@ -15,12 +15,6 @@ public sealed class CreateEventViewController : UITableViewController
         _viewModel.CreateCommand.CanExecuteChanged += CreateCommandOnCanExecuteChanged;
     }
 
-    private void CreateCommandOnCanExecuteChanged(object? sender, EventArgs e)
-    {
-        var createButtonItem = _createButtonItem;
-        createButtonItem?.Enabled = _viewModel.CreateCommand.CanExecute(null);
-    }
-
     public override void ViewDidLoad()
     {
         base.ViewDidLoad();
@@ -59,5 +53,11 @@ public sealed class CreateEventViewController : UITableViewController
         _cancelButtonItem?.Dispose();
         _createButtonItem?.Dispose();
         _source?.Dispose();
+    }
+
+    private void CreateCommandOnCanExecuteChanged(object? sender, EventArgs e)
+    {
+        var createButtonItem = _createButtonItem;
+        createButtonItem?.Enabled = _viewModel.CreateCommand.CanExecute(null);
     }
 }

@@ -15,10 +15,6 @@ public abstract class SegmentsFormViewHolder<TItem> : FormViewHolder<TItem>
     private SegmentsButtonCheckedListener? _buttonCheckedListener;
     private bool _isUpdatingValue;
 
-    protected virtual TextView? LabelView { get; set; }
-
-    protected virtual MaterialButtonToggleGroup? ToggleGroupView { get; set; }
-
     protected SegmentsFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -31,20 +27,9 @@ public abstract class SegmentsFormViewHolder<TItem> : FormViewHolder<TItem>
         _options = [];
     }
 
-    private void OnButtonChecked(int checkedId, bool isChecked)
-    {
-        if (_isUpdatingValue || !isChecked || ToggleGroupView == null || Item == null)
-        {
-            return;
-        }
+    protected virtual TextView? LabelView { get; set; }
 
-        var button = ToggleGroupView.FindViewById(checkedId)
-            ?? throw new InvalidOperationException("The checked segment is not found.");
-
-        var index = ToggleGroupView.IndexOfChild(button);
-
-        Item.Value = _options[index].Value;
-    }
+    protected virtual MaterialButtonToggleGroup? ToggleGroupView { get; set; }
 
     protected override void Initialize()
     {
@@ -207,6 +192,21 @@ public abstract class SegmentsFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnButtonChecked(int checkedId, bool isChecked)
+    {
+        if (_isUpdatingValue || !isChecked || ToggleGroupView == null || Item == null)
+        {
+            return;
+        }
+
+        var button = ToggleGroupView.FindViewById(checkedId)
+            ?? throw new InvalidOperationException("The checked segment is not found.");
+
+        var index = ToggleGroupView.IndexOfChild(button);
+
+        Item.Value = _options[index].Value;
     }
 }
 

@@ -7,19 +7,6 @@ namespace Buform.Tests;
 
 public static class CommandExtensionsSpecs
 {
-    public abstract class Context
-    {
-        protected const string Parameter = "parameter";
-
-        protected Context(bool canExecute)
-        {
-            Command = Substitute.For<ICommand>();
-            Command.CanExecute(Parameter).Returns(canExecute);
-        }
-
-        protected ICommand Command { get; }
-    }
-
     public static class SafeCanExecute
     {
         public sealed class NullCommand
@@ -107,5 +94,18 @@ public static class CommandExtensionsSpecs
                 _exception.Should().BeNull();
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string Parameter = "parameter";
+
+        protected Context(bool canExecute)
+        {
+            Command = Substitute.For<ICommand>();
+            Command.CanExecute(Parameter).Returns(canExecute);
+        }
+
+        protected ICommand Command { get; }
     }
 }

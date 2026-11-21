@@ -10,11 +10,6 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
 
     private IReadOnlyList<IFormOption> _options;
 
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UISegmentedControl? SegmentedControl { get; set; }
-
     protected SegmentsFormCell()
     {
         _options = [];
@@ -25,6 +20,12 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
     {
         _options = [];
     }
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UISegmentedControl? SegmentedControl { get; set; }
 
     protected override void Initialize()
     {
@@ -73,32 +74,6 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnValueChanged(object? sender, EventArgs e)
-    {
-        if (SegmentedControl == null)
-        {
-            return;
-        }
-
-        if (Item == null)
-        {
-            return;
-        }
-
-        if (_options.Count == 0)
-        {
-            Item.Value = null;
-        }
-        else if (SegmentedControl.SelectedSegment < 0)
-        {
-            Item.Value = null;
-        }
-        else
-        {
-            Item.Value = _options.ElementAtOrDefault((int)SegmentedControl.SelectedSegment)?.Value;
-        }
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -206,6 +181,32 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChanged(object? sender, EventArgs e)
+    {
+        if (SegmentedControl == null)
+        {
+            return;
+        }
+
+        if (Item == null)
+        {
+            return;
+        }
+
+        if (_options.Count == 0)
+        {
+            Item.Value = null;
+        }
+        else if (SegmentedControl.SelectedSegment < 0)
+        {
+            Item.Value = null;
+        }
+        else
+        {
+            Item.Value = _options.ElementAtOrDefault((int)SegmentedControl.SelectedSegment)?.Value;
+        }
     }
 }
 

@@ -11,6 +11,20 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         /* Required constructor */
     }
 
+    public override async void ViewDidLoad()
+    {
+        base.ViewDidLoad();
+
+        await LoadOptionsIfNeededAsync().ConfigureAwait(true);
+    }
+
+    public override string TitleForFooter(UITableView tableView, nint section)
+    {
+        return Item?.State != AsyncPickerLoadingState.Loaded
+            ? string.Empty
+            : Item?.Message ?? string.Empty;
+    }
+
     protected virtual async Task LoadOptionsIfNeededAsync()
     {
         if (Item == null)
@@ -62,20 +76,6 @@ public abstract class AsyncPickerViewController<TItem> : PickerViewController<TI
         }
 
         TableView.ReloadData();
-    }
-
-    public override async void ViewDidLoad()
-    {
-        base.ViewDidLoad();
-
-        await LoadOptionsIfNeededAsync().ConfigureAwait(true);
-    }
-
-    public override string TitleForFooter(UITableView tableView, nint section)
-    {
-        return Item?.State != AsyncPickerLoadingState.Loaded
-            ? string.Empty
-            : Item?.Message ?? string.Empty;
     }
 
     protected override void Dispose(bool disposing)

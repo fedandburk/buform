@@ -20,16 +20,7 @@ internal sealed class DateTimePickerFragment : Fragment
 
     private DateTime _value;
 
-    private DateTimeFormItem Item =>
-        _item ?? throw new InvalidOperationException("The date and time picker has no item.");
-
     public DateTimePickerFragment()
-    {
-        /* Required constructor */
-    }
-
-    private DateTimePickerFragment(IntPtr javaReference, JniHandleOwnership transfer)
-        : base(javaReference, transfer)
     {
         /* Required constructor */
     }
@@ -40,6 +31,15 @@ internal sealed class DateTimePickerFragment : Fragment
 
         _item = item;
     }
+
+    private DateTimePickerFragment(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
+    private DateTimeFormItem Item =>
+        _item ?? throw new InvalidOperationException("The date and time picker has no item.");
 
     public static void Show(FragmentManager fragmentManager, DateTimeFormItem item)
     {
@@ -86,6 +86,13 @@ internal sealed class DateTimePickerFragment : Fragment
                     null
                 );
         }
+    }
+
+    private static long ToSelection(DateTime value)
+    {
+        var date = new DateTimeOffset(value.Year, value.Month, value.Day, 0, 0, 0, TimeSpan.Zero);
+
+        return date.ToUnixTimeMilliseconds();
     }
 
     private void ShowDatePicker()
@@ -191,13 +198,6 @@ internal sealed class DateTimePickerFragment : Fragment
         }
 
         return value;
-    }
-
-    private static long ToSelection(DateTime value)
-    {
-        var date = new DateTimeOffset(value.Year, value.Month, value.Day, 0, 0, 0, TimeSpan.Zero);
-
-        return date.ToUnixTimeMilliseconds();
     }
 
     private sealed class DateSelectedListener : Object, IMaterialPickerOnPositiveButtonClickListener

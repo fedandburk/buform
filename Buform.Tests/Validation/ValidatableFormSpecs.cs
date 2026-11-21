@@ -7,81 +7,6 @@ namespace Buform.Tests;
 
 public static class ValidatableFormSpecs
 {
-    public sealed class ErrorsForm : ValidatableForm
-    {
-        public ErrorsForm(object target)
-            : base(target)
-        {
-            Errors = [];
-        }
-
-        public List<FormValidationError> Errors { get; }
-
-        protected override IReadOnlyList<FormValidationError> GetValidationErrors()
-        {
-            return Errors;
-        }
-    }
-
-    public abstract class Context
-    {
-        protected const string VisibleProperty = "Visible";
-        protected const string HiddenProperty = "Hidden";
-        protected const string ErrorMessage = "error";
-
-        protected Context(params string[] invalidProperties)
-        {
-            VisibleError = new FormValidationError(VisibleProperty, ErrorMessage);
-            HiddenError = new FormValidationError(HiddenProperty, ErrorMessage);
-
-            VisibleItem = CreateItem(VisibleProperty, true);
-            HiddenItem = CreateItem(HiddenProperty, false);
-
-            Sut = new ErrorsForm(new Model());
-            Sut.Errors.AddRange(
-                new[] { VisibleError, HiddenError }.Where(error =>
-                    invalidProperties.Contains(error.PropertyName)
-                )
-            );
-
-            PropertyChanges = [];
-
-            ((INotifyPropertyChanged)Sut).PropertyChanged += (_, args) =>
-                PropertyChanges.Add(args.PropertyName);
-
-            Sut.Add(new LabeledFormGroup { VisibleItem, HiddenItem });
-        }
-
-        protected FormValidationError VisibleError { get; }
-
-        protected FormValidationError HiddenError { get; }
-
-        protected IValidatableFormItem VisibleItem { get; }
-
-        protected IValidatableFormItem HiddenItem { get; }
-
-        protected ErrorsForm Sut { get; }
-
-        protected List<string?> PropertyChanges { get; }
-
-        private static IValidatableFormItem CreateItem(string propertyName, bool isVisible)
-        {
-            var item = Substitute.For<IValidatableFormItem>();
-
-            item.PropertyName.Returns(propertyName);
-            item.IsVisible.Returns(isVisible);
-            item.When(substitute => substitute.Initialize(Arg.Any<Form>(), Arg.Any<object>()))
-                .Do(_ =>
-                    item.ValueChanged += Raise.EventWith(
-                        item,
-                        new FormValueChangedEventArgs(propertyName)
-                    )
-                );
-
-            return item;
-        }
-    }
-
     public static class Initialization
     {
         public sealed class InvalidItemsAdded : Context
@@ -192,6 +117,81 @@ public static class ValidatableFormSpecs
             {
                 Sut.IsValid.Should().BeFalse();
             }
+        }
+    }
+
+    public sealed class ErrorsForm : ValidatableForm
+    {
+        public ErrorsForm(object target)
+            : base(target)
+        {
+            Errors = [];
+        }
+
+        public List<FormValidationError> Errors { get; }
+
+        protected override IReadOnlyList<FormValidationError> GetValidationErrors()
+        {
+            return Errors;
+        }
+    }
+
+    public abstract class Context
+    {
+        protected const string VisibleProperty = "Visible";
+        protected const string HiddenProperty = "Hidden";
+        protected const string ErrorMessage = "error";
+
+        protected Context(params string[] invalidProperties)
+        {
+            VisibleError = new FormValidationError(VisibleProperty, ErrorMessage);
+            HiddenError = new FormValidationError(HiddenProperty, ErrorMessage);
+
+            VisibleItem = CreateItem(VisibleProperty, true);
+            HiddenItem = CreateItem(HiddenProperty, false);
+
+            Sut = new ErrorsForm(new Model());
+            Sut.Errors.AddRange(
+                new[] { VisibleError, HiddenError }.Where(error =>
+                    invalidProperties.Contains(error.PropertyName)
+                )
+            );
+
+            PropertyChanges = [];
+
+            ((INotifyPropertyChanged)Sut).PropertyChanged += (_, args) =>
+                PropertyChanges.Add(args.PropertyName);
+
+            Sut.Add(new LabeledFormGroup { VisibleItem, HiddenItem });
+        }
+
+        protected FormValidationError VisibleError { get; }
+
+        protected FormValidationError HiddenError { get; }
+
+        protected IValidatableFormItem VisibleItem { get; }
+
+        protected IValidatableFormItem HiddenItem { get; }
+
+        protected ErrorsForm Sut { get; }
+
+        protected List<string?> PropertyChanges { get; }
+
+        private static IValidatableFormItem CreateItem(string propertyName, bool isVisible)
+        {
+            var item = Substitute.For<IValidatableFormItem>();
+
+            item.PropertyName.Returns(propertyName);
+            item.IsVisible.Returns(isVisible);
+            item.When(substitute => substitute.Initialize(Arg.Any<Form>(), Arg.Any<object>()))
+                .Do(_ =>
+                    item.ValueChanged += Raise.EventWith(
+                        item,
+                        new FormValueChangedEventArgs(propertyName)
+                    )
+                );
+
+            return item;
         }
     }
 }

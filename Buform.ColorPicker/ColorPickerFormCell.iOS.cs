@@ -5,15 +5,6 @@ namespace Buform;
 public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
     where TItem : ColorPickerFormItem
 {
-    protected virtual IUIColorPickerViewControllerDelegate? Delegate { get; set; }
-
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UIView? ColorView { get; set; }
-
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected ColorPickerFormCell()
     {
         /* Required constructor */
@@ -23,6 +14,39 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
         : base(handle)
     {
         /* Required constructor */
+    }
+
+    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
+
+    protected virtual IUIColorPickerViewControllerDelegate? Delegate { get; set; }
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UIView? ColorView { get; set; }
+
+    public override async void OnSelected()
+    {
+        base.OnSelected();
+
+        if (Item == null)
+        {
+            return;
+        }
+
+        var colorPickerViewController = CreateColorPickerViewController(Item);
+
+        var viewController = GetViewController();
+
+        if (viewController == null)
+        {
+            return;
+        }
+
+        await viewController
+            .PresentViewControllerAsync(colorPickerViewController, true)
+            .ConfigureAwait(false);
     }
 
     protected virtual UIColorPickerViewController CreateColorPickerViewController(TItem item)
@@ -115,29 +139,6 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
                 OnItemSet();
                 break;
         }
-    }
-
-    public override async void OnSelected()
-    {
-        base.OnSelected();
-
-        if (Item == null)
-        {
-            return;
-        }
-
-        var colorPickerViewController = CreateColorPickerViewController(Item);
-
-        var viewController = GetViewController();
-
-        if (viewController == null)
-        {
-            return;
-        }
-
-        await viewController
-            .PresentViewControllerAsync(colorPickerViewController, true)
-            .ConfigureAwait(false);
     }
 
     protected override void Dispose(bool disposing)

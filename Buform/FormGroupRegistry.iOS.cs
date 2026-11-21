@@ -4,32 +4,6 @@ namespace Buform;
 
 internal sealed class FormGroupRegistry
 {
-    private enum RegistrationType
-    {
-        Class,
-        Nib,
-    }
-
-    private enum HolderType
-    {
-        Header,
-        Footer,
-    }
-
-    private sealed class Holder
-    {
-        public Type ViewType { get; }
-        public RegistrationType RegistrationType { get; }
-
-        public Holder(Type viewType, RegistrationType registrationType)
-        {
-            ArgumentNullException.ThrowIfNull(viewType);
-
-            ViewType = viewType;
-            RegistrationType = registrationType;
-        }
-    }
-
     private readonly IDictionary<(Type, HolderType), Holder> _holders;
 
     private readonly Dictionary<Type, Func<IFormGroupHandler>> _handlers;
@@ -40,19 +14,16 @@ internal sealed class FormGroupRegistry
         _handlers = new Dictionary<Type, Func<IFormGroupHandler>>();
     }
 
-    private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
+    private enum RegistrationType
     {
-        foreach (var registrationType in groupType.GetRegistrationTypes())
-        {
-            if (_holders.TryGetValue((registrationType, holderType), out holder))
-            {
-                return true;
-            }
-        }
+        Class,
+        Nib,
+    }
 
-        holder = null;
-
-        return false;
+    private enum HolderType
+    {
+        Header,
+        Footer,
     }
 
     public void RegisterGroupHandler<
@@ -179,5 +150,35 @@ internal sealed class FormGroupRegistry
         reuseIdentifier = null;
 
         return false;
+    }
+
+    private bool TryGetHolder(Type groupType, HolderType holderType, out Holder? holder)
+    {
+        foreach (var registrationType in groupType.GetRegistrationTypes())
+        {
+            if (_holders.TryGetValue((registrationType, holderType), out holder))
+            {
+                return true;
+            }
+        }
+
+        holder = null;
+
+        return false;
+    }
+
+    private sealed class Holder
+    {
+        public Holder(Type viewType, RegistrationType registrationType)
+        {
+            ArgumentNullException.ThrowIfNull(viewType);
+
+            ViewType = viewType;
+            RegistrationType = registrationType;
+        }
+
+        public Type ViewType { get; }
+
+        public RegistrationType RegistrationType { get; }
     }
 }

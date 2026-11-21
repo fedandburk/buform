@@ -2,26 +2,6 @@ namespace Buform;
 
 internal sealed class FormItemRegistry
 {
-    private enum RegistrationType
-    {
-        Class,
-        Nib,
-    }
-
-    private sealed class Holder
-    {
-        public Type CellType { get; }
-        public RegistrationType RegistrationType { get; }
-
-        public Holder(Type cellType, RegistrationType registrationType)
-        {
-            ArgumentNullException.ThrowIfNull(cellType);
-
-            CellType = cellType;
-            RegistrationType = registrationType;
-        }
-    }
-
     private readonly IDictionary<Type, Holder> _holders;
 
     public FormItemRegistry()
@@ -29,19 +9,10 @@ internal sealed class FormItemRegistry
         _holders = new Dictionary<Type, Holder>();
     }
 
-    private bool TryGetHolder(Type itemType, out Holder? holder)
+    private enum RegistrationType
     {
-        foreach (var registrationType in itemType.GetRegistrationTypes())
-        {
-            if (_holders.TryGetValue(registrationType, out holder))
-            {
-                return true;
-            }
-        }
-
-        holder = null;
-
-        return false;
+        Class,
+        Nib,
     }
 
     public void RegisterItem<TItem, TItemView>()
@@ -97,5 +68,35 @@ internal sealed class FormItemRegistry
         reuseIdentifier = null;
 
         return false;
+    }
+
+    private bool TryGetHolder(Type itemType, out Holder? holder)
+    {
+        foreach (var registrationType in itemType.GetRegistrationTypes())
+        {
+            if (_holders.TryGetValue(registrationType, out holder))
+            {
+                return true;
+            }
+        }
+
+        holder = null;
+
+        return false;
+    }
+
+    private sealed class Holder
+    {
+        public Holder(Type cellType, RegistrationType registrationType)
+        {
+            ArgumentNullException.ThrowIfNull(cellType);
+
+            CellType = cellType;
+            RegistrationType = registrationType;
+        }
+
+        public Type CellType { get; }
+
+        public RegistrationType RegistrationType { get; }
     }
 }

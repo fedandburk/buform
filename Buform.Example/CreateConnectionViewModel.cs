@@ -10,51 +10,7 @@ namespace Buform.Example;
 
 public partial class CreateConnectionViewModel : ObservableObject
 {
-    public class Validator : AbstractValidator<CreateConnectionViewModel>
-    {
-        public Validator()
-        {
-            RuleFor(item => item.Server).NotEmpty();
-            RuleFor(item => item.Port).NotEmpty().GreaterThan(0);
-            RuleFor(item => item.Password).NotEmpty();
-        }
-    }
-
-    public enum ConnectionType
-    {
-        Ftp,
-        FtpSsl,
-        WebDav,
-    }
-
     private const string AnonymousUsername = "anonymous";
-
-    [ObservableProperty]
-    public partial string? Server { get; set; }
-
-    [ObservableProperty]
-    public partial int? Port { get; set; }
-
-    [ObservableProperty]
-    public partial ConnectionType Type { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsAnonymousLogin { get; set; }
-
-    [ObservableProperty]
-    public partial string? Username { get; set; }
-
-    [ObservableProperty]
-    public partial string? Password { get; set; }
-
-    [ObservableProperty]
-    public partial string? SshPrivateKey { get; set; }
-
-    [ObservableProperty]
-    public partial FluentValidationForm<CreateConnectionViewModel> Form { get; set; }
-
-    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
-    public partial bool CanConnect { get; set; }
 
     public CreateConnectionViewModel()
     {
@@ -143,10 +99,39 @@ public partial class CreateConnectionViewModel : ObservableObject
         (Form as INotifyPropertyChanged).PropertyChanged += OnPropertyChanged;
     }
 
-    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    public enum ConnectionType
     {
-        CanConnect = Form.IsValid;
+        Ftp,
+        FtpSsl,
+        WebDav,
     }
+
+    [ObservableProperty]
+    public partial string? Server { get; set; }
+
+    [ObservableProperty]
+    public partial int? Port { get; set; }
+
+    [ObservableProperty]
+    public partial ConnectionType Type { get; set; }
+
+    [ObservableProperty]
+    public partial bool IsAnonymousLogin { get; set; }
+
+    [ObservableProperty]
+    public partial string? Username { get; set; }
+
+    [ObservableProperty]
+    public partial string? Password { get; set; }
+
+    [ObservableProperty]
+    public partial string? SshPrivateKey { get; set; }
+
+    [ObservableProperty]
+    public partial FluentValidationForm<CreateConnectionViewModel> Form { get; set; }
+
+    [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
+    public partial bool CanConnect { get; set; }
 
     private static string FormatConnectionType(ConnectionType value)
     {
@@ -165,6 +150,11 @@ public partial class CreateConnectionViewModel : ObservableObject
         Console.WriteLine("Connect command executed");
     }
 
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        CanConnect = Form.IsValid;
+    }
+
     [RelayCommand]
     private void Reset()
     {
@@ -177,5 +167,15 @@ public partial class CreateConnectionViewModel : ObservableObject
         Username = null;
         Password = null;
         SshPrivateKey = null;
+    }
+
+    public class Validator : AbstractValidator<CreateConnectionViewModel>
+    {
+        public Validator()
+        {
+            RuleFor(item => item.Server).NotEmpty();
+            RuleFor(item => item.Port).NotEmpty().GreaterThan(0);
+            RuleFor(item => item.Password).NotEmpty();
+        }
     }
 }

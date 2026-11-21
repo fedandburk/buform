@@ -4,6 +4,12 @@ public abstract class ValidatableForm : Form
 {
     private bool _isValid;
 
+    protected ValidatableForm(object target)
+        : base(target)
+    {
+        _isValid = true;
+    }
+
     public bool IsValid
     {
         get => _isValid;
@@ -18,21 +24,6 @@ public abstract class ValidatableForm : Form
 
             NotifyPropertyChanged();
         }
-    }
-
-    protected ValidatableForm(object target)
-        : base(target)
-    {
-        _isValid = true;
-    }
-
-    protected abstract IReadOnlyList<FormValidationError> GetValidationErrors();
-
-    protected override void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
-    {
-        base.OnItemValueChanged(sender, e);
-
-        Validate();
     }
 
     public bool Validate()
@@ -53,6 +44,15 @@ public abstract class ValidatableForm : Form
         {
             item.ResetValidationError();
         }
+    }
+
+    protected abstract IReadOnlyList<FormValidationError> GetValidationErrors();
+
+    protected override void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
+    {
+        base.OnItemValueChanged(sender, e);
+
+        Validate();
     }
 
     private bool Validate(bool showsUnchangedValues)

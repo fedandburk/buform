@@ -23,13 +23,6 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
         /* Required constructor */
     }
 
-    protected FragmentActivity GetFragmentActivity()
-    {
-        return ItemView.GetFragmentActivity();
-    }
-
-    protected abstract void Initialize();
-
     public virtual void Initialize(IDisposable data)
     {
         ArgumentNullException.ThrowIfNull(data);
@@ -51,6 +44,13 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
         Initialize();
     }
 
+    protected FragmentActivity GetFragmentActivity()
+    {
+        return ItemView.GetFragmentActivity();
+    }
+
+    protected abstract void Initialize();
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -65,10 +65,6 @@ public abstract class FormViewHolder : RecyclerView.ViewHolder
 public abstract class FormViewHolder<TItem> : FormViewHolder
     where TItem : class, IFormItem
 {
-    public TItem? Item { get; private set; }
-
-    protected virtual TextView? ValidationErrorView { get; set; }
-
     protected FormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -81,38 +77,9 @@ public abstract class FormViewHolder<TItem> : FormViewHolder
         /* Required constructor */
     }
 
-    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(IValidatableFormItem.ValidationErrorMessage) or null)
-        {
-            UpdateValidationErrorView();
-        }
+    public TItem? Item { get; private set; }
 
-        OnItemPropertyChanged(e.PropertyName);
-    }
-
-    private void UpdateValidationErrorView()
-    {
-        if (ValidationErrorView == null || Item is not IValidatableFormItem item)
-        {
-            return;
-        }
-
-        var message = item.ValidationErrorMessage;
-
-        ValidationErrorView.Text = message;
-        ValidationErrorView.Visibility = message == null ? ViewStates.Gone : ViewStates.Visible;
-    }
-
-    protected virtual void OnItemSet()
-    {
-        /* Nothing to do */
-    }
-
-    protected virtual void OnItemPropertyChanged(string? propertyName)
-    {
-        /* Nothing to do */
-    }
+    protected virtual TextView? ValidationErrorView { get; set; }
 
     public override void Initialize(IDisposable data)
     {
@@ -143,6 +110,16 @@ public abstract class FormViewHolder<TItem> : FormViewHolder
         OnItemSet();
     }
 
+    protected virtual void OnItemSet()
+    {
+        /* Nothing to do */
+    }
+
+    protected virtual void OnItemPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -154,5 +131,28 @@ public abstract class FormViewHolder<TItem> : FormViewHolder
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(IValidatableFormItem.ValidationErrorMessage) or null)
+        {
+            UpdateValidationErrorView();
+        }
+
+        OnItemPropertyChanged(e.PropertyName);
+    }
+
+    private void UpdateValidationErrorView()
+    {
+        if (ValidationErrorView == null || Item is not IValidatableFormItem item)
+        {
+            return;
+        }
+
+        var message = item.ValidationErrorMessage;
+
+        ValidationErrorView.Text = message;
+        ValidationErrorView.Visibility = message == null ? ViewStates.Gone : ViewStates.Visible;
     }
 }

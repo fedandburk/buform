@@ -4,6 +4,12 @@ namespace Buform;
 
 public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatableFormItem
 {
+    protected ValidatableFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public string? ValidationErrorMessage
     {
         get;
@@ -13,12 +19,6 @@ public abstract class ValidatableFormItem<TValue> : FormItem<TValue>, IValidatab
 
             NotifyPropertyChanged();
         }
-    }
-
-    protected ValidatableFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
     }
 
     public virtual void SetValidationError(

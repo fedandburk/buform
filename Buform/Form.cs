@@ -15,13 +15,23 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
 
     private bool _isDisposed;
 
-    public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
+    public Form(object target)
+    {
+        ArgumentNullException.ThrowIfNull(target);
 
-    public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
+        Target = target;
 
-    protected object? Target { get; private set; }
+        var itemsSubscription = this.ToObservableChangeSet()
+            .MergeManyChangeSets(group => group.Connect())
+            .Bind(out _items)
+            .Subscribe();
 
-    protected IReadOnlyList<IFormItem> AllItems => _items;
+        var groupsSubscription = this.ToObservableChangeSet()
+            .SubscribeMany(group => group.Connect().SubscribeMany(SubscribeItem).Subscribe())
+            .Subscribe();
+
+        _subscriptions = new CompositeDisposable(itemsSubscription, groupsSubscription);
+    }
 
     public event EventHandler<FormValueChangedEventArgs>? ValueChanged;
 
@@ -46,52 +56,13 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
         }
     }
 
-    public Form(object target)
-    {
-        ArgumentNullException.ThrowIfNull(target);
+    protected object? Target { get; private set; }
 
-        Target = target;
+    protected IReadOnlyList<IFormItem> AllItems => _items;
 
-        var itemsSubscription = this.ToObservableChangeSet()
-            .MergeManyChangeSets(group => group.Connect())
-            .Bind(out _items)
-            .Subscribe();
+    public virtual IFormItem? this[Expression<Func<object?>> property] => GetItem(property);
 
-        var groupsSubscription = this.ToObservableChangeSet()
-            .SubscribeMany(group => group.Connect().SubscribeMany(SubscribeItem).Subscribe())
-            .Subscribe();
-
-        _subscriptions = new CompositeDisposable(itemsSubscription, groupsSubscription);
-    }
-
-    private IDisposable SubscribeItem(IFormItem item)
-    {
-        item.ValueChanged += OnItemValueChanged;
-
-        InitializeItem(item);
-
-        return Disposable.Create(() => item.ValueChanged -= OnItemValueChanged);
-    }
-
-    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
-    {
-        ValueChanged?.Invoke(this, e);
-    }
-
-    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-    {
-        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-    }
-
-    private void InitializeItem(IFormItem item)
-    {
-        if (Target != null)
-        {
-            item.Initialize(this, Target);
-        }
-
-        item.IsReadOnly = IsReadOnly;
-    }
+    public virtual IFormItem? this[string propertyName] => GetItem(propertyName);
 
     public virtual TItem? GetItem<TItem>(Expression<Func<object?>> property)
         where TItem : class, IFormItem
@@ -126,6 +97,16 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
         Dispose(true);
     }
 
+    protected virtual void OnItemValueChanged(object? sender, FormValueChangedEventArgs e)
+    {
+        ValueChanged?.Invoke(this, e);
+    }
+
+    protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
+
     protected virtual void Dispose(bool isDisposing)
     {
         if (_isDisposed)
@@ -148,5 +129,24 @@ public class Form : ObservableCollection<IFormGroup>, IDisposable
         }
 
         Target = null;
+    }
+
+    private IDisposable SubscribeItem(IFormItem item)
+    {
+        item.ValueChanged += OnItemValueChanged;
+
+        InitializeItem(item);
+
+        return Disposable.Create(() => item.ValueChanged -= OnItemValueChanged);
+    }
+
+    private void InitializeItem(IFormItem item)
+    {
+        if (Target != null)
+        {
+            item.Initialize(this, Target);
+        }
+
+        item.IsReadOnly = IsReadOnly;
     }
 }

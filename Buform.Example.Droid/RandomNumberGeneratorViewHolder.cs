@@ -20,16 +20,6 @@ public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder<RandomN
         /* Required constructor */
     }
 
-    private void OnGenerateButtonClick(object? sender, EventArgs e)
-    {
-        if (Item == null)
-        {
-            throw new InvalidOperationException("The random number row has no item.");
-        }
-
-        Item.GenerateCommand.Execute(null);
-    }
-
     protected override void Initialize()
     {
         base.Initialize();
@@ -56,5 +46,15 @@ public sealed class RandomNumberGeneratorViewHolder : TextFormViewHolder<RandomN
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnGenerateButtonClick(object? sender, EventArgs e)
+    {
+        if (Item == null)
+        {
+            throw new InvalidOperationException("The random number row has no item.");
+        }
+
+        Item.GenerateCommand.Execute(null);
     }
 }

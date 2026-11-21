@@ -5,25 +5,6 @@ namespace Buform.Tests;
 
 public static class FormItemSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Changed = "changed";
-
-        protected Context()
-        {
-            Target = new Model { Name = First };
-
-            Sut = new TextFormItem<string?>(() => Target.Name);
-
-            _ = new Form(Target) { new LabeledFormGroup { Sut } };
-        }
-
-        protected Model Target { get; }
-
-        protected TextFormItem<string?> Sut { get; }
-    }
-
     public static class Value
     {
         public sealed class TargetPropertyRead : Context
@@ -118,5 +99,24 @@ public static class FormItemSpecs
                 _exception.Should().BeOfType<ArgumentException>();
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Changed = "changed";
+
+        protected Context()
+        {
+            Target = new Model { Name = First };
+
+            Sut = new TextFormItem<string?>(() => Target.Name);
+
+            _ = new Form(Target) { new LabeledFormGroup { Sut } };
+        }
+
+        protected Model Target { get; }
+
+        protected TextFormItem<string?> Sut { get; }
     }
 }

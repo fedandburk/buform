@@ -4,6 +4,12 @@ namespace Buform;
 
 public class SwitchFormItem : ValidatableFormItem<bool>
 {
+    public SwitchFormItem(Expression<Func<bool>> targetProperty)
+        : base(targetProperty)
+    {
+        /* Required constructor */
+    }
+
     public virtual string? Label
     {
         get;
@@ -13,11 +19,5 @@ public class SwitchFormItem : ValidatableFormItem<bool>
 
             NotifyPropertyChanged();
         }
-    }
-
-    public SwitchFormItem(Expression<Func<bool>> targetProperty)
-        : base(targetProperty)
-    {
-        /* Required constructor */
     }
 }

@@ -73,12 +73,6 @@ public static class FormPlatform
         ItemRegistry.RegisterItemNib<TItem, TItemView>();
     }
 
-    internal static void Register(UITableView tableView)
-    {
-        GroupRegistry.Register(tableView);
-        ItemRegistry.Register(tableView);
-    }
-
     public static void RegisterGroupHandler<
         TGroup,
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
@@ -88,6 +82,12 @@ public static class FormPlatform
         where THandler : FormGroupHandler<TGroup>
     {
         GroupRegistry.RegisterGroupHandler<TGroup, THandler>();
+    }
+
+    internal static void Register(UITableView tableView)
+    {
+        GroupRegistry.Register(tableView);
+        ItemRegistry.Register(tableView);
     }
 
     internal static bool TryGetHeaderReuseIdentifier(Type groupType, out string? reuseIdentifier)

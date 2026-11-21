@@ -8,40 +8,6 @@ namespace Buform.FluentValidation.Tests;
 
 public static class FluentValidationFormSpecs
 {
-    public abstract class Context
-    {
-        protected const string FirstMessage = "first";
-        protected const string SecondMessage = "second";
-
-        protected Context()
-        {
-            Target = new Model();
-
-            Validator = Substitute.For<IValidator<Model>>();
-
-            Item = Substitute.For<IValidatableFormItem>();
-            Item.PropertyName.Returns(nameof(Model.Name));
-            Item.IsVisible.Returns(true);
-            Item.When(item => item.Initialize(Arg.Any<Form>(), Arg.Any<object>()))
-                .Do(_ =>
-                    Item.ValueChanged += Raise.EventWith(
-                        Item,
-                        new FormValueChangedEventArgs(nameof(Model.Name))
-                    )
-                );
-
-            Sut = new FluentValidationForm<Model>(Target, Validator);
-        }
-
-        protected Model Target { get; }
-
-        protected IValidator<Model> Validator { get; }
-
-        protected IValidatableFormItem Item { get; }
-
-        protected FluentValidationForm<Model> Sut { get; }
-    }
-
     public static class Validate
     {
         public sealed class TwoFailuresForOneProperty : Context
@@ -78,5 +44,39 @@ public static class FluentValidationFormSpecs
                 Sut.IsValid.Should().BeFalse();
             }
         }
+    }
+
+    public abstract class Context
+    {
+        protected const string FirstMessage = "first";
+        protected const string SecondMessage = "second";
+
+        protected Context()
+        {
+            Target = new Model();
+
+            Validator = Substitute.For<IValidator<Model>>();
+
+            Item = Substitute.For<IValidatableFormItem>();
+            Item.PropertyName.Returns(nameof(Model.Name));
+            Item.IsVisible.Returns(true);
+            Item.When(item => item.Initialize(Arg.Any<Form>(), Arg.Any<object>()))
+                .Do(_ =>
+                    Item.ValueChanged += Raise.EventWith(
+                        Item,
+                        new FormValueChangedEventArgs(nameof(Model.Name))
+                    )
+                );
+
+            Sut = new FluentValidationForm<Model>(Target, Validator);
+        }
+
+        protected Model Target { get; }
+
+        protected IValidator<Model> Validator { get; }
+
+        protected IValidatableFormItem Item { get; }
+
+        protected FluentValidationForm<Model> Sut { get; }
     }
 }

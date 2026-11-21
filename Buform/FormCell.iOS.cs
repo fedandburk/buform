@@ -7,10 +7,6 @@ public abstract class FormCell : UITableViewCell
 {
     private bool _isInitialized;
 
-    public virtual bool IsSelectable => false;
-
-    public IFormItem? Item { get; private set; }
-
     protected FormCell()
     {
         /* Required constructor */
@@ -20,6 +16,36 @@ public abstract class FormCell : UITableViewCell
         : base(handle)
     {
         /* Required constructor */
+    }
+
+    public virtual bool IsSelectable => false;
+
+    public IFormItem? Item { get; private set; }
+
+    public virtual void Initialize(IFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        if (ReferenceEquals(Item, item))
+        {
+            return;
+        }
+
+        Item = item;
+
+        if (_isInitialized)
+        {
+            return;
+        }
+
+        _isInitialized = true;
+
+        Initialize();
+    }
+
+    public virtual void OnSelected()
+    {
+        /* Nothing to do */
     }
 
     protected UITableView? GetTableView()
@@ -47,41 +73,11 @@ public abstract class FormCell : UITableViewCell
     }
 
     protected abstract void Initialize();
-
-    public virtual void Initialize(IFormItem item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        if (ReferenceEquals(Item, item))
-        {
-            return;
-        }
-
-        Item = item;
-
-        if (_isInitialized)
-        {
-            return;
-        }
-
-        _isInitialized = true;
-
-        Initialize();
-    }
-
-    public virtual void OnSelected()
-    {
-        /* Nothing to do */
-    }
 }
 
 public abstract class FormCell<TItem> : FormCell
     where TItem : class, IFormItem
 {
-    public new TItem? Item { get; private set; }
-
-    protected virtual UILabel? ValidationLabel => null;
-
     protected FormCell()
     {
         /* Required constructor */
@@ -93,41 +89,9 @@ public abstract class FormCell<TItem> : FormCell
         /* Required constructor */
     }
 
-    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        if (Item == null)
-        {
-            return;
-        }
+    public new TItem? Item { get; private set; }
 
-        if (e.PropertyName == nameof(IValidatableFormItem.ValidationErrorMessage))
-        {
-            UpdateValidationLabel();
-        }
-
-        OnItemPropertyChanged(e.PropertyName);
-    }
-
-    private void UpdateValidationLabel()
-    {
-        if (ValidationLabel == null || Item is not IValidatableFormItem item)
-        {
-            return;
-        }
-
-        ValidationLabel.TextColor =
-            item.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
-    }
-
-    protected virtual void OnItemSet()
-    {
-        /* Nothing to do */
-    }
-
-    protected virtual void OnItemPropertyChanged(string? propertyName)
-    {
-        /* Nothing to do */
-    }
+    protected virtual UILabel? ValidationLabel => null;
 
     public override void Initialize(IFormItem item)
     {
@@ -157,6 +121,16 @@ public abstract class FormCell<TItem> : FormCell
         UpdateValidationLabel();
     }
 
+    protected virtual void OnItemSet()
+    {
+        /* Nothing to do */
+    }
+
+    protected virtual void OnItemPropertyChanged(string? propertyName)
+    {
+        /* Nothing to do */
+    }
+
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -168,5 +142,31 @@ public abstract class FormCell<TItem> : FormCell
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (Item == null)
+        {
+            return;
+        }
+
+        if (e.PropertyName == nameof(IValidatableFormItem.ValidationErrorMessage))
+        {
+            UpdateValidationLabel();
+        }
+
+        OnItemPropertyChanged(e.PropertyName);
+    }
+
+    private void UpdateValidationLabel()
+    {
+        if (ValidationLabel == null || Item is not IValidatableFormItem item)
+        {
+            return;
+        }
+
+        ValidationLabel.TextColor =
+            item.ValidationErrorMessage == null ? UIColor.Label : UIColor.SystemRed;
     }
 }

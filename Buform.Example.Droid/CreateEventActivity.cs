@@ -11,18 +11,13 @@ public sealed class CreateEventActivity : FormActivity
 
     private IMenuItem? _addItem;
 
-    protected override Form Form => _viewModel.Form;
-
     public CreateEventActivity()
     {
         _viewModel = new CreateEventViewModel();
         _viewModel.CreateCommand.CanExecuteChanged += OnCreateCanExecuteChanged;
     }
 
-    private void OnCreateCanExecuteChanged(object? sender, EventArgs e)
-    {
-        _addItem?.SetEnabled(_viewModel.CreateCommand.CanExecute(null));
-    }
+    protected override Form Form => _viewModel.Form;
 
     protected override void OnCreateMenu(IMenu menu)
     {
@@ -39,5 +34,10 @@ public sealed class CreateEventActivity : FormActivity
         _viewModel.CreateCommand.CanExecuteChanged -= OnCreateCanExecuteChanged;
 
         base.OnDestroy();
+    }
+
+    private void OnCreateCanExecuteChanged(object? sender, EventArgs e)
+    {
+        _addItem?.SetEnabled(_viewModel.CreateCommand.CanExecute(null));
     }
 }

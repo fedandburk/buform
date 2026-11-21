@@ -8,13 +8,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
     private NSLayoutConstraint? _textFieldLeadingConstraint;
     private NSLayoutConstraint? _labelWidthConstraint;
 
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UITextField? TextField { get; set; }
-
-    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
-
     protected TextInputFormCell()
     {
         /* Required constructor */
@@ -24,6 +17,21 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         : base(handle)
     {
         /* Required constructor */
+    }
+
+    public override bool IsSelectable => !Item?.IsReadOnly ?? false;
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UITextField? TextField { get; set; }
+
+    public override void OnSelected()
+    {
+        base.OnSelected();
+
+        TextField?.BecomeFirstResponder();
     }
 
     protected override void Initialize()
@@ -73,16 +81,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnEditingChanged(object? sender, EventArgs e)
-    {
-        if (TextField == null)
-        {
-            return;
-        }
-
-        Item?.SetText(TextField.Text);
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -192,13 +190,6 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         }
     }
 
-    public override void OnSelected()
-    {
-        base.OnSelected();
-
-        TextField?.BecomeFirstResponder();
-    }
-
     protected override void Dispose(bool disposing)
     {
         if (disposing)
@@ -214,6 +205,16 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnEditingChanged(object? sender, EventArgs e)
+    {
+        if (TextField == null)
+        {
+            return;
+        }
+
+        Item?.SetText(TextField.Text);
     }
 }
 

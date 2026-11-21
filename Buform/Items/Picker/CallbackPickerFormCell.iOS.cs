@@ -16,6 +16,18 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCell<TItem>
         /* Required constructor */
     }
 
+    public override async void OnSelected()
+    {
+        base.OnSelected();
+
+        if (Item == null)
+        {
+            return;
+        }
+
+        await Item.ExecuteCallbackAsync().ConfigureAwait(true);
+    }
+
     protected override string? GetLabel(TItem item)
     {
         ArgumentNullException.ThrowIfNull(item);
@@ -28,18 +40,6 @@ public abstract class CallbackPickerFormCell<TItem> : PickerFormCell<TItem>
         ArgumentNullException.ThrowIfNull(item);
 
         return item.FormattedValue;
-    }
-
-    public override async void OnSelected()
-    {
-        base.OnSelected();
-
-        if (Item == null)
-        {
-            return;
-        }
-
-        await Item.ExecuteCallbackAsync().ConfigureAwait(true);
     }
 }
 

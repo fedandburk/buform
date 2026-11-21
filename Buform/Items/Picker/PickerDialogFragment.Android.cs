@@ -15,6 +15,24 @@ public class PickerDialogFragment : AppCompatDialogFragment
     private PickerOptionsAdapter? _adapter;
     private bool _isSearchVisible;
 
+    public PickerDialogFragment()
+    {
+        /* Required constructor */
+    }
+
+    public PickerDialogFragment(IOptionsPickerFormItem item)
+    {
+        ArgumentNullException.ThrowIfNull(item);
+
+        Item = item;
+    }
+
+    protected PickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
+        : base(javaReference, transfer)
+    {
+        /* Required constructor */
+    }
+
     protected IOptionsPickerFormItem? Item { get; }
 
     protected virtual TextView? MessageView { get; set; }
@@ -32,58 +50,6 @@ public class PickerDialogFragment : AppCompatDialogFragment
     protected virtual RecyclerView? OptionsView { get; set; }
 
     protected virtual bool IsMultipleChoice => Item is IMultiValuePickerFormItem;
-
-    public PickerDialogFragment()
-    {
-        /* Required constructor */
-    }
-
-    protected PickerDialogFragment(IntPtr javaReference, JniHandleOwnership transfer)
-        : base(javaReference, transfer)
-    {
-        /* Required constructor */
-    }
-
-    public PickerDialogFragment(IOptionsPickerFormItem item)
-    {
-        ArgumentNullException.ThrowIfNull(item);
-
-        Item = item;
-    }
-
-    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        Refresh();
-    }
-
-    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        Item?.FilterQuery = e.Text?.ToString();
-    }
-
-    private void OnOptionClick(IFormOption option)
-    {
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.Pick(option);
-
-        if (!IsMultipleChoice)
-        {
-            Dismiss();
-
-            return;
-        }
-
-        Refresh();
-    }
-
-    private void OnClearClick(object? sender, DialogClickEventArgs e)
-    {
-        Item?.Pick(null);
-    }
 
     public override void OnCreate(Bundle? savedInstanceState)
     {
@@ -127,6 +93,46 @@ public class PickerDialogFragment : AppCompatDialogFragment
         return builder.Create();
     }
 
+    public override void OnStart()
+    {
+        base.OnStart();
+
+        if (Item == null)
+        {
+            return;
+        }
+
+        Item.PropertyChanged += OnItemPropertyChanged;
+
+        Refresh();
+    }
+
+    public override void OnStop()
+    {
+        Item?.PropertyChanged -= OnItemPropertyChanged;
+
+        base.OnStop();
+    }
+
+    public override void OnDismiss(IDialogInterface dialog)
+    {
+        Item?.FilterQuery = null;
+
+        base.OnDismiss(dialog);
+    }
+
+    public override void OnDestroy()
+    {
+        SearchInput?.TextChanged -= OnSearchTextChanged;
+
+        OptionsView?.SetAdapter(null);
+
+        _adapter?.Dispose();
+        _adapter = null;
+
+        base.OnDestroy();
+    }
+
     protected virtual View CreateContentView(Context context)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -166,34 +172,6 @@ public class PickerDialogFragment : AppCompatDialogFragment
         OptionsView?.SetAdapter(_adapter);
 
         return view;
-    }
-
-    public override void OnStart()
-    {
-        base.OnStart();
-
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.PropertyChanged += OnItemPropertyChanged;
-
-        Refresh();
-    }
-
-    public override void OnStop()
-    {
-        Item?.PropertyChanged -= OnItemPropertyChanged;
-
-        base.OnStop();
-    }
-
-    public override void OnDismiss(IDialogInterface dialog)
-    {
-        Item?.FilterQuery = null;
-
-        base.OnDismiss(dialog);
     }
 
     protected virtual void Refresh()
@@ -252,15 +230,37 @@ public class PickerDialogFragment : AppCompatDialogFragment
         OptionsView?.Visibility = ViewStates.Gone;
     }
 
-    public override void OnDestroy()
+    private void OnItemPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        SearchInput?.TextChanged -= OnSearchTextChanged;
+        Refresh();
+    }
 
-        OptionsView?.SetAdapter(null);
+    private void OnSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        Item?.FilterQuery = e.Text?.ToString();
+    }
 
-        _adapter?.Dispose();
-        _adapter = null;
+    private void OnOptionClick(IFormOption option)
+    {
+        if (Item == null)
+        {
+            return;
+        }
 
-        base.OnDestroy();
+        Item.Pick(option);
+
+        if (!IsMultipleChoice)
+        {
+            Dismiss();
+
+            return;
+        }
+
+        Refresh();
+    }
+
+    private void OnClearClick(object? sender, DialogClickEventArgs e)
+    {
+        Item?.Pick(null);
     }
 }

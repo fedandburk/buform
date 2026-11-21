@@ -5,11 +5,6 @@ namespace Buform;
 public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     where TItem : DateTimeFormItem
 {
-    protected virtual UILabel? Label { get; set; }
-
-    protected override UILabel? ValidationLabel => Label;
-    protected virtual UIDatePicker? DatePicker { get; set; }
-
     protected DateTimeFormCell()
     {
         /* Required constructor */
@@ -20,6 +15,12 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
     {
         /* Required constructor */
     }
+
+    protected virtual UILabel? Label { get; set; }
+
+    protected override UILabel? ValidationLabel => Label;
+
+    protected virtual UIDatePicker? DatePicker { get; set; }
 
     protected override void Initialize()
     {
@@ -54,11 +55,6 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
                 ),
             }
         );
-    }
-
-    private void OnValueChanged(object? sender, EventArgs e)
-    {
-        Item?.Value = DatePicker?.Date.ToDateTime() ?? DateTime.UtcNow;
     }
 
     protected virtual void UpdateReadOnlyState()
@@ -178,6 +174,11 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnValueChanged(object? sender, EventArgs e)
+    {
+        Item?.Value = DatePicker?.Date.ToDateTime() ?? DateTime.UtcNow;
     }
 }
 

@@ -13,11 +13,6 @@ internal sealed class FormItemClickListener : Java.Lang.Object, View.IOnClickLis
         _item = item;
     }
 
-    public void OnClick(View? view)
-    {
-        _groupHandler.SelectItem(_item);
-    }
-
     public static void Attach(View view, IFormGroupHandler groupHandler, IFormItem item)
     {
         ArgumentNullException.ThrowIfNull(view);
@@ -50,5 +45,10 @@ internal sealed class FormItemClickListener : Java.Lang.Object, View.IOnClickLis
         view.SetTag(Resource.Id.FormItemClickListener, null);
 
         view.Clickable = false;
+    }
+
+    public void OnClick(View? view)
+    {
+        _groupHandler.SelectItem(_item);
     }
 }

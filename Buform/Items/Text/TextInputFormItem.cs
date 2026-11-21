@@ -8,6 +8,17 @@ public class TextInputFormItem<TValue> : ValidatableFormItem<TValue>, ITextInput
 
     private Func<TValue?, string?>? _formatter;
 
+    public TextInputFormItem(
+        Expression<Func<TValue>> targetProperty,
+        Func<string?, TValue?> converter
+    )
+        : base(targetProperty)
+    {
+        ArgumentNullException.ThrowIfNull(converter);
+
+        _converter = converter;
+    }
+
     public virtual string? Label
     {
         get;
@@ -66,15 +77,9 @@ public class TextInputFormItem<TValue> : ValidatableFormItem<TValue>, ITextInput
 
     public virtual string? FormattedValue => _formatter?.Invoke(Value) ?? Value?.ToString();
 
-    public TextInputFormItem(
-        Expression<Func<TValue>> targetProperty,
-        Func<string?, TValue?> converter
-    )
-        : base(targetProperty)
+    public virtual void SetText(string? text)
     {
-        ArgumentNullException.ThrowIfNull(converter);
-
-        _converter = converter;
+        Value = _converter.Invoke(text);
     }
 
     protected override void OnValueChanged()
@@ -82,11 +87,6 @@ public class TextInputFormItem<TValue> : ValidatableFormItem<TValue>, ITextInput
         base.OnValueChanged();
 
         NotifyPropertyChanged(nameof(FormattedValue));
-    }
-
-    public virtual void SetText(string? text)
-    {
-        Value = _converter.Invoke(text);
     }
 
     protected override void Dispose(bool isDisposing)

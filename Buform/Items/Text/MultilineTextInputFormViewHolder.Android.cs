@@ -10,10 +10,6 @@ public abstract class MultilineTextInputFormViewHolder<TItem> : FormViewHolder<T
 {
     private bool _isUpdatingValue;
 
-    protected virtual TextInputLayout? InputLayoutView { get; set; }
-
-    protected virtual EditText? InputView { get; set; }
-
     protected MultilineTextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -26,15 +22,9 @@ public abstract class MultilineTextInputFormViewHolder<TItem> : FormViewHolder<T
         /* Required constructor */
     }
 
-    private void OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_isUpdatingValue || Item == null)
-        {
-            return;
-        }
+    protected virtual TextInputLayout? InputLayoutView { get; set; }
 
-        Item.SetText(e.Text?.ToString());
-    }
+    protected virtual EditText? InputView { get; set; }
 
     protected override void Initialize()
     {
@@ -170,6 +160,16 @@ public abstract class MultilineTextInputFormViewHolder<TItem> : FormViewHolder<T
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_isUpdatingValue || Item == null)
+        {
+            return;
+        }
+
+        Item.SetText(e.Text?.ToString());
     }
 }
 

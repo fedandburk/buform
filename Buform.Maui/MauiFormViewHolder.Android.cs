@@ -21,10 +21,6 @@ internal abstract class MauiFormViewHolder<TMauiView> : RecyclerView.ViewHolder
     private Type? _mauiViewType;
     private int _layoutRetryCount;
 
-    protected FrameLayout Container { get; }
-
-    public AView? ContentView => Container.ChildCount > 0 ? Container.GetChildAt(0) : null;
-
     protected MauiFormViewHolder(FrameLayout container, IMauiContext mauiContext)
         : base(container)
     {
@@ -33,6 +29,10 @@ internal abstract class MauiFormViewHolder<TMauiView> : RecyclerView.ViewHolder
         Container = container;
         _mauiContext = mauiContext;
     }
+
+    public AView? ContentView => Container.ChildCount > 0 ? Container.GetChildAt(0) : null;
+
+    protected FrameLayout Container { get; }
 
     public virtual void Unbind()
     {

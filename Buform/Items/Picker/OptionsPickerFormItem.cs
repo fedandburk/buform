@@ -9,6 +9,13 @@ public abstract class OptionsPickerFormItem<TValue>
     private IReadOnlyList<IFormOption> _allOptions;
     private IReadOnlyList<IFormOption> _options;
 
+    protected OptionsPickerFormItem(Expression<Func<TValue>> targetProperty)
+        : base(targetProperty)
+    {
+        _allOptions = [];
+        _options = [];
+    }
+
     public virtual string? Label
     {
         get;
@@ -72,12 +79,9 @@ public abstract class OptionsPickerFormItem<TValue>
 
     protected IReadOnlyList<IFormOption> AllOptions => _allOptions;
 
-    protected OptionsPickerFormItem(Expression<Func<TValue>> targetProperty)
-        : base(targetProperty)
-    {
-        _allOptions = [];
-        _options = [];
-    }
+    public abstract void Pick(IFormOption? option);
+
+    public abstract bool IsPicked(IFormOption option);
 
     protected void SetOptions(IEnumerable<IFormOption> options)
     {
@@ -110,8 +114,4 @@ public abstract class OptionsPickerFormItem<TValue>
 
         NotifyPropertyChanged(nameof(FormattedValue));
     }
-
-    public abstract void Pick(IFormOption? option);
-
-    public abstract bool IsPicked(IFormOption option);
 }

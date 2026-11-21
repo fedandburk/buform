@@ -4,28 +4,6 @@ namespace Buform;
 
 internal sealed class MauiFormGroupRegistry
 {
-    private enum HolderType
-    {
-        Header,
-        Footer,
-    }
-
-    private sealed class Holder
-    {
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-        public Type ViewType { get; }
-
-        public Holder(
-            [DynamicallyAccessedMembers(
-                DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
-            )]
-                Type viewType
-        )
-        {
-            ViewType = viewType;
-        }
-    }
-
     private readonly IDictionary<(Type, HolderType), Holder> _groups;
 
     public MauiFormGroupRegistry()
@@ -33,26 +11,10 @@ internal sealed class MauiFormGroupRegistry
         _groups = new Dictionary<(Type, HolderType), Holder>();
     }
 
-    private bool TryGetViewType(
-        Type groupType,
-        HolderType holderType,
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-            out Type? viewType
-    )
+    private enum HolderType
     {
-        foreach (var registrationType in groupType.GetRegistrationTypes())
-        {
-            if (_groups.TryGetValue((registrationType, holderType), out var holder))
-            {
-                viewType = holder.ViewType;
-
-                return true;
-            }
-        }
-
-        viewType = null;
-
-        return false;
+        Header,
+        Footer,
     }
 
     public void RegisterGroupHeader<
@@ -97,5 +59,43 @@ internal sealed class MauiFormGroupRegistry
         ArgumentNullException.ThrowIfNull(groupType);
 
         return TryGetViewType(groupType, HolderType.Footer, out viewType);
+    }
+
+    private bool TryGetViewType(
+        Type groupType,
+        HolderType holderType,
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+            out Type? viewType
+    )
+    {
+        foreach (var registrationType in groupType.GetRegistrationTypes())
+        {
+            if (_groups.TryGetValue((registrationType, holderType), out var holder))
+            {
+                viewType = holder.ViewType;
+
+                return true;
+            }
+        }
+
+        viewType = null;
+
+        return false;
+    }
+
+    private sealed class Holder
+    {
+        public Holder(
+            [DynamicallyAccessedMembers(
+                DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
+            )]
+                Type viewType
+        )
+        {
+            ViewType = viewType;
+        }
+
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+        public Type ViewType { get; }
     }
 }

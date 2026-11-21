@@ -10,10 +10,6 @@ public abstract class TextInputFormViewHolder<TItem> : FormViewHolder<TItem>
 {
     private bool _isUpdatingValue;
 
-    protected virtual TextInputLayout? InputLayoutView { get; set; }
-
-    protected virtual EditText? InputView { get; set; }
-
     protected TextInputFormViewHolder(IntPtr javaReference, JniHandleOwnership transfer)
         : base(javaReference, transfer)
     {
@@ -26,37 +22,9 @@ public abstract class TextInputFormViewHolder<TItem> : FormViewHolder<TItem>
         /* Required constructor */
     }
 
-    private void OnTextChanged(object? sender, TextChangedEventArgs e)
-    {
-        if (_isUpdatingValue || Item == null)
-        {
-            return;
-        }
+    protected virtual TextInputLayout? InputLayoutView { get; set; }
 
-        Item.SetText(e.Text?.ToString());
-    }
-
-    private void SetInputType(EditText inputView, InputTypes inputTypes)
-    {
-        if (inputView.InputType == inputTypes)
-        {
-            return;
-        }
-
-        _isUpdatingValue = true;
-
-        try
-        {
-            inputView.Text = null;
-            inputView.InputType = inputTypes;
-        }
-        finally
-        {
-            _isUpdatingValue = false;
-        }
-
-        UpdateValue();
-    }
+    protected virtual EditText? InputView { get; set; }
 
     protected override void Initialize()
     {
@@ -227,6 +195,38 @@ public abstract class TextInputFormViewHolder<TItem> : FormViewHolder<TItem>
         }
 
         base.Dispose(disposing);
+    }
+
+    private void OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        if (_isUpdatingValue || Item == null)
+        {
+            return;
+        }
+
+        Item.SetText(e.Text?.ToString());
+    }
+
+    private void SetInputType(EditText inputView, InputTypes inputTypes)
+    {
+        if (inputView.InputType == inputTypes)
+        {
+            return;
+        }
+
+        _isUpdatingValue = true;
+
+        try
+        {
+            inputView.Text = null;
+            inputView.InputType = inputTypes;
+        }
+        finally
+        {
+            _isUpdatingValue = false;
+        }
+
+        UpdateValue();
     }
 }
 

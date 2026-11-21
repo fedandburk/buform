@@ -7,54 +7,6 @@ namespace Buform.Tests;
 
 public static class FormGroupSpecs
 {
-    public abstract class Context
-    {
-        protected const string First = "first";
-        protected const string Second = "second";
-        protected const string Third = "third";
-        protected const string Inserted = "inserted";
-
-        protected Context()
-        {
-            FirstItem = new TextFormItem<string>(First);
-            SecondItem = new TextFormItem<string>(Second);
-            ThirdItem = new TextFormItem<string>(Third);
-
-            Sut = new LabeledFormGroup { FirstItem, SecondItem, ThirdItem };
-
-            Changes = [];
-            PropertyChanges = [];
-
-            Sut.CollectionChanged += (_, args) => Changes.Add(args);
-            Sut.PropertyChanged += (_, args) => PropertyChanges.Add(args.PropertyName);
-        }
-
-        protected TextFormItem<string> FirstItem { get; }
-        protected TextFormItem<string> SecondItem { get; }
-        protected TextFormItem<string> ThirdItem { get; }
-
-        protected LabeledFormGroup Sut { get; }
-
-        protected List<NotifyCollectionChangedEventArgs> Changes { get; }
-
-        protected List<string?> PropertyChanges { get; }
-
-        protected IReadOnlyList<object?> AllValues =>
-            [FirstItem.Value, SecondItem.Value, ThirdItem.Value];
-
-        protected IReadOnlyList<object?> VisibleValues => Sut.Select(item => item.Value).ToList();
-
-        protected IReadOnlyList<object?> HiddenValues
-        {
-            get
-            {
-                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
-
-                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
-            }
-        }
-    }
-
     public static class IsVisible
     {
         public sealed class HideMiddleItem : Context
@@ -331,6 +283,54 @@ public static class FormGroupSpecs
             public void RaisesCountChanged()
             {
                 PropertyChanges.Should().Contain(nameof(Sut.Count));
+            }
+        }
+    }
+
+    public abstract class Context
+    {
+        protected const string First = "first";
+        protected const string Second = "second";
+        protected const string Third = "third";
+        protected const string Inserted = "inserted";
+
+        protected Context()
+        {
+            FirstItem = new TextFormItem<string>(First);
+            SecondItem = new TextFormItem<string>(Second);
+            ThirdItem = new TextFormItem<string>(Third);
+
+            Sut = new LabeledFormGroup { FirstItem, SecondItem, ThirdItem };
+
+            Changes = [];
+            PropertyChanges = [];
+
+            Sut.CollectionChanged += (_, args) => Changes.Add(args);
+            Sut.PropertyChanged += (_, args) => PropertyChanges.Add(args.PropertyName);
+        }
+
+        protected TextFormItem<string> FirstItem { get; }
+        protected TextFormItem<string> SecondItem { get; }
+        protected TextFormItem<string> ThirdItem { get; }
+
+        protected LabeledFormGroup Sut { get; }
+
+        protected List<NotifyCollectionChangedEventArgs> Changes { get; }
+
+        protected List<string?> PropertyChanges { get; }
+
+        protected IReadOnlyList<object?> AllValues =>
+            [FirstItem.Value, SecondItem.Value, ThirdItem.Value];
+
+        protected IReadOnlyList<object?> VisibleValues => Sut.Select(item => item.Value).ToList();
+
+        protected IReadOnlyList<object?> HiddenValues
+        {
+            get
+            {
+                using var subscription = Sut.Connect().Bind(out var items).Subscribe();
+
+                return items.Where(item => !item.IsVisible).Select(item => item.Value).ToList();
             }
         }
     }

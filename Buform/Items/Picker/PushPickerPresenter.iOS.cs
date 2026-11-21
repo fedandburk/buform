@@ -3,14 +3,14 @@ namespace Buform;
 public class PushPickerPresenter<TItem> : PickerPresenter<TItem>
     where TItem : class, IOptionsPickerFormItem
 {
-    protected Func<TItem, UIViewController> ViewControllerFactory { get; }
-
     public PushPickerPresenter(Func<TItem, UIViewController> viewControllerFactory)
     {
         ArgumentNullException.ThrowIfNull(viewControllerFactory);
 
         ViewControllerFactory = viewControllerFactory;
     }
+
+    protected Func<TItem, UIViewController> ViewControllerFactory { get; }
 
     public override Task PickAsync(UIView sourceView, TItem item)
     {

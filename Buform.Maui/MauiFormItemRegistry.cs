@@ -4,42 +4,11 @@ namespace Buform;
 
 internal sealed class MauiFormItemRegistry
 {
-    private sealed class Holder
-    {
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
-        public Type ViewType { get; }
-
-        public Holder(
-            [DynamicallyAccessedMembers(
-                DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
-            )]
-                Type viewType
-        )
-        {
-            ViewType = viewType;
-        }
-    }
-
     private readonly Dictionary<Type, Holder> _holders;
 
     public MauiFormItemRegistry()
     {
         _holders = [];
-    }
-
-    private bool TryGetHolder(Type itemType, out Holder? holder)
-    {
-        foreach (var registrationType in itemType.GetRegistrationTypes())
-        {
-            if (_holders.TryGetValue(registrationType, out holder))
-            {
-                return true;
-            }
-        }
-
-        holder = null;
-
-        return false;
     }
 
     public void RegisterItem<
@@ -71,5 +40,36 @@ internal sealed class MauiFormItemRegistry
         viewType = null;
 
         return false;
+    }
+
+    private bool TryGetHolder(Type itemType, out Holder? holder)
+    {
+        foreach (var registrationType in itemType.GetRegistrationTypes())
+        {
+            if (_holders.TryGetValue(registrationType, out holder))
+            {
+                return true;
+            }
+        }
+
+        holder = null;
+
+        return false;
+    }
+
+    private sealed class Holder
+    {
+        public Holder(
+            [DynamicallyAccessedMembers(
+                DynamicallyAccessedMemberTypes.PublicParameterlessConstructor
+            )]
+                Type viewType
+        )
+        {
+            ViewType = viewType;
+        }
+
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)]
+        public Type ViewType { get; }
     }
 }

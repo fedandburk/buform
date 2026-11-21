@@ -4,6 +4,8 @@ namespace Buform.Tests;
 
 public sealed class Model : INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public string? Name
     {
         get;
@@ -14,6 +16,4 @@ public sealed class Model : INotifyPropertyChanged
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
         }
     }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 }
