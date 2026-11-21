@@ -21,12 +21,15 @@ concurrency:
 jobs:
   check:
     name: Check
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 30
     if: ${{ !startsWith(github.ref, 'refs/tags/') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+
+      - name: Select Xcode
+        run: sudo xcode-select --switch /Applications/Xcode_27.2.app
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v6.1.0
@@ -51,7 +54,7 @@ jobs:
 
   publish:
     name: Publish
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 30
     if: startsWith(github.ref, 'refs/tags/')
     permissions:
@@ -60,6 +63,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7.0.1
+
+      - name: Select Xcode
+        run: sudo xcode-select --switch /Applications/Xcode_27.2.app
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v6.1.0
