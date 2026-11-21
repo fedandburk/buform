@@ -20,7 +20,7 @@ public abstract class FormHeaderFooter : UITableViewHeaderFooterView
 
     protected UITableView? GetTableView()
     {
-        var view = this as UIView;
+        UIView view = this;
 
         while (true)
         {

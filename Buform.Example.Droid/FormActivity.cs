@@ -8,7 +8,7 @@ namespace Buform.Example.Droid;
 
 public abstract class FormActivity : AppCompatActivity
 {
-    protected MaterialToolbar? Toolbar { get; private set; }
+    private MaterialToolbar? _toolbar;
 
     protected abstract Form Form { get; }
 
@@ -25,12 +25,12 @@ public abstract class FormActivity : AppCompatActivity
 
         SetContentView(Resource.Layout.ActivityForm);
 
-        Toolbar = FindViewById<MaterialToolbar>(Resource.Id.Toolbar)!;
-        Toolbar.Title = Title;
-        Toolbar.SetNavigationIcon(Resource.Drawable.abc_ic_ab_back_material);
-        Toolbar.NavigationClick += (_, _) => Finish();
+        _toolbar = FindViewById<MaterialToolbar>(Resource.Id.Toolbar)!;
+        _toolbar.Title = Title;
+        _toolbar.SetNavigationIcon(Resource.Drawable.abc_ic_ab_back_material);
+        _toolbar.NavigationClick += (_, _) => Finish();
 
-        OnCreateMenu(Toolbar.Menu!);
+        OnCreateMenu(_toolbar.Menu!);
 
         var recyclerView = FindViewById<FormRecyclerView>(Resource.Id.RecyclerView)!;
 
@@ -41,7 +41,7 @@ public abstract class FormActivity : AppCompatActivity
 
     private sealed class BottomInsetListener : Java.Lang.Object, IOnApplyWindowInsetsListener
     {
-        public WindowInsetsCompat? OnApplyWindowInsets(View? view, WindowInsetsCompat? insets)
+        public WindowInsetsCompat OnApplyWindowInsets(View? view, WindowInsetsCompat? insets)
         {
             ArgumentNullException.ThrowIfNull(view);
             ArgumentNullException.ThrowIfNull(insets);

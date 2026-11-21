@@ -56,11 +56,6 @@ public sealed class ComponentsViewController : UITableViewController
     {
         _viewModel.ToggleReadOnlyModeCommand.Execute(null);
 
-        if (_toggleReadOnlyButtonItem == null)
-        {
-            return;
-        }
-
-        _toggleReadOnlyButtonItem.Selected = _viewModel.Form.IsReadOnly;
+        _toggleReadOnlyButtonItem?.Selected = _viewModel.Form.IsReadOnly;
     }
 }

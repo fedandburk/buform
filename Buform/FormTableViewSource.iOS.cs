@@ -291,7 +291,7 @@ public class FormTableViewSource : UITableViewDelegate
 
     private IFormItem GetItem(NSIndexPath indexPath)
     {
-        return _groups[(int)indexPath.Section][(int)indexPath.Row];
+        return _groups[indexPath.Section][indexPath.Row];
     }
 
     private IFormGroup GetGroup(nint section)
