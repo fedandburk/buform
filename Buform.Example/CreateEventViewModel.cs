@@ -55,10 +55,10 @@ public partial class CreateEventViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private FluentValidationForm<Model> _form;
+    public partial FluentValidationForm<Model> Form { get; set; }
 
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(CreateCommand))]
-    private bool _canCreate;
+    public partial bool CanCreate { get; set; }
 
     public CreateEventViewModel()
     {

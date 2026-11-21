@@ -30,31 +30,31 @@ public partial class CreateConnectionViewModel : ObservableObject
     private const string AnonymousUsername = "anonymous";
 
     [ObservableProperty]
-    private string? _server;
+    public partial string? Server { get; set; }
 
     [ObservableProperty]
-    private int? _port;
+    public partial int? Port { get; set; }
 
     [ObservableProperty]
-    private ConnectionType _type;
+    public partial ConnectionType Type { get; set; }
 
     [ObservableProperty]
-    private bool _isAnonymousLogin;
+    public partial bool IsAnonymousLogin { get; set; }
 
     [ObservableProperty]
-    private string? _username;
+    public partial string? Username { get; set; }
 
     [ObservableProperty]
-    private string? _password;
+    public partial string? Password { get; set; }
 
     [ObservableProperty]
-    private string? _sshPrivateKey;
+    public partial string? SshPrivateKey { get; set; }
 
     [ObservableProperty]
-    private FluentValidationForm<CreateConnectionViewModel> _form;
+    public partial FluentValidationForm<CreateConnectionViewModel> Form { get; set; }
 
     [ObservableProperty, NotifyCanExecuteChangedFor(nameof(ConnectCommand))]
-    private bool _canConnect;
+    public partial bool CanConnect { get; set; }
 
     public CreateConnectionViewModel()
     {

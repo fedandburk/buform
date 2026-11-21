@@ -10,7 +10,7 @@ public sealed partial class MenuViewModel : ObservableObject
     private readonly INavigationService _navigationService;
 
     [ObservableProperty]
-    private Form _form;
+    public partial Form Form { get; set; }
 
     public MenuViewModel(INavigationService navigationService)
     {

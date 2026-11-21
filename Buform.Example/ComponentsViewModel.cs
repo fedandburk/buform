@@ -20,55 +20,60 @@ public partial class ComponentsViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private Color _color = Color.Gold;
+    public partial Color Color { get; set; }
 
     [ObservableProperty]
-    private ObservableCollection<int> _list = new(Enumerable.Range(1, 10));
+    public partial ObservableCollection<int> List { get; set; }
 
     [ObservableProperty]
-    private Enum _segments;
+    public partial Enum Segments { get; set; }
 
     [ObservableProperty]
-    private string? _text;
+    public partial string? Text { get; set; }
 
     [ObservableProperty]
-    private string? _multilineText = new LipsumGenerator().GenerateLipsum(1);
+    public partial string? MultilineText { get; set; }
 
     [ObservableProperty]
-    private float _slider;
+    public partial float Slider { get; set; }
 
     [ObservableProperty]
-    private int _stepper;
+    public partial int Stepper { get; set; }
 
     [ObservableProperty]
-    private DateTime _dateTime = DateTime.UtcNow;
+    public partial DateTime DateTime { get; set; }
 
     [ObservableProperty]
-    private bool _switch;
+    public partial bool Switch { get; set; }
 
     [ObservableProperty]
-    private string? _hiddenText;
+    public partial string? HiddenText { get; set; }
 
     [ObservableProperty]
-    private string? _callbackPicker;
+    public partial string? CallbackPicker { get; set; }
 
     [ObservableProperty]
-    private int? _picker;
+    public partial int? Picker { get; set; }
 
     [ObservableProperty]
-    private int? _asyncPicker;
+    public partial int? AsyncPicker { get; set; }
 
     [ObservableProperty]
-    private int[]? _multiValuePicker;
+    public partial int[]? MultiValuePicker { get; set; }
 
     [ObservableProperty]
-    private int _randomNumber;
+    public partial int RandomNumber { get; set; }
 
     [ObservableProperty]
-    private Form _form;
+    public partial Form Form { get; set; }
 
     public ComponentsViewModel()
     {
+        Color = Color.Gold;
+        List = new ObservableCollection<int>(Enumerable.Range(1, 10));
+        MultilineText = new LipsumGenerator().GenerateLipsum(1);
+        DateTime = DateTime.UtcNow;
+
         Form = new Form(this)
         {
             new ListFormGroup<int, TextFormItem<int>>(
