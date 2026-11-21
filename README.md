@@ -4,30 +4,37 @@
 [![CI](https://github.com/fedandburk/buform/actions/workflows/ci.yml/badge.svg)](https://github.com/fedandburk/buform/actions/workflows/ci.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/fedandburk/buform/badge)](https://www.codefactor.io/repository/github/fedandburk/buform)
 
-Buform is a library specifically designed for Xamarin developers, offering a solution for creating and managing forms in mobile apps.
+Buform is a framework for list-based screens in .NET apps for iOS and Android. It builds menus, settings, details, data entry and collections of records from one model in shared code, and shows them with native views: UIKit cells on iOS and Material 3 list items on Android.
 
-With Buform, Xamarin developers can easily design and implement various types of forms, such as settings forms, registration forms, and more, with flexible and customizable form components.
+## Highlights
 
-The library provides a user-friendly API that simplifies form creation and input handling, along with robust validations support.
+Buform does the wiring of list screens, so the app code can focus on its own UI.
 
-## Features
+- **list mechanics:** data sources, adapters, cell reuse, animated updates, selection, swipe to delete and reorder
+- **bindings:** each row reads and writes its property of the view model, in both directions
+- **validation:** errors show on the rows, also with FluentValidation
+- **your design kit:** cells and view holders from your own design kit for any item, header or footer, each registered with one call
+- **system look by default:** the built-in rows use Liquid Glass on iOS and Material 3 on Android
 
-- Compatible with [Xamarin.Forms](https://github.com/xamarin/Xamarin.Forms), [Maui](https://github.com/dotnet/maui), and [MvvmCross](https://github.com/MvvmCross/MvvmCross)
-- Can handle live targets, e.g. targets that implement `INotifyPropertyChanged` interface
-- Can handle dynamic form definition updates
-- Supports user input validation and compatible with [FluentValidation](https://github.com/FluentValidation/FluentValidation)
-- Can display a read-only form or item
-- Provides a set of default items, like text, switch, button, date and time pickers, etc.
-- Supports custom item types and UI implementation overrides for existing items
+## Packages
+
+| Package | Contents |
+|---|---|
+| [Fedandburk.Buform](https://www.nuget.org/packages/Fedandburk.Buform) | the form model and the native iOS and Android views |
+| [Fedandburk.Buform.Maui](https://www.nuget.org/packages/Fedandburk.Buform.Maui) | the views for .NET MAUI |
+| [Fedandburk.Buform.FluentValidation](https://www.nuget.org/packages/Fedandburk.Buform.FluentValidation) | validation with [FluentValidation](https://github.com/FluentValidation/FluentValidation) |
+| [Fedandburk.Buform.ColorPicker](https://www.nuget.org/packages/Fedandburk.Buform.ColorPicker) | a colour picker item |
+
+Buform works with any view model that implements `INotifyPropertyChanged`, for example with [MvvmCross](https://github.com/MvvmCross/MvvmCross) or [CommunityToolkit.Mvvm](https://github.com/CommunityToolkit/dotnet). No other package is necessary.
 
 ## Installation
 
-Use [NuGet](https://www.nuget.org) package manager to install this library.
-
 ```bash
-Install-Package Fedandburk.Buform
+dotnet add package Fedandburk.Buform
 ```
+
+Add the other packages in the same way.
 
 ## Usage
 
-See the [Wiki](https://github.com/fedandburk/buform/wiki) section.
+The [wiki](https://github.com/fedandburk/buform/wiki) describes the features, the requirements and the usage.
