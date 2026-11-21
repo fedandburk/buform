@@ -48,6 +48,7 @@ internal sealed class MauiFormHeaderFooterViewHolder : MauiFormViewHolder<FormHe
                 }
 
                 break;
+            case FormRowType.Item:
             default:
                 throw new ArgumentOutOfRangeException(nameof(rowType), rowType, null);
         }

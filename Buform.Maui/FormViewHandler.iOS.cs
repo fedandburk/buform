@@ -23,20 +23,14 @@ internal sealed class FormViewHandler : ViewHandler<FormView, UITableView>
 
     private static void MapForm(FormViewHandler handler, FormView view)
     {
-        if (handler._source != null)
-        {
-            handler._source.Form = view.Form;
-        }
+        handler._source?.Form = view.Form;
     }
 
     protected override void ConnectHandler(UITableView platformView)
     {
         base.ConnectHandler(platformView);
 
-        if (_source != null)
-        {
-            _source.Form = VirtualView.Form;
-        }
+        _source?.Form = VirtualView.Form;
     }
 
     protected override void DisconnectHandler(UITableView platformView)

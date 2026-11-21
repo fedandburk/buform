@@ -46,12 +46,7 @@ public abstract class TextFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateValue()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.FormattedValue;
+        Label?.Text = Item?.FormattedValue;
     }
 
     protected override void OnItemSet()

@@ -54,32 +54,17 @@ public abstract class SwitchFormCell<TItem> : FormCell<TItem>
 
     private void OnValueChanged(object? sender, EventArgs e)
     {
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.Value = Switch?.On ?? false;
+        Item?.Value = Switch?.On ?? false;
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (Switch == null)
-        {
-            return;
-        }
-
-        Switch.Enabled = !Item?.IsReadOnly ?? true;
+        Switch?.Enabled = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.Label;
+        Label?.Text = Item?.Label;
     }
 
     protected virtual void UpdateValue(bool isAnimated)

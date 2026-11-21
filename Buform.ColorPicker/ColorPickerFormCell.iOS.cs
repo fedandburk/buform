@@ -78,22 +78,12 @@ public abstract class ColorPickerFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.Label;
+        Label?.Text = Item?.Label;
     }
 
     protected virtual void UpdateValue()
     {
-        if (ColorView == null)
-        {
-            return;
-        }
-
-        ColorView.BackgroundColor = Item?.Value.ToColor() ?? UIColor.Clear;
+        ColorView?.BackgroundColor = Item?.Value.ToColor() ?? UIColor.Clear;
     }
 
     protected virtual void UpdateReadOnlyState()

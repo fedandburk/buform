@@ -50,9 +50,6 @@ public sealed class RandomNumberGeneratorCell : TextFormCell<RandomNumberGenerat
         }
 
         var button = _button;
-        if (button != null)
-        {
-            button.TouchUpInside -= OnTouchUpInside;
-        }
+        button?.TouchUpInside -= OnTouchUpInside;
     }
 }

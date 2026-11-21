@@ -54,13 +54,15 @@ internal sealed class MauiFormItemViewHolder : MauiFormViewHolder<FormItemView>
             _card = card;
         }
 
-        if (platformView.Parent != _card)
+        if (Equals(platformView.Parent, _card))
         {
-            (platformView.Parent as ViewGroup)?.RemoveView(platformView);
-
-            _card.RemoveAllViews();
-            _card.AddView(platformView);
+            return _cardLayout;
         }
+
+        (platformView.Parent as ViewGroup)?.RemoveView(platformView);
+
+        _card.RemoveAllViews();
+        _card.AddView(platformView);
 
         return _cardLayout;
     }

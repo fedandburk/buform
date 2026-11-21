@@ -57,22 +57,12 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (TextView == null)
-        {
-            return;
-        }
-
-        TextView.Editable = !Item?.IsReadOnly ?? true;
+        TextView?.Editable = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdatePlaceholder()
     {
-        if (TextView == null)
-        {
-            return;
-        }
-
-        TextView.Placeholder = Item?.Placeholder;
+        TextView?.Placeholder = Item?.Placeholder;
     }
 
     protected virtual void UpdateInputType()
@@ -102,12 +92,7 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateValue()
     {
-        if (TextView == null)
-        {
-            return;
-        }
-
-        TextView.Text = Item?.FormattedValue;
+        TextView?.Text = Item?.FormattedValue;
     }
 
     protected override void OnItemSet()
@@ -142,10 +127,7 @@ public abstract class MultilineTextInputFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var textView = TextView;
-            if (textView != null)
-            {
-                textView.Changed -= OnChanged;
-            }
+            textView?.Changed -= OnChanged;
 
             TextView?.Dispose();
             TextView = null;

@@ -1,6 +1,6 @@
 namespace Buform;
 
-public abstract class FormHeaderFooterView : ContentView { }
+public abstract class FormHeaderFooterView : ContentView;
 
 public abstract class FormHeaderFooterView<TGroup> : FormHeaderFooterView
     where TGroup : class, IFormGroup

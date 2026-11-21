@@ -103,12 +103,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (SegmentedControl == null)
-        {
-            return;
-        }
-
-        SegmentedControl.Enabled = !Item?.IsReadOnly ?? true;
+        SegmentedControl?.Enabled = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdateLabel()
@@ -201,10 +196,7 @@ public abstract class SegmentsFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var segmentedControl = SegmentedControl;
-            if (segmentedControl != null)
-            {
-                segmentedControl.ValueChanged -= OnValueChanged;
-            }
+            segmentedControl?.ValueChanged -= OnValueChanged;
 
             SegmentedControl?.Dispose();
             SegmentedControl = null;

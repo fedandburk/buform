@@ -1,6 +1,5 @@
 ﻿using Android.App;
 using Android.Content.PM;
-using Android.OS;
 
 namespace Buform.Example.Maui;
 
@@ -14,4 +13,4 @@ namespace Buform.Example.Maui;
         | ConfigChanges.SmallestScreenSize
         | ConfigChanges.Density
 )]
-public class MainActivity : MauiAppCompatActivity { }
+public class MainActivity : MauiAppCompatActivity;

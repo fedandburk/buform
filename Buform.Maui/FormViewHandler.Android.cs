@@ -59,7 +59,7 @@ internal sealed class FormViewHandler : ViewHandler<FormView, RecyclerView>
 
     private void UpdateForm()
     {
-        if (PlatformView?.GetAdapter() is MauiFormRecyclerAdapter adapter)
+        if (PlatformView.GetAdapter() is MauiFormRecyclerAdapter adapter)
         {
             adapter.Form = VirtualView.Form;
         }

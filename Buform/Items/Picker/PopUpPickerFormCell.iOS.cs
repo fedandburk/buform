@@ -149,15 +149,9 @@ public abstract class PopUpPickerFormCell<TItem> : PresentedPickerFormCell<TItem
                 ? UITableViewCellAccessory.None
                 : UITableViewCellAccessory.DisclosureIndicator;
 
-        if (ValueLabel != null)
-        {
-            ValueLabel.Hidden = isPopUp;
-        }
+        ValueLabel?.Hidden = isPopUp;
 
-        if (MenuButton != null)
-        {
-            MenuButton.Hidden = !isPopUp;
-        }
+        MenuButton?.Hidden = !isPopUp;
     }
 
     protected override void UpdateReadOnlyState()

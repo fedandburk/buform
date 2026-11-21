@@ -23,17 +23,11 @@ public class FormTableViewSource : UITableViewDelegate
                 return;
             }
 
-            if (field != null)
-            {
-                field.CollectionChanged -= OnGroupsChanged;
-            }
+            field?.CollectionChanged -= OnGroupsChanged;
 
             field = value;
 
-            if (field != null)
-            {
-                field.CollectionChanged += OnGroupsChanged;
-            }
+            field?.CollectionChanged += OnGroupsChanged;
 
             _isSnapshotApplied = false;
 

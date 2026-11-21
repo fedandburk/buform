@@ -62,12 +62,7 @@ public abstract class ButtonFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.Label;
+        Label?.Text = Item?.Label;
     }
 
     protected virtual void UpdateStyle()

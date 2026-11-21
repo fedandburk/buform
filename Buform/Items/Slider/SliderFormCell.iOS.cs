@@ -60,12 +60,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (Slider == null)
-        {
-            return;
-        }
-
-        Slider.Enabled = !Item?.IsReadOnly ?? true;
+        Slider?.Enabled = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdateRange()
@@ -113,10 +108,7 @@ public abstract class SliderFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var slider = Slider;
-            if (slider != null)
-            {
-                slider.ValueChanged -= OnValueChanged;
-            }
+            slider?.ValueChanged -= OnValueChanged;
 
             Slider?.Dispose();
             Slider = null;

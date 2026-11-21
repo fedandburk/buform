@@ -18,10 +18,7 @@ public sealed class CreateEventViewController : UITableViewController
     private void CreateCommandOnCanExecuteChanged(object? sender, EventArgs e)
     {
         var createButtonItem = _createButtonItem;
-        if (createButtonItem != null)
-        {
-            createButtonItem.Enabled = _viewModel.CreateCommand.CanExecute(null);
-        }
+        createButtonItem?.Enabled = _viewModel.CreateCommand.CanExecute(null);
     }
 
     public override void ViewDidLoad()

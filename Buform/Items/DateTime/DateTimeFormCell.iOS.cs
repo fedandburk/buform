@@ -58,22 +58,12 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
 
     private void OnValueChanged(object? sender, EventArgs e)
     {
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.Value = DatePicker?.Date.ToDateTime() ?? DateTime.UtcNow;
+        Item?.Value = DatePicker?.Date.ToDateTime() ?? DateTime.UtcNow;
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (DatePicker == null)
-        {
-            return;
-        }
-
-        DatePicker.Enabled = !Item?.IsReadOnly ?? false;
+        DatePicker?.Enabled = !Item?.IsReadOnly ?? false;
     }
 
     protected virtual void UpdateRange()
@@ -89,12 +79,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.Label;
+        Label?.Text = Item?.Label;
     }
 
     protected virtual void UpdateInputType()
@@ -183,10 +168,7 @@ public abstract class DateTimeFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var datePicker = DatePicker;
-            if (datePicker != null)
-            {
-                datePicker.ValueChanged -= OnValueChanged;
-            }
+            datePicker?.ValueChanged -= OnValueChanged;
 
             DatePicker?.Dispose();
             DatePicker = null;

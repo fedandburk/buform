@@ -146,10 +146,7 @@ public abstract class FormCell<TItem> : FormCell
             );
         }
 
-        if (Item != null)
-        {
-            Item.PropertyChanged -= OnItemPropertyChanged;
-        }
+        Item?.PropertyChanged -= OnItemPropertyChanged;
 
         Item = typedItem;
 
@@ -165,10 +162,7 @@ public abstract class FormCell<TItem> : FormCell
         if (disposing)
         {
             var item = Item;
-            if (item != null)
-            {
-                item.PropertyChanged -= OnItemPropertyChanged;
-            }
+            item?.PropertyChanged -= OnItemPropertyChanged;
 
             Item = null;
         }

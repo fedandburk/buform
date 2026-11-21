@@ -49,17 +49,11 @@ public class ButtonFormItem : FormItem<ICommand>
             return;
         }
 
-        if (_command != null)
-        {
-            _command.CanExecuteChanged -= OnCanExecuteChanged;
-        }
+        _command?.CanExecuteChanged -= OnCanExecuteChanged;
 
         _command = command;
 
-        if (_command != null)
-        {
-            _command.CanExecuteChanged += OnCanExecuteChanged;
-        }
+        _command?.CanExecuteChanged += OnCanExecuteChanged;
     }
 
     protected virtual void OnCanExecuteChanged(object? sender, EventArgs e)

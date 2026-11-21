@@ -91,10 +91,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
             );
         }
 
-        if (Group != null)
-        {
-            Group.PropertyChanged -= OnGroupPropertyChanged;
-        }
+        Group?.PropertyChanged -= OnGroupPropertyChanged;
 
         Group = typedGroup;
 
@@ -108,10 +105,7 @@ public abstract class FormHeaderFooter<TGroup> : FormHeaderFooter
         if (disposing)
         {
             var group = Group;
-            if (group != null)
-            {
-                group.PropertyChanged -= OnGroupPropertyChanged;
-            }
+            group?.PropertyChanged -= OnGroupPropertyChanged;
 
             Group = null;
         }

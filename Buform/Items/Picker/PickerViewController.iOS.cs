@@ -53,10 +53,7 @@ public class PickerViewController<TItem> : UITableViewController
             UIBarButtonItemStyle.Plain,
             (_, _) =>
             {
-                if (Item != null)
-                {
-                    Item.Value = null;
-                }
+                Item?.Value = null;
             }
         );
     }
@@ -193,10 +190,7 @@ public class PickerViewController<TItem> : UITableViewController
         if (disposing)
         {
             var item = Item;
-            if (item != null)
-            {
-                item.PropertyChanged -= OnPropertyChanged;
-            }
+            item?.PropertyChanged -= OnPropertyChanged;
 
             Item = null;
 

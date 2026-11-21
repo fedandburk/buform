@@ -54,22 +54,12 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
 
     private void OnValueChanged(object? sender, EventArgs e)
     {
-        if (Item == null)
-        {
-            return;
-        }
-
-        Item.Value = (int)(Stepper?.Value ?? 0);
+        Item?.Value = (int)(Stepper?.Value ?? 0);
     }
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (Stepper == null)
-        {
-            return;
-        }
-
-        Stepper.Enabled = !Item?.IsReadOnly ?? true;
+        Stepper?.Enabled = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdateRange()
@@ -85,32 +75,17 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateStep()
     {
-        if (Stepper == null)
-        {
-            return;
-        }
-
-        Stepper.StepValue = Item?.Step ?? 1;
+        Stepper?.StepValue = Item?.Step ?? 1;
     }
 
     protected virtual void UpdateLabel()
     {
-        if (Label == null)
-        {
-            return;
-        }
-
-        Label.Text = Item?.Label;
+        Label?.Text = Item?.Label;
     }
 
     protected virtual void UpdateValue()
     {
-        if (Stepper == null)
-        {
-            return;
-        }
-
-        Stepper.Value = Item?.Value ?? 0;
+        Stepper?.Value = Item?.Value ?? 0;
     }
 
     protected override void OnItemSet()
@@ -150,10 +125,7 @@ public abstract class StepperFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var stepper = Stepper;
-            if (stepper != null)
-            {
-                stepper.ValueChanged -= OnValueChanged;
-            }
+            stepper?.ValueChanged -= OnValueChanged;
 
             Stepper?.Dispose();
             Stepper = null;

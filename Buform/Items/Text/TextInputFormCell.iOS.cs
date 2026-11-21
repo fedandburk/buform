@@ -87,12 +87,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateReadOnlyState()
     {
-        if (TextField == null)
-        {
-            return;
-        }
-
-        TextField.Enabled = !Item?.IsReadOnly ?? true;
+        TextField?.Enabled = !Item?.IsReadOnly ?? true;
     }
 
     protected virtual void UpdateLabel()
@@ -124,12 +119,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdatePlaceholder()
     {
-        if (TextField == null)
-        {
-            return;
-        }
-
-        TextField.Placeholder = Item?.Placeholder;
+        TextField?.Placeholder = Item?.Placeholder;
     }
 
     protected virtual void UpdateInputType()
@@ -159,22 +149,12 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
 
     protected virtual void UpdateSecureState()
     {
-        if (TextField == null)
-        {
-            return;
-        }
-
-        TextField.SecureTextEntry = Item?.IsSecure ?? false;
+        TextField?.SecureTextEntry = Item?.IsSecure ?? false;
     }
 
     protected virtual void UpdateValue()
     {
-        if (TextField == null)
-        {
-            return;
-        }
-
-        TextField.Text = Item?.FormattedValue;
+        TextField?.Text = Item?.FormattedValue;
     }
 
     protected override void OnItemSet()
@@ -224,10 +204,7 @@ public abstract class TextInputFormCell<TItem> : FormCell<TItem>
         if (disposing)
         {
             var textField = TextField;
-            if (textField != null)
-            {
-                textField.EditingChanged -= OnEditingChanged;
-            }
+            textField?.EditingChanged -= OnEditingChanged;
 
             TextField?.Dispose();
             TextField = null;

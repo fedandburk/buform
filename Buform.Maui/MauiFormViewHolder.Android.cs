@@ -39,10 +39,7 @@ internal abstract class MauiFormViewHolder<TMauiView> : RecyclerView.ViewHolder
         _nativeViewHolder?.Dispose();
         _nativeViewHolder = null;
 
-        if (_mauiView != null)
-        {
-            _mauiView.BindingContext = null;
-        }
+        _mauiView?.BindingContext = null;
 
         Container.RemoveAllViews();
     }
@@ -121,7 +118,7 @@ internal abstract class MauiFormViewHolder<TMauiView> : RecyclerView.ViewHolder
     {
         ArgumentNullException.ThrowIfNull(view);
 
-        if (view.Parent == Container)
+        if (Equals(view.Parent, Container))
         {
             return;
         }
